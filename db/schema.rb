@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20161028143548) do
+=======
+ActiveRecord::Schema.define(version: 20160920093506) do
+>>>>>>> c5c3392... cloud provider migration added
 
   create_table "api_tokens", force: :cascade do |t|
     t.string  "token",       limit: 255
