@@ -1,0 +1,19 @@
+<table id="cloud-provider-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Owner</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- cloud_providers.each do |cloud_provider| -%>
+      <%- cloud_provider = k(:cloud_provider, cloud_provider) -%>
+      <tr id="#cloud-provider-<%= cloud_provider.name %>">
+        <td><%= cloud_provider.name_link %></td>
+        <td><%= cloud_provider.owner.name %></td>
+        <td><%= cloud_provider.description %></td>
+      </tr>
+      <%- end -%>
+  </tbody>
+</table>
