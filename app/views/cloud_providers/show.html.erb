@@ -26,8 +26,9 @@
           <th>Description</th>
         </tr>
         <tr>
+          <%- owner = k(:owner, @cloud_provider.owner) -%>
           <td><%= @cloud_provider.name %></td>
-          <td><%= @cloud_provider.owner.name %></td>
+          <td><%= owner.name_link %></td>
           <td><%= @cloud_provider.description %></td>
         </tr>
       </table>
