@@ -12,6 +12,7 @@
             <li><%= link_to '<i class="fa fa-plus"></i> New Owner'.html_safe, new_owner_path %></li>
             <li class="active"><a href="#data" data-toggle="tab">Owner Data</a></li>
             <li><a href="#machines" data-toggle="tab">Machines</a></li>
+            <li><a href="#cloud-providers" data-toggle="tab">Cloud Providers</a></li>
             <li><a href="#history" data-toggle="tab">History</a></li>
           </ul>
           <ul class="nav pull-right">
@@ -57,6 +58,10 @@
 
     <div class="tab-pane" id="machines">
       <%= render partial: 'machines/table', locals: {machines: @owner.machines} %>
+    </div>
+
+    <div class="tab-pane" id="cloud-providers">
+      <%= render partial: 'cloud_providers/table', locals: {cloud_providers: @owner.cloud_providers} %>
     </div>
 
     <div class="tab-pane" id="history">

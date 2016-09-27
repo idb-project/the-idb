@@ -8,6 +8,7 @@ class Owner < ActiveRecord::Base
   has_many :inventories, :dependent => :destroy
   has_many :machines, :dependent => :destroy
   has_many :attachments, :dependent => :destroy
+  has_many :cloud_providers, :dependent => :destroy
 
   validates :name, :nickname, presence: true
   validates :name, :nickname, uniqueness: true
