@@ -1,0 +1,19 @@
+<%- @version.changesets do |attribute, changeset| -%>
+<%- unless ["Arch", "Ram", "Cores", "Serialnumber", "Device type", "Vmhost", "Os", "Os release", "Mrtg url", "Switch url"].include?(attribute) -%>
+### <%= attribute %> ###
+
+<%- if attribute == "Backup type" -%>
+<%= @version.diff_text_backup_type(changeset) %>
+<%- elsif attribute == "Owner" -%>
+<%= @version.diff_text_owner(changeset) %>
+<%- elsif attribute == "Power feed a" -%>
+<%= @version.diff_text_location(changeset) %>
+<%- elsif attribute == "Power feed b" -%>
+<%= @version.diff_text_location(changeset) %>
+<%- else -%>
+<%= @version.diff_text(changeset) %>
+<%- end -%>
+<%- end -%>
+<%- end -%>
+--
+Link: <%= version_url(@version.id) %>

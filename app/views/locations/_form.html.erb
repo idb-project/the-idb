@@ -1,0 +1,50 @@
+<div id="locations-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @location.new_record? -%>
+            <a class="brand" href="<%= new_location_path %>">New location</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_location_path(@location) %>"><%= @location.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- unless @location.new_record? -%>
+            <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, location_path(@location), class: 'location-delete', method: 'delete' %></li>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, location_path(@location) %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, locations_path %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@location, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+          <%- if @location.new_record? -%>
+          <%= f.input :location_level_id, collection: LocationLevel.order(:level), include_blank: false, label: "Type" %>
+          <%- end -%>
+          <%- location = k(:location, @location) -%>
+          <%= f.input :location_id, collection: Location.joins(:location_level).where("location_levels.level < ?", 50).order(:name), include_blank: true, label_method: lambda { |location| k(location).location_name }, label: "Parent" %>
+          <%= f.input :name %>
+          <%= f.input :description %>
+          <%= f.button :submit %>
+        <%- end -%>
+      </div>
+      <div class="span6">
+        <%= render 'location_table' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

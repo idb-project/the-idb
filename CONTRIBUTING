@@ -1,0 +1,18 @@
+# Contributing to idb
+
+As an open source project, we encourage and appreciate any kind of contributions like comments, 
+enhancement requests, bug reports, or code contributions!
+
+## Development workflow
+
+* Development is done on the `develop` branch
+* For anything larger than single commits, please use feature/bugfix branches
+
+## Reporting Bugs or Enhancement Requests
+
+## Submitting Patches
+
+The idb source code is managed using the git distributed source control management tool <https://www.git-scm.org/>.
+The code repository is publicly hosted on BitBucket <https://bitbucket.org/bytemine-idb/idb-core/>.
+This project tracks patch provenance and licensing using the Developer Certificate of Origin and Signed-off-by 
+tags initially developed by the Linux kernel project.

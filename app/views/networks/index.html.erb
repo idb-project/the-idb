@@ -1,0 +1,26 @@
+<div id="networks-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= networks_path %>">Networks</a>
+          <ul class="nav">
+            <li><%= link_to '<i class="fa fa-plus"></i> New Network'.html_safe, new_network_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <%= link_to('New', new_network_path) %> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'table', locals: {networks: @networks} %>
+  </div>
+</div>
+
+</div>

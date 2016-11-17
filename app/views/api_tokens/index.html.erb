@@ -1,0 +1,30 @@
+<div id="api-tokens-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= api_tokens_path %>">Api Tokens</a>
+          <ul class="nav">
+            <li>
+              <div class="columnSelectorWrapper">
+                <input id="colSelect1" type="checkbox" class="hidden">
+                <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1"><i class="fa fa-cog">&nbsp;</i>Columns</label>
+                <div id="columnSelector" class="columnSelector"></div>
+              </div>
+            </li>
+            <li><%= link_to '<i class="fa fa-plus"></i> New Api Token'.html_safe, new_api_token_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'table', locals: {api_tokens: @api_tokens} %>
+  </div>
+</div>
+

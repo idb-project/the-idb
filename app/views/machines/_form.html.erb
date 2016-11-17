@@ -1,0 +1,140 @@
+<div id="machines-form">
+<%- if !@machine.new_record? && @machine.manual? -%>
+  <div class="alert">
+    <strong>Attention</strong> It looks like this machine is not updated
+    automatically. You can edit the details manually.
+  </div>
+<%- end -%>
+
+<%- if @machine_details && @machine_details.show_errors? -%>
+  <div class="alert alert-error">
+    <p>Machine Detail Errors</p>
+    <ul>
+    <%- @machine_details.errors.full_messages.each do |msg| -%>
+      <li><%= msg %></li>
+    <%- end -%>
+    </ul>
+  </div>
+<%- end -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @machine.new_record? -%>
+            <a class="brand" href="<%= new_machine_path %>">New Machine</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_machine_path(@machine) %>"><%= @machine.name %></a>
+          <%- end -%>
+          <ul class="nav">
+          <%- if !@machine.new_record? -%>
+              <li class="active"><a href="#base" data-toggle="tab">Base</a></li>
+              <li><a href="#details" data-toggle="tab">Details</a></li>
+          <%- end -%>
+            <%- if IDB.config.modules.advanced_fields && !@machine.new_record? -%>
+            <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
+            <%- end -%>
+          </ul>
+          <ul class="nav pull-right">
+          <%- if @machine.new_record? -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, machines_path %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, machine_path(@machine) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@machine, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span12'}}) do |f| %>
+          <%= f.input :fqdn %>
+          <%= f.input :description, input_html: {rows: 15, id: 'markup-source'} %>
+          <%= f.input :backup_type, collection: Machine::BackupType.invert  %>
+          <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
+          <%- if IDB.config.modules.location -%>
+          <%- unless @machine.virtual? -%>
+          <%= f.association :power_feed_a, label: "Location A", collection: @form_locations, selected: @power_feed_a_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%= f.association :power_feed_b, label: "Location B", collection: @form_locations, selected: @power_feed_b_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%# f.association :power_feed_a, label: "Power supply A", collection: @power_supplies, selected: @power_feed_a, include_blank: true %>
+          <%# f.association :power_feed_b, label: "Power supply B", collection: @power_supplies, selected: @power_feed_b, include_blank: true %>
+          <%- end -%>
+          <%- end -%>
+          <%- if @machine.auto_update? -%>
+            <%= f.input :auto_update, label: 'Automatic update?', boolean_style: :inline, input_html: {class: 'span1', style: 'min-height: 23px'} %>
+          <%- end -%>
+          <%- if !@machine.new_record? -%>
+            <%= f.input :needs_reboot, as: :boolean, label: 'Needs Reboot?', boolean_style: :inline, input_html: {class: 'span1', style: 'min-height: 23px'} %>
+          <%- end -%>
+          <%= f.button :submit %>
+      </div>
+      <div class="span6">
+        <div class="row-fluid">
+          <div class="span12">
+            <h4>Description Preview</h4>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span12 markup-target box">
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span12">
+            <hr/>
+            <h4>Attachments:</h4>
+            <ul>
+              <%- @machine.attachments.each do |att| -%>
+                <li>
+                  <a href="<%=att.attachment.url%>" target="_blank"><%=att.attachment_file_name%></a>
+                  <%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, attachment_path(att), method: 'delete', class: 'attachment-delete', data: {confirm: "Really delete?"} %></li>
+              <%- end -%>
+            </ul>
+            <%= file_field_tag "attachments[]", type: :file, multiple: true %>
+          </div>
+        <%- end -%>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="details">
+    <%- unless @machine.new_record? -%>
+      <%= render 'details_form' %>
+    <%- end -%>
+  </div>
+  <%- if IDB.config.modules.advanced_fields -%>
+  <div class="tab-pane" id="advanced">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@machine, html: {class: 'form-horizontal' },
+              defaults: {input_html: {class: 'span12'}}) do |f| %>
+          <div class="row-fluid">
+            <div class="span12">
+              <h4>Advanced fields</h4>
+              <%= f.input :config_instructions, as: :text, input_html: {rows: 8} %>
+              <%= f.input :sw_characteristics, as: :text, input_html: {rows: 8, cols: 60}, label: "Software characteristics" %>
+              <%= f.input :business_purpose, as: :text, input_html: {rows: 8, cols: 60} %>
+              <%= f.input :business_criticality, as: :text, input_html: {rows: 8, cols: 60} %>
+              <%= f.input :business_notification, as: :text, input_html: {rows: 8, cols: 60} %>
+            </div>
+          </div>
+
+          <div class="row-fluid">
+            <div class="span6">
+              <%= f.button :submit %>
+            </div>
+          </div>
+        <%- end -%>
+      </div>
+    </div>
+  </div>
+  <%- end -%>
+</div>
+
+</div>

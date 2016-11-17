@@ -1,0 +1,30 @@
+<div id="pages-apps">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= page_path('apps') %>">Apps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- pages = YAML.load_file(Rails.root.join('config/app_pages.yml'))['pages'] -%>
+<%- pages.each do |category, array| -%>
+  <h4><%= category.capitalize %></h4>
+  <%- pages[category].each do |page| -%>
+    <div class="row-fluid">
+      <div class="span3">
+        <p><a href="<%= page['url'] %>" target="_blank" class="btn btn-block"><%= page['name'] %></a></p>
+      </div>
+      <div class="span9">
+        <p><%= page['description'] %></p>
+      </div>
+    </div>
+  <%- end -%>
+<%- end -%>
+
+</div>

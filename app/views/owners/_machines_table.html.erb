@@ -1,0 +1,132 @@
+<table class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>FQDN</th>
+      <th>Aliases</th>
+      <th>IP</th>
+      <th>OS</th>
+      <th>Architecture</th>
+      <th>CPU</th>
+      <th>RAM</th>
+      <th>Type</th>
+      <th>VM Host</th>
+      <th>Uptime</th>
+      <th>Serviced</th>
+      <%- if IDB.config.modules.unattended_upgrades -%>
+      <th>Unattended</th>
+      <th>Security updates</th>
+      <th>Pending updates</th>
+      <%- end -%>
+      <th>Backup</th>
+      <th>Owner</th>
+      <%- if IDB.config.modules.advanced_fields -%>
+      <th>CI</th>
+      <th>SC</th>
+      <th>BP</th>
+      <th>BC</th>
+      <th>BN</th>
+      <%- end -%>
+    </tr>
+  </thead>
+  <tbody>
+    <%- machines.each do |machine| -%>
+      <%- machine = k(:machine, machine) -%>
+      <tr id="#machine-<%= machine.id %>">
+        <td><%= machine.id %></td>
+        <td style="font-weight:normal" data-name="<%=machine.fqdn%>"><%= machine.fqdn %>
+          <span class="auto-update"><%="*" if machine.auto_update%></span>
+        </td>
+        <td><%= machine.alias_names %></td>
+        <td><%= machine.first_ip %></td>
+        <td><%= machine.os %></td>
+        <td><%= machine.arch %></td>
+        <td class="machine_cores"><%= machine.cores %></td>
+        <td class="machine_memory"><%= machine.ram %></td>
+        <td><%= machine.device_type %></td>
+        <td><%= machine.vmhost %></td>
+        <td><%= machine.uptime %></td>
+        <td><%= machine.serviced_at %></td>
+        <%- if IDB.config.modules.unattended_upgrades -%>
+        <td><%= machine.unattended_upgrades_column %></td>
+        <%- end -%>
+        <td><%= machine.pending_security_updates %></td>
+        <td nowrap="nowrap" title="<%= machine.pending_updates_package_names_list.join("\r\n") %>" data-text="<%= machine.pending_updates_package_names_list %>"><%= machine.pending_updates_package_names_list.join(" ").truncate(20) %></td>
+        <td><%= machine.backup_type %></td>
+        <td><%= machine.owner_link %></td>
+        <%- if IDB.config.modules.advanced_fields -%>
+        <td data-name="<%= machine.config_instructions %>"><%- unless machine.config_instructions.blank? -%>
+            <span
+              class="fa fa-zoom-in"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Config instructions:&#013;<%=machine.config_instructions%>">
+            </span><%- end -%></td>
+        <td data-name="<%= machine.sw_characteristics %>"><%- unless machine.sw_characteristics.blank? -%>
+            <span
+              class="fa fa-zoom-in"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Software characteristics:&#013;<%=machine.sw_characteristics%>">
+            </span>
+          <%- end -%></td>
+        <td data-name="<%= machine.business_purpose %>"><%- unless machine.business_purpose.blank? -%>
+            <span
+              class="fa fa-zoom-in"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Business purpose:&#013;<%=machine.business_purpose%>">
+            </span>
+          <%- end -%></td>
+        <td data-name="<%= machine.business_criticality %>"><%- unless machine.business_criticality.blank? -%>
+            <span
+              class="fa fa-zoom-in"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Business criticality:&#013;<%=machine.business_criticality%>">
+            </span>
+          <%- end -%></td>
+        <td data-name="<%= machine.business_notification %>"><%- unless machine.business_notification.blank? -%>
+            <span
+              class="fa fa-zoom-in"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Business notification:&#013;<%=machine.business_notification%>">
+            </span>
+          <%- end -%></td>
+          <%- end -%>
+      </tr>
+    <%- end -%>
+  </tbody>
+  
+  <tbody class="tablesorter-no-sort to-hide summary" style="font-weight: bold">
+    <tr class="">
+      <td></td>
+      <td class="summary-td">Summary</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="total-cores"></span></td>
+      <td><span class="total-memory"></span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- if IDB.config.modules.unattended_upgrades -%>
+      <td></td>
+      <%- end -%>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- if IDB.config.modules.advanced_fields -%>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- end -%>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
