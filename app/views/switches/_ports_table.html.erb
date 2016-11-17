@@ -1,0 +1,28 @@
+<table class="table table-striped table-condensed">
+  <thead>
+    <tr>
+      <th>Switch Port</th>
+      <th>Machine</th>
+      <th>Interface</th>
+      <th>MAC:</th>
+      <%- if IDB.config.mrtg.base_url && switch.switch_url -%>
+        <th>MRTG</th>
+      <%- end-%>
+    </tr>
+  </thead>
+  <tbody>
+    <%- switch.switch_ports.sort_by(&:number).each do |port| -%>
+      <tr>
+        <td><%= port.number %></td>
+        <td><%= link_to(port.nic.machine.name, port.nic.machine) %></td>
+        <td><%= port.nic.name %></td>
+        <td><tt><%= port.nic.mac %></tt></td>
+        <%- if IDB.config.mrtg.base_url && switch.switch_url -%>
+          <%- base_url = switch.mrtg_url ? switch.mrtg_url : IDB.config.mrtg.base_url -%>
+          <%- base_url += "/" unless base_url.ends_with?("/") -%>
+          <td><a href="<%= base_url %><%= switch.switch_url %>_<%= port.number %>.html" target="_blank">MRTG</a></td>
+        <%- end-%>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>

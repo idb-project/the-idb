@@ -1,0 +1,98 @@
+<%- inventory = k(:inventory, @inventory) -%>
+
+<div id="inventories-show">
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="<%= inventory_path(@inventory) %>"><%= @inventory.name %></a>
+        <ul class="nav">
+          <li class="active"><a href="#general" data-toggle="tab">General</a></li>
+          <li><a href="#history" data-toggle="tab">History</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_inventory_path(@inventory) %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="general">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="row-fluid">
+            <div class="span12">
+              <table class="table table-condensed">
+                <tr>
+                  <th class="span4">inventory number:</th>
+                  <th class="span4">name:</th>
+                  <th class="span4">serial / part.no.</th>
+                </tr>
+                <tr>
+                  <td class="span4"><%= inventory.id_or_inventory_number%></td>
+                  <td class="span4"><%= inventory.name%></td>
+                  <td class="span4"><%= inventory.serial%> / <%= inventory.part_number%></td>
+                </tr>
+                <tr>
+                  <th class="span4">purchase date:</th>
+                  <th class="span4">install date:</th>
+                  <th class="span4">warranty end:</th>
+                </tr>
+                <tr>
+                  <td class="span4"><%= inventory.purchase_date%></td>
+                  <td class="span4"><%= inventory.install_date%></td>
+                  <td class="span4"><%= inventory.warranty_end%></td>
+                </tr>
+                <tr>
+                  <th class="span4">supplier:</th>
+                  <th class="span4">user:</th>
+                  <th class="span4">owner:</th>
+                </tr>
+                <tr>
+                  <td class="span4"><%= inventory.seller%></td>
+                  <td class="span4"><%= inventory.user%></td>
+                  <td class="span4"><%= inventory.owner_link%></td>
+                </tr>
+                <tr>
+                  <th class="span4">machine:</th>
+                  <th class="span4">location:</th>
+                  <th class="span4">place:</th>
+                </tr>
+                <tr>
+                  <td class="span4"><%= inventory.machine_link%></td>
+                  <td class="span4"><%= inventory.location_link%></td>
+                  <td class="span4"><%= inventory.place%></td>
+                </tr>
+                <tr>
+                  <th class="span4">status:</th>
+                  <th class="span4">category:</th>
+                  <th class="span4">attachments:</th>
+                </tr>
+                <tr>
+                  <td class="span4"><%= inventory.status_string%></td>
+                  <td class="span4"><%= inventory.category%></td>
+                  <td class="span4"><%= inventory.attachment_list.html_safe%></td>
+                </tr>
+              </table>
+              <table class="table table-condensed">
+                <tr>
+                  <th class="span12">comment:</th>
+                </tr>
+                <tr>
+                  <td class="span12"><%= inventory.comment%></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="history">
+      <%= render partial: 'shared/history', locals: {object: @inventory} %>
+    </div>
+  </div>
+</div>
+
+</div>

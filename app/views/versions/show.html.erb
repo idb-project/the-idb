@@ -1,0 +1,31 @@
+<%- version = k(:version, @version) -%>
+
+
+<div id="versions-show">
+
+<div class="row-fluid tabbable">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%= version.header_link(@version) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <span style="color: #777777"><%= version.summary %></span>
+    <%= version.diff_css %>
+
+    <%- version.changesets do |attribute, changeset| -%>
+      <h4><%= attribute %></h4>
+      <%= version.diff_html(changeset) %>
+      <hr/>
+    <%- end -%>
+  </div>
+</div>
+
+</div>

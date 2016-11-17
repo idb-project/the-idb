@@ -1,0 +1,7 @@
+<%- if @softdelete -%>
+As the soft-delete module is turned on the machine is fully restorable.
+
+Link to restore: <%= deleted_machines_url %>
+<%- else -%>
+As the soft-delete module is turned off the machine is not restorable.
+<%- end -%>

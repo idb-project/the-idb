@@ -1,0 +1,18 @@
+/* AJAX loading gif for text boxes. */
+
+input[type=text].ajax-loader {
+  background: transparent image-url("loading.gif") no-repeat 99% 49%;
+}
+
+div.ajax-loader {
+  background: transparent image-url("loading.gif") no-repeat 0 50%;
+  padding-left: 25px;
+  font-weight: bold;
+  position: relative;
+}
+
+span.ajax-loader {
+  background: transparent image-url("loading.gif") no-repeat 0 50%;
+  padding-left: 25px;
+  position: relative;
+}

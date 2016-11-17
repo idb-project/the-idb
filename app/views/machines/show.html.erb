@@ -1,0 +1,443 @@
+<%- machine = k(:machine, @machine) -%>
+
+<div id="machines-show">
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="<%= machine_path(@machine) %>"><%= @machine.name %></a>
+        <ul class="nav">
+          <li class="active"><a href="#host" data-toggle="tab">Host</a></li>
+          <li><a href="#owner" data-toggle="tab">Owner</a></li>
+          <li><a href="#network" data-toggle="tab">Network</a></li>
+          <%- if machine.is_backed_up? -%>
+          <li><a href="#backup" data-toggle="tab">Backup</a></li>
+          <%- end -%>
+          <%- if IDB.config.modules.advanced_fields -%>
+          <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
+          <%- end -%>
+          <%- if IDB.config.modules.unattended_upgrades && machine.unattended_upgrades -%>
+          <li><a href="#unattended" data-toggle="tab">Unattended</a></li>
+          <%- end -%>
+          <li><a href="#pending" data-toggle="tab">Pending updates</a></li>
+          <%- if machine.switch? -%>
+            <li><a href="#portsettings" data-toggle="tab">Ports</a></li>
+          <%- end -%>
+          <li><a href="#maintenance" data-toggle="tab">Maintenance</a></li>
+          <li><a href="#history" data-toggle="tab">History</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_machine_path(@machine) %></li>
+          <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, machine_path(@machine), class: 'machine-delete' %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="host">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="row-fluid">
+            <div class="span6">
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>Operatingsystem</h5>
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span3">operating system:</th>
+                      <th class="span3">OS release:</th>
+                      <th class="span3">architecture:</th>
+                      <th class="span3">type:</th>
+                    </tr>
+                    <tr>
+                      <td class="span3"><%= machine.os%></td>
+                      <td class="span3"><%= machine.os_release %></td>
+                      <td class="span3"><%= machine.arch %></td>
+                      <td class="span3"><%= machine.device_type %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>System information</h5>
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span3">RAM:</th>
+                      <th class="span3">cores:</th>
+                      <th class="span3">hdd size:</th>
+                      <th class="span3">serial number:</th>
+                    </tr>
+                    <tr>
+                      <td class="span3"><%= machine.ram %></td>
+                      <td class="span3"><%= machine.cores %></td>
+                      <td class="span3"><%= machine.diskspace %></td>
+                      <td class="span3"><%= machine.serialnumber %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>Uptime / service date</h5>
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span6">uptime:</th>
+                      <th class="span6">serviced at:</th>
+                    </tr>
+                    <tr>
+                      <td class="span6"><%= machine.uptime %></td>
+                      <td class="span6"><%= machine.serviced_at %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>creation / updated</h5>
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span6">updated at:</th>
+                      <th class="span6">created at:</th>
+                    </tr>
+                    <tr>
+                      <td class="span6"><%= machine.updated_at %></td>
+                      <td class="span6"><%= machine.created_at %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <%- if machine.connected_to_power_feed? -%>
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>Locations:</h5>
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span6">A:</th>
+                      <th class="span6">B:</th>
+                    </tr>
+                    <tr>
+                      <td class="span6"><%= machine.power_feed_a_location_name.html_safe %></td>
+                      <td class="span6"><%= machine.power_feed_b_location_name.html_safe %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <%- end -%>
+            </div>
+
+            <div class="span6">
+              <%- if !machine.alias_names.blank? -%>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <h5>Aliases</h5>
+                    <p><%= machine.alias_names %></p>
+                  </div>
+                </div>
+              <%- end -%>
+
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>Attachments</h5>
+                  <p><%= machine.attachment_list.html_safe %></p>
+                </div>
+              </div>
+
+              <div class="row-fluid">
+                <div class="span12">
+                  <b>Notes / description</b>
+                  <div class="box">
+                    <p><%= machine.description %></p>
+                  </div>
+                  <%- if IDB.config.modules.inventory && !@inventories.empty? -%>
+                    <b>Inventory</b>
+                    <%- @inventories.each do |inventory| -%>
+                    <%- inventory = k(:inventory, inventory) -%>
+                      <ul>
+                        <li><%= inventory.name_link %></li>
+                      </ul>
+                    <%- end -%>
+                  <%- end -%>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- if machine.owner -%>
+    <div class="tab-pane" id="owner">
+      <%- owner = k(:owner, machine.owner) -%>
+      <table class="table table-condensed">
+        <tr>
+          <th>name:</th>
+          <th>nickname:</th>
+          <th>customer id:</th>
+          <th>wiki url:</th>
+          <th>repository url:</th>
+        </tr>
+        <tr>
+          <td><%= owner.name_link %></td>
+          <td><%= owner.nickname %></td>
+          <td><%= owner.customer_id %></td>
+          <td><%= owner.wiki_link %></td>
+          <td><%= owner.repo_link %></td>
+        </tr>
+      </table>
+      <%= owner.description %>
+    </div>
+    <%- end -%>
+    <div class="tab-pane" id="network">
+      <h5>Network information</h5>
+      <table class="table table-striped">
+        <tr>
+          <th>interface</th>
+          <th>MAC address</th>
+          <th>ip address</th>
+          <th>netmask</th>
+          <th>ip v6 address</th>
+          <th>switch</th>
+          <th>port</th>
+        </tr>
+        <%- machine.nics.each do |nic| -%>
+          <tr>
+            <td><%= nic.name %></td>
+            <td><tt><%= nic.mac %></tt></td>
+            <td><%= nic.ipv4addr %></td>
+            <td><%= nic.ipv4mask %></td>
+            <td><%= nic.ipv6addr %></td>
+            <%- if nic.switch_port -%>
+              <td><%= nic.switch_port.switch.name %></td>
+              <td><%= nic.switch_port.number %></td>
+            <%- else -%>
+              <td></td>
+              <td></td>
+            <%- end -%>
+          </tr>
+        <%- end -%>
+      </table>
+    </div>
+    <%- if machine.is_backed_up? -%>
+    <div class="tab-pane" id="backup">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="row-fluid">
+            <div class="span6">
+              <div class="row-fluid">
+                <div class="span12">
+                  <h5>Backup type: <%= machine.backup_brand %></h5>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span3">Last full run:</th>
+                      <th class="span3">Last incremental run:</th>
+                      <th class="span3">Last differential run:</th>
+                    </tr>
+                    <tr>
+                      <td class="span3"><%= machine.backup_last_full_run %></td>
+                      <td class="span3"><%= machine.backup_last_inc_run %></td>
+                      <td class="span3"><%= machine.backup_last_diff_run %></td>
+                    </tr>
+                    <%- if machine.backup_sizes_present? -%>
+                    <tr>
+                      <th class="span3">Last full size:</th>
+                      <th class="span3">Last incremental size:</th>
+                      <th class="span3">Last differential size:</th>
+                      <th class="span3">Total backup size:</th>
+                    </tr>
+                    <tr>
+                      <td class="span3"><%= machine.backup_last_full_size %></td>
+                      <td class="span3"><%= machine.backup_last_inc_size %></td>
+                      <td class="span3"><%= machine.backup_last_diff_size %></td>
+                      <td class="span3"><%= machine.backup_size_sum %></td>
+                    </tr>
+                    <%- end -%>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- end -%>
+    <%- if IDB.config.modules.advanced_fields -%>
+    <div class="tab-pane" id="advanced">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="row-fluid">
+            <div class="span12">
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">Config instructions:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.config_instructions %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">Software characteristics:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.sw_characteristics %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">Business purpose:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.business_purpose %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">Business criticality:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.business_criticality %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">Business notification:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.business_notification %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <%- if (IDB.config.modules.api.v1_enabled || IDB.config.modules.api.v2_enabled) && !machine.api_data.blank? -%>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">API data:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12"><%= machine.api_data.html_safe %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            <%- end -%>
+            <%- if !machine.puppetdb_data.blank? -%>
+              <div class="row-fluid">
+                <div class="span12">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th class="span12">PuppetDB data:</th>
+                    </tr>
+                    <tr>
+                      <td class="span12" style="width: 250px"><%= machine.puppetdb_data.html_safe %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            <%- end -%>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- end -%>
+    <%- if IDB.config.modules.unattended_upgrades -%>
+    <div class="tab-pane" id="unattended">
+      <p>
+        <strong>Blacklisted packages:</strong>
+        <br/>
+        <%= machine.unattended_upgrades_blacklisted_packages.html_safe %>
+      </p>
+      <p>
+        <strong>Automatic reboot:</strong>
+        <br/>
+        <%= machine.unattended_upgrades_reboot_string %>
+      </p>
+      <p>
+        <strong>Time:</strong>
+        <br/>
+        <%= machine.unattended_upgrades_time %>
+      </p>
+      <p>
+        <strong>Upgrade repositories:</strong>
+        <br/>
+        <%= machine.unattended_upgrades_repos.html_safe %>
+      </p>
+    </div>
+    <%- end -%>
+    <div class="tab-pane" id="pending">
+      <p>
+        <strong>Pending security updates:</strong>
+        <br/>
+        <%= machine.pending_security_updates.to_s.html_safe %>
+      </p>
+      <p>
+      <p>
+        <strong>Pending updates:</strong>
+        <br/>
+        <%= machine.pending_updates_package_names.to_s.html_safe %>
+      </p>
+    </div>
+    <%- if machine.switch? -%>
+      <div class="tab-pane" id="portsettings">
+        <%= render partial: 'switches/ports_table', locals: {switch: machine.machine} %>
+      </div>
+    <%- end -%>
+    <div class="tab-pane" id="maintenance">
+      <div class="row-fluid">
+        <div class="span6">
+          <h5>Maintenance information</h5>
+        </div>
+        <div class="span6 text-right">
+          <%= link_to 'Update Service Date', maintenance_record_new_machine_path(@machine),
+                class: 'btn btn-small btn-info'%>
+        </div>
+      </div>
+      <table class="table table-striped">
+        <tr>
+          <th>date</th>
+          <th>user</th>
+          <th>logfile</th>
+        </tr>
+        <%- machine.maintenance_records.each do |record| -%>
+          <%- record = k(:machine_maintenance, record) -%>
+          <tr>
+            <td><%= record.date %></td>
+            <td><%= record.username %></td>
+            <td><%= record.logfile_link %></td>
+          </tr>
+        <%- end -%>
+      </table>
+    </div>
+    <div class="tab-pane" id="history">
+      <%= render partial: 'shared/history', locals: {object: @machine} %>
+    </div>
+  </div>
+</div>
+
+</div>

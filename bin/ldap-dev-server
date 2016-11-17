@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('../../config/environment', __FILE__)
+require 'ldap/server'
+require 'json'
+
+class LDAPHandler < LDAP::Server::Operation
+  attr_reader :db
+
+  def initialize(connection, message_id, db)
+    super(connection, message_id)
+    @db = db
+  end
+
+  def simple_bind(version, dn, password)
+    return unless dn
+
+    if db[dn]['password'] == password
+      log("Authentication success: #{dn}")
+    else
+      log("Authentication error: #{dn}")
+      raise LDAP::ResultError::InappropriateAuthentication, 'Auth wrong'
+    end
+  end
+
+  def search(basedn, scope, deref, filter)
+    case scope
+    when LDAP::Server::BaseObject
+      # Client asked for single object by DN.
+      raise LDAP::ResultError::UnwillingToPerform, "#{scope} not implemented"
+    when LDAP::Server::WholeSubtree
+      db.each do |dn, record|
+        unless dn.index(basedn, -basedn.length) # Under basedn?
+          log("dn #{dn} not under basedn #{basedn}")
+          next
+        end
+
+        next unless LDAP::Server::Filter.run(filter, record)
+
+        log("Found dn #{dn}")
+        send_SearchResultEntry(dn, record)
+      end
+    else
+      raise LDAP::ResultError::UnwillingToPerform, "#{scope} not implemented"
+    end
+  end
+end
+
+class LogFormatter
+  def call(severity, time, progname, msg)
+    "#{msg}\n"
+  end
+end
+
+db = JSON.parse(File.read(File.expand_path('../../db/ldapdb.json', __FILE__)))
+port = IDB.config.ldap.port
+
+logger = Logger.new(STDOUT)
+logger.formatter = LogFormatter.new
+
+puts "Starting LDAP server on port #{port}"
+
+server = LDAP::Server.new({
+  port: port,
+  operation_class: LDAPHandler,
+  operation_args: [db],
+  logger: logger
+})
+
+server.run_tcpserver
+server.join

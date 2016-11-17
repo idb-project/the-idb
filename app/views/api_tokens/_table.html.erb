@@ -1,0 +1,23 @@
+<table id="api-token-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Read</th>
+      <th>Write</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- api_tokens.each do |api_token| -%>
+      <%- api_token = k(:api_token, api_token) -%>
+      <tr id="#api-token-<%= api_token.id %>">
+        <td><%= api_token.token_link %></td>
+        <td><%= api_token.name %>
+        <td><%= api_token.description %>
+        <td><%= api_token.read %></td>
+        <td><%= api_token.write %></td>
+      </tr>
+      <%- end -%>
+  </tbody>
+</table>

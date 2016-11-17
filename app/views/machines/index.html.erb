@@ -1,0 +1,40 @@
+<div id="machines-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= machines_path %>">Machines</a>
+          <ul class="nav">
+            <li>
+              <div class="columnSelectorWrapper">
+                <input id="colSelect1" type="checkbox" class="hidden">
+                <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1"><i class="fa fa-cog">&nbsp;</i>Columns</label>
+                <div id="columnSelector" class="columnSelector"></div>
+              </div>
+            </li>
+            <li><%= link_to '<i class="fa fa-plus"></i> New Machine'.html_safe, new_machine_path %></li>
+            <%- unless IDB.config.puppetdb.auto_create -%>
+            <li><%= link_to '<i class="fa fa-question"></i> Untracked'.html_safe, untracked_machines_path %></li>
+            <%- end -%>
+            <li><%= link_to '<i class="fa fa-question"></i> Outdated'.html_safe, outdated_machines_path %></li>
+            <%- if IDB.config.modules.softdelete -%>
+              <li><%= link_to '<i class="fa fa-times"></i> Deleted'.html_safe, deleted_machines_path %></li>
+            <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <%= link_to('New', new_machine_path) %> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'table', locals: {machines: @machines} %>
+  </div>
+</div>
+
+</div>

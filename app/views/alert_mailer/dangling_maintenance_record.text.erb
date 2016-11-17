@@ -1,0 +1,11 @@
+<%= @user.name %> created a maintenance record for "<%= @record.fqdn %>".
+
+There is no matching machine for that FQDN in the database.
+
+Please create one and assign the dangling maintenance record to that new
+machine.
+
+Thank you!
+
+--
+Link: <%= maintenance_record_url(@record.id) %>

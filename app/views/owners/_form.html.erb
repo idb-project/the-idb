@@ -1,0 +1,67 @@
+<div id="owners-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @owner.new_record? -%>
+            <a class="brand" href="<%= new_owner_path %>">New Owner</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_owner_path(@owner) %>"><%= @owner.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- if @owner.new_record? -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, owners_path %></li>
+          <%- else-%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, owner_path(@owner) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span6">
+    <%= simple_form_for(@owner, html: {class: 'form-vertical', multipart: true },
+          defaults: {input_html: {class: 'input-xxlarge'}}) do |f| %>
+      <%= f.input :name %>
+      <%= f.input :nickname %>
+      <%= f.input :customer_id, label: 'Customer ID' %>
+      <%= f.input :wiki_url, label: 'Wiki URL' %>
+      <%= f.input :repo_url, label: 'Repository URL' %>
+      <%= f.input :description, input_html: {rows: 15, id: 'markup-source'} %>
+      <%= f.button :submit %>
+  </div>
+  <div class="span6">
+    <div class="row-fluid">
+      <div class="span12">
+        <h4>Description Preview</h4>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12 markup-target box">
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <hr/>
+        <h5>Attachments:</h5>
+        <ul>
+          <%- @owner.attachments.each do |att| -%>
+            <li>
+              <a href="<%=att.attachment.url%>" target="_blank"><%=att.attachment_file_name%></a>
+              <%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, attachment_path(att), method: 'delete', class: 'attachment-delete', data: {confirm: "Really delete?"} %></li>
+          <%- end -%>
+        </ul>
+        <%= file_field_tag "attachments[]", type: :file, multiple: true %>
+      </div>
+    </div>
+    <%- end -%>
+  </div>
+</div>
+
+</div>
+
