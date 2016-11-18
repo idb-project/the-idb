@@ -34,12 +34,6 @@ There are two user accounts in the development LDAP database. (db/ldapdb.json)
 * `bundle exec rspec`
 * Automatically run tests when files change: `bundle exec guard`
 
-## Deploy a new release
-
-* Run `bundle exec cap <stage> deploy`, where <stage> is the customer
-* Current stages: btm-dev, btm-prod, brille
-* Deploy from git branch other than master: 'bundle exec cap <stage> deploy -s branch=<branch-name>'
-
 ### Things to think of when updating Ruby
 
 ruby -S gem update --system
