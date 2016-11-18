@@ -1,3 +1,7 @@
+HEAD:
+=====
+- [bugfix] Inventory datepicker does not accept existing dates. #4658
+
 1.6.0
 =====
 - [feature] Upgrade to Rails 5. #4636
