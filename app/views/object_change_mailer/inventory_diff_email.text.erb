@@ -1,0 +1,15 @@
+<%- @version.changesets do |attribute, changeset| -%>
+### <%= attribute %> ###
+
+<%- if attribute == "User" %>
+<%= @version.diff_text_user(changeset) %>
+<%- elsif attribute == "Machine" %>
+<%= @version.diff_text_machine(changeset) %>
+<%- else %>
+<%= @version.diff_text(changeset) %>
+<%- end %>
+
+<%- end -%>
+
+--
+Link: <%= version_url(@version.id) %>

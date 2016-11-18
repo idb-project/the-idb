@@ -1,0 +1,16 @@
+<table id="location-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>Location</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- locations.each do |location| -%>
+      <tr id="#location-<%= location.id %>">
+        <td><%= k(location).location_link.html_safe %></td>
+        <td><%= location.description %>
+      </tr>
+      <%- end -%>
+  </tbody>
+</table>

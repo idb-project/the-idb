@@ -1,0 +1,13 @@
+Together with the owner all machines and inventory items belonging to the
+owner have been deleted as well.
+
+<%- if @softdelete -%>
+As the soft-delete module is turned on the owner is fully restorable.
+If the owner is being restored the related items (machines and inventory) will
+be restored as well, IF the restore is being done within 10 minutes of the
+deletion.
+
+Link to restore: <%= deleted_owners_url %>
+<%- else -%>
+As the soft-delete module is turned off the owner is not restorable.
+<%- end -%>

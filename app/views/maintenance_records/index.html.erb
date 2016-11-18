@@ -1,0 +1,66 @@
+<div id="maintenance-records-index">
+
+<%- record = k(:machine_maintenance, @record) -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= maintenance_records_path %>">
+            Maintenance Records
+          </a>
+          <%- if @unassigned_records && @unassigned_records.size > 0 -%>
+            <ul class="nav">
+              <li><%= link_to "<i class='fa fa-question'></i> Unassigned (#{@unassigned_records.size.to_s})".html_safe, maintenance_records_path(unassigned: true) %></li>
+            </ul>
+          <%- end -%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <p>Use the <strong>service</strong> script to service
+    a machine. It can be downloaded using the following command:
+    <code>
+      <%= IDB.config.api.curl_command %> -u <%= @user.login %> <%= IDB.config.api.url %>/scripts/<%= IDB.config.api.script_name %> > <%= IDB.config.api.script_name %>
+    </code>
+    </p>
+  </div>
+</div>
+
+<%- if params[:unassigned] -%>
+<div class="row-fluid">
+  <div class="span12">
+    <p class="lead">Unassigned maintenance records</p>
+  </div>
+</div>
+<%- end -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <table class="table table-striped">
+      <tr class="first-row">
+        <th>date</th>
+        <th>machine</th>
+        <th>user</th>
+        <th>logfile</th>
+      </tr>
+      <%- @records.each do |record| -%>
+        <%- record = k(:machine_maintenance, record) -%>
+        <tr class="<%= record.css_class %>">
+          <td><%= record.date %></td>
+          <td><%= record.machine_link %></td>
+          <td><%= record.username %></td>
+          <td><%= record.logfile_link %></td>
+        </tr>
+      <%- end -%>
+    </table>
+    <%= will_paginate @records %>
+  </div>
+</div>
+
+</div>

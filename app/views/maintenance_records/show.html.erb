@@ -1,0 +1,43 @@
+<div id="maintenance-records-show">
+
+<%- record = k(:machine_maintenance, @record) -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= maintenance_record_path(@record) %>">
+            Maintenance Record - <%= record.title %>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- if record.dangling? -%>
+<div class="row-fluid">
+  <div class="span12 alert alert-error">
+    This record is not assigned to a machine. Please fix it!
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= simple_form_for @record do |f| %>
+      <%= f.input :machine_id, collection: record.machine_list,
+        input_html: {class: 'input-xxlarge'} %>
+      <%= f.submit 'Assign', class: 'btn btn-success' %>
+    <%- end -%>
+  </div>
+</div>
+<%- end -%>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= record.logfile %>
+  </div>
+</div>
+
+</div>

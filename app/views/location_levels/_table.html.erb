@@ -1,0 +1,19 @@
+<table id="location-level-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- location_levels.each do |location_level| -%>
+      <%- location_level = k(:location_level, location_level) -%>
+      <tr id="#location-level-<%= location_level.id %>">
+        <td><%= location_level.name_link %></td>
+        <td><%= location_level.level %></td>
+        <td><%= location_level.description %></td>
+      </tr>
+      <%- end -%>
+  </tbody>
+</table>

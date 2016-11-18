@@ -1,0 +1,23 @@
+<%- @version.changesets do |attribute, changeset| -%>
+### <%= attribute %> ###
+
+<%- if attribute == "Backup type" %>
+<%= @version.diff_text_backup_type(changeset) %>
+<%- elsif attribute == "Device type" %>
+<%= @version.diff_text_device_type(changeset) %>
+<%- elsif attribute == "Owner" %>
+<%= @version.diff_text_owner(changeset) %>
+<%- elsif attribute == "Backup brand" %>
+<%= @version.diff_text_backup_brand(changeset) %>
+<%- elsif attribute == "Power feed a" -%>
+<%= @version.diff_text_location(changeset) %>
+<%- elsif attribute == "Power feed b" -%>
+<%= @version.diff_text_location(changeset) %>
+<%- else %>
+<%= @version.diff_text(changeset) %>
+<%- end %>
+
+<%- end -%>
+
+--
+Link: <%= version_url(@version.id) %>

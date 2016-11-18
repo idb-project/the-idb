@@ -1,0 +1,98 @@
+<table class="table tablesorter custom-popup inventory-table">
+  <thead>
+    <tr>
+      <th>Inventory No</th>
+      <th>Name</th>
+      <th>Serial</th>
+      <th>Part No</th>
+      <th>Puchase date</th>
+      <th>Install date</th>
+      <th>Warranty end</th>
+      <th>Supplier</th>
+      <th>User</th>
+      <th>Owner</th>
+      <th>Machine</th>
+      <th>Location</th>
+      <th>Place</th>
+      <th>Category</th>
+      <th>Status</th>
+      <th>Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- inventories.each do |inventory| -%>
+      <%- inventory = k(:inventory, inventory) -%>
+      <tr id="#inventory-<%= inventory.id %>"<%- unless inventory.active? -%> class="inactive"<%- end -%>>
+        <td><%= inventory.id_or_inventory_number_link %></td>
+        <td><%= inventory.name %></td>
+        <td><%= inventory.serial %></td>
+        <td><%= inventory.part_number %></td>
+        <td><%= inventory.purchase_date %></td>
+        <td><%= inventory.install_date %></td>
+        <td><%= inventory.warranty_end %></td>
+        <td><%= inventory.seller %></td>
+        <td><%= inventory.user %></td>
+        <td><%= inventory.owner_link %></td>
+        <td><%= inventory.machine_link %></td>
+        <td><%= locations[inventory.location_id] %></td>
+        <td><%= inventory.place %></td>
+        <td><%= inventory.category %></td>
+        <td><%= inventory.status_string %></td>
+        <td><%= inventory.comment %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>
+
+ <div class="btn-group">
+      <button type="button" class="btn btn-default download">Download</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><h5><strong>Output options</strong></h5></li>
+        <li>
+          <label>Separator: <input class="output-separator-input" size="2" value=";" type="text"></label>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="comma">,</button>
+          <button type="button" class="output-separator btn btn-default btn-xs active" title="semi-colon">;</button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="tab">  </button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="space"> </button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="output JSON">json</button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
+        </li>
+        <li>
+          <div class="btn-group output-download-popup" data-toggle="buttons" title="Download file or open in Popup window">
+            <label class="btn btn-default btn-sm active">
+              <input name="delivery1" class="output-popup" type="radio"> Popup
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="delivery1" class="output-download" checked="" type="radio"> Download
+            </label>
+          </div>
+        </li>
+        <li>
+          <div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible or all rows">
+            <label class="btn btn-default btn-sm active">
+              <input name="getrows1" class="output-filter" checked="checked" type="radio"> Filtered
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="getrows1" class="output-visible" type="radio"> Visible
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="getrows1" class="output-all" type="radio"> All
+            </label>
+          </div>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <label>Replace quotes: <input class="output-replacequotes" size="2" value="&quot;" type="text"></label>
+          <button type="button" class="output-quotes btn btn-default btn-xs" title="single quote">'</button>
+          <button type="button" class="output-quotes btn btn-default btn-xs active" title="left double quote">“</button>
+          <button type="button" class="output-quotes btn btn-default btn-xs" title="escaped quote">\"</button>
+        </li>
+        <li><label title="Remove extra white space from each cell">Trim spaces: <input class="output-trim" checked="" type="checkbox"></label></li>
+        <li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox"></label></li>
+        <li><label title="Wrap all values in quotes">Wrap in Quotes: <input class="output-wrap" type="checkbox" checked="checked"></label></li>
+        <li><label title="Choose a download filename">Filename: <input class="output-filename" size="15" value="inventory.csv" type="text"></label></li>
+      </ul>
+    </div>

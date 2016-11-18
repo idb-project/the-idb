@@ -1,0 +1,48 @@
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= owners_path %>">Owners</a>
+          <ul class="nav">
+            <li><%= link_to '<i class="fa fa-plus"></i> New Owner'.html_safe, new_owner_path %></li>
+            <li><%= link_to '<i class="fa fa-upload"></i> CSV Import'.html_safe, new_lexware_import_path %></li>
+            <li><%= link_to '<i class="fa fa-times"></i> Deleted'.html_safe, deleted_owners_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid" id="owners-index">
+  <div class="span12">
+    <table class="table tablesorter">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Nickname</th>
+          <th>Customer ID</th>
+          <th>Wiki</th>
+          <th>Machines</th>
+          <th>Total backup size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @owners.each do |owner| -%>
+          <%- owner = k(:owner, owner) -%>
+          <tr id="#owner-<%= owner.id %>">
+            <td><%= owner.id %></td>
+            <td><%= owner.name_link %></td>
+            <td><%= owner.nickname %></td>
+            <td><%= owner.customer_id %></td>
+            <td><%= owner.wiki_link %></td>
+            <td><%= owner.machines_count %></td>
+            <td><%= owner.backup_size_sum %></td>
+          </tr>
+        <%- end -%>
+      </tbody>
+    </table>
+  </div>
+</div>

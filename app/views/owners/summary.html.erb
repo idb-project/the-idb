@@ -1,0 +1,152 @@
+<%- owner = k(:owner, @owner) -%>
+
+<div id="owners-show">
+
+<div class="row-fluid tabbable">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <span class="brand"><%= owner.name %></span>
+
+          <ul class="nav pull-right">
+            <li class="printer"><a href="#" onclick="window.print();"><i class="fa fa-print"></i> Print</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12 tab-content">
+    <div class="tab-pane active" id="data">
+      <%= owner.description %>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+<div id="machines-index" style="margin-top: 25px">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <span class="brand">Machines</span>
+          <ul class="nav">
+            <li>
+              <i class="fa fa-cog"></i>
+              <div class="columnSelectorWrapper">
+                <input id="colSelect1" type="checkbox" class="hidden">
+                <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1">Columns</label>
+                <div id="columnSelector" class="columnSelector"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'machines_table', locals: {machines: @machines} %>
+  </div>
+</div>
+
+</div>
+
+
+<%- @networks.all.each do |network_obj| -%>
+<div id="networks-show" style="margin-top: 25px">
+<%- network = k(:network, network_obj) -%>
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <span class="brand">Network: <%= network_obj.name %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="network">
+      <div class="row-fluid">
+        <div class="span12">
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th>address:</th>
+                <th>prefix:</th>
+                <th>netmask:</th>
+                <th>broadcast:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= network.address %></td>
+                <td><%= network.prefix %></td>
+                <td><%= network.netmask %> / <tt><%= network.netmask_hex %></tt></td>
+                <td><%= network.broadcast %></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-condensed">
+            <thead>
+            <tr>
+              <th>host min:</th>
+              <th>host max:</th>
+              <th>hosts/total:</th>
+              <th>hosts/used:</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= network.host_min %></td>
+                <td><%= network.host_max %></td>
+                <td><%= network.hosts_count %></td>
+                <td><%= network.hosts_used %></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Description</h5>
+          <div class="box">
+            <p><%= network.description %></p>
+          </div>
+        </div>
+      </div>
+      <div class="row-fluid" style="margin-top:15px">
+        <div class="span12">
+          <h5 class="ip_toggler" style="display:inline">IP Addresses</h5>
+            <span class="ip_toggler" style="margin-left: 20px">
+              <%= check_box_tag 'toggle_ips' %>
+              <span style="margin-left: 1px;font-size:0.8em">show unassigned IPs</span>
+            </span>
+          <table class="table table-condensed tablesorter network-table">
+            <thead>
+              <tr>
+                <th>ip address</th>
+                <th>machine</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- network.addresses.each do |ip| -%>
+                <%= network.ip_address_row(ip, false) %>
+              <%- end -%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- end -%>
+</div>

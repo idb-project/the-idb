@@ -1,0 +1,23 @@
+<table class="table tablesorter">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Machines</th>
+      <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- networks.each do |network| -%>
+      <%- network = k(:network, network) -%>
+      <tr id="#network-<%= network.id %>">
+        <td><%= network.id %></td>
+        <td><%= network.name_link %></td>
+        <td><%= network.address %></td>
+        <td><%= network.hosts_used %></td>
+        <td><%= network.owner_link %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>

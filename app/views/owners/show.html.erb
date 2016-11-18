@@ -1,0 +1,68 @@
+<%- owner = k(:owner, @owner) -%>
+
+<div id="owners-show">
+
+<div class="row-fluid tabbable">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= owner_path(@owner) %>"><%= owner.name %></a>
+          <ul class="nav">
+            <li><%= link_to '<i class="fa fa-plus"></i> New Owner'.html_safe, new_owner_path %></li>
+            <li class="active"><a href="#data" data-toggle="tab">Owner Data</a></li>
+            <li><a href="#machines" data-toggle="tab">Machines</a></li>
+            <li><a href="#history" data-toggle="tab">History</a></li>
+          </ul>
+          <ul class="nav pull-right">
+            <li><%= link_to '<i class="fa fa-print"></i> Summary'.html_safe, owners_summary_path(@owner) %></li>
+            <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_owner_path(@owner) %></li>
+            <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, owner_path(@owner), class: 'owner-delete' %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12 tab-content">
+    <div class="tab-pane active" id="data">
+      <table class="table table-condensed">
+        <tr>
+          <th>nickname:</th>
+          <th>customer id:</th>
+          <th>wiki url:</th>
+          <th>repository url:</th>
+          <th>attachments:</th>
+        </tr>
+        <tr>
+          <td><%= owner.nickname %></td>
+          <td><%= owner.customer_id %></td>
+          <td><%= owner.wiki_link %></td>
+          <td><%= owner.repo_link %></td>
+          <td><%= owner.attachment_list.html_safe %></td>
+        </tr>
+      </table>
+
+      <%- unless owner.imported_data.blank? -%>
+      <strong>imported data</strong>
+      <%= owner.imported_data %>
+      <br/>
+      <%- end -%>
+
+      <strong>description</strong>
+      <%= owner.description %>
+    </div>
+
+    <div class="tab-pane" id="machines">
+      <%= render partial: 'machines/table', locals: {machines: @owner.machines} %>
+    </div>
+
+    <div class="tab-pane" id="history">
+      <%= render partial: 'shared/history', locals: {object: @owner} %>
+    </div>
+  </div>
+</div>
+
+</div>

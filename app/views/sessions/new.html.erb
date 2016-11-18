@@ -1,0 +1,24 @@
+<h1>Login</h1>
+
+<div id="flash-login">
+  <%= present(:flash, flash).show %>
+</div>
+
+<%= form_tag do %>
+  <p>
+    <%= label_tag :username %>
+    <%= text_field_tag :name, '', autofocus: true %>
+  </p>
+  <p>
+    <%= label_tag :password %>
+    <%= password_field_tag :password %>
+  </p>
+
+  <%- if IDB.config.modules.otp_login -%>
+  <p>
+    <%= label_tag :otp %>
+    <%= password_field_tag :otp %>
+  </p>
+  <%- end -%>
+  <p class="button"><%= submit_tag "Login" %></p>
+<% end %>

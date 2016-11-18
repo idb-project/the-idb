@@ -1,0 +1,8 @@
+<%- @version.changesets do |attribute, changeset| -%>
+### <%= attribute %> ###
+
+<%= @version.diff_text(changeset) %>
+<%- end -%>
+
+--
+Link: <%= version_url(@version.id) %>

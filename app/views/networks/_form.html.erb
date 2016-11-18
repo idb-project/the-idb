@@ -1,0 +1,59 @@
+<div id="networks-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @network.new_record? -%>
+            <a class="brand" href="<%= new_network_path %>">New Network</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_network_path(@network) %>"><%= @network.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- if @network.new_record? -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, networks_path %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, network_path(@network) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span6">
+    <%= simple_form_for(@network, html: {class: 'form-vertical' },
+          defaults: {input_html: {class: 'span12'}}) do |f| %>
+      <%= f.input :name %>
+      <%= f.input :address %>
+      <%- if @network.persisted? -%>
+        <div class="text-right">
+          <button class="btn btn-mini toggle-allowed-ip-addresses">Toggle allowed IP addresses.</button>
+        </div>
+        <div class="hide allowed-ip-addresses">
+          <%= f.input :allowed_ip_addresses, collection: @network.allowed_ip_addresses_with_hosts, as: :check_boxes, input_html: {class: ''} %>
+        </div>
+      <%- end -%>
+      <%= f.input :description, input_html: {rows: 15, id: 'markup-source'} %>
+      <%= f.association :owner, collection: Owner.order(:name) %>
+      <%= f.button :submit %>
+    <%- end -%>
+  </div>
+  <div class="span6">
+    <div class="row-fluid">
+      <div class="span12">
+        <h4>Description Preview</h4>
+        <hr/>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12 markup-target box">
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

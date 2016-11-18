@@ -1,0 +1,45 @@
+<div id="outdated-machines-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= outdated_machines_path %>">Outdated Machines</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span4">
+    <div class="alert alert-info">
+      The following nodes have not been updated automatically within the last day.
+    </div>
+
+  </div>
+
+  <div class="span8">
+    <table class="table tablesorter custom-popup">
+      <thead>
+        <tr>
+          <th>FQDN</th>
+          <th>Data from</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @outdated_machines.each do |machine| -%>
+          <%- machine = k(:machine, machine) -%>
+          <tr>
+            <td style="font-weight:normal" data-name="<%=machine.fqdn%>"><%= machine.name_link %>
+            </td>
+            <td><%= machine.updated_at %></td>
+          </tr>
+        <%- end -%>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
