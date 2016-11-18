@@ -24,7 +24,7 @@ https://github.com/idb-project
 ## It all began with puppet and puppetdb
 
 The primary adapter for gathering informations has been PuppetDB.
-Thats the reason why - unlike other adapters - the PuppetDB adapter is
+That's the reason why - unlike other adapters - the PuppetDB adapter is
 bundled directly within the idb. Don't fear: the idb can be used
 without puppet just fine. 
 
