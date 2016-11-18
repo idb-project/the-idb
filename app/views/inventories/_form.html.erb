@@ -66,6 +66,7 @@
 
 </div>
 <%= javascript_include_tag "pikaday" %>
+<%= javascript_include_tag "moment.min" %>
 <script>
   var purchase_picker = new Pikaday({ field: document.getElementById('purchase_date'), yearRange: [1900, 2050] });
   var install_picker = new Pikaday({ field: document.getElementById('install_date'), yearRange: [1900, 2050] });
