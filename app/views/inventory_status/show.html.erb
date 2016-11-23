@@ -1,0 +1,40 @@
+<div id="owners-show">
+
+<div class="row-fluid tabbable">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <ul class="nav pull-right">
+          <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_location_level_path(@location_level) %></li>
+            <%- if @location_level.orphaned? %>
+              <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, location_level_path(@location_level), class: 'location-level-delete', method: 'delete' %></li>
+            <%- end %>
+          <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, location_levels_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span6 tab-content">
+    <div class="tab-pane active" id="data">
+      <table class="table table-condensed">
+        <tr>
+          <th>name:</th>
+          <th>description:</th>
+          <th>level:</th>
+        </tr>
+        <tr>
+          <td><%= @location_level.name %></td>
+          <td><%= @location_level.description %></td>
+          <td><%= @location_level.level %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
