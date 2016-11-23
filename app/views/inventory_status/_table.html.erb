@@ -1,0 +1,16 @@
+<table id="inventory-status-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- all_inventory_status.each do |inventory_status| -%>
+      <tr id="#inventory-status-<%= inventory_status.id %>">
+        <td><%= link_to(inventory_status.name, edit_inventory_status_path(inventory_status))%></td>
+        <td><%= !inventory_status.inactive %></td>
+      </tr>
+      <%- end -%>
+  </tbody>
+</table>
