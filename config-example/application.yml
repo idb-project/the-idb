@@ -2,8 +2,8 @@
 defaults: &defaults
   design:
     title: 'IDB local'
-    logo_path: 'bytemine-logo.png'
-    favicon_path: 'bytemine-favicon.ico'
+    logo_path: 'idb-logo.png'
+    favicon_path: 'idb-favicon.ico'
   api:
     url: 'https://idb-public-api.example.com'
     script_name: 'idb-service'
