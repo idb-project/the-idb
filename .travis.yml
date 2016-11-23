@@ -6,3 +6,4 @@ services:
 before_script:
   - mysql -e 'create database idb_test;'
   - mv config-example config
+  - bundle exec rake db:migrate
