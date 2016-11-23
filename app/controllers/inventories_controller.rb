@@ -25,6 +25,7 @@ class InventoriesController < ApplicationController
   def new
     @inventory = Inventory.new
     @form_locations = Location.depth_traverse
+    @form_status = InventoryStatus.order(name: :asc)
   end
 
   def create
@@ -52,7 +53,7 @@ class InventoriesController < ApplicationController
       params[:inventory].delete("install_date(3i)")
     end
 
-    @inventory = Inventory.new(params.require(:inventory).permit(:inventory_number, :name, :serial, :part_number, :seller, :status, :user_id, :owner_id, :machine_id, :comment, :location_id, :place, :category, :warranty_end, :purchase_date, :install_date))
+    @inventory = Inventory.new(params.require(:inventory).permit(:inventory_number, :name, :serial, :part_number, :seller, :inventory_status_id, :user_id, :owner_id, :machine_id, :comment, :location_id, :place, :category, :warranty_end, :purchase_date, :install_date))
     @form_locations = Location.depth_traverse
 
     if @inventory.save
@@ -67,6 +68,7 @@ class InventoriesController < ApplicationController
   def edit
     @inventory = Inventory.find(params[:id])
     @form_locations = Location.depth_traverse
+    @form_status = InventoryStatus.order(name: :asc)
   end
 
   def update
@@ -89,7 +91,7 @@ class InventoriesController < ApplicationController
   end
 
   def inventory_params
-    params.require(:inventory).permit(:inventory_number, :name, :serial, :part_number, :seller, :status, :user_id, :owner_id, :machine_id, :comment, :location_id, :place, :category, :warranty_end, :purchase_date, :install_date, :attachments)
+    params.require(:inventory).permit(:inventory_number, :name, :serial, :part_number, :seller, :inventory_status_id, :user_id, :owner_id, :machine_id, :comment, :location_id, :place, :category, :warranty_end, :purchase_date, :install_date, :attachments)
   end
 
   def add_attachments(attachments)
