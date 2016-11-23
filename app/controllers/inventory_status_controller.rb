@@ -5,7 +5,6 @@ class InventoryStatusController < ApplicationController
 
   def new
     @inventory_status = InventoryStatus.new
-    @inventory_status_hash = {}
     @all_inventory_status = InventoryStatus.order(name: :asc)
   end
 
@@ -25,7 +24,6 @@ class InventoryStatusController < ApplicationController
 
   def edit
     @inventory_status = InventoryStatus.find(params[:id])
-    @inventory_status_hash = {}
     @all_inventory_status = InventoryStatus.order(name: :asc)
   end
 
