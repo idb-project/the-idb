@@ -28,11 +28,11 @@ describe MachineFinderService do
     it 'does not create a machine that is in softdelete state, but all other new machines' do
       @machine.destroy
 
-      @mfs.instance_variable_set(:@nodes, ["test.example.com", "test2.example.com"]) 
+      @mfs.instance_variable_set(:@nodes, ["test.example.com", "test3.example.com"]) 
 
-      expect(MachineUpdateWorker).not_to receive(:perform_async).with("test.example.com")
-      expect(MachineUpdateWorker).to receive(:perform_async).with("test2.example.com")
       @mfs.find_untracked_machines
+      expect(Machine.find_by_fqdn("test.example.com")).to be_nil
+      expect(Machine.find_by_fqdn("test3.example.com")).not_to be_nil
     end
   end
 end
