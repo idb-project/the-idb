@@ -1,5 +1,8 @@
 language: ruby
 rvm:
  - 2.2.5
+services:
+  - mysql
 before_script:
-  mv config-example config
+  - mysql -e 'create database idb_test;'
+  - mv config-example config
