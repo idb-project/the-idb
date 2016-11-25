@@ -11,7 +11,7 @@ class CloudProvidersController < ApplicationController
   end
 
   def create
-    @cloud_provider = CloudProvider.new(params.require(:cloud_provider).permit(:name, :description, :owner_id, :config))
+    @cloud_provider = CloudProvider.new(params.require(:cloud_provider).permit(:name, :description, :owner_id, :config, :apidocs))
     @owners = Owner.all
 
     if params["check"] == "json"
@@ -46,7 +46,7 @@ class CloudProvidersController < ApplicationController
   def update
     @cloud_provider = CloudProvider.find(params[:id])
     @owners = Owner.all
-    if @cloud_provider.update(params.require(:cloud_provider).permit(:name, :description, :owner_id, :config))
+    if @cloud_provider.update(params.require(:cloud_provider).permit(:name, :description, :owner_id, :config, :apidocs))
       redirect_to cloud_providers_path, notice: 'Cloud Provider updated.'
     else
       render :edit

@@ -17,7 +17,7 @@ class Owner < ActiveRecord::Base
   after_initialize { self.data ||= {} }
 
   def self.eager_find(id)
-    includes(:machines, machines: [{nics: [:ip_address]}, :owner]).find(id)
+    includes(:cloud_providers, :machines, machines: [{nics: [:ip_address]}, :owner]).find(id)
   end
 
   def display_name

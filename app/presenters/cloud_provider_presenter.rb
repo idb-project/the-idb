@@ -9,4 +9,9 @@ class CloudProviderPresenter < Keynote::Presenter
     link_to(cloud_provider.name, cloud_provider)
   end
 
+  def apidocs_link
+    link_to(cloud_provider.apidocs, cloud_provider.apidocs).html_safe
+  end
+
+
 end

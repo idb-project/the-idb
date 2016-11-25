@@ -5,6 +5,7 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="container-fluid">
+          <span class="brand"><%= @cloud_provider.name %></span>
           <ul class="nav pull-right">
           <li><%= link_to '<i class="icon-edit"></i> Edit'.html_safe, edit_cloud_provider_path(@cloud_provider) %></li>
 		  <li><%= link_to '<i class="icon-remove-sign"></i> Delete'.html_safe, cloud_provider_path(@cloud_provider), class: 'cloud-provider-delete', method: 'delete' %></li>
@@ -23,12 +24,15 @@
         <tr>
           <th>Name</th>
           <th>Owner</th>
+          <th>API Documentation</th>
           <th>Description</th>
         </tr>
         <tr>
           <%- owner = k(:owner, @cloud_provider.owner) -%>
+          <%- cloud_provider = k(:cloud_provider, @cloud_provider) -%>
           <td><%= @cloud_provider.name %></td>
           <td><%= owner.name_link %></td>
+          <td><%= cloud_provider.apidocs_link %></td>
           <td><%= @cloud_provider.description %></td>
         </tr>
       </table>

@@ -3,6 +3,7 @@
     <tr>
       <th>Name</th>
       <th>Owner</th>
+      <th>API Documentation</th>
       <th>Description</th>
     </tr>
   </thead>
@@ -13,6 +14,7 @@
       <tr id="#cloud-provider-<%= cloud_provider.name %>">
         <td><%= cloud_provider.name_link %></td>
         <td><%= owner.name_link %></td>
+        <td><%= cloud_provider.apidocs_link %></td>
         <td><%= cloud_provider.description %></td>
       </tr>
       <%- end -%>

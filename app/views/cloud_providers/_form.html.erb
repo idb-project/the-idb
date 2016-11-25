@@ -37,6 +37,7 @@
           <%= f.input :name %>
           <%= f.input :owner_id, collection: @owners.order(:name), include_blank: false, label: "Owner" %>
           <%= f.input :description %>
+          <%= f.input :apidocs, label: "API Documentation" %>
           <%= f.input :config %>
           <div class="control-group text optional cloud_provider_check">
             <label class="text optional control-label" for="cloud_provider_check">Check</label>
