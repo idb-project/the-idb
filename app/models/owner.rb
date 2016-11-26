@@ -8,6 +8,7 @@ class Owner < ActiveRecord::Base
   has_many :inventories, :dependent => :destroy
   has_many :machines, :dependent => :destroy
   has_many :attachments, :dependent => :destroy
+  has_many :cloud_providers, :dependent => :destroy
 
   validates :name, :nickname, presence: true
   validates :name, :nickname, uniqueness: true
@@ -16,7 +17,7 @@ class Owner < ActiveRecord::Base
   after_initialize { self.data ||= {} }
 
   def self.eager_find(id)
-    includes(:machines, machines: [{nics: [:ip_address]}, :owner]).find(id)
+    includes(:cloud_providers, :machines, machines: [{nics: [:ip_address]}, :owner]).find(id)
   end
 
   def display_name
