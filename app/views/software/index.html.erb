@@ -1,0 +1,32 @@
+<%- if @machines -%>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Machine</th>
+      <th>Software</th>
+    </tr>
+  </thead>
+  <tbody>
+	<%- @machines.each do |machine| -%>
+	<tr>
+	<td><%= link_to(machine.fqdn, machine) %></td>
+	<td>
+	<ul>
+		<%- machine.software.each do |software| -%>
+			<li><%= software["name"] %> <%= software["version"] %></li>
+		<%- end -%>
+	</ul>
+	</td>
+	</tr>
+	<%- end -%>
+  </tbody>
+</table>
+<%- end -%>
+
+<div id="software-index">
+<%= form_tag("/software", method: "post") do %>
+<%= label_tag(:q, "Search:") %>
+<%= text_field_tag(:q) %>
+<%= submit_tag("Search") %>
+<% end %>
+</div>
