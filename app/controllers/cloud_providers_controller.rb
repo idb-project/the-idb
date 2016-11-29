@@ -47,6 +47,17 @@ class CloudProvidersController < ApplicationController
   def update
     @cloud_provider = CloudProvider.find(params[:id])
     @owners = Owner.all
+
+    if params["check"] == "json"
+      begin
+        JSON.parse(params[:cloud_provider][:config])
+      rescue JSON::ParserError
+        flash.alert = "JSON validation failed, check the config for errors!"
+        render :new
+        return
+      end
+    end
+
     if @cloud_provider.update(params.require(:cloud_provider).permit(:name, :description, :owner_id, :config, :apidocs))
       redirect_to cloud_providers_path, notice: 'Cloud Provider updated.'
     else
