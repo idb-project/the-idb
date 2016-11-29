@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20161125140128) do
     t.integer  "machine_id"
   end
 
-  create_table "cloud_providers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "cloud_providers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "owner_id"
     t.string  "name"
     t.string  "description"
