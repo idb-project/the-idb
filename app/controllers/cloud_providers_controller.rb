@@ -25,6 +25,7 @@ class CloudProvidersController < ApplicationController
     end
 
     if @cloud_provider.save
+      flash.notice = "Cloud provider created"
       redirect_to cloud_providers_path
     else
       render :new
