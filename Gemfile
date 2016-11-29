@@ -56,3 +56,7 @@ group :development do
   gem 'guard-rspec', require: false
   gem 'ruby-ldapserver', require: false
 end
+
+group :test do
+  gem 'rails-controller-testing'
+end
