@@ -53,6 +53,7 @@ class OwnersController < ApplicationController
     @owner = Owner.find(params[:owner])
     @machines = @owner.machines
     @networks = Network.where(owner: @owner)
+    @cloud_providers = @owner.cloud_providers
     render :summary
   end
 
