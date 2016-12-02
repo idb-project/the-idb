@@ -1,0 +1,74 @@
+<%= stylesheet_link_tag    "pikaday", media: "all" %>
+<div id="inventories-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @inventory.new_record? -%>
+            <a class="brand" href="<%= new_inventory_path %>">New Inventory</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_inventory_path(@inventory) %>"><%= @inventory.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- if @inventory.new_record? -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, inventories_path %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, inventory_path(@inventory) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@inventory, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span12'}}) do |f| %>
+          <%= f.input :inventory_number %>
+          <%= f.input :name, :url => autocomplete_inventory_name_inventories_path, :as => :autocomplete %>
+          <%= f.input :serial %>
+          <%= f.input :part_number %>
+          <%= f.input :purchase_date, :input_html => { id: "purchase_date", class: "span4" } %>
+          <%= f.input :install_date, :input_html => { id: "install_date", class: "span4" } %>
+          <%= f.input :warranty_end, :input_html => { id: "warranty_end", class: "span4" } %>
+          <%= f.input :seller, :url => autocomplete_inventory_seller_inventories_path, :as => :autocomplete, label: "Supplier"  %>
+          <%= f.input :comment %>
+          <%= f.association :inventory_status, collection: @form_status, include_blank: true, label: "Status"  %>
+          <%= f.association :user, collection: User.order(:name), include_blank: true %>
+          <%= f.association :owner, collection: Owner.order(:name), include_blank: true %>
+          <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>
+          <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%= f.input :place, :url => autocomplete_inventory_place_inventories_path, :as => :autocomplete %>
+          <%= f.input :category, :url => autocomplete_inventory_category_inventories_path, :as => :autocomplete %>
+          <%= f.button :submit %>
+      </div>
+      <div class="span6">
+        <h5>Attachments:</h5>
+          <ul>
+            <%- @inventory.attachments.each do |att| -%>
+              <li>
+                <a href="<%=att.attachment.url%>" target="_blank"><%=att.attachment_file_name%></a>
+                <%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, attachment_path(att), method: 'delete', class: 'attachment-delete', data: {confirm: "Really delete?"} %></li>
+            <%- end -%>
+          </ul>
+          <%= file_field_tag "attachments[]", type: :file, multiple: true %>
+        <%- end -%>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<%= javascript_include_tag "pikaday" %>
+<%= javascript_include_tag "moment.min" %>
+<script>
+  var purchase_picker = new Pikaday({ field: document.getElementById('purchase_date'), yearRange: [1900, 2050] });
+  var install_picker = new Pikaday({ field: document.getElementById('install_date'), yearRange: [1900, 2050] });
+  var warranty_picker = new Pikaday({ field: document.getElementById('warranty_end'), yearRange: [1900, 2050] });
+</script>

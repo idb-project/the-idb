@@ -1,0 +1,188 @@
+@import "bootstrap";
+@import "font-awesome";
+@import "theme.bootstrap_2";
+@import "flash";
+@import "ajax-loader";
+
+$boxBorder: $tableBorder;
+$boxBackground: $navbarBackground;
+$boxBackgroundHighlight: $navbarBackgroundHighlight;
+$boxPadding: $paddingLarge;
+
+@mixin box-base {
+  border: 1px solid $boxBorder;
+  @include border-radius($baseBorderRadius);
+  margin-bottom: 10px;
+  padding: $boxPadding;
+  @include box-shadow(0 1px 4px rgba(0,0,0,.065));
+}
+
+@mixin box-background {
+  @include gradient-vertical($boxBackgroundHighlight, $boxBackground);
+}
+
+body {
+  padding-top: 54px;
+}
+
+.navbar {
+  margin-bottom: 12px;
+}
+
+.tablesorter-bootstrap .tablesorter-header, .tablesorter-bootstrap tfoot th, .tablesorter-bootstrap tfoot td {
+  padding: 3px;
+}
+
+.columnSelectorWrapper {
+  position: relative;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+.columnSelector, .hidden {
+  display: none;
+}
+
+.columnSelectorButton {
+}
+
+#colSelect1:checked ~ #columnSelector {
+  display: block;
+}
+
+.columnSelector {
+  width: 170px;
+  position: absolute;
+  top: 30px;
+  padding: 10px;
+  background: #fff;
+  border: #99bfe6 1px solid;
+  border-radius: 5px;
+  z-index: 200;
+}
+
+.columnSelector label {
+  display: block;
+}
+
+.columnSelector label:nth-child(1) {
+  border-bottom: #99bfe6 solid 1px;
+  margin-bottom: 5px;
+}
+
+.columnSelector input {
+  margin-right: 5px;
+}
+
+.columnSelector .disabled {
+  color: #ddd;
+}
+
+.dropdown-menu-to-left {
+  background-clip: padding-box;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  float: left;
+  right: 0px;
+  left: auto;
+  list-style: outside none none;
+  margin: 2px 0 0;
+  min-width: 160px;
+  padding: 5px 0;
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+}
+
+.table th, .table td {
+  padding: 5px;
+}
+
+.first-row {
+  border-bottom: 1px solid #dddddd;
+}
+
+.box {
+  @include box-base;
+}
+
+.sidekiq-frame {
+  border: 1px solid $boxBorder;
+}
+
+.login-box {
+  padding-left: 10px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #767676;
+  border-radius: 5px;
+}
+
+.version {
+  margin-top: 10px;
+}
+
+.hide_ip {
+  display: none;
+}
+
+.machine-add-alias {
+  margin-bottom: 20px;
+}
+
+.table td {
+  border-top: 0px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+
+.attachment-delete {
+  color: #777777;
+  margin-left: 10px;
+}
+
+.attachment-delete:hover {
+  color: #333333;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.ui-menu, ui-menu-item {
+  background-color: #dddddd;
+  width: 400px;
+  padding-left: 4px;
+  list-style-type: none;
+}
+
+.ui-state-focus {
+  cursor: pointer;
+  background-color: #777777;
+}
+
+span[role="status"] {
+  display: none;
+}
+
+tr.inactive {
+  color: #777777;
+  font-style: italic;
+}
+
+.parentlocation {
+  display: none;
+}
+
+.location_table {
+  width: 100%;
+  border: 1px solid #777777;
+}
+
+.location_table td {
+  border: 1px solid #777777;
+  padding: 2px;
+}
+
+span.markdown-hint {
+  font-size: 0.8em;
+}

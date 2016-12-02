@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= IDB.config.design.title %></title>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= favicon_link_tag "#{IDB.config.design.favicon_path}" %>
+</head>
+<body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="<%= root_path %>">
+          <%= image_tag(IDB.config.design.logo_path) %>
+          <%= IDB.config.design.title %>
+        </a>
+        <ul class="pull-right version">
+          Version: <%= IDB::VERSION %>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span4">
+      </div>
+      <div class="span4 login-box">
+        <%= yield %>
+      </div>
+      <div class="span4">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

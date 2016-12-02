@@ -1,0 +1,169 @@
+<table id="machine-table" class="table tablesorter custom-popup">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>FQDN</th>
+      <th>Aliases</th>
+      <th style="min-width: 160px">IP</th>
+      <th>IPv6</th>
+      <th>OS</th>
+      <th>Architecture</th>
+      <th>CPU</th>
+      <th>RAM</th>
+      <th>Type</th>
+      <th>VM Host</th>
+      <th>Uptime</th>
+      <th>Serviced</th>
+      <th>Needs Reboot</th>
+      <th>Latest data</th>
+      <%- if IDB.config.modules.unattended_upgrades -%>
+      <th>Unattended</th>
+      <th>Security updates</th>
+      <th>Pending updates</th>
+      <%- end -%>
+      <th>Backup</th>
+      <th>Owner</th>
+      <%- if IDB.config.modules.advanced_fields -%>
+      <th>CI</th>
+      <th>SC</th>
+      <th>BP</th>
+      <th>BC</th>
+      <th>BN</th>
+      <%- end -%>
+    </tr>
+  </thead>
+  <tbody>
+    <%- machines.each do |machine| -%>
+      <%- machine = k(:machine, machine) -%>
+      <tr id="#machine-<%= machine.id %>">
+        <td><%= machine.id %></td>
+        <td style="font-weight:normal <%=";font-style:italic" if machine.outdated && machine.auto_update %>" data-name="<%=machine.fqdn%>"><%= machine.name_link %>
+          <span class="auto-update"><%="*" if machine.auto_update%></span>
+        </td>
+        <td><%= machine.alias_names %></td>
+        <td data-text="<%= machine.first_ip %>"><%= machine.first_ip %></td>
+        <td data-text="<%=machine.first_v6_ip%>" title="<%=machine.first_v6_ip%>"><%= machine.first_v6_ip.truncate(10) if machine.first_v6_ip %></td>
+        <td><%= machine.os %></td>
+        <td><%= machine.arch %></td>
+        <td class="machine_cores"><%= machine.cores %></td>
+        <td class="machine_memory"><%= machine.ram %></td>
+        <td><%= machine.device_type %></td>
+        <td><%= machine.vmhost %></td>
+        <td><%= machine.uptime %></td>
+        <td><%= machine.serviced_at %></td>
+        <td><%= machine.needs_reboot_string %></td>
+        <td><%= machine.updated_at %></td>
+        <%- if IDB.config.modules.unattended_upgrades -%>
+        <td><%= machine.unattended_upgrades_column %></td>
+        <%- end -%>
+        <td><%= machine.pending_security_updates %></td>
+        <td nowrap="nowrap" title="<%= machine.pending_updates_package_names_list.join("\r\n") %>" data-text="<%= machine.pending_updates_package_names_list %>"><%= machine.pending_updates_package_names_list.join(" ").truncate(20) %></td>
+        <td><%= machine.backup_type %></td>
+        <td><%= machine.owner_link %></td>
+        <%- if IDB.config.modules.advanced_fields -%>
+        <td nowrap="nowrap" data-text="<%= machine.config_instructions %>" title="<%= machine.config_instructions %>">
+          <%= machine.config_instructions.truncate(20) %>
+        </td>
+        <td nowrap="nowrap" data-text="<%= machine.sw_characteristics %>" title="<%= machine.sw_characteristics %>">
+          <%= machine.sw_characteristics.truncate(20) %>
+        </td>
+        <td nowrap="nowrap" data-text="<%= machine.business_purpose %>" title="<%= machine.business_purpose %>">
+          <%= machine.business_purpose.truncate(20) %>
+        </td>
+        <td nowrap="nowrap" data-text="<%= machine.business_criticality %>" title="<%= machine.business_criticality %>">
+          <%= machine.business_criticality.truncate(20) %>
+        </td>
+        <td nowrap="nowrap" data-text="<%= machine.business_notification %>" title="<%= machine.business_notification %>">
+          <%= machine.business_notification.truncate(20) %>
+        </td>
+        <%- end -%>
+      </tr>
+    <%- end -%>
+  </tbody>
+  
+  <tbody class="tablesorter-no-sort to-hide summary" style="font-weight: bold">
+    <tr class="">
+      <td></td>
+      <td class="summary-td">Summary</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="total-cores"></span></td>
+      <td><span class="total-memory"></span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- if IDB.config.modules.unattended_upgrades -%>
+      <td></td>
+      <%- end -%>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- if IDB.config.modules.advanced_fields -%>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%- end -%>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+ <div class="btn-group">
+      <button type="button" class="btn btn-default download">Download</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><h5><strong>Output options</strong></h5></li>
+        <li>
+          <label>Separator: <input class="output-separator-input" size="2" value=";" type="text"></label>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="comma">,</button>
+          <button type="button" class="output-separator btn btn-default btn-xs active" title="semi-colon">;</button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="tab">  </button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="space"> </button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="output JSON">json</button>
+          <button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
+        </li>
+        <li>
+          <div class="btn-group output-download-popup" data-toggle="buttons" title="Download file or open in Popup window">
+            <label class="btn btn-default btn-sm active">
+              <input name="delivery1" class="output-popup" type="radio"> Popup
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="delivery1" class="output-download" checked="" type="radio"> Download
+            </label>
+          </div>
+        </li>
+        <li>
+          <div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible or all rows">
+            <label class="btn btn-default btn-sm active">
+              <input name="getrows1" class="output-filter" checked="checked" type="radio"> Filtered
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="getrows1" class="output-visible" type="radio"> Visible
+            </label>
+            <label class="btn btn-default btn-sm">
+              <input name="getrows1" class="output-all" type="radio"> All
+            </label>
+          </div>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <label>Replace quotes: <input class="output-replacequotes" size="2" value="&quot;" type="text"></label>
+          <button type="button" class="output-quotes btn btn-default btn-xs" title="single quote">'</button>
+          <button type="button" class="output-quotes btn btn-default btn-xs active" title="left double quote">“</button>
+          <button type="button" class="output-quotes btn btn-default btn-xs" title="escaped quote">\"</button>
+        </li>
+        <li><label title="Remove extra white space from each cell">Trim spaces: <input class="output-trim" checked="" type="checkbox"></label></li>
+        <li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox"></label></li>
+        <li><label title="Wrap all values in quotes">Wrap in Quotes: <input class="output-wrap" type="checkbox" checked="checked"></label></li>
+        <li><label title="Choose a download filename">Filename: <input class="output-filename" size="15" value="machine-overview.csv" type="text"></label></li>
+      </ul>
+    </div>

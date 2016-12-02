@@ -1,0 +1,23 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Event</th>
+      <th>User</th>
+      <th>Timestamp</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- object.ordered_versions.each do |version| -%>
+      <%- version = k(:version, version) -%>
+      <tr id="#version-<%= version.id %>">
+        <td><%= version.index %></td>
+        <td><%= version.event %></td>
+        <td><%= version.user %></td>
+        <td><%= version.created_at %></td>
+        <td><%= version.show_link %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>

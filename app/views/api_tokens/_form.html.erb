@@ -1,0 +1,45 @@
+<div id="api-tokens-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @api_token.new_record? -%>
+            <a class="brand" href="<%= new_api_token_path %>">New Api Token</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_api_token_path(@api_token) %>"><%= @api_token.token %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- unless @api_token.new_record? -%>
+            <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, api_tokens_path(@api_token), class: 'api-token-delete', method: 'delete' %></li>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, api_tokens_path(@api_token) %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, api_tokens_path(@api_token) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@api_token, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+          <%= f.input :token %>
+          <%= f.input :name %>
+          <%= f.input :description %>
+          <%= f.input :read %>
+          <%= f.input :write%>
+          <%= f.button :submit %>
+        <%- end -%>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

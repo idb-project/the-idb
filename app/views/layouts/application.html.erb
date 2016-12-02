@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= IDB.config.design.title %></title>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= stylesheet_link_tag    "print", media: "print" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= favicon_link_tag "#{IDB.config.design.favicon_path}" %>
+</head>
+<body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="<%= root_path %>">
+          <%= image_tag(IDB.config.design.logo_path) %>
+          <%= IDB.config.design.title %>
+        </a>
+        <ul class="nav">
+          <li><%= link_to '<i class="fa fa-plane"></i> Machines'.html_safe, machines_path %></li>
+          <li><%= link_to '<i class="fa fa-wrench"></i> Maintenance'.html_safe, maintenance_records_path %></li>
+          <li><%= link_to '<i class="fa fa-sitemap"></i> Switches'.html_safe, switches_path %></li>
+          <li><%= link_to '<i class="fa fa-cloud"></i> Networks'.html_safe, networks_path %></li>
+          <li><%= link_to '<i class="fa fa-group"></i> Owners'.html_safe, owners_path %></li>
+          <%- if IDB.config.modules.app_pages -%>
+          <li><%= link_to '<i class="fa fa-bookmark"></i> Apps'.html_safe, page_path('apps') %></li>
+          <%- end -%>
+          <%- if IDB.config.modules.inventory -%>
+          <li><%= link_to '<i class="fa fa-money"></i> Inventory'.html_safe, inventories_path %></li>
+          <%- end -%>
+          <%- if IDB.config.modules.location -%>
+          <li><%= link_to '<i class="fa fa-globe"></i> Location'.html_safe, locations_path %></li>
+          <%- end -%>
+          
+        </ul>
+        <ul class="nav pull-right">
+          <li class="dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-user"></i> <%= current_user.display_name %>
+              <ul class="dropdown-menu text-right">
+                <li><%= link_to '<i class="fa fa-tasks"></i> Api Tokens'.html_safe, api_tokens_path %></li>
+                <li><%= BackgroundJobs.new.link('Background Jobs', 'fa fa-tasks', background_jobs_sidekiq_path) %></li>
+                <li><%= link_to '<i class="fa fa-tasks"></i> Location Levels'.html_safe, location_levels_path %></li>
+                <%- if IDB.config.modules.inventory -%>
+                <li><%= link_to '<i class="fa fa-tasks"></i> Inventory Status'.html_safe, inventory_status_index_path %></li>
+                <%- end -%>
+                <li><%= link_to '<i class="fa fa-frown"></i> Logout'.html_safe, logout_path, method: :delete %></li>
+              </ul>
+            </a>
+          </li>
+        </ul>
+        <ul class="nav pull-right">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="flash">
+    <%= present(:flash, flash).show %>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

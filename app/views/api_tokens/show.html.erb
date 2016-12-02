@@ -1,0 +1,42 @@
+<div id="owners-show">
+
+<div class="row-fluid tabbable">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <ul class="nav pull-right">
+          <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_api_token_path(@api_token) %></li>
+		  <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, api_token_path(@api_token), class: 'location-level-delete', method: 'delete' %></li>
+          <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, api_tokens_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span6 tab-content">
+    <div class="tab-pane active" id="data">
+      <table class="table table-condensed">
+        <tr>
+          <th>Token</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Read</th>
+          <th>Write</th>
+        </tr>
+        <tr>
+          <td><%= @api_token.token %></td>
+          <td><%= @api_token.name %></td>
+          <td><%= @api_token.description %></td>
+          <td><%= @api_token.read %></td>
+          <td><%= @api_token.write %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>

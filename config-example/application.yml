@@ -1,0 +1,146 @@
+---
+defaults: &defaults
+  design:
+    title: 'IDB local'
+    logo_path: 'idb-logo.png'
+    favicon_path: 'idb-favicon.ico'
+  api:
+    url: 'https://idb-public-api.example.com'
+    script_name: 'idb-service'
+    curl_command: 'curl'
+  mail:
+    host: 'examplehost.example.com'
+    protocol: 'https'
+    from: 'donotreply@example.com'
+    to: 'idb-admin@example.com'
+  modules:
+    app_pages: true
+    advanced_fields: true
+    otp_login: false
+    unattended_upgrades: true
+    inventory: true
+    api:
+      v1_enabled: true
+      v2_enabled: true
+      v2_api_token: 'randomtoken'
+    softdelete: true
+    location: true
+  redis:
+    url: 'redis://127.0.0.1:6379/0'
+    namespace: 'idb'
+    pool_size: 5
+    pool_timeout: 1
+  mco:
+    socket_path: ''
+  stomp:
+    host: 'stomp-host.example.com'
+    port: 61614
+    user: 'idb-public-api'
+    password: 'the-password'
+    vhost: 'mcollective'
+    queue_maintenance: 'idb.maintenance'
+    ssl_cert: 'tmp/ssl/idb-client.pem'
+    ssl_key: 'tmp/ssl/idb-client.key'
+    ssl_ca: 'tmp/ssl/ca_crt.pem'
+  puppetdb:
+    api_urls:
+      - url: 'https://puppet.example.com/'
+        version: 'v4'
+    api_timeout: 5
+    auto_create: false
+  redmine:
+    ticket_url: 'http://redmine.example.com/issues/%s'
+  rt:
+    ticket_url: 'https://rt.example.com/Ticket/Display.html?id=%s'
+  mrtg:
+    base_url: 'https://mrtg.example.com/'
+  device_types:
+    - id: 1
+      name: 'physical'
+      is_virtual: false
+    - id: 2
+      name: 'virtual'
+      is_virtual: true
+    - id: 3
+      name: 'switch'
+  machine_details:
+    # http://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions
+    os:
+      - 'Windows'
+      - 'Windows Server'
+      - 'SLES'
+      - 'RHEL'
+      - 'pfSense'
+      - 'UCS'
+    os_release:
+      - '1.2.1'
+      - '1.2.2'
+      - '1.2.3'
+      - '2.0'
+      - '2.0.1'
+      - '2.0.1'
+      - '2.0.2'
+      - '2.0.3'
+      - '2.1'
+      - '3.0'
+      - '3.1'
+      - '3.2'
+      - '3.3'
+      - '4.0'
+      - '4.1'
+      - '5'
+      - '6'
+      - '7'
+      - '8'
+      - '10'
+      - 'Vista'
+      - '2012 R2'
+      - '2012'
+      - '2008 R2'
+      - '2008'
+      - '10 SP 2'
+      - '10 SP 3'
+      - '10 SP 4'
+      - '11 SP 1'
+      - '11 SP 2'
+
+development:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 389
+    base: 'dc=nodomain'
+    uid: 'uid'
+    auth_dn: 
+    auth_password: 
+
+test:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 10389
+    base: 'dc=example,dc=com'
+    uid: 'uid'
+
+production:
+  <<: *defaults
+  ldap:
+    host: 'ldap.example.com'
+    port: 636
+    base: 'dc=example,dc=com'
+    uid: 'uid'
+  stomp:
+    host: 'stomp.example.com'
+    port: 61614
+    user: 'idb-public-api'
+    password: 'stomp_password'
+    vhost: 'mcollective'
+    queue_maintenance: 'idb.maintenance'
+    ssl_cert: '/apps/infrastructure_db/shared/ssl/activemq-cert.pem'
+    ssl_key: '/apps/infrastructure_db/shared/ssl/activemq-key.pem'
+    ssl_ca: '/apps/infrastructure_db/shared/ssl/ca.pem'
+  puppetdb:
+    api_urls:
+      - 'https://puppetdb1.example.com/'
+      - 'https://puppetdb2.example.com/'
+    api_timeout: 120

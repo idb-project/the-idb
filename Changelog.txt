@@ -1,0 +1,173 @@
+1.6.1
+=====
+- [bugfix] Pin stomp to v1.3.4 to connect to ActiveMQ again. #4675
+- [feature] Inventory status are user configurable. #4665
+- [bugfix] Inventory datepicker does not accept existing dates. #4658
+
+1.6.0
+=====
+- [feature] Upgrade to Rails 5. #4636
+- [feature] Add date picker to inventory form. #4497
+- [feature] Allow duplicate location names. #4557
+- [feature] API tokens should have a name and description. #4543
+- [bugfix] Layout of login window is broken in certain Internet Explorer versions. #4381
+- [feature] Enable updating machine aliases via API. #4538
+- [bugfix] Sorting of parent locations within the creation of new locations is not present. #4542
+- [bugfix] Aliases can not be removed nor adjusted via api. #4616
+
+1.5.4.1
+=======
+- [feature] autocomplete on supplier field in inventory. #4415
+- [bugfix] sessions are overwritten in user identification field is not 'uid'. #4562
+- [bugfix] resize logo to fix layout in internet explorer. #4381
+- [feature] allow updating of aliases fields via api. #4538
+- [feature] filter duplicates in inventory autocomplete.
+
+1.5.4
+=====
+- [feature] Include a markdown cheat sheet. #4527
+- [bugfix] Correctly handle invalid FQDN while machine creation. #4508
+- [bugfix] Sane sorting of locations in drop down boxes. #4455
+- [feature] Add link to API token management interface in backoffice. #4500
+- [bugfix] Disallow duplicated network names. Display error page if a existing name is used. #4491
+- [bugfix] Display serial number for inventory items if no explicit inventory number is set. #￼4499
+- [feature] Reworked locations for speedup and improved usability. #4458
+- [update] Updated to ruby 2.2.5 (only for capistrano based deployments on Ubuntu 14.04 LTS)
+
+1.5.3
+======
+- [security] update to rails 4.2.7.1
+- [bugfix] make sure we're allowed to modify install_date
+- [featue] Add support for multiple API tokens with read/write permission handling - #4436
+
+1.5.2.1
+=======
+- [bugfix] display markdown in inventory comments as well - #4445
+
+1.5.2
+=====
+
+- [cleanup] remove graph(ite) support - #2552
+- [reliability] update to rails framework 4.2.7
+- [feature] add the possiblity to mark machines as needing a reboot - #4408
+- [feature] allow removal of untracked machines - #4350
+- [feature] make location levels editable
+- [feature] list inventory items for owners within the owner and include them in the summary
+- [feature] enable owner removal, recursive through machines including undelete
+- [bugfix] make sure updated_at and created_at are valid before trying to display them
+- [feature] add install date to inventory
+
+1.5.1
+=====
+
+- [feature] Link locations ot inventory items
+- [feature] Owner added to inventory items
+- [feature] Auto-complete on name in inventory
+- [feature] Allow inventory items to have a category. #4379
+- [feature] Display machine name italic, if the data is stale. #4351
+- [feature] Add a seperate view for outdated machines. #4351
+- [reliability] Increase size of raw_data_puppetdb and raw_data_api
+- [improved admin experience] Log a proper error if no owner exists, yet machines are submitted via API (which assumes there is a default owner)
+- [bugfix] Fix assigning of locations so that a location can be unassigned
+- [bugfix] Key has changed to 'certname' for puppetdb version 4
+- [bugfix] Adjust PuppetDB version 4 path
+
+
+1.5.0
+=====
+- Update Rails to 4.2.6.
+- Implement auto-create via puppetDB. #4302
+- Implement API v2 with authentication. #4287
+- Support new puppetDBs with API protocol v4. #4233
+- API does not accept NIC information. #4103
+- Update Ruby from 2.2.3 to 2.2.4
+
+
+1.4.1
+=====
+- Update Rails to 4.2.5.1.
+- Mac addresses cannot be edited. #3959
+- Display total backup space an owners machines use. #3989
+- Display total size of backupspace a machine is using. #3988
+- Add attributes to hold backup sizes for full, diff and inc backups. #3986
+- Store latest raw data from puppetDB and API. #3998
+- Prevent duplicate MAC addresses. #3957
+- Implement a reminder for inventory items soon are not covered by warranty. #3936
+- Move IPv6 into own column, fixing IP filtering that way. #3948
+
+
+1.4.0
+=====
+- Improve ordering of security updates column. #3937
+- Replace the magnifier in advanced fields columns by mouseover and shortened text. #3935
+- Fix output after toggling the 'show unassigned IPs' option. #3896
+- Implement API option: Only update, or create and update. #3930
+- Send out an email on machine deletion. #3875
+- Implement editing of IPv6 addresses via GUI, and accept IPv6 addresses from puppetDB. #3716
+- Implement a view to undelete or to finally destroy a machine if softdelete is enabled. #3911
+- Implement a config switch to disable the softdelete funtion. #3911
+- Correct machine diff emails on network changes. #3908
+- First version of an API to GET and PUT machine informations.
+- Versions view should display a link to the object itself. #3389
+- Mark inactive inventory items in table view.
+- Inventory diff does not reflect a user change. #3874
+- Allow adding a machine from untracked machines list. #3867
+- When entering location for inventory item do autocomplete search. #3824
+- Exclude machine attributes from diffing. #3844
+- Find machines also by alias for maintenance records. #3845
+
+
+1.3.2
+=====
+- Duplicate alias definition throws a rails exception, not a user-friendly message. #3850
+- Show aliases in network section, IP overview. #3849
+
+
+1.3.1
+=====
+- Update Ruby from 2.2.2 to 2.2.3
+
+
+1.3.0
+=====
+- Routing error on new inventory items. #3811
+- Aliases cannot be edited if host information is retrieved from puppetdb. #3802
+- Update Rails to 4.2.4.
+- Attachment handling for various objects. #3796
+- List unassigned maintenance records in separate table. #3795
+- Implement pagination for maintenance records. #3788
+- CPU and memory summary is broken on filtering. #3783
+- Disable certain columns by default; custom setting overrides this.
+- Allow management of aliases for machines. #3756
+- Link to version in diff mails is broken #3782.
+- Send out an email on newly created objects. #3759
+
+
+1.2.0
+=====
+- Update to latest Rails 4.2.3. #3758
+- Update to latest Ruby 2.2.2. #3712
+- Implement owner summary with print function. #3736
+- By default hide unassigned IPs from IP list in network overview. Checkbox to display them.
+- Prepare severity classes and operating_systems for #3718 and #3719.
+- Implement inventory module.
+
+
+1.1.2
+=====
+- List pending updates in main table and allow filtering for every package. #3290
+- Display package names of pending updates. #3290
+
+
+1.1.1
+=====
+- Try to find a new machine on the configured puppetDBs for the first try of updating the facts. #3717
+
+
+1.1.0
+=====
+- Better owner and documentation visibility in machine details.
+- Refactor puppetDB queries to avoid overhead. #3704
+- Add download button to export IP/machine list of a network. #3700
+- Use sticky header in main table: header and filter stay visible even on scrolling.
+- Allow the user to toggle which columns are displayed. #3693

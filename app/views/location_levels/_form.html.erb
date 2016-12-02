@@ -1,0 +1,43 @@
+<div id="location-levels-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @location_level.new_record? -%>
+            <a class="brand" href="<%= new_location_level_path %>">New location level</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_location_level_path(@location_level) %>"><%= @location_level.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- unless @location_level.new_record? -%>
+            <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, location_levels_path(@location_level), class: 'location-level-delete', method: 'delete' %></li>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, location_levels_path(@location_level) %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, location_levels_path(@location_level) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@location_level, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+          <%= f.input :name %>
+          <%= f.input :level %>
+          <%= f.input :description %>
+          <%= f.button :submit %>
+        <%- end -%>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,13 @@
+<%- unless @early_date_items.empty? -%>
+Warranty ends on <%= @early_date_items.first.warranty_end %> for these items:
+<%- @early_date_items.each do |i| -%>
+- <%= i.inventory_number %>, <%= i.name %>: <%= inventory_url(i) %>
+<%- end -%>
+<%- end -%>
+
+<%- unless @late_date_items.empty? -%>
+Warranty ends on <%= @late_date_items.first.warranty_end %> for these items:
+<%- @late_date_items.each do |i| -%>
+- <%= i.inventory_number %>, <%= i.name %>: <%= inventory_url(i) %>
+<%- end -%>
+<%- end -%>
