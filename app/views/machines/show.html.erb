@@ -24,6 +24,9 @@
           <%- if machine.switch? -%>
             <li><a href="#portsettings" data-toggle="tab">Ports</a></li>
           <%- end -%>
+          <%- if machine.software -%>
+            <li><a href="#software" data-toggle="tab">Software</a></li>
+          <%- end -%>
           <li><a href="#maintenance" data-toggle="tab">Maintenance</a></li>
           <li><a href="#history" data-toggle="tab">History</a></li>
         </ul>
@@ -57,23 +60,6 @@
                       <td class="span3"><%= machine.arch %></td>
                       <td class="span3"><%= machine.device_type %></td>
                     </tr>
-                  </table>
-                </div>
-              </div>
-              <div class="row-fluid">
-                <div class="span12">
-                  <h5>Software</h5>
-                  <table class="table table-condensed">
-                    <tr>
-                      <th class="span3">Name</th>
-                      <th class="span3">Version</th>
-                    </tr>
-                    <%- machine.software.each do |software| -%>
-                    <tr>
-                      <td class="span3"><%= software["name"] %></td>
-                      <td class="span3"><%= software["version"] %></td>
-                    </tr>
-		                <%- end -%>
                   </table>
                 </div>
               </div>
@@ -450,6 +436,9 @@
           </tr>
         <%- end -%>
       </table>
+    </div>
+    <div class="tab-pane" id="software">
+      <%= render partial: 'software/table', locals: {object: @machine} %>
     </div>
     <div class="tab-pane" id="history">
       <%= render partial: 'shared/history', locals: {object: @machine} %>

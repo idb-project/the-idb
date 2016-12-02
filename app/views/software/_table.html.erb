@@ -1,0 +1,18 @@
+<div class="row-fluid">
+  <div class="span6 tab-content">
+    <div class="tab-pane active" id="data">
+      <table class="table table-striped">
+        <tr>
+          <th>Name:</th>
+          <th>Version:</th>
+        </tr>
+				<%- @machine.software.each do |software| -%>
+        <tr>
+          <td><%= software["name"] %></td>
+          <td><%= software["version"] %></td>
+        </tr>
+				<%- end -%>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,9 @@
 class SoftwareController < ApplicationController
   def index
-    @machines = nil
     @software = nil
   end
 
-  def create
+  def search
     @software = Array.new
     params["q"].split.each { |s| 
       n, v = s.split('=')
@@ -18,6 +17,5 @@ class SoftwareController < ApplicationController
     puts ActiveSupport::JSON.encode(@software)
 
     @machines = Machine.where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(@software))
-    render :index
   end
 end
