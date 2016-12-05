@@ -14,8 +14,6 @@ class SoftwareController < ApplicationController
       end
     }
 
-    puts ActiveSupport::JSON.encode(@software)
-
     @machines = Machine.where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(@software))
   end
 end

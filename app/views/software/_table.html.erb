@@ -6,12 +6,12 @@
           <th>Name:</th>
           <th>Version:</th>
         </tr>
-				<%- @machine.software.each do |software| -%>
+        <%- @machine.software.each do |software| -%>
         <tr>
           <td><%= software["name"] %></td>
           <td><%= software["version"] %></td>
         </tr>
-				<%- end -%>
+        <%- end -%>
       </table>
     </div>
   </div>
