@@ -42,6 +42,9 @@
                 <li><%= link_to '<i class="fa fa-tasks"></i> Api Tokens'.html_safe, api_tokens_path %></li>
                 <li><%= BackgroundJobs.new.link('Background Jobs', 'fa fa-tasks', background_jobs_sidekiq_path) %></li>
                 <li><%= link_to '<i class="fa fa-tasks"></i> Location Levels'.html_safe, location_levels_path %></li>
+                <%- if IDB.config.modules.inventory -%>
+                <li><%= link_to '<i class="fa fa-tasks"></i> Inventory Status'.html_safe, inventory_status_index_path %></li>
+                <%- end -%>
                 <li><%= link_to '<i class="fa fa-frown"></i> Logout'.html_safe, logout_path, method: :delete %></li>
               </ul>
             </a>

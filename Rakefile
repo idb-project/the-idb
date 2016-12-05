@@ -3,4 +3,10 @@
 
 require File.expand_path('../config/application', __FILE__)
 
+if Rails.env.test?
+  require 'rspec/core/rake_task'
+  task :default => :spec
+  RSpec::Core::RakeTask.new
+end
+
 InfrastructureDb::Application.load_tasks

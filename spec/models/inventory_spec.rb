@@ -10,7 +10,6 @@ describe Inventory do
       purchase_date: '2015-04-01',
       warranty_end: '2017-04-01',
       seller: 'Cheap IT stuff',
-      status: 1,
       comment: 'Just a comment',
       location_id: 2
     }
@@ -52,13 +51,13 @@ describe Inventory do
 
   describe "active?" do
     it 'returns true if status is active' do
-      inventory.status = 0
+      inventory.inventory_status = InventoryStatus.new(name: "in use")
 
       expect(inventory.active?).to be true
     end
 
     it 'returns false if status is not active' do
-      inventory.status = 1
+      inventory.inventory_status = InventoryStatus.new(name: "broken", inactive: true)
 
       expect(inventory.active?).to be false
     end

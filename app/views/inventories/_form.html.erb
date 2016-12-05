@@ -39,7 +39,7 @@
           <%= f.input :warranty_end, :input_html => { id: "warranty_end", class: "span4" } %>
           <%= f.input :seller, :url => autocomplete_inventory_seller_inventories_path, :as => :autocomplete, label: "Supplier"  %>
           <%= f.input :comment %>
-          <%= f.input :status, collection: Inventory::Status.invert  %>
+          <%= f.association :inventory_status, collection: @form_status, include_blank: true, label: "Status"  %>
           <%= f.association :user, collection: User.order(:name), include_blank: true %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: true %>
           <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>

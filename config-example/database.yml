@@ -20,8 +20,8 @@ test:
   encoding: utf8
   database: idb_test
   pool: 30
-  username: idb_test
-  password: idbtestpassword
+  username: travis
+  password: ""
   socket: /var/run/mysqld/mysqld.sock
 
 production:

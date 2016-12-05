@@ -6,7 +6,7 @@ gem 'rails'
 gem 'rake'
 gem 'mysql2'
 gem 'net-ldap'
-gem 'stomp'
+gem 'stomp', '1.3.4'
 gem 'bcrypt'
 gem 'grape'
 
