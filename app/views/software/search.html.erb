@@ -7,7 +7,7 @@
   <tbody>
 	<%- @machines.each do |machine| -%>
 	<tr>
-	<td><%= link_to(machine.fqdn, machine_path(machine)) %></td>
+	<td><%= link_to(machine.fqdn, machine_path(machine, anchor: "software")) %></td>
 	</tr>
 	<%- end -%>
   </tbody>
