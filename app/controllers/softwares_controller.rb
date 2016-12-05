@@ -1,4 +1,4 @@
-class SoftwareController < ApplicationController
+class SoftwaresController < ApplicationController
   def index
     @software = nil
   end
