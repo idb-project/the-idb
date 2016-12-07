@@ -49,9 +49,9 @@ class EditableMachineForm
   end
 
   def update(params)
-    @parms = params.clone
-    # Create a deep dup of the params because we modify it.
-    params = params.deep_dup.with_indifferent_access
+    params.permit! if params.is_a? ActionController::Parameters
+    @parms = params.to_h.clone
+    params = params.to_h
 
     nics = params.delete(:nics)
     nics = recursive_symbolize_keys(nics) || Array.new
@@ -59,6 +59,9 @@ class EditableMachineForm
     aliases = params.delete(:aliases) || Array.new
 
     nics_changed = false
+
+    # if nic parameters are presented delete all nics and create them from scratch
+    @machine.nics.destroy_all if nics.size > 0
 
     params.keys.each do |key|
       next unless machine.respond_to?("#{key}=")
@@ -69,9 +72,9 @@ class EditableMachineForm
       next if data[:name].blank?
 
       ip_address = data.delete(:ip_address)
+      next if data[:remove] # NIC has been marked to remove, ignore its params
       nic = nic_for(data)
       return false unless nic
-      next if nic.destroyed?
 
       nic.update(mac: data[:mac])
       nics_changed = true
@@ -110,21 +113,14 @@ class EditableMachineForm
 
   def nic_for(data)
     return if data.nil? || data[:name].blank?
-
-    remove = data.delete(:remove) if data[:remove]
     nic =  machine.nics.where(name: data[:name]).first
 
-    if nic
-      # Destroy the nic if the remove flag has been set.
-      remove ? nic.destroy : nic
+    if data[:mac].blank? || Nic.where(mac: data[:mac]).size == 0
+      machine.nics.build(data)
     else
-      if data[:mac].blank? || Nic.where(mac: data[:mac]).size == 0
-        machine.nics.build(data)
-      else
-        @show_errors = true
-        self.errors.add(data[:name], 'mac address already taken')
-        nil
-      end
+      @show_errors = true
+      self.errors.add(data[:name], 'mac address already taken')
+      nil
     end
   end
 
