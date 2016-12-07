@@ -71,7 +71,7 @@ class MachinesController < ApplicationController
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
     @power_feed_b_id = @machine.power_feed_b.nil? ? "" : @machine.power_feed_b.id
 
-    if @machine.update(machine_params)
+    if @machine.update(machine_params.permit!)
       add_attachments(params[:attachments])
       trigger_version_change(@machine, current_user.display_name)
       redirect_to machine_path(@machine), notice: 'Machine updated!'
