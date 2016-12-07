@@ -3,7 +3,6 @@ group: idb
 vendor: bytemine GmbH
 maintainer: info@bytemine.net
 homepage: https://www.bytemine.net/
-before: [ './bin/pkgr_before_precompile.sh' ]
 targets:
   centos-7:
    build_dependencies:
