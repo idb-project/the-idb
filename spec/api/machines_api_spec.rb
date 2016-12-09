@@ -258,6 +258,51 @@ describe 'Machines API' do
       api_put "machines?fqdn=existing3.example.com&zzz=fhfhf", @api_token_w
       expect(response.status).to eq(200)
     end
+
+    it 'updates the software of a machine if existing, JSON payload' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_get "machines?fqdn=existing.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("existing.example.com")
+
+      payload = {
+        "fqdn":"existing.example.com",
+        "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}]
+      }
+      api_put_json "machines?fqdn=existing.example.com", @api_token_w, payload
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("existing.example.com")
+      expect(machine['software'].size).to eq(2)
+      expect(machine['software'][0]["name"]).to eq("test1")
+      expect(machine['software'][0]["version"]).to eq("1234")
+      expect(machine['software'][1]["name"]).to eq("test2")
+      expect(machine['software'][1]["version"]).to eq("5678")
+    end
+
+    it 'creates a machine with a software configuration if not existing' do
+      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine).to eq({})
+
+      payload = {
+        "fqdn":"new-machine.example.com",
+        "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}],
+        "create_machine": true
+      }
+      api_put_json "machines?fqdn=new-machine.example.com", @api_token_w, payload
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("new-machine.example.com")
+      expect(machine['software'].size).to eq(2)
+      expect(machine['software'][0]["name"]).to eq("test1")
+      expect(machine['software'][0]["version"]).to eq("1234")
+      expect(machine['software'][1]["name"]).to eq("test2")
+      expect(machine['software'][1]["version"]).to eq("5678")
+    end
   end
 
   describe "PUT /machines with multiple machines" do
