@@ -5,6 +5,8 @@
 <%= @version.diff_text_user(changeset) %>
 <%- elsif attribute == "Machine" %>
 <%= @version.diff_text_machine(changeset) %>
+<%- elsif attribute == "Inventory status" %>
+<%= @version.diff_inventory_status(changeset) %>
 <%- else %>
 <%= @version.diff_text(changeset) %>
 <%- end %>
