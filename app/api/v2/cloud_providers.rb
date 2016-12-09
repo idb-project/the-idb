@@ -52,7 +52,7 @@ module V2
           CloudProvider.all
         else
           m = CloudProvider.where("owner_id = ?", p["owner"].to_i)
-          unless m
+          if m.empty?
             status 404
             {}
           else

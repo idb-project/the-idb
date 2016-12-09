@@ -1,9 +1,5 @@
 <div id="cloud-provider-form">
 
-<div id="flash-cloud-providers">
-  <%= present(:flash, flash).show %>
-</div>
-
 <div class="row-fluid">
   <div class="span12">
     <div class="navbar">
@@ -40,10 +36,9 @@
           <%= f.input :apidocs, label: "API Documentation" %>
           <%= f.input :config %>
           <div class="control-group text optional cloud_provider_check">
-            <label class="text optional control-label" for="cloud_provider_check">Check</label>
+            <label class="text optional control-label" for="cloud_provider_check">Validate JSON config</label>
             <div class="controls">
-              <%= radio_button_tag 'check', 'none', true %> None
-              <%= radio_button_tag 'check', 'json' %> JSON
+              <%= check_box_tag 'check', 'json', true %>
             </div>
           </div>
           <%= f.button :submit %>
