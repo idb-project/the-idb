@@ -323,7 +323,8 @@ describe 'Machines API' do
             "ip_address": {
               "addr": "192.168.5.5"
             },
-            "name": "eth5"
+            "name": "eth5",
+            "mac": "3c:97:0e:d8:81:e7"
             }]
         },{
           "fqdn":"new-machine-b.example.com",
