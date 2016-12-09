@@ -1,3 +1,7 @@
+HEAD
+====
+- [bugfix] Fix interface handling. #4673
+
 1.6.1
 =====
 - [bugfix] Pin stomp to v1.3.4 to connect to ActiveMQ again. #4675
