@@ -1,5 +1,6 @@
-HEAD:
+1.6.1
 =====
+- [bugfix] Pin stomp to v1.3.4 to connect to ActiveMQ again. #4675
 - [feature] Inventory status are user configurable. #4665
 - [bugfix] Inventory datepicker does not accept existing dates. #4658
 
