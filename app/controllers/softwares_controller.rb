@@ -14,6 +14,6 @@ class SoftwaresController < ApplicationController
       end
     }
 
-    @machines = Machine.where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(@software))
+    @machines = Machine.includes(:owner, nics: [:ip_address]).order(:fqdn).where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(@software))
   end
 end
