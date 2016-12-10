@@ -1,0 +1,14 @@
+<p>
+<%= form_tag("/softwares/search", method: "get") do %>
+<%= label_tag(:q, "Search:") %>
+<%= text_field_tag(:q, params["q"]) %>
+<%= submit_tag("Search") %>
+<% end %>
+</p>
+<h5>Query format</h5>
+<p>
+Search requests are in the format
+<code>name=version</code> where the <code>=version</code> part is optional.
+A request <code>openvpn=2.3.11 nmap=7.12</code> would return all machines with openvpn version 2.3.11 and nmap version 7.12 installed.
+Currently only conjunction of search terms is supported, every term stated must be fulfilled.
+</p>
