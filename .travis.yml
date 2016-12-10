@@ -3,6 +3,10 @@ rvm:
   - 2.2.5
 services:
   - mysql
+before_install:
+  -  chmod +x ./scripts/* #thanks https://medium.com/@psaunders
+  - ./script/travis-mysql-5.7.sh
+  - ./script/travis-reset-mysql-root-password.sh
 before_script:
   - mysql -e 'create database idb_test;'
   - mv config-example config
