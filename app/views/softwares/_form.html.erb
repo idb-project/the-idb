@@ -1,9 +1,9 @@
 <p>
-<%= form_tag("/softwares/search", method: "get") do %>
-<%= label_tag(:q, "Search:") %>
-<%= text_field_tag(:q, params["q"]) %>
-<%= submit_tag("Search") %>
-<% end %>
+<%= simple_form_for(:software, url: "search", method: "get", html: {class: 'form-horizontal' },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+  <%= text_field_tag :q %>
+  <%= f.button :submit, "Search" %>
+<%- end -%>
 </p>
 <h5>Query format</h5>
 <p>
