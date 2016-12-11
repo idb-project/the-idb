@@ -1,14 +1,7 @@
 <p>
-<%= simple_form_for(:software, url: "search", method: "get", html: {class: 'form-horizontal' },
+<%= simple_form_for(:software, url: "softwares", method: "get", html: {class: 'form-horizontal' },
               defaults: {input_html: {class: 'span6'}}) do |f| %>
   <%= text_field_tag :q %>
   <%= f.button :submit, "Search" %>
 <%- end -%>
-</p>
-<h5>Query format</h5>
-<p>
-Search requests are in the format
-<code>name=version</code> where the <code>=version</code> part is optional.
-A request <code>openvpn=2.3.11 nmap=7.12</code> would return all machines with openvpn version 2.3.11 and nmap version 7.12 installed.
-Currently only conjunction of search terms is supported, every term stated must be fulfilled.
 </p>
