@@ -1,5 +1,6 @@
 HEAD
 ====
+- [feature] Display API-token used for update in machine history. #4355
 - [bugfix] Fix interface handling. #4673
 
 1.6.1
