@@ -5,6 +5,8 @@ module MachineHelpers
     payload = p.clone
     p["raw_data_api"] = payload.to_json
 
+    PaperTrail.whodunnit = p[:idb_api_token] ? p[:idb_api_token] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+
     # strip all params that are not attributes of a machine
     # and prepare some params
     p = p.reject { |k| !Machine.attribute_method?(k) }

@@ -25,8 +25,15 @@ class ApplicationController < ActionController::Base
   end
 
   def user_for_paper_trail
-    return unless session[:user_id]
-    session[:user_id]
+    if session[:user_id]
+      return session[:user_id]
+    elsif params[:idb_api_token]
+      return session[:idb_api_token]
+    elsif request.headers["X-Idb-Api-Token"]
+      return request.headers["X-Idb-Api-Token"]
+    end
+
+    return
   end
 
   def trigger_version_change(object, username = "")
