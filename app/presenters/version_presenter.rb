@@ -25,7 +25,7 @@ class VersionPresenter < Keynote::Presenter
 
     t = ApiToken.find_by("name = ?", version.whodunnit)
     if t
-      return t.name
+      return link_to(t.token, t)
     end
 
     return '?'
