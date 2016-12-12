@@ -1,5 +1,6 @@
 HEAD
 ====
+- [feature] Implementation of a module to search for installed software packages. #4596
 - [bugfix] Fix interface handling. #4673
 
 1.6.1
