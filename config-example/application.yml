@@ -16,6 +16,22 @@ defaults: &defaults
   modules:
     app_pages: true
     advanced_fields: true
+    advanced_field_names:
+      advanced_field_1:
+        short: 'CI'
+        long: 'Config instructions'
+      advanced_field_2:
+        short: 'SC'
+        long: 'Software characteristics'
+      advanced_field_3:
+        short: 'BP'
+        long: 'Business purpose'
+      advanced_field_4:
+        short: 'BC'
+        long: 'Business criticality'
+      advanced_field_5:
+        short: 'BN'
+        long: 'Business notification'
     otp_login: false
     unattended_upgrades: true
     inventory: true
