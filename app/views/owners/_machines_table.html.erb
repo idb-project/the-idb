@@ -21,11 +21,11 @@
       <th>Backup</th>
       <th>Owner</th>
       <%- if IDB.config.modules.advanced_fields -%>
-      <th>CI</th>
-      <th>SC</th>
-      <th>BP</th>
-      <th>BC</th>
-      <th>BN</th>
+      <th><%= Machine.advanced_field_name(1) %></th>
+      <th><%= Machine.advanced_field_name(2) %></th>
+      <th><%= Machine.advanced_field_name(3) %></th>
+      <th><%= Machine.advanced_field_name(4) %></th>
+      <th><%= Machine.advanced_field_name(5) %></th>
       <%- end -%>
     </tr>
   </thead>
