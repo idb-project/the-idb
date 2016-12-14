@@ -1,5 +1,7 @@
 HEAD
 ====
+- [feature] Allow re-labeling of general purpose fields. #4380
+- [bugfix] Subject of version-diff-mails contains fixed app title. #4529
 - [bugfix] Fix interface handling. #4673
 
 1.6.1
