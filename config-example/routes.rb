@@ -41,14 +41,7 @@ InfrastructureDb::Application.routes.draw do
   resources :location_levels
   resources :inventory_status
   resources :api_tokens
-  resources :softwares do
-    collection do
-      get :search
-    end
-    member do
-      get :show
-    end
-  end
+  resources :softwares, only: [:index]
   resources :cloud_providers
 
   post 'markup/render', to: 'markup#do_render'
