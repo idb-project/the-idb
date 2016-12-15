@@ -27,8 +27,8 @@ class ApplicationController < ActionController::Base
   def user_for_paper_trail
     if session[:user_id]
       return session[:user_id]
-    elsif params[:idb_api_token]
-      return session[:idb_api_token]
+    elsif params["idb_api_token"]
+      return params["idb_api_token"]
     elsif request.headers["X-Idb-Api-Token"]
       return request.headers["X-Idb-Api-Token"]
     end
