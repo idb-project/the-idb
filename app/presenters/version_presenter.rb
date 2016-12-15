@@ -17,13 +17,13 @@ class VersionPresenter < Keynote::Presenter
 
   def user
     if version.whodunnit.to_i > 0 
-      u = User.find(version.whodunnit.to_i)
+      u = User.find_by_id(version.whodunnit.to_i)
       if u
         return u.display_name
       end
     end
 
-    t = ApiToken.find_by("name = ?", version.whodunnit)
+    t = ApiToken.find_by_token(version.whodunnit)
     if t
       return link_to(t.name, t)
     end
