@@ -159,6 +159,6 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def mail_subject
-    %([IDB] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
+    %([#{IDB.config.design.title}] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
   end
 end
