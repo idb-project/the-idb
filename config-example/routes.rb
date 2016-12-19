@@ -39,7 +39,9 @@ InfrastructureDb::Application.routes.draw do
     get :get_parent_locations, :on => :collection
   end
   resources :location_levels
+  resources :inventory_status
   resources :api_tokens
+  resources :cloud_providers
 
   post 'markup/render', to: 'markup#do_render'
 

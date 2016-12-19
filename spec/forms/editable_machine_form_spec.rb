@@ -6,7 +6,7 @@ describe EditableMachineForm do
   end
 
   let(:attributes) do
-    {
+    ActionController::Parameters.new(
       backup_type: 1,
       auto_update: false,
       arch: 'i386',
@@ -34,7 +34,7 @@ describe EditableMachineForm do
           name: 'alias1a'
         }
       ]
-    }
+    )
   end
 
   let(:form) { described_class.new(machine) }
@@ -43,15 +43,15 @@ describe EditableMachineForm do
     before { machine.save! }
 
     it 'returns empty Hash if nothing changed' do
-      expect(form.update({})).to eq({})
+      expect(form.update(ActionController::Parameters.new)).to eq({})
     end
 
     it 'returns nil on errors' do
-      expect(form.update({fqdn: -1})).to be_nil
+      expect(form.update(ActionController::Parameters.new(fqdn: -1))).to be_nil
     end
 
     it 'returns a hash with changed attributes on attribute changes' do
-      expect(form.update({os: "abc"}).keys).to eq(["os"])
+      expect(form.update(ActionController::Parameters.new(os: "abc")).keys).to eq(["os"])
     end
 
     it 'updates the backup_type' do
@@ -127,19 +127,20 @@ describe EditableMachineForm do
     end
 
     it 'updates a nic' do
-      form.update(attributes.dup)
+      form.update(attributes)
 
       expect(machine.nics.first.ipv4addr).to eq('10.0.0.1')
+      expect(machine.nics.first.name).to eq('eth3')
 
       attributes[:nics].first[:ip_address][:addr] = '127.0.0.1'
       attributes[:nics].first[:ip_address][:addr_v6] = '2001:0DB8:85a3:08D3:1319:8A2E:0370:4711'
+      attributes[:nics].first[:name] = 'eth3-new'
 
-      described_class.new(Machine.first).update(attributes)
+      form.update(attributes)
 
-      m = Machine.find(machine.id)
-
-      expect(m.nics.first.ipv4addr).to eq('127.0.0.1')
-      expect(m.nics.first.ipv6addr).to eq('2001:0DB8:85a3:08D3:1319:8A2E:0370:4711')
+      expect(machine.nics.first.ipv4addr).to eq('127.0.0.1')
+      expect(machine.nics.first.ipv6addr).to eq('2001:0DB8:85a3:08D3:1319:8A2E:0370:4711')
+      expect(machine.nics.first.name).to eq('eth3-new')
     end
 
     describe 'multiple nics' do

@@ -16,10 +16,19 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def user
-    return '?' unless version.whodunnit
+    if version.whodunnit.to_i > 0 
+      u = User.find_by_id(version.whodunnit.to_i)
+      if u
+        return u.display_name
+      end
+    end
 
-    @user ||= User.find(version.whodunnit.to_i)
-    @user.display_name
+    t = ApiToken.find_by_token(version.whodunnit)
+    if t
+      return link_to(t.name, t)
+    end
+
+    return '?'
   end
 
   def show_link
@@ -133,6 +142,16 @@ class VersionPresenter < Keynote::Presenter
     end
   end
 
+  def diff_inventory_status(changeset)
+    if (changeset)
+      old = changeset[0] ? InventoryStatus.find_by_id(*changeset[0]).name : " ---"
+      new = changeset[1] ? InventoryStatus.find_by_id(*changeset[1]).name : " ---"
+      "-#{old}\r\n+#{new}"
+    else
+      ""
+    end
+  end
+
   def changesets
     version.changeset.each do |attribute, changeset|
       yield(attribute.humanize, changeset)
@@ -140,6 +159,6 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def mail_subject
-    %([IDB] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
+    %([#{IDB.config.design.title}] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
   end
 end

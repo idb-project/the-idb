@@ -1,3 +1,16 @@
+1.6.2
+=====
+- [feature] Display API-token used for update in machine history. #4355
+- [feature] Allow re-labeling of general purpose fields. #4380
+- [bugfix] Subject of version-diff-mails contains fixed app title. #4529
+- [bugfix] Fix interface handling. #4673
+
+1.6.1
+=====
+- [bugfix] Pin stomp to v1.3.4 to connect to ActiveMQ again. #4675
+- [feature] Inventory status are user configurable. #4665
+- [bugfix] Inventory datepicker does not accept existing dates. #4658
+
 1.6.0
 =====
 - [feature] Upgrade to Rails 5. #4636

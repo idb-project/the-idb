@@ -22,6 +22,8 @@ class FlashPresenter < Keynote::Presenter
       'alert alert-success'
     when :error, :alert
       'alert alert-error'
+    else
+      'alert alert-success'
     end
   end
 end
