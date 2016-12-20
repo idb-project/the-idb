@@ -66,6 +66,38 @@ class MachineUpdateService
       end
     end
 
+    unless facts.idb_installed_packages.empty?
+      if facts.operatingsystem == "CentOS"
+        software = Array.new
+
+        # remove starting and closing [ ], split at spaces
+        facts.idb_installed_packages.gsub(/[\[\]]/,'').split(' ').each do |s|
+          m = /(?<name>.*)-(?<version>.*-.*\..*)/.match(s)
+          if m
+            software << { name: m[:name], version: m[:version] }
+          end
+        end
+
+        machine.software = software
+      elsif facts.operatingsystem == "Debian" or facts.operatingsystem = "Ubuntu"
+        software = Array.new
+
+        # remove starting and closing [ ], split at spaces
+        facts.idb_installed_packages.gsub(/[\[\]]/,'').split(' ').each do |s|
+          puts s
+          n, v = s.split('=')
+          puts n, v
+          if v
+            software << { name: n, version: v }
+          else
+            software << { name: n }
+          end
+        end
+
+        machine.software = software
+      end
+    end
+
     machine.save!
   end
 end
