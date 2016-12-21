@@ -1,3 +1,7 @@
+HEAD
+====
+- [feature] Implementation of a module to search for installed software packages. #4596
+
 1.6.2
 =====
 - [feature] Display API-token used for update in machine history. #4355

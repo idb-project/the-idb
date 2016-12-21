@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20161125140128) do
     t.bigint   "backup_last_inc_size"
     t.bigint   "backup_last_diff_size"
     t.integer  "needs_reboot"
+    t.json     "software"
     t.index ["deleted_at"], name: "index_machines_on_deleted_at", using: :btree
     t.index ["fqdn"], name: "index_machines_on_fqdn", unique: true, using: :btree
   end
