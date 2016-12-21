@@ -16,10 +16,19 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def user
-    return '?' unless version.whodunnit
+    if version.whodunnit.to_i > 0 
+      u = User.find_by_id(version.whodunnit.to_i)
+      if u
+        return u.display_name
+      end
+    end
 
-    @user ||= User.find(version.whodunnit.to_i)
-    @user.display_name
+    t = ApiToken.find_by_token(version.whodunnit)
+    if t
+      return link_to(t.name, t)
+    end
+
+    return '?'
   end
 
   def show_link
@@ -150,6 +159,6 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def mail_subject
-    %([IDB] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
+    %([#{IDB.config.design.title}] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
   end
 end

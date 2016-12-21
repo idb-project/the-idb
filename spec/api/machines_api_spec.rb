@@ -106,6 +106,18 @@ describe 'Machines API' do
       expect(machine['ucs_role']).to eq("master")
     end
 
+    it 'creates a machine if not existing, entering the API token name into the history' do
+      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine).to eq({})
+
+      api_put "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", @api_token_w
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.token)
+    end
+
     it 'does not create a machine if not explicitely specified' do
       api_get "machines?fqdn=new-machine.example.com", @api_token_r
       machine = JSON.parse(response.body)
