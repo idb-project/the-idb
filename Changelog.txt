@@ -1,5 +1,6 @@
 HEAD
 ====
+- [feature] Import installed software packages from puppet.
 - [feature] Implementation of a module to search for installed software packages. #4596
 
 1.6.2

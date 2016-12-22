@@ -42,9 +42,9 @@ describe SoftwaresController do
       expect(assigns(:machines).size).to eq(0)
     end
 
-    it "returns all machines matching the search parameters, version not exactly matching" do
-      get :index, params: {"q": "nginx=1.10.1-0"}
-      expect(assigns(:machines).size).to eq(0)
+    it "returns all machines matching the search parameters, partial version" do
+      get :index, params: {"q": "nginx=1.10"}
+      expect(assigns(:machines).size).to eq(2)
     end
   end
 end

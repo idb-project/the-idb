@@ -26,7 +26,7 @@ module Puppetdb
       urls.each do |url|
         api = Puppetdb::Api.new(url)
         data = api.get("/pdb/query/v4/nodes/#{fqdn}/facts").data
-        return url if data && data["certname"]
+        return url if data && data.class == Array
       end
       nil
     end
