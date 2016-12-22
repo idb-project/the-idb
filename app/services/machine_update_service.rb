@@ -66,7 +66,7 @@ class MachineUpdateService
       end
     end
 
-    unless facts.idb_installed_packages.empty?
+    if facts.idb_installed_packages != nil and not facts.idb_installed_packages.empty?
       if facts.operatingsystem == "CentOS"
         machine.software = parse_yum_packages(facts.idb_installed_packages)
       elsif facts.operatingsystem == "Debian" or facts.operatingsystem = "Ubuntu"
