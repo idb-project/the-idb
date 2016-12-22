@@ -1,0 +1,7 @@
+<p>
+<%= simple_form_for(:software, url: "softwares", method: "get", html: {class: 'form-horizontal' },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+  <%= text_field_tag :q %>
+  <%= f.button :submit, "Search" %>
+<%- end -%>
+</p>

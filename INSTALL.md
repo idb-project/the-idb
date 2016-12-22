@@ -2,7 +2,7 @@
 
 ## Basic requirements
 
-* MySQL Server
+* MySQL Server (>= 5.7)
 * LDAP or ActiveDirectory
 * Redis (>= 2.8)
 * Ruby 2.2

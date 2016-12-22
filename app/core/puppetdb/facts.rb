@@ -37,6 +37,7 @@ module Puppetdb
     attribute :idb_pending_updates_sum, Integer
     attribute :idb_pending_updates_package_names, Array
     attribute :idb_reboot_required, Boolean
+    attribute :idb_installed_packages, JSON
 
     attr_reader :interfaces
 

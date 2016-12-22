@@ -41,6 +41,7 @@ defaults: &defaults
       v2_api_token: 'randomtoken'
     softdelete: true
     location: true
+    software_packages: false
   redis:
     url: 'redis://127.0.0.1:6379/0'
     namespace: 'idb'
@@ -64,6 +65,11 @@ defaults: &defaults
         version: 'v4'
     api_timeout: 5
     auto_create: false
+    apt_distributions:
+      - 'Ubuntu'
+      - 'Debian'
+    yum_distributions:
+      - 'CentOS'
   redmine:
     ticket_url: 'http://redmine.example.com/issues/%s'
   rt:

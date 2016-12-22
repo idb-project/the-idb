@@ -1,5 +1,11 @@
 HEAD
 ====
+- [feature] Import installed software packages from puppet.
+- [feature] Implementation of a module to search for installed software packages. #4596
+
+1.6.2
+=====
+- [feature] Display API-token used for update in machine history. #4355
 - [feature] Allow re-labeling of general purpose fields. #4380
 - [bugfix] Subject of version-diff-mails contains fixed app title. #4529
 - [bugfix] Fix interface handling. #4673

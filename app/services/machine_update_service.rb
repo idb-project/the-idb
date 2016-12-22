@@ -66,6 +66,38 @@ class MachineUpdateService
       end
     end
 
+    if facts.idb_installed_packages != nil and not facts.idb_installed_packages.empty?
+      if IDB.config.puppetdb.yum_distributions.include? facts.operatingsystem
+        machine.software = parse_yum_packages(facts.idb_installed_packages)
+      elsif IDB.config.puppetdb.apt_distributions.include? facts.operatingsystem
+        machine.software = parse_apt_packages(facts.idb_installed_packages)
+      end
+    end
+
     machine.save!
+  end
+
+  def self.parse_yum_packages(x)
+    software = Array.new
+    x.gsub(/[\[\]]/,'').split(' ').each do |s|
+      m = /(?<name>.*)-(?<version>.*-.*\..*)/.match(s)
+      if m
+        software << { name: m[:name], version: m[:version] }
+      end
+    end
+    return software
+  end
+
+  def self.parse_apt_packages(x)
+    software = Array.new
+    x.gsub(/[\[\]]/,'').split(' ').each do |s|
+      n, v = s.split('=')
+      if v
+        software << { name: n, version: v }
+      else
+        software << { name: n }
+      end
+    end
+    return software
   end
 end
