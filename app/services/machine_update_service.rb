@@ -77,18 +77,6 @@ class MachineUpdateService
     machine.save!
   end
 
-<<<<<<< HEAD
-def self.parse_yum_packages(x)
-  software = Array.new
-  x.gsub(/[\[\]]/,'').split(' ').each do |s|
-    m = /(?<name>.*)-(?<version>.*-.*\..*)/.match(s)
-    if m
-      software << { name: m[:name], version: m[:version] }
-    end
-  end
-  return software
-end
-=======
   def self.parse_yum_packages(x)
     software = Array.new
     x.gsub(/[\[\]]/,'').split(' ').each do |s|
@@ -99,7 +87,6 @@ end
     end
     return software
   end
->>>>>>> puppet-software-packages
 
   def self.parse_deb_packages(x)
     software = Array.new
