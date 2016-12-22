@@ -117,11 +117,11 @@
           <div class="row-fluid">
             <div class="span12">
               <h4>Advanced fields</h4>
-              <%= f.input :config_instructions, as: :text, input_html: {rows: 8} %>
-              <%= f.input :sw_characteristics, as: :text, input_html: {rows: 8, cols: 60}, label: "Software characteristics" %>
-              <%= f.input :business_purpose, as: :text, input_html: {rows: 8, cols: 60} %>
-              <%= f.input :business_criticality, as: :text, input_html: {rows: 8, cols: 60} %>
-              <%= f.input :business_notification, as: :text, input_html: {rows: 8, cols: 60} %>
+              <%= f.input :config_instructions, as: :text, input_html: {rows: 8}, label: Machine.advanced_field_name(1, "long") %>
+              <%= f.input :sw_characteristics, as: :text, input_html: {rows: 8, cols: 60}, label: Machine.advanced_field_name(2, "long") %>
+              <%= f.input :business_purpose, as: :text, input_html: {rows: 8, cols: 60}, label: Machine.advanced_field_name(3, "long") %>
+              <%= f.input :business_criticality, as: :text, input_html: {rows: 8, cols: 60}, label: Machine.advanced_field_name(4, "long") %>
+              <%= f.input :business_notification, as: :text, input_html: {rows: 8, cols: 60}, label: Machine.advanced_field_name(5, "long") %>
             </div>
           </div>
 

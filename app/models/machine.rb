@@ -50,6 +50,29 @@ class Machine < ActiveRecord::Base
     where(device_type_id: 3)
   end
 
+  def self.advanced_field_name(index, type="short")
+    name = nil
+    if IDB.config.modules.advanced_fields && IDB.config.modules.advanced_field_names
+      name = IDB.config.modules.advanced_field_names.send("advanced_field_#{index}") ? IDB.config.modules.advanced_field_names.send("advanced_field_#{index}").send("#{type}") : nil
+    end
+
+    unless name
+      case index
+      when 1
+        name = type == "short" ? "CI" : "Config instructions"
+      when 2
+        name = type == "short" ? "SC" : "Software characteristics"
+      when 3
+        name = type == "short" ? "BP" : "Business purpose"
+      when 4
+        name = type == "short" ? "BC" : "Business criticality"
+      when 5
+        name = type == "short" ? "BN" : "Business notification"
+      end
+    end
+    name || ""
+  end
+
   def switch?
     device_type && device_type.name == 'switch'
   end

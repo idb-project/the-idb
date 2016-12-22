@@ -1,0 +1,30 @@
+<div id="cloud_providers-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= cloud_providers_path %>">Cloud Providers</a>
+          <ul class="nav">
+            <li>
+              <div class="columnSelectorWrapper">
+                <input id="colSelect1" type="checkbox" class="hidden">
+                <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1"><i class="icon-cog">&nbsp;</i>Columns</label>
+                <div id="columnSelector" class="columnSelector"></div>
+              </div>
+            </li>
+            <li><%= link_to '<i class="icon-plus"></i> New Cloud Provider'.html_safe, new_cloud_provider_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'table', locals: {cloud_providers: @cloud_providers} %>
+  </div>
+</div>
+

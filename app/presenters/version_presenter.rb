@@ -133,6 +133,16 @@ class VersionPresenter < Keynote::Presenter
     end
   end
 
+  def diff_inventory_status(changeset)
+    if (changeset)
+      old = changeset[0] ? InventoryStatus.find_by_id(*changeset[0]).name : " ---"
+      new = changeset[1] ? InventoryStatus.find_by_id(*changeset[1]).name : " ---"
+      "-#{old}\r\n+#{new}"
+    else
+      ""
+    end
+  end
+
   def changesets
     version.changeset.each do |attribute, changeset|
       yield(attribute.humanize, changeset)
@@ -140,6 +150,6 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def mail_subject
-    %([IDB] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
+    %([#{IDB.config.design.title}] #{version.item.class} "#{version.item.name}" #{version.event} by #{user})
   end
 end

@@ -1,0 +1,51 @@
+<div id="cloud-provider-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%- if @cloud_provider.new_record? -%>
+            <a class="brand" href="<%= new_cloud_provider_path %>">New Cloud Provider</a>
+          <%- else-%>
+            <a class="brand" href="<%= edit_cloud_provider_path(@cloud_provider) %>"><%= @cloud_provider.name %></a>
+          <%- end -%>
+          <ul class="nav pull-right">
+          <%- unless @cloud_provider.new_record? -%>
+            <li><%= link_to '<i class="icon-remove-sign"></i> Delete'.html_safe, cloud_providers_path(@cloud_provider), class: 'cloud-provider-delete', method: 'delete' %></li>
+            <li><%= link_to '<i class="icon-level-up"></i> Cancel'.html_safe, cloud_providers_path(@cloud_provider) %></li>
+          <%- else -%>
+            <li><%= link_to '<i class="icon-level-up"></i> Cancel'.html_safe, cloud_providers_path(@cloud_provider) %></li>
+          <%- end -%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="base">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= simple_form_for(@cloud_provider, html: {class: 'form-horizontal', multipart: true },
+              defaults: {input_html: {class: 'span6'}}) do |f| %>
+          <%= f.input :name %>
+          <%= f.input :owner_id, collection: @owners.order(:name), include_blank: false, label: "Owner" %>
+          <%= f.input :description %>
+          <%= f.input :apidocs, label: "API Documentation" %>
+          <%= f.input :config %>
+          <div class="control-group text optional cloud_provider_check">
+            <label class="text optional control-label" for="cloud_provider_check">Validate JSON config</label>
+            <div class="controls">
+              <%= check_box_tag 'check', 'json', true %>
+            </div>
+          </div>
+          <%= f.button :submit %>
+        <%- end -%>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
