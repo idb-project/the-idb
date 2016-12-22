@@ -67,10 +67,10 @@ class MachineUpdateService
     end
 
     if facts.idb_installed_packages != nil and not facts.idb_installed_packages.empty?
-      if facts.operatingsystem == "CentOS"
+      if IDB.config.puppetdb.yum_distributions.include? facts.operatingsystem
         machine.software = parse_yum_packages(facts.idb_installed_packages)
-      elsif facts.operatingsystem == "Debian" or facts.operatingsystem = "Ubuntu"
-        machine.software = parse_deb_packages(facts.idb_installed_packages)
+      elsif IDB.config.puppetdb.apt_distributions.include? facts.operatingsystem
+        machine.software = parse_apt_packages(facts.idb_installed_packages)
       end
     end
 
@@ -88,7 +88,7 @@ class MachineUpdateService
     return software
   end
 
-  def self.parse_deb_packages(x)
+  def self.parse_apt_packages(x)
     software = Array.new
     x.gsub(/[\[\]]/,'').split(' ').each do |s|
       n, v = s.split('=')

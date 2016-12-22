@@ -65,6 +65,11 @@ defaults: &defaults
         version: 'v4'
     api_timeout: 5
     auto_create: false
+    apt_distributions:
+      - 'Ubuntu'
+      - 'Debian'
+    yum_distributions:
+      - 'CentOS'
   redmine:
     ticket_url: 'http://redmine.example.com/issues/%s'
   rt:
