@@ -23,6 +23,9 @@ and Ubuntu like this:
 
 ## Sources
 
+This column can only be filled automatically with data, no frontend for manual input exists. Currently
+two methods are supported to add software data to machines.
+
 ### API
 Currently the software configuration can be imported using the IDB-API. The relevant field
 for this is the `software` field containing a value like described above.
