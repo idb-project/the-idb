@@ -1,5 +1,6 @@
 HEAD
 ====
+- [feature] Update Rails to 5.0.1. #4729
 - [feature] Import installed software packages from puppet.
 - [feature] Implementation of a module to search for installed software packages. #4596
 
