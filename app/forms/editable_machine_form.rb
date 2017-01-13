@@ -114,14 +114,7 @@ class EditableMachineForm
   def nic_for(data)
     return if data.nil? || data[:name].blank?
     nic =  machine.nics.where(name: data[:name]).first
-
-    if data[:mac].blank? || Nic.where(mac: data[:mac]).size == 0
-      machine.nics.build(data)
-    else
-      @show_errors = true
-      self.errors.add(data[:name], 'mac address already taken')
-      nil
-    end
+    machine.nics.build(data)
   end
 
   def alias_for(data)
