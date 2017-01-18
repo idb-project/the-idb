@@ -1,6 +1,9 @@
 class NetworksController < ApplicationController
   def index
     @networks = Network.all
+    @duplicated_macs = Nic.find_by_sql(%q{select nics.mac, nics.machine_id from nics join ( select mac, machine_id, count(*) from nics group by mac, machine_id having count(*) > 1) as dups on dups.mac =
+ nics.mac;})
+    @machines = Machine.all
   end
 
   def show

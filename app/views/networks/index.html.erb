@@ -7,6 +7,8 @@
         <div class="container-fluid">
           <a class="brand" href="<%= networks_path %>">Networks</a>
           <ul class="nav">
+            <li class="active"><a href="#index" data-toggle="tab"><i class="fa fa-cloud"></i> Networks</a></li>
+            <li><a href="#duplicated_macs" data-toggle="tab"><i class="fa fa-list"></i> Duplicated MACs</a></li>
             <li><%= link_to '<i class="fa fa-plus"></i> New Network'.html_safe, new_network_path %></li>
           </ul>
         </div>
@@ -16,10 +18,20 @@
 </div>
 
 <!-- <%= link_to('New', new_network_path) %> -->
-
-<div class="row-fluid">
-  <div class="span12">
-    <%= render partial: 'table', locals: {networks: @networks} %>
+<div class="tab-content">
+  <div class="tab-pane active" id="index">
+    <div class="row-fluid">
+      <div class="span12">
+        <%= render partial: 'table', locals: {networks: @networks} %>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="duplicated_macs">
+    <div class="row-fluid">
+      <div class="span12">
+        <%= render partial: 'duplicated_macs_table', locals: {machines: @machines, duplicated_macs: @duplicated_macs} %>
+      </div>
+    </div>
   </div>
 </div>
 
