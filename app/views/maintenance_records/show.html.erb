@@ -36,7 +36,7 @@
 
 <div class="row-fluid">
   <div class="span12">
-    <%= record.logfile %>
+    <%= record.logfile.force_encoding(Encoding::UTF_8) %>
   </div>
 </div>
 
