@@ -37,6 +37,7 @@ module V2
     format :json
 
     resource :cloud_providers do
+
       desc "Return a list of all cloud providers"
       get do
         authenticate!
@@ -60,6 +61,24 @@ module V2
           end
         end
       end
+
+      desc "Returns a cloud provider by name."
+      params do
+        requires :name, type: String, desc: "cloud provider config name"
+      end
+      route_param :name do
+        get do
+          authenticate!
+          can_read!
+          unless IDB.config.modules.api.v2_enabled
+            status 501
+            return {}
+          end
+
+          CloudProvider.find_by name: params[:name]
+        end
+      end
+
     end
 
   end
