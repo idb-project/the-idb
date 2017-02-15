@@ -65,6 +65,7 @@ defaults: &defaults
         version: 'v4'
     api_timeout: 5
     auto_create: false
+    filter:
     apt_distributions:
       - 'Ubuntu'
       - 'Debian'
