@@ -1,6 +1,7 @@
 module Puppetdb
   class Nodes < Struct.new(:urls)
     def all
+      filter = IDB.config.puppetdb.filter.blank? ? nil : Regexp.new(IDB.config.puppetdb.filter)
       nodes = []
 
       # Try to find machines in all puppetdb servers.
@@ -9,7 +10,9 @@ module Puppetdb
         data = api.get('/v3/nodes').data || []
 
         data.each do |node|
-          nodes << node['name']
+          if filter.nil? || node['name'].match(filter)
+            nodes << node['name']
+          end
         end
       end
 

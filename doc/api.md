@@ -19,6 +19,8 @@ Currently the following endpoints are supported:
 - `machines`: Create, update and query machines.
 - `cloud_providers`: Read cloud provider configuration, used to automatically fetch
   adapter configuration.
+- `cloud_providers/$NAME`: Read cloud provider configuration by name.
+
 
 #### `machines` endpoint
 
@@ -86,6 +88,20 @@ Currently the following endpoints are supported:
 			<dt>Parameters</dt><dd><code>owner</code> (optional, only return configurations of this owner)</dd>
 			<dt>Examples</dt>
 			<dd><code>curl https://idb.example.com/api/v2/cloud_providers</code></dd>
+		</dl>
+	</dd>
+</dl>
+
+#### `cloud_providers/$NAME` endpoint
+
+<dl>
+	<dt>Query</dt>
+	<dd>
+		<dl>
+			<dt>Description</dt><dd>Querys the cloud provider configuration having this name.</dd>
+			<dt>Method</dt><dd><code>GET</code></dd>
+			<dt>Examples</dt>
+			<dd><code>curl https://idb.example.com/api/v2/cloud_providers/test</code></dd>
 		</dl>
 	</dd>
 </dl>
