@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   def user_authentication
     return true if @current_user
     if session[:user_id]
-      @current_user = User.find(session[:user_id])
+      @current_user = User.find_by_id(session[:user_id])
       return true if @current_user
     end
     redirect_to login_url
