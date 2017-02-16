@@ -77,25 +77,25 @@ class MachineUpdateService
     machine.save!
   end
 
-  def self.parse_yum_packages(x)
+  def self.parse_yum_packages(packages)
     software = Array.new
-    x.gsub(/[\[\]]/,'').split(' ').each do |s|
-      m = /(?<name>.*)-(?<version>.*-.*\..*)/.match(s)
-      if m
-        software << { name: m[:name], version: m[:version] }
+    packages.gsub(/[\[\]]/,'').split(' ').each do |package|
+      matched_package = /(?<name>.*)-(?<version>.*-.*\..*)/.match(package)
+      if matched_package
+        software << { name: matched_package[:name], version: matched_package[:version] }
       end
     end
     return software
   end
 
-  def self.parse_apt_packages(x)
+  def self.parse_apt_packages(packages)
     software = Array.new
-    x.gsub(/[\[\]]/,'').split(' ').each do |s|
-      n, v = s.split('=')
-      if v
-        software << { name: n, version: v }
+    packages.gsub(/[\[\]]/,'').split(' ').each do |package|
+      name, version = package.split('=')
+      if version
+        software << { name: name, version: version }
       else
-        software << { name: n }
+        software << { name: name }
       end
     end
     return software
