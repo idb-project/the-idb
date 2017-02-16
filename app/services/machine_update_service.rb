@@ -67,9 +67,9 @@ class MachineUpdateService
     end
 
     if facts.idb_installed_packages != nil and not facts.idb_installed_packages.empty?
-      if IDB.config.puppetdb.yum_distributions && IDB.config.puppetdb.yum_distributions.include? facts.operatingsystem
+      if IDB.config.puppetdb.yum_distributions && IDB.config.puppetdb.yum_distributions.include?(facts.operatingsystem)
         machine.software = parse_yum_packages(facts.idb_installed_packages)
-      elsif IDB.config.puppetdb.apt_distributions && IDB.config.puppetdb.apt_distributions.include? facts.operatingsystem
+      elsif IDB.config.puppetdb.apt_distributions && IDB.config.puppetdb.apt_distributions.include?(facts.operatingsystem)
         machine.software = parse_apt_packages(facts.idb_installed_packages)
       end
     end
