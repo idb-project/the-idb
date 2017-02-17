@@ -76,7 +76,7 @@ class MachineUpdateService
     software = Array.new
     packages.gsub(/[\[\]]/,'').split(' ').each do |package|
       if matched_package = package.match(/\S*=\S*/)
-        # apt package
+        # deb package
         name, version = matched_package.to_s.split('=')
         software << (version.nil? ? { name: name } : { name: name, version: version })
       elsif matched_package = package.match(/(?<name>.*)-(?<version>.*-.*\..*)/)

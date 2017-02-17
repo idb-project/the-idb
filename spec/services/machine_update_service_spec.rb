@@ -223,8 +223,8 @@ describe MachineUpdateService do
       end
     end
 
-    context 'with apt packages provided' do
-      it "processes apt version Strings correctly" do
+    context 'with deb packages provided' do
+      it "processes .deb version Strings correctly" do
         packages = "[adaptec-firmware=1.35-2.15.4.noarch gnome-icon-theme=2.28.0-1.2.11.noarch]"
         expect(described_class.parse_installed_packages(packages).first).to eq({:name => "adaptec-firmware", :version => "1.35-2.15.4.noarch"})
         expect(described_class.parse_installed_packages(packages).size).to eq(2)
@@ -232,7 +232,7 @@ describe MachineUpdateService do
     end
 
     context 'with rpm packages provided' do
-      it "processes apt version Strings correctly" do
+      it "processes rpm version Strings correctly" do
         packages = "[adaptec-firmware-1.35-2.15.4.noarch gnome-icon-theme-2.28.0-1.2.11.noarch]"
         expect(described_class.parse_installed_packages(packages).first).to eq({:name => "adaptec-firmware", :version => "1.35-2.15.4.noarch"})
         expect(described_class.parse_installed_packages(packages).size).to eq(2)
