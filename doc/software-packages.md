@@ -39,7 +39,7 @@ A list of those items may look like this:
 
 	 [accountsservice=0.6.40-2ubuntu11.2 acl=2.2.52-3 acpid=1:2.0.26-1ubuntu2 ... zlib1g:amd64=1:1.2.8.dfsg-2ubuntu4]
 
-The individual items have to be split into package name and version. Currently apt and yum based systems are supported.
+The individual items have to be split into package name and version. Currently only .deb and .rpm based systems are supported.
 
 ## Frontend
 
