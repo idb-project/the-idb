@@ -13,4 +13,6 @@ Always:
 * restart webserver / application server
 * restart sidekiq
 
+### Update Config File
 
+* If present one can remove the puppetDB options "apt_distributions" and "yum_distributions" from application.yml, they are obsolete.
