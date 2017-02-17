@@ -5,6 +5,12 @@ class OwnersController < ApplicationController
 
   def show
     @owner = Owner.eager_find(params[:id])
+
+    if IDB.config.modules.lexware_rt_crm_api && @owner.customer_id
+      url = "#{IDB.config.modules.lexware_rt_crm_api}/customers/#{@owner.customer_id}"
+      response = make_request(url)
+      @owner.data = JSON.parse(response.body) if response && response.code == "200"
+    end
   end
 
   def new
@@ -68,6 +74,15 @@ class OwnersController < ApplicationController
       attachments.each { |attachment|
         @owner.attachments.create(attachment: attachment)
       }
+    end
+  end
+
+  def make_request(url, method = "get")
+    begin
+      response = HttpHelper.req(url, method)
+    rescue StandardError => e
+      flash[:error] = e.message
+      return
     end
   end
 end
