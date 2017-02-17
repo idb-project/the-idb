@@ -40,16 +40,30 @@ class OwnerPresenter < Keynote::Presenter
   def imported_data
     return if !owner.data || owner.data.empty?
 
-    c = Lexware::Customer.new(owner.data)
-
-    build_html do
-      address do
-        address_line(self, c.company)
-        address_line(self, c.street)
-        address_line(self, "#{c.zipcode} #{c.city}")
-        address_line(self, c.country)
-        address_line(self, c.email, "email: #{c.email}")
-        address_line(self, c.phone, "phone: #{c.phone}")
+    if IDB.config.modules.lexware_rt_crm_api && owner.data["addressCountry"]
+      # data fetched from Lexware via RT CRM API
+      c = Lexware::APICustomer.new(owner.data)
+      build_html do
+        address do
+          address_line(self, c.companyName)
+          address_line(self, c.addressStreet)
+          address_line(self, "#{c.addressPostalcode} #{c.addressCity}")
+          address_line(self, c.addressCountry)
+          address_line(self, c.email, "email: #{c.email}")
+        end
+      end
+    else
+      # data from Lexware via importer
+      c = Lexware::Customer.new(owner.data)
+      build_html do
+        address do
+          address_line(self, c.company)
+          address_line(self, c.street)
+          address_line(self, "#{c.zipcode} #{c.city}")
+          address_line(self, c.country)
+          address_line(self, c.email, "email: #{c.email}")
+          address_line(self, c.phone, "phone: #{c.phone}")
+        end
       end
     end
   end
