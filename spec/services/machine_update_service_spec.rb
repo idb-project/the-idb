@@ -4,17 +4,20 @@ describe MachineUpdateService do
   describe '.update_from_facts' do
     let(:facts) do
       Puppetdb::Facts.new(
-        interfaces: 'eth0,eth1,eth2,lo',
+        interfaces: 'eth0,eth1,eth2,lo,Ethernet 2',
         ipaddress_eth0: '172.20.10.7',
         ipaddress6_eth0: '172.20.10.7v6',
         ipaddress_eth1: '10.0.0.1',
         ipaddress_lo: '127.0.0.1',
+        "ipaddress_Ethernet 2": '127.0.1.1',
         macaddress_eth0: '6a:a8:6d:e0:a2:a6',
         macaddress_eth1: '3c:97:0e:40:06:be',
         macaddress_eth2: '3c:97:0e:40:06:b1',
+        "macaddress_Ethernet 2": '3c:97:0e:40:06:b2',
         netmask_eth0: '255.255.255.240',
         netmask_eth1: '255.255.255.0',
         netmask_lo: '255.0.0.0',
+        "netmask_Ethernet 2": '255.255.0.0',
         is_virtual: false,
         serialnumber: '42Q6F5J',
         memorysize_mb: '12018.26',
@@ -111,6 +114,22 @@ describe MachineUpdateService do
 
           it 'sets the netmask' do
             expect(nic.ip_address.netmask).to eq('255.255.255.0')
+          end
+        end
+
+        describe 'Ethernet 2 interface' do
+          let(:nic) { machine.nics.find {|n| n.name == 'Ethernet 2' } }
+
+          it 'sets the mac address' do
+            expect(nic.mac).to eq('3c:97:0e:40:06:b2')
+          end
+
+          it 'sets the ip address' do
+            expect(nic.ip_address.addr).to eq('127.0.1.1')
+          end
+
+          it 'sets the netmask' do
+            expect(nic.ip_address.netmask).to eq('255.255.0.0')
           end
         end
       end

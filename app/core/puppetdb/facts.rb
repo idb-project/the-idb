@@ -54,7 +54,7 @@ module Puppetdb
       attributes = HashWithIndifferentAccess.new(attributes)
 
       attributes[:interfaces].to_s.split(',').each do |interface|
-        nic = build_nic(interface.downcase, attributes)
+        nic = build_nic(interface, attributes)
 
         if nic
           @interfaces[nic.name] = nic
