@@ -102,12 +102,12 @@ module Puppetdb
 
       Nic.new(name: name).tap do |nic|
         # XXX Revisit: Windows seems to only set "macaddress".
-        nic.mac = attributes["macaddress_#{name}"] || attributes['macaddress']
+        nic.mac = attributes["macaddress_#{name}"] || attributes["macaddress_#{name}".downcase] || attributes['macaddress']
         nic.mac = nic.mac.downcase if nic.mac
         nic.ip_address = IpAddress.new
-        nic.ip_address.addr = attributes["ipaddress_#{name}"]
-        nic.ip_address.addr_v6 = attributes["ipaddress6_#{name}"]
-        nic.ip_address.netmask = attributes["netmask_#{name}"]
+        nic.ip_address.addr = attributes["ipaddress_#{name}"] || attributes["ipaddress_#{name}".downcase]
+        nic.ip_address.addr_v6 = attributes["ipaddress6_#{name}"] || attributes["ipaddress6_#{name}".downcase]
+        nic.ip_address.netmask = attributes["netmask_#{name}"] || attributes["netmask_#{name}".downcase]
         # XXX Hardcoded for now! Not sure how facter displays ipv6 addresses.
         nic.ip_address.family = 'inet'
       end

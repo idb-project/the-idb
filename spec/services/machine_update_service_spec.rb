@@ -17,7 +17,7 @@ describe MachineUpdateService do
         netmask_eth0: '255.255.255.240',
         netmask_eth1: '255.255.255.0',
         netmask_lo: '255.0.0.0',
-        "netmask_Ethernet 2": '255.255.0.0',
+        "netmask_ethernet 2": '255.255.0.0',
         is_virtual: false,
         serialnumber: '42Q6F5J',
         memorysize_mb: '12018.26',
