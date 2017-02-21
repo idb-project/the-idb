@@ -1,5 +1,12 @@
 HEAD
 ====
+- [feature] Fetch owner information live via rt-crm-api. #4799
+- [feature] Simplify installed packages processing. #4798
+- [bugfix] redirect to login page, if no valid user in session
+- [bugfix] Check if apt and yum distributions are configured before accessing them.
+- [feature] enable access to cloud providers via api
+- [feature] allow duplicate mac address. #3965
+- [bugfix] MySQL exception in inventory module. #4725
 - [feature] Update Rails to 5.0.1. #4729
 - [feature] Import installed software packages from puppet.
 - [feature] Implementation of a module to search for installed software packages. #4596
