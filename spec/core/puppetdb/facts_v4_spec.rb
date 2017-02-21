@@ -162,7 +162,7 @@ describe Puppetdb::FactsV4 do
   end
 
   describe 'local_area_connection_2' do
-    let(:lan) { facts.interfaces['local_area_connection_2'] }
+    let(:lan) { facts.interfaces['Local_Area_Connection_2'] }
 
     it 'has an ip address' do
       expect(lan.ip_address.addr).to eq(hash[:ipaddress_local_area_connection_2])
