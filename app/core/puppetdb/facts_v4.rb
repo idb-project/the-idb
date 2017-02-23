@@ -16,12 +16,6 @@ module Puppetdb
         facts["diskspace"] = i
       end
 
-      if facts["memorysize"].end_with?("GB")
-        facts["memorysize_mb"] = facts["memorysize"].to_f*1024.to_i
-      elsif facts["memorysize"].end_with?("MB")
-        facts["memorysize_mb"] = facts["memorysize"].to_f.to_i
-      end
-
       new(facts)
     end
 
