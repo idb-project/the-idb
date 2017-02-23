@@ -192,39 +192,6 @@ describe MachineUpdateService do
     end
   end
 
-  describe '.update_from_alternative_facts' do
-    let(:facts2) do
-      Puppetdb::Facts.new(
-        serialnumber: '42Q6F5J',
-        memorysize: '23.60 GB'
-      )
-    end
-
-    let(:machine) do
-      Machine.create!(fqdn: 'test.example.com')
-    end
-
-    before do
-      allow(Puppetdb::FactsV3).to receive(:for).and_return(facts2)
-      allow(Puppetdb::FactsV3).to receive(:raw_data).and_return(facts2.to_s)
-      allow(Puppetdb::FactsV4).to receive(:for).and_return(facts2)
-      allow(Puppetdb::FactsV4).to receive(:raw_data).and_return(facts2.to_s)
-      @url = "https://puppetdb.example.com"
-    end
-
-    it 'sets the serialnumber' do
-      described_class.update_from_facts(machine, @url)
-
-      expect(machine.serialnumber).to eq('42Q6F5J')
-    end
-
-    it 'sets the RAM if memorysize_mb is not defined' do
-      described_class.update_from_facts(machine, @url)
-
-      expect(machine.ram).to eq(24166)
-    end
-  end
-
   describe '.parse_installed_packages' do
     let(:machine) do
       Machine.create!(fqdn: 'test.example.com')
