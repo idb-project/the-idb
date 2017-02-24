@@ -19,10 +19,21 @@
   <div class="span12">
     <span style="color: #777777"><%= version.summary %></span>
     <%= version.diff_css %>
-
     <%- version.changesets do |attribute, changeset| -%>
       <h4><%= attribute %></h4>
+      <%- if attribute == "Machine" %>
+      <%= version.diff_html_machine(changeset) %>
+      <%- elsif attribute == "Location" %>
+      <%= version.diff_html_location(changeset) %>
+      <%- elsif attribute == "Owner" %>
+      <%= version.diff_html_owner(changeset) %>
+      <%- elsif attribute == "Inventory status" %>
+      <%= version.diff_html_status(changeset) %>
+      <%- elsif attribute == "User" %>
+      <%= version.diff_html_user(changeset) %>
+      <%- else %>
       <%= version.diff_html(changeset) %>
+      <%- end %>
       <hr/>
     <%- end -%>
   </div>
