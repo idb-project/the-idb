@@ -25,11 +25,7 @@ module Puppetdb
     end
 
     attribute :lsbdistrelease, String
-
-    def operatingsystemrelease
-      # this fact got renamed from puppetDB API v3 to v4
-      lsbdistrelease
-    end
+    attribute :operatingsystemrelease, String
 
     def windows_fixes
       return unless operatingsystem =~ /windows/i

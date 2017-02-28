@@ -23,7 +23,8 @@ describe MachineUpdateService do
         memorysize_mb: '12018.26',
         blockdevices: 'hda,sda',
         blockdevice_hda_size: 2000000,
-        blockdevice_sda_size: 1000000
+        blockdevice_sda_size: 1000000,
+        lsbdistrelease: '2012 R1'
       )
     end
 
@@ -48,7 +49,8 @@ describe MachineUpdateService do
         memorysize_mb: '12018.26',
         blockdevices: 'hda,sda',
         blockdevice_hda_size: 2000000,
-        blockdevice_sda_size: 1000000
+        blockdevice_sda_size: 1000000,
+        operatingsystemrelease: '2012 R2'
       )
     end
 
@@ -74,6 +76,18 @@ describe MachineUpdateService do
       described_class.update_from_facts(machine,  @url)
 
       expect(machine.serialnumber).to eq('42Q6F5J')
+    end
+
+    it 'sets the os_release' do
+      described_class.update_from_facts(machine,  @url)
+
+      expect(machine.os_release).to eq('2012 R1')
+    end
+
+    it 'sets the os_release from v4 facts' do
+      described_class.update_from_facts(machine,  @url, "v4")
+
+      expect(machine.os_release).to eq('2012 R2')
     end
 
     context 'retrieve the installed RAM' do

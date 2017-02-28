@@ -13,6 +13,7 @@ module Puppetdb
 
     attribute :operatingsystem, String
     attribute :operatingsystemrelease, String
+    attribute :lsbdistrelease, String
     attribute :architecture, String
     attribute :memorysize_mb, Float
     attribute :memorysize, Float

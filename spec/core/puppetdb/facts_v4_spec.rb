@@ -41,7 +41,6 @@ describe Puppetdb::FactsV4 do
 
   its(:operatingsystem) { should eq('Ubuntu') }
   its(:lsbdistrelease) { should eq('12.04') }
-  its(:operatingsystemrelease) { should eq('12.04') }
   its(:architecture) { should eq('amd64') }
   its(:memorysize_mb) { should eq(2000) }
   its(:blockdevices) { should eq("hda,sda,sdb") }
