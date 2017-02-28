@@ -5,7 +5,11 @@ module Puppetdb
       data = api.get("/pdb/query/v4/nodes/#{node}/facts").data
 
       facts = Array(data).each_with_object({}) do |fact, hash|
-        hash[fact['name'].gsub("-", "_")] = fact['value']
+        if fact.class == Array && fact.first == "error"
+          # usually "No information is known about node ..."
+        else
+          hash[fact['name'].gsub("-", "_")] = fact['value']
+        end
       end
 
       if facts["blockdevices"]
