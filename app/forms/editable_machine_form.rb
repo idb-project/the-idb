@@ -93,10 +93,6 @@ class EditableMachineForm
     begin
       changed_attributes = machine.changed_attributes
       if valid? && machine.save
-        if nics_changed
-          # trigger mco worker to try to map this machine with vmhosts
-          ScheduledMcoVirshWorker.perform_async unless IDB.config.mco.socket_path.blank?
-        end
         changed_attributes.empty? ? {} : changed_attributes
       else
         @show_errors = true
