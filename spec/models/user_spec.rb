@@ -33,6 +33,20 @@ describe User do
     end
   end
 
+  describe '#is_admin?' do
+    it 'returns the admin status' do
+      expect(user.is_admin?).to be false
+
+      attributes[:admin] = false
+      user.update(attributes)
+      expect(user.is_admin?).to be false
+
+      attributes[:admin] = true
+      user.update(attributes)
+      expect(user.is_admin?).to be true
+    end
+  end
+
   describe '#update' do
     let(:updated_user) { User.first }
 
