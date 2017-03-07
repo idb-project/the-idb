@@ -52,7 +52,7 @@ module Puppetdb
 
       @interfaces = {}
 
-      attributes = HashWithIndifferentAccess.new(attributes)
+      attributes = ActiveSupport::HashWithIndifferentAccess.new(attributes)
 
       attributes[:interfaces].to_s.split(',').each do |interface|
         nic = build_nic(interface, attributes)
