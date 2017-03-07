@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161125140128) do
+ActiveRecord::Schema.define(version: 20170307141740) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 20161125140128) do
     t.datetime "deleted_at"
     t.string   "password_digest"
     t.string   "carLicence"
+    t.boolean  "admin"
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
     t.index ["login"], name: "index_users_on_login", unique: true, using: :btree
   end
