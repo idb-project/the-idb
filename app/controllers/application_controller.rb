@@ -24,6 +24,20 @@ class ApplicationController < ActionController::Base
     redirect_to login_url
   end
 
+  def require_admin_user
+    if current_user
+      if !current_user.is_admin?
+        flash[:error] = "Access forbidden"
+        redirect_to root_path
+        return false
+      end
+    else
+      flash[:error] = "Access forbidden"
+      redirect_to login_path
+      return false
+    end
+  end
+
   def user_for_paper_trail
     if session[:user_id]
       return session[:user_id]

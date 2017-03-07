@@ -1,4 +1,6 @@
 class CloudProvidersController < ApplicationController
+  before_action :require_admin_user
+
   def index
     @cloud_providers = CloudProvider.all
   end
