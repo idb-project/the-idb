@@ -56,8 +56,10 @@ describe BasicUserAuth do
 
     context 'if a user is found' do
       before do
+        allow(ldap_user).to receive(:dn).and_return("my_dn")
         allow(ldap).to receive(:find_user).with('login', 'pass').and_return(ldap_user)
-        allow(UserService).to receive(:update_from_virtual_user).with(ldap_user, 'pass').and_return(user)
+        allow(ldap).to receive(:is_admin?).and_return(false)
+        allow(UserService).to receive(:update_from_virtual_user).with(ldap_user, 'pass', false).and_return(user)
       end
 
       it 'yields the user' do

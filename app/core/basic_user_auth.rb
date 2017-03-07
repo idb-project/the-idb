@@ -51,7 +51,8 @@ class BasicUserAuth < Struct.new(:realm, :context)
       end
     end
     if user
-      yield(UserService.update_from_virtual_user(user, pass, ldap.is_admin?(user.dn))) if block_given?
+      is_admin = ldap.is_admin?(user.dn)
+      yield(UserService.update_from_virtual_user(user, pass, is_admin)) if block_given?
     end
     user
   end
