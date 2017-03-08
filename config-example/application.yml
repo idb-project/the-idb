@@ -47,8 +47,6 @@ defaults: &defaults
     namespace: 'idb'
     pool_size: 5
     pool_timeout: 1
-  mco:
-    socket_path: ''
   stomp:
     host: 'stomp-host.example.com'
     port: 61614

@@ -15,7 +15,7 @@ class MachineUpdateService
 
     machine.auto_update = true
     machine.os = facts.operatingsystem
-    machine.os_release = facts.operatingsystemrelease
+    machine.os_release = facts.operatingsystemrelease || facts.lsbdistrelease
     machine.arch = facts.architecture
     machine.ram = facts.memorysize_mb
     machine.cores = facts.processorcount

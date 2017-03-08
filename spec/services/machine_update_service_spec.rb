@@ -17,13 +17,40 @@ describe MachineUpdateService do
         netmask_eth0: '255.255.255.240',
         netmask_eth1: '255.255.255.0',
         netmask_lo: '255.0.0.0',
-        "netmask_Ethernet 2": '255.255.0.0',
+        "netmask_ethernet 2": '255.255.0.0',
         is_virtual: false,
         serialnumber: '42Q6F5J',
         memorysize_mb: '12018.26',
         blockdevices: 'hda,sda',
         blockdevice_hda_size: 2000000,
-        blockdevice_sda_size: 1000000
+        blockdevice_sda_size: 1000000,
+        lsbdistrelease: '2012 R1'
+      )
+    end
+
+    let(:factsv4) do
+      Puppetdb::FactsV4.new(
+        interfaces: 'eth0,eth1,eth2,lo,Ethernet 2',
+        ipaddress_eth0: '172.20.10.7',
+        ipaddress6_eth0: '172.20.10.7v6',
+        ipaddress_eth1: '10.0.0.1',
+        ipaddress_lo: '127.0.0.1',
+        "ipaddress_Ethernet 2": '127.0.1.1',
+        macaddress_eth0: '6a:a8:6d:e0:a2:a6',
+        macaddress_eth1: '3c:97:0e:40:06:be',
+        macaddress_eth2: '3c:97:0e:40:06:b1',
+        "macaddress_Ethernet 2": '3c:97:0e:40:06:b2',
+        netmask_eth0: '255.255.255.240',
+        netmask_eth1: '255.255.255.0',
+        netmask_lo: '255.0.0.0',
+        "netmask_ethernet 2": '255.255.0.0',
+        is_virtual: false,
+        serialnumber: '42Q6F5J',
+        memorysize_mb: '12018.26',
+        blockdevices: 'hda,sda',
+        blockdevice_hda_size: 2000000,
+        blockdevice_sda_size: 1000000,
+        operatingsystemrelease: '2012 R2'
       )
     end
 
@@ -34,8 +61,8 @@ describe MachineUpdateService do
     before do
       allow(Puppetdb::FactsV3).to receive(:for).and_return(facts)
       allow(Puppetdb::FactsV3).to receive(:raw_data).and_return(facts.to_s)
-      allow(Puppetdb::FactsV4).to receive(:for).and_return(facts)
-      allow(Puppetdb::FactsV4).to receive(:raw_data).and_return(facts.to_s)
+      allow(Puppetdb::FactsV4).to receive(:for).and_return(factsv4)
+      allow(Puppetdb::FactsV4).to receive(:raw_data).and_return(factsv4.to_s)
       @url = "https://puppetdb.example.com"
     end
 
@@ -50,11 +77,40 @@ describe MachineUpdateService do
 
       expect(machine.serialnumber).to eq('42Q6F5J')
     end
-    
-    it 'sets the RAM' do
-      described_class.update_from_facts(machine, @url)
 
-      expect(machine.ram).to eq(12018)
+    it 'sets the os_release' do
+      described_class.update_from_facts(machine,  @url)
+
+      expect(machine.os_release).to eq('2012 R1')
+    end
+
+    it 'sets the os_release from v4 facts' do
+      described_class.update_from_facts(machine,  @url, "v4")
+
+      expect(machine.os_release).to eq('2012 R2')
+    end
+
+    context 'retrieve the installed RAM' do
+      it 'sets the RAM' do
+        described_class.update_from_facts(machine, @url)
+
+        expect(machine.ram).to eq(12018)
+      end
+
+      it 'sets the RAM from v4 facts' do
+        described_class.update_from_facts(machine, @url, "v4")
+
+        expect(machine.ram).to eq(12018)
+      end
+
+      it 'sets the RAM from v4 facts, written in GB' do
+        factsv4["memorysize"] = "120GB"
+        factsv4["memorysize_mb"] = nil
+        allow(Puppetdb::FactsV4).to receive(:for_node).and_return(factsv4)
+        described_class.update_from_facts(machine, @url, "v4")
+
+        expect(machine.ram).to eq(122880)
+      end
     end
 
     it 'sets the auto_update flag to true' do
@@ -189,39 +245,6 @@ describe MachineUpdateService do
           end
         end
       end
-    end
-  end
-
-  describe '.update_from_alternative_facts' do
-    let(:facts2) do
-      Puppetdb::Facts.new(
-        serialnumber: '42Q6F5J',
-        memorysize: '23.60 GB'
-      )
-    end
-
-    let(:machine) do
-      Machine.create!(fqdn: 'test.example.com')
-    end
-
-    before do
-      allow(Puppetdb::FactsV3).to receive(:for).and_return(facts2)
-      allow(Puppetdb::FactsV3).to receive(:raw_data).and_return(facts2.to_s)
-      allow(Puppetdb::FactsV4).to receive(:for).and_return(facts2)
-      allow(Puppetdb::FactsV4).to receive(:raw_data).and_return(facts2.to_s)
-      @url = "https://puppetdb.example.com"
-    end
-
-    it 'sets the serialnumber' do
-      described_class.update_from_facts(machine, @url)
-
-      expect(machine.serialnumber).to eq('42Q6F5J')
-    end
-
-    it 'sets the RAM if memorysize_mb is not defined' do
-      described_class.update_from_facts(machine, @url)
-
-      expect(machine.ram).to eq(24166)
     end
   end
 
