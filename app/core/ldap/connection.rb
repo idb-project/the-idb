@@ -31,23 +31,33 @@ module LDAP
 
     def find_user(login, password)
       filter = Net::LDAP::Filter.eq(@config.uid, login)
-      response = @ldap.bind_as(:filter => filter, :password => password)
-
-      response ? LDAP::User.new(response.first) : false
+      begin
+        response = @ldap.bind_as(:filter => filter, :password => password)
+        response ? LDAP::User.new(response.first) : false
+      rescue Exception => e
+        # typically thrown if bind did not return result
+        Rails.logger.error e
+        false
+      end
     end
 
     def is_admin?(dn)
       if @config.admin_group.blank?
         return true
       else
-        if @ldap.bind
-          filter = Net::LDAP::Filter.eq(@config.group_membership_attribute, dn)
-          result = @ldap.search(base: @config.base, filter: filter)
-          result.each do |entry|
-            return true if entry.dn == @config.admin_group
+        begin
+          if @ldap.bind
+            filter = Net::LDAP::Filter.eq(@config.group_membership_attribute, dn)
+            result = @ldap.search(base: @config.base, filter: filter)
+            result.each do |entry|
+              return true if entry.dn == @config.admin_group
+            end
+          else
+            Rails.logger.error "error on LDAP bind: " + @ldap.get_operation_result
           end
-        else
-          puts "error on LDAP bind: " + @ldap.get_operation_result
+        rescue Exception => e
+          # typically thrown if bind did not return result
+          Rails.logger.error e
         end
       end
       false
