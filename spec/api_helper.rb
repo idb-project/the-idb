@@ -20,6 +20,12 @@ def api_post action, token, params={}, version="2"
   JSON.parse(response.body) rescue {}
 end
 
+def api_post_json action, token, payload, version="2"
+  payload.merge!({"idb_api_token": token.token })
+  post "/api/v#{version}/#{action}", params: payload, as: :json
+  JSON.parse(response.body) rescue {}
+end
+
 def api_delete action, token, params={}, version="2"
   params.merge!({"idb_api_token": token.token })
   delete "/api/v#{version}/#{action}", params: params

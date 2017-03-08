@@ -4,8 +4,7 @@ module V2
 
     def api_enabled!
       unless IDB.config.modules.api.v2_enabled
-        status 501
-        return {}
+        error!("API disabled.", 501)
       end
      end
 
