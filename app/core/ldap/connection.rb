@@ -51,7 +51,7 @@ module LDAP
             result = @ldap.search(base: @config.admin_group)
             if result.blank?
               Rails.logger.error "LDAP admin group #{@config.admin_group} not found"
-              return true
+              return false
             else
               # check group membership of the logged in user
               result.first[@config.group_membership_attribute].each do |entry|
