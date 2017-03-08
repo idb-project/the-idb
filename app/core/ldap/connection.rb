@@ -47,11 +47,16 @@ module LDAP
       else
         begin
           if @ldap.bind
-            # check membership in admin group
-            filter = Net::LDAP::Filter.eq(@config.group_membership_attribute, login)
-            result = @ldap.search(base: @config.base, filter: filter)
-            result.each do |entry|
-              return true if entry.dn == @config.admin_group
+            # check if admin group exists
+            result = @ldap.search(base: @config.admin_group)
+            if result.blank?
+              Rails.logger.error "LDAP admin group #{@config.admin_group} not found"
+              return true
+            else
+              # check group membership of the logged in user
+              result.first[@config.group_membership_attribute].each do |entry|
+                return true if entry.to_s == login
+              end
             end
           else
             Rails.logger.error "error on LDAP bind: " + @ldap.get_operation_result
