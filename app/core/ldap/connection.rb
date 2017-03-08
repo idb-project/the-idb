@@ -41,13 +41,14 @@ module LDAP
       end
     end
 
-    def is_admin?(dn)
+    def is_admin?(login)
       if @config.admin_group.blank?
         return true
       else
         begin
           if @ldap.bind
-            filter = Net::LDAP::Filter.eq(@config.group_membership_attribute, dn)
+            # check membership in admin group
+            filter = Net::LDAP::Filter.eq(@config.group_membership_attribute, login)
             result = @ldap.search(base: @config.base, filter: filter)
             result.each do |entry|
               return true if entry.dn == @config.admin_group
