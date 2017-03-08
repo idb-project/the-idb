@@ -23,8 +23,8 @@ module LDAP
       end
 
       # Enable encryption if ldaps port is used.
-      options[:encryption] = :simple_tls if options[:port] == (636 || 7636)
-      options[:encryption] = :simple_tls if config.tls == "yes"
+      options[:encryption] = :simple_tls if options[:port] == 636
+      options[:encryption] = :simple_tls if config.tls == true
 
       @ldap = Net::LDAP.new(options)
     end
