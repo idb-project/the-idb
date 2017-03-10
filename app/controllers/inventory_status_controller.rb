@@ -1,4 +1,6 @@
 class InventoryStatusController < ApplicationController
+  before_action :require_admin_user
+
   def index
     @all_inventory_status = InventoryStatus.order(name: :asc)
   end

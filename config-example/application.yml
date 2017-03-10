@@ -128,7 +128,12 @@ development:
     base: 'dc=nodomain'
     uid: 'uid'
     auth_dn: 
-    auth_password: 
+    auth_password:
+    uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
 
 test:
   <<: *defaults
@@ -145,6 +150,10 @@ production:
     port: 636
     base: 'dc=example,dc=com'
     uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
   stomp:
     host: 'stomp.example.com'
     port: 61614
