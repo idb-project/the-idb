@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170307141740) do
+ActiveRecord::Schema.define(version: 20170310105145) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20170307141740) do
     t.datetime "attachment_updated_at"
     t.integer  "owner_id"
     t.integer  "machine_id"
+    t.string   "attachment_fingerprint"
   end
 
   create_table "cloud_providers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
