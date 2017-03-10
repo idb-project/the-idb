@@ -1,37 +1,6 @@
 module V2
   class CloudProviders < Grape::API
-    helpers do
-      def get_token
-        if params[:idb_api_token]
-          return params[:idb_api_token]
-        elsif request.headers["X-Idb-Api-Token"]
-          return request.headers["X-Idb-Api-Token"]
-        else
-          error!("Unauthorized.", 401)
-        end
-      end
-
-      def authenticate!
-        token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-        if ApiToken.where("token = ?", token).empty?
-          error!("Unauthorized.", 401)
-        end
-      end
-
-      def can_read!
-        token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-        unless ApiToken.where("token = ?", token).first.read
-          error!("Unauthorized.", 401)
-        end
-      end
-
-      def can_write!
-        token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-        unless ApiToken.where("token = ?", token).first.write
-          error!("Unauthorized.", 401)
-        end
-      end
-    end
+    helpers V2::Helpers
 
     version 'v2'
     format :json
