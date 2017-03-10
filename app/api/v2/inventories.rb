@@ -9,6 +9,7 @@ module V2
       before do
         api_enabled!
         authenticate!
+        PaperTrail.whodunnit = params["idb_api_token"] ? params["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
       end
 
       get do
@@ -64,13 +65,11 @@ module V2
     end
 
     def self.inventory_create(p)
-      PaperTrail.whodunnit = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
       p = p.reject { |k| !Inventory.attribute_method?(k) }
       Inventory.create(p)
     end
 
     def self.inventory_update(p)
-      PaperTrail.whodunnit = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
       p = p.reject { |k| !Inventory.attribute_method?(k) }
       inventory = Inventory.find_by id: p["id"]
       if inventory != nil
