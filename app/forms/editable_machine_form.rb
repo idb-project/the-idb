@@ -57,6 +57,7 @@ class EditableMachineForm
     nics = recursive_symbolize_keys(nics) || Array.new
 
     aliases = params.delete(:aliases) || Array.new
+    aliases = recursive_symbolize_keys(aliases)
 
     nics_changed = false
 
