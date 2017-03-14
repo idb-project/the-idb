@@ -1,4 +1,4 @@
-# API￼
+# API
 
 This documentation describes API version 2.
 
