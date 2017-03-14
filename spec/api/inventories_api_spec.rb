@@ -54,6 +54,22 @@ describe 'Inventories API' do
       expect(inventories["id"]).to eq(@inventory_a.id)
     end
 
+    it "returns inventory items by number if number param is set" do
+      api_get "inventories?number=#{@inventory_a.inventory_number}", @api_token_r
+
+      inventories = JSON.parse(response.body)
+      expect(response.status).to eq(200)
+      expect(inventories.first["id"]).to eq(@inventory_a.id)
+    end
+
+    it "returns the inventory by id if id param is set" do
+      api_get "inventories?id=#{@inventory_a.id}", @api_token_r
+
+      inventories = JSON.parse(response.body)
+      expect(response.status).to eq(200)
+      expect(inventories["id"]).to eq(@inventory_a.id)
+    end
+
     it "returns a 404 if no inventory is found" do
       api_get "inventories?id=0", @api_token_r
 
