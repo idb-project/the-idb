@@ -14,17 +14,26 @@ module V2
 
       get do
         can_read!
-        if params[:id] != nil
-          i = Inventory.find_by id: params[:id]
-          if i
-            i
-          else
-            status 404
-            {}
-          end
+
+        x = nil
+        case
+        when params[:id]
+          x = Inventory.find_by id: params[:id]
+        when params[:number]
+          x = Inventory.where inventory_number: params[:number]
+        when params[:owner]
+          x = Inventory.where "owner_id = ?", params[:owner]
         else
-          Inventory.all
-        end        
+          x = Inventory.all
+        end
+
+        if not x 
+          status 404
+          return {}
+        end
+
+        status 200
+        x
       end
 
       post do
