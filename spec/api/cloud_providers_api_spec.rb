@@ -27,6 +27,15 @@ describe 'Cloud providers API' do
   end
 
   describe "GET /cloud_providers" do
+    it "returns error with invalid token" do
+      api_get "cloud_providers", @api_token
+
+      machines = JSON.parse(response.body)
+      expect(response.status).to eq(401)
+      expect(machines["response_type"]).to eq("error")
+      expect(machines["response"]).to eq("Unauthorized.")
+    end
+
     it "returns a cloud provider given an id" do
       api_get "cloud_providers?id=#{@cloud_provider.id}", @api_token_r
 
