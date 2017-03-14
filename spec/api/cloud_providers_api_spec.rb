@@ -19,8 +19,10 @@ describe 'Cloud providers API' do
       IDB.config.modules.api.v2_enabled = false
 
       api_get "cloud_providers", @api_token_r
+      body = JSON.parse(response.body)
       expect(response.status).to eq(501)
-      expect(JSON.parse(response.body)).to eq({})
+      expect(body["response_type"]).to eq("error")
+      expect(body["response"]).to eq("API disabled.")
     end
   end
 

@@ -6,14 +6,15 @@ module V2
     format :json
 
     resource :cloud_providers do
+      before do
+        api_enabled!
+        authenticate!
+        PaperTrail.whodunnit = params["idb_api_token"] ? params["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+      end
+
       desc "Returns cloud providers by id, name or owner."
       get do
-          authenticate!
           can_read!
-          unless IDB.config.modules.api.v2_enabled
-            status 501
-            return {}
-          end
 
           m = nil
           case
