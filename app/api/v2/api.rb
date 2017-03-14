@@ -3,5 +3,6 @@ module V2
     mount V2::Machines
     mount V2::CloudProviders
     mount V2::Inventories
+    mount V2::Software
   end
 end
