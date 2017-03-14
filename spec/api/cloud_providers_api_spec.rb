@@ -25,25 +25,25 @@ describe 'Cloud providers API' do
   end
 
   describe "GET /cloud_providers" do
-    it "returns error with invalid token" do
-      api_get "cloud_providers", @api_token
+    it "returns a cloud provider given an id" do
+      api_get "cloud_providers?id=#{@cloud_provider.id}", @api_token_r
 
       cloud_providers = JSON.parse(response.body)
-      expect(response.status).to eq(401)
-      expect(cloud_providers["response_type"]).to eq("error")
-      expect(cloud_providers["response"]).to eq("Unauthorized.")
+
+      expect(response.status).to eq(200)
+      expect(cloud_providers["id"]).to eq(@cloud_provider.id)
     end
 
-    it "returns all cloud providers if owner is not specified" do
-      api_get "cloud_providers", @api_token_r
+    it "returns the cloud provider given an name" do
+      api_get "cloud_providers?name=#{@cloud_provider.name}", @api_token_r
 
       cloud_providers = JSON.parse(response.body)
       expect(response.status).to eq(200)
-      expect(cloud_providers.size).to eq(2)
+      expect(cloud_providers.size).to eq(1)
       expect(cloud_providers.first["name"]).to eq(@cloud_provider.name)
     end
 
-    it "returns the cloud providers of an owner if owner is specified" do
+    it "returns the cloud provider given an name" do
       api_get "cloud_providers?owner=#{@user.id}", @api_token_r
 
       cloud_providers = JSON.parse(response.body)
@@ -52,12 +52,12 @@ describe 'Cloud providers API' do
       expect(cloud_providers.first["name"]).to eq(@cloud_provider.name)
     end
 
-    it "returns a 404 if no cloud provider is found" do
-      api_get "cloud_providers?owner=99999", @api_token_r
+    it "returns all cloud_providers with no parameter" do
+      api_get "cloud_providers", @api_token_r
 
       cloud_providers = JSON.parse(response.body)
-      expect(response.status).to eq(404)
-      expect(cloud_providers.size).to eq(0)
+      expect(response.status).to eq(200)
+      expect(cloud_providers.size).to eq(2)
     end
   end
 end
