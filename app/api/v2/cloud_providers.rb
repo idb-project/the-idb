@@ -25,10 +25,11 @@ module V2
             m = CloudProvider.where "owner_id = ?", params[:owner]
           else
             m = CloudProvider.all
-            if not m
-              status 404
-              return {}
-            end
+          end
+
+          if not m
+            status 404
+            return {}
           end
 
           status 200
