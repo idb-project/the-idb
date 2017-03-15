@@ -11,7 +11,9 @@
           <ul class="nav">
             <li class="active"><a href="#data" data-toggle="tab">Owner Data</a></li>
             <li><a href="#machines" data-toggle="tab">Machines</a></li>
+            <%- if @owner.cloud_providers.count > 0 -%>
             <li><a href="#cloud-providers" data-toggle="tab">Cloud Providers</a></li>
+            <%- end -%>
             <li><a href="#history" data-toggle="tab">History</a></li>
           </ul>
           <ul class="nav pull-right">
