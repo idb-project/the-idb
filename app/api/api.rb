@@ -6,7 +6,7 @@ module MachineHelpers
     token = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
     token_name = token.nil? ? nil : ApiToken.find_by_token(token).try(:name)
 
-    p["raw_data_api"] = token_name.nil? ? payload.to_json : {token_name => payload}.to_json
+    p["raw_data_api"] = token_name.nil? ? {"no token" => payload}.to_json : {token_name => payload}.to_json
 
     PaperTrail.whodunnit = token_name
 
