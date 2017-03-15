@@ -3,9 +3,12 @@ module MachineHelpers
     create_machine = p["create_machine"]
 
     payload = p.clone
-    p["raw_data_api"] = payload.to_json
+    token = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+    token_name = token.nil? ? nil : ApiToken.find_by_token(token).try(:name)
 
-    PaperTrail.whodunnit = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+    p["raw_data_api"] = token_name.nil? ? payload.to_json : {token_name => payload}.to_json
+
+    PaperTrail.whodunnit = token_name
 
     # strip all params that are not attributes of a machine
     # and prepare some params

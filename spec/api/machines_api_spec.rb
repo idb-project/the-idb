@@ -115,7 +115,7 @@ describe 'Machines API' do
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
-      expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.token)
+      expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.name)
     end
 
     it 'does not create a machine if not explicitely specified' do
@@ -161,6 +161,21 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
       expect(machine['ucs_role']).to eq("member")
+    end
+
+    it 'sets the API raw data on machine update' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_get "machines?fqdn=existing.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("existing.example.com")
+
+      # sets the raw api data
+      api_put "machines?fqdn=existing.example.com&backup_brand=2", @api_token_w
+      m = Machine.find_by_fqdn("existing.example.com")
+      data = JSON.parse(m.raw_data_api)
+      expect(data.keys.first).to eq(@api_token_w.name)
+      expect(data[@api_token_w.name]["backup_brand"]).to eq("2")
     end
 
     it 'sets the backup_type if backup parameters are presented' do
