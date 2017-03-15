@@ -6,7 +6,7 @@ module V2
       unless IDB.config.modules.api.v2_enabled
         error!("API disabled.", 501)
       end
-     end
+    end
 
     def get_token
       if params[:idb_api_token]
