@@ -197,6 +197,17 @@ describe 'Machines API' do
       expect(data[@api_token_w2.name]["backup_brand"]).to eq("12")
     end
 
+    it 'keeps the API raw data from different API token on machine update, but not the idb_api_token' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_put "machines?fqdn=existing.example.com&backup_brand=3&idb_api_token=#{@api_token_w.token}", @api_token_w
+      m = Machine.find_by_fqdn("existing.example.com")
+      data = JSON.parse(m.raw_data_api)
+      expect(data.keys.size).to eq(1)
+      expect(data[@api_token_w.name]["backup_brand"]).to eq("3")
+      expect(data[@api_token_w.name]["idb_api_token"]).to be_nil
+    end
+
     it 'sets the backup_type if backup parameters are presented' do
       FactoryGirl.create(:machine, fqdn: "existing.example.com")
 
