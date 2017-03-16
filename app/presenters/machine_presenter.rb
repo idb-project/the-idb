@@ -329,9 +329,11 @@ class MachinePresenter < Keynote::Presenter
   def puppetdb_data
     output = ""
     if machine.raw_data_puppetdb
+      output += "<div id='puppet_db_data'>"
       JSON.parse(machine.raw_data_puppetdb).each do |h|
         output += "#{h['name']}: #{h['value']}<br/>"
       end
+      output += "</div>"
     end
     output
   end

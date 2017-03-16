@@ -78,4 +78,12 @@ $(function () {
       $(this).next().slideDown();
     }
   });
+
+  $(".puppet_db_data_headline").click(function() {
+    if($("#puppet_db_data").is(':visible')) {
+      $("#puppet_db_data").slideUp();
+    } else {
+      $("#puppet_db_data").slideDown();
+    }
+  });
 });
