@@ -341,7 +341,7 @@ class MachinePresenter < Keynote::Presenter
     if machine.raw_data_api
       raw = JSON.parse(machine.raw_data_api)
       raw.keys.each do |k|
-        output += "#{k}: #{raw[k]}<br/>"
+        output += "<span class='raw_api_data_headline'>#{k}:<span class='icon-resize-vertical'>&nbsp;</span></span><div class='raw_data_api'>#{raw[k]}</div><hr/>"
       end
     end
     output
