@@ -107,7 +107,7 @@ describe 'Machines API' do
       expect(machine['ucs_role']).to eq("master")
     end
 
-    it 'creates a machine if not existing, entering the API token name into the history' do
+    it 'creates a machine if not existing, entering the API token into the history' do
       api_get "machines?fqdn=new-machine.example.com", @api_token_r
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
@@ -116,7 +116,7 @@ describe 'Machines API' do
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
-      expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.name)
+      expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.token)
     end
 
     it 'does not create a machine if not explicitely specified' do
@@ -175,8 +175,8 @@ describe 'Machines API' do
       api_put "machines?fqdn=existing.example.com&backup_brand=2", @api_token_w
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
-      expect(data.keys.first).to eq(@api_token_w.name)
-      expect(data[@api_token_w.name]["backup_brand"]).to eq("2")
+      expect(data.keys.first).to eq(@api_token_w.token)
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
     end
 
     it 'keeps the API raw data from different API token on machine update' do
@@ -192,9 +192,9 @@ describe 'Machines API' do
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
       expect(data.keys.size).to eq(2)
-      expect(data[@api_token_w.name]["backup_brand"]).to eq("2")
-      expect(data[@api_token_w2.name]["custom_attribute"]).to eq("test")
-      expect(data[@api_token_w2.name]["backup_brand"]).to eq("12")
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
+      expect(data[@api_token_w2.token]["custom_attribute"]).to eq("test")
+      expect(data[@api_token_w2.token]["backup_brand"]).to eq("12")
     end
 
     it 'keeps the API raw data from different API token on machine update, but not the idb_api_token' do
@@ -204,8 +204,8 @@ describe 'Machines API' do
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
       expect(data.keys.size).to eq(1)
-      expect(data[@api_token_w.name]["backup_brand"]).to eq("3")
-      expect(data[@api_token_w.name]["idb_api_token"]).to be_nil
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("3")
+      expect(data[@api_token_w.token]["idb_api_token"]).to be_nil
     end
 
     it 'sets the backup_type if backup parameters are presented' do

@@ -343,7 +343,8 @@ class MachinePresenter < Keynote::Presenter
     if machine.raw_data_api
       raw = JSON.parse(machine.raw_data_api)
       raw.keys.each do |k|
-        output += "<span class='raw_api_data_headline'>#{k}:<span class='icon-resize-vertical'>&nbsp;</span></span><div class='raw_data_api'>"
+        token = ApiToken.find_by_token(k).try(:name) || "unknown"
+        output += "<span class='raw_api_data_headline'>#{token}:<span class='icon-resize-vertical'>&nbsp;</span></span><div class='raw_data_api'>"
           raw[k].keys.each do |key|
             output += "#{key}: #{raw[k][key]}<br/>"
           end

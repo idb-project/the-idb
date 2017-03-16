@@ -4,9 +4,11 @@ module MachineHelpers
 
     payload = p.clone
     token = p["idb_api_token"] ? p["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
-    token_name = token.nil? ? "no token" : ApiToken.find_by_token(token).try(:name)
+    token_name = token.nil? ? "no token" : token
     # do not store the token itself if provided, that is potentially classified to users
     payload.delete("idb_api_token")
+    payload.delete("create_machine")
+    payload.delete("fqdn")
 
     p["raw_data_api"] = {token_name => payload}.to_json
 
