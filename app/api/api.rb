@@ -56,6 +56,10 @@ module MachineHelpers
         m = nil
       end
     else
+      unless m.raw_data_api.nil?
+        result = JSON.parse(m.raw_data_api).merge!({token_name => payload})
+        p["raw_data_api"] = result.to_json
+      end
       m.update_attributes(p)
       m.backup_type = 1 if is_backed_up
       m.update_details_by_api(p_nics, EditableMachineForm.new(m))
