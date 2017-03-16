@@ -1,21 +1,21 @@
 FactoryGirl.define do
   factory :api_token do
-    token	"deadbeef"
-    name "general token"
+    sequence(:token) { |n| "token-#{n}" }
+    sequence(:name) { |n| "token-name-#{n}" }
     read	false
     write false
   end
 
   factory :api_token_r, class: ApiToken do
-    token "dead"
-    name "r-token"
+    sequence(:token) { |n| "r-token-#{n}" }
+    sequence(:name) { |n| "r-token-name-#{n}" }
     read true
     write false
   end
 
   factory :api_token_w, class: ApiToken do
-    token "beef"
-    name "w-token"
+    sequence(:token) { |n| "w-token-#{n}" }
+    sequence(:name) { |n| "w-token-name-#{n}" }
     read false
     write true
   end	
