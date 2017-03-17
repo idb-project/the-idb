@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170316092020) do
+ActiveRecord::Schema.define(version: 20170317103037) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -236,6 +236,13 @@ ActiveRecord::Schema.define(version: 20170316092020) do
     t.index ["customer_id"], name: "index_owners_on_customer_id", using: :btree
     t.index ["deleted_at"], name: "index_owners_on_deleted_at", using: :btree
     t.index ["nickname"], name: "index_owners_on_nickname", unique: true, using: :btree
+  end
+
+  create_table "owners_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "owner_id"
+    t.integer "user_id"
+    t.index ["owner_id"], name: "index_owners_users_on_owner_id", using: :btree
+    t.index ["user_id"], name: "index_owners_users_on_user_id", using: :btree
   end
 
   create_table "switch_ports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -59,6 +59,17 @@
         <%= file_field_tag "attachments[]", type: :file, multiple: true %>
       </div>
     </div>
+    <%- if current_user.is_admin? -%>
+    <div class="row-fluid">
+      <div class="span12">
+        <hr/>
+        <h5>Users:</h5>
+        <div class="span12" style="padding-left: 8px">
+          <%= f.association :users, as: :check_boxes, label: false %>
+        </div>
+      </div>
+    </div>
+    <%- end -%>
     <%- end -%>
   </div>
 </div>
