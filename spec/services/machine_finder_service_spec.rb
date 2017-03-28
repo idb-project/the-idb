@@ -12,27 +12,30 @@ describe MachineFinderService do
     end
 
     it 'creates a machine that has been found in a PuppetDB but not locally' do
-      @mfs.instance_variable_set(:@nodes, ["test2.example.com"]) 
+      nodes = ["test2.example.com"]
+      @mfs.instance_variable_set(:@nodes, nodes) 
 
       @mfs.find_untracked_machines
-      expect(Machine.last.fqdn).to eq("test2.example.com")
+      expect(Machine.last.fqdn).to eq(nodes.last)
     end
 
     it 'does not create a machine that already exists' do
-      @mfs.instance_variable_set(:@nodes, ["test.example.com"]) 
+      nodes = ["test.example.com"]
+      @mfs.instance_variable_set(:@nodes, nodes) 
 
-      expect(Machine).not_to receive(:new).with(fqdn: "test.example.com")
+      expect(Machine).not_to receive(:new).with(fqdn: nodes.last)
       @mfs.find_untracked_machines
     end
 
     it 'does not create a machine that is in softdelete state, but all other new machines' do
       @machine.destroy
 
-      @mfs.instance_variable_set(:@nodes, ["test.example.com", "test3.example.com"]) 
+      nodes = ["test.example.com", "test3.example.com"]
+      @mfs.instance_variable_set(:@nodes, nodes) 
 
       @mfs.find_untracked_machines
-      expect(Machine.find_by_fqdn("test.example.com")).to be_nil
-      expect(Machine.find_by_fqdn("test3.example.com")).not_to be_nil
+      expect(Machine.find_by_fqdn(nodes.first)).to be_nil
+      expect(Machine.find_by_fqdn(nodes.last)).not_to be_nil
     end
   end
 end
