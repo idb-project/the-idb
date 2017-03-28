@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
     BasicUserAuth.new(IDB.config.design.title, self).authenticate(params[:name], params[:password], params[:otp])
     if current_user
       session[:user_id] = current_user.id
+      User.current = current_user
       redirect_to root_url
     else
       flash.alert = "Wrong credentials"
@@ -18,6 +19,7 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
+    User.current = nil
     redirect_to login_url
   end
 end
