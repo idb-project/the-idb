@@ -48,8 +48,6 @@ describe User do
   end
 
   describe '#update' do
-    let(:updated_user) { User.first }
-
     before do
       user.save!
     end
@@ -62,7 +60,7 @@ describe User do
       it 'updates the user' do
         user.update(attributes)
 
-        expect(updated_user.email).to eq('johnny@example.com')
+        expect(user.email).to eq('johnny@example.com')
       end
     end
 
@@ -74,7 +72,7 @@ describe User do
       it 'keeps the previous one' do
         user.update(attributes)
 
-        expect(updated_user.name).to eq('John Doe')
+        expect(user.name).to eq('John Doe')
       end
     end
 
@@ -86,7 +84,7 @@ describe User do
       it 'keeps the previous one' do
         user.update(attributes)
 
-        expect(updated_user.name).to eq('John Doe')
+        expect(user.name).to eq('John Doe')
       end
     end
   end
