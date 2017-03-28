@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :user do
-    sequence(:login) { |n| "User#{n}" }
+    sequence(:login) { |n| "User_#{n}" }
   end
 end

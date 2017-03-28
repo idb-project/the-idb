@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :location do
-    name "MyLocation"
+    sequence(:name) { |n| "MyLocation_#{n}" }
     level 10
   end
 end
