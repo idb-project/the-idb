@@ -3,6 +3,7 @@ require 'spec_helper'
 describe WarrantyReminderWorker do
   describe "perform" do
     before(:each) do
+      allow(User).to receive(:current).and_return(nil)
       @w = WarrantyReminderWorker.new
     end
 

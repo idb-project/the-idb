@@ -1,9 +1,15 @@
 require 'spec_helper'
 
 describe Machine do
+  before :each do
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+  end
+
   let(:attributes) do
     {
-      fqdn: 'machine.example.com'
+      fqdn: 'machine.example.com',
+      owner: @owner
     }
   end
 
@@ -11,7 +17,7 @@ describe Machine do
 
   describe 'soft-delete via paranoia' do
     it 'is restorable after delete' do
-      m = FactoryGirl.create :machine
+      m = FactoryGirl.create(:machine, owner: @owner)
       expect(m).to respond_to(:paranoia_destroyed?)
       m.delete
 
@@ -114,7 +120,7 @@ describe Machine do
 
   describe '.create_switch!' do
     it 'creates a machine with device type switch' do
-      described_class.create_switch!(fqdn: 'foo.example.com')
+      described_class.create_switch!(fqdn: 'foo.example.com', owner: @owner)
 
       expect(Machine.first.device_type.name).to eq('switch')
     end
@@ -124,7 +130,7 @@ describe Machine do
     let(:fqdn) { 'switch.example.com' }
 
     context 'which an existing switch for the fqdn' do
-      before { Machine.create!(fqdn:fqdn, device_type_id: 3) }
+      before { Machine.create!(fqdn:fqdn, device_type_id: 3, owner: @owner) }
 
       it 'returns true' do
         expect(described_class.is_switch?(fqdn)).to eq(true)
@@ -132,7 +138,7 @@ describe Machine do
     end
 
     context 'with a machine for the fqdn but no switch' do
-      before { Machine.create!(fqdn:fqdn) }
+      before { Machine.create!(fqdn:fqdn, owner: @owner) }
 
       it 'returns false' do
         expect(described_class.is_switch?(fqdn)).to eq(false)
@@ -148,8 +154,8 @@ describe Machine do
 
   describe '.switches' do
     before do
-      Machine.create_switch!(fqdn: 'switch.example.com')
-      Machine.create!(fqdn: 'machine.example.com')
+      Machine.create_switch!(fqdn: 'switch.example.com', owner: @owner)
+      Machine.create!(fqdn: 'machine.example.com', owner: @owner)
     end
 
     it 'returns only machines of type switch' do

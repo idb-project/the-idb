@@ -3,6 +3,7 @@ require 'spec_helper'
 describe CloudProvidersController do
   before(:each) do
     @current_user = FactoryGirl.create(:user, admin: true)
+    allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
   end
 
@@ -10,6 +11,7 @@ describe CloudProvidersController do
     it "redirects to root path if user is not an admin" do
       current_user2 = FactoryGirl.create(:user, admin: false)
       controller.session[:user_id] = current_user2.id
+      allow(User).to receive(:current).and_return(current_user2)
       get :index
       expect(response).to redirect_to root_path
     end

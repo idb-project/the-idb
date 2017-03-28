@@ -3,6 +3,7 @@ require 'spec_helper'
 describe MachineFinderService do
   describe '.find_untracked_machines' do
     before do
+      allow(User).to receive(:current).and_return(nil) # no current user present
       @machine = Machine.create!(fqdn: 'test.example.com')
       IDB.config.puppetdb.auto_create = true
       IDB.config.puppetdb.api_urls = {}

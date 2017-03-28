@@ -38,6 +38,14 @@ class Machine < ActiveRecord::Base
   validates :fqdn, presence: true, uniqueness: true
   validates :fqdn, format: {with: FQDN_REGEX}
 
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      -> { where(deleted_at: nil) }
+    else
+      -> { where(owner: User.current.owners, deleted_at: nil) }
+    end
+  end
+
   def self.create_switch!(attributes = {})
     create(attributes.merge(device_type_id: 3))
   end
