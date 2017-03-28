@@ -6,11 +6,9 @@ require 'timecop'
 describe 'Inventories API' do
 
   before :each do
-    user = FactoryGirl.create :user
-    allow(User).to receive(:current).and_return(user)
     IDB.config.modules.api.v2_enabled = true
-    @owner = FactoryGirl.create :owner
-    @owner.users << user
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
     @inventory_a = FactoryGirl.create :inventory, owner: @owner
     @inventory_b = FactoryGirl.create :inventory, owner: @owner
     @api_token = FactoryGirl.create :api_token
