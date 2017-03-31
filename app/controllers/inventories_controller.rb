@@ -3,6 +3,7 @@ class InventoriesController < ApplicationController
   autocomplete :inventory, :place, :full => true, :scopes => [:unique_place]
   autocomplete :inventory, :category, :full => true, :scopes => [:unique_category]
   autocomplete :inventory, :seller, :full => true, :scopes => [:unique_seller]
+  autocomplete :location, :name, :full => true, :display_value => :location_name
 
   def index
     @inventories = Inventory.all #joins(:location).order(:inventory_number)

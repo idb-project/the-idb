@@ -43,7 +43,9 @@
           <%= f.association :user, collection: User.order(:name), include_blank: true %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: true %>
           <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>
-          <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%# <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%#= f.association :location, :url => autocomplete_location_name_inventories_path, :as => :select %>
+          <%= f.input :location, :url => autocomplete_location_name_inventories_path, :as => :autocomplete %>
           <%= f.input :place, :url => autocomplete_inventory_place_inventories_path, :as => :autocomplete %>
           <%= f.input :category, :url => autocomplete_inventory_category_inventories_path, :as => :autocomplete %>
           <%= f.button :submit %>
