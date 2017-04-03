@@ -1,4 +1,6 @@
 <%= stylesheet_link_tag    "pikaday", media: "all" %>
+<%= stylesheet_link_tag "tree", media: "all" %>
+
 <div id="inventories-form">
 
 <div class="row-fluid">
@@ -43,13 +45,83 @@
           <%= f.association :user, collection: User.order(:name), include_blank: true %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: true %>
           <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>
-          <%# <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
-          <%#= f.association :location, :url => autocomplete_location_name_inventories_path, :as => :select %>
-          <%= f.input :location, :url => autocomplete_location_name_inventories_path, :as => :autocomplete %>
+
+          <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| location.name } %>
+          <div class="control-group select optional inventory_location">
+<%
+def draw_tree(location,onclick,level=0)
+  if level == 0
+%>
+<ul class="tree">
+<%
+  end
+%>
+  <li>
+    <input type="checkbox" id="node-<%= location.id %>" class="tree-checkbox" />
+    <label for="node-<%= location.id %>" class="tree-checkbox-label">
+<%
+  if not location.children.empty?
+%>
+      <i class="fa fa-plus-square tree-expand"></i>
+      <i class="fa fa-minus-square tree-collapse"></i>
+<%
+  else
+%>
+      <i class="fa fa-square"></i>
+<%
+  end
+%>
+    </label>
+    <span class="tree-name-label" onClick="<%= onclick %>(<%= location.id %>)"><%= location.name %></span>
+<%
+  if not location.children.empty?
+%>
+    <ul>
+<%
+    location.children.each do |child|
+      draw_tree(child,onclick,level+1)
+    end
+%>
+    </ul>
+<%
+  end
+%>
+  </li>
+<%
+  if level == 0
+%>
+</ul>
+<%
+  end
+end
+%>
+
+<%- unless @all_locations.empty? -%>
+<div id="location-tree">
+<%- Location.roots.each do |l| -%>
+  <% draw_tree(l,"set_location",0) %>
+<%- end -%>
+</div>
+<%- end -%>
+
+<script>
+function set_location(id) {
+    selectObj = document.getElementById("inventory_location_id");
+    for (var i = 0; i < selectObj.options.length; i++) {
+        if (selectObj.options[i].value == id) {
+            selectObj.options[i].selected = true;
+            return;
+        }
+    }
+}
+</script>
+      </div>
+
           <%= f.input :place, :url => autocomplete_inventory_place_inventories_path, :as => :autocomplete %>
           <%= f.input :category, :url => autocomplete_inventory_category_inventories_path, :as => :autocomplete %>
           <%= f.button :submit %>
       </div>
+
       <div class="span6">
         <h5>Attachments:</h5>
           <ul>

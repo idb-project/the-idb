@@ -25,7 +25,9 @@ class InventoriesController < ApplicationController
 
   def new
     @inventory = Inventory.new
-    @form_locations = Location.depth_traverse
+    #@form_locations = Location.depth_traverse
+    @form_locations = Location.order(:name)
+    @all_locations = Location.order(:name)
     @form_status = InventoryStatus.order(name: :asc)
   end
 
@@ -68,7 +70,9 @@ class InventoriesController < ApplicationController
 
   def edit
     @inventory = Inventory.find(params[:id])
-    @form_locations = Location.depth_traverse
+    #@form_locations = Location.depth_traverse
+    @form_locations = Location.order(:name)
+    @all_locations = Location.order(:name)
     @form_status = InventoryStatus.order(name: :asc)
   end
 

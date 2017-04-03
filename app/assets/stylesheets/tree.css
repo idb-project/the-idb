@@ -13,6 +13,7 @@ li .tree-checkbox-label {
 }
 
 li .tree-checkbox-label + .tree-name-label {
+  cursor: pointer;
   display: inline; 
 }
 
