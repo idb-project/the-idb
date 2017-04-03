@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag    "tree", media: "all" %>
 
 <%
-def draw_tree(location,level=0)
+def draw_tree(location,onclick,level=0)
   if level == 0
 %>
 <ul class="tree">
@@ -10,7 +10,7 @@ def draw_tree(location,level=0)
 %>
   <li>
     <input type="checkbox" id="node-<%= location.id %>" class="tree-checkbox" />
-    <label for="node-<%= location.id %>" class="tree-label">
+    <label for="node-<%= location.id %>" class="tree-checkbox-label">
 <%
   if not location.children.empty?
 %>
@@ -19,15 +19,15 @@ def draw_tree(location,level=0)
 <%
   end
 %>
-      <%= location.name %>
     </label>
+    <span class="tree-name-label" onClick="<%= onclick %>(<%= location.id %>)"><%= location.name %></span>
 <%
   if not location.children.empty?
 %>
     <ul>
 <%
     location.children.each do |child|
-      draw_tree(child,level+1)
+      draw_tree(child,onclick,level+1)
     end
 %>
     </ul>
@@ -48,10 +48,8 @@ end
 <h3>Existing locations:</h3>
 <div id="location-tree">
 <%- Location.roots.each do |l| -%>
-  <% draw_tree(l) %>
+  <% draw_tree(l,"console.log",0) %>
 <%- end -%>
 </div>
 <%- end -%>
 
-<script>
-</script>
