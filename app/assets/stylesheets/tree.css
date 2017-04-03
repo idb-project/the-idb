@@ -1,0 +1,45 @@
+.tree li {
+  list-style: none;          /* all list item li dots invisible */
+}
+
+li input[type=checkbox].tree-checkbox {
+  opacity: 0;
+  display: none;
+}
+
+li .tree-label {
+  cursor: pointer;        /* cursor changes when you mouse over this class */
+}                         /* could add the many user-select: none; commands here */
+
+li input[type=checkbox].tree-checkbox + label.tree-label + ul {
+  display: none;         
+}
+
+li input[type=checkbox].tree-checkbox:checked + label.tree-label + ul {
+  display: block;         
+}
+
+li input[type=checkbox].tree-checkbox + label.tree-label .tree-expand {
+  display: inline;
+}
+
+li input[type=checkbox].tree-checkbox + label.tree-label .tree-collapse {
+  display: none;
+}
+
+li input[type=checkbox].tree-checkbox:checked + label.tree-label i.tree-expand {
+  display: none;
+}
+
+li input[type=checkbox].tree-checkbox:checked + label.tree-label i.tree-collapse {
+  display: inline;
+}
+
+/*
+li .tree-label + input + ul {
+  display: none;         
+}
+
+li .tree-label + input:checked + ul {
+  display: block;         
+}*/

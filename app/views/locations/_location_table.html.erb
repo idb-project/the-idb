@@ -1,56 +1,51 @@
-<!--      <%- unless @all_locations.empty? -%>
-        <h3>Existing locations:</h3>
-        <table class="location_table">
-        <tr>
-          <%-  @location_levels.each do |location_level| -%>
-            <th><%= location_level.name %></th>
-          <%- end %>
-        </tr>
-        <%- Location.roots.each do |l| -%>
-          <tr><td><%= l.name %></td><td></td><td></td><td></td><td></td></tr>
-          <%- l.children.each do |l20| -%>
-            <tr><td></td><td><%= l20.name %></td><td></td><td></td><td></td></tr>
-            <%- l20.children.each do |l30| -%>
-              <tr><td></td><td></td><td><%= l30.name %></td><td></td><td></td></tr>
-              <%- l30.children.each do |l40| -%>
-                <tr><td></td><td></td><td></td><td><%= l40.name %></td><td></td></tr>
-                <%- l40.children.each do |l50| -%>
-                  <tr><td></td><td></td><td></td><td></td><td><%= l50.name %></td></tr>
-                <%- end -%>
-              <%- end -%>
-            <%- end -%>
-          <%- end -%>
-        <%- end -%>
-        </table>
-      <%- end -%>
--->
-<%= javascript_include_tag "jquery.a11yTree" %>
+<%= stylesheet_link_tag    "tree", media: "all" %>
 
 <%
-def draw_tree(location)
+def draw_tree(location,level=0)
+  if level == 0
 %>
-<ul>
+<ul class="tree">
+<%
+  end
+%>
   <li>
-
+    <input type="checkbox" id="node-<%= location.id %>" class="tree-checkbox" />
+    <label for="node-<%= location.id %>" class="tree-label">
 <%
   if not location.children.empty?
 %>
-<i class="fa fa-plus-square"></i>
-<span class="tree-item-label"><%= location.name %></span>
+      <i class="fa fa-plus-square tree-expand"></i>
+      <i class="fa fa-minus-square tree-collapse"></i>
+<%
+  end
+%>
+      <%= location.name %>
+    </label>
+<%
+  if not location.children.empty?
+%>
+    <ul>
 <%
     location.children.each do |child|
-      draw_tree(child)
+      draw_tree(child,level+1)
     end
+%>
+    </ul>
+<%
   end
 %>
   </li>
+<%
+  if level == 0
+%>
 </ul>
 <%
+  end
 end
 %>
 
 <%- unless @all_locations.empty? -%>
-<h3 id="tree-label">Existing locations:</h3>
+<h3>Existing locations:</h3>
 <div id="location-tree">
 <%- Location.roots.each do |l| -%>
   <% draw_tree(l) %>
@@ -59,10 +54,4 @@ end
 <%- end -%>
 
 <script>
-$('#location-tree > ul').a11yTree({
-                     treeLabelId:'tree-label',
-                     toggleSelector:'i.fa',
-                     treeItemLabelSelector:'.tree-item-label'
-                });
 </script>
-
