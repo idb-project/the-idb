@@ -1,4 +1,4 @@
-<%= stylesheet_link_tag    "tree", media: "all" %>
+<%= stylesheet_link_tag "tree", media: "all" %>
 
 <%
 def draw_tree(location,onclick,level=0)
@@ -26,7 +26,8 @@ def draw_tree(location,onclick,level=0)
 %>
     <ul>
 <%
-    location.children.each do |child|
+    children = location.children.sort_by { |child| child.name }
+    children.each do |child|
       draw_tree(child,onclick,level+1)
     end
 %>
