@@ -1,56 +1,10 @@
 <%= stylesheet_link_tag "tree", media: "all" %>
 
-<%
-def draw_tree(location,onclick,level=0)
-  if level == 0
-%>
-<ul class="tree">
-<%
-  end
-%>
-  <li>
-    <input type="checkbox" id="node-<%= location.id %>" class="tree-checkbox" />
-    <label for="node-<%= location.id %>" class="tree-checkbox-label">
-<%
-  if not location.children.empty?
-%>
-      <i class="fa fa-plus-square tree-expand"></i>
-      <i class="fa fa-minus-square tree-collapse"></i>
-<%
-  end
-%>
-    </label>
-    <span class="tree-name-label" onClick="<%= onclick %>(<%= location.id %>)"><%= location.name %></span>
-<%
-  if not location.children.empty?
-%>
-    <ul>
-<%
-    children = location.children.sort_by { |child| child.name }
-    children.each do |child|
-      draw_tree(child,onclick,level+1)
-    end
-%>
-    </ul>
-<%
-  end
-%>
-  </li>
-<%
-  if level == 0
-%>
-</ul>
-<%
-  end
-end
-%>
-
 <%- unless @all_locations.empty? -%>
 <h3>Existing locations:</h3>
 <div id="location-tree">
-<%- Location.roots.each do |l| -%>
-  <% draw_tree(l,"console.log",0) %>
+<%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
+  <%= k(l).location_tree("",0) %>
 <%- end -%>
 </div>
 <%- end -%>
-
