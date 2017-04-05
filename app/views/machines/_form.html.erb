@@ -1,3 +1,6 @@
+<%= javascript_include_tag 'tree' %>
+<%= stylesheet_link_tag "tree", media: "all" %>
+
 <div id="machines-form">
 <%- if !@machine.new_record? && @machine.manual? -%>
   <div class="alert">
@@ -62,9 +65,25 @@
           <%- if IDB.config.modules.location -%>
           <%- unless @machine.virtual? -%>
           <%= f.association :power_feed_a, label: "Location A", collection: @form_locations, selected: @power_feed_a_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          
+          <%- unless Location.all.empty? -%>
+          <div id="location-tree" class="controls">
+            <%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
+              <%= k(l).location_tree("set_location_for('machine_power_feed_a')",0) %>
+            <%- end -%>
+          </div>
+          <%- end -%>
+
           <%= f.association :power_feed_b, label: "Location B", collection: @form_locations, selected: @power_feed_b_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
-          <%# f.association :power_feed_a, label: "Power supply A", collection: @power_supplies, selected: @power_feed_a, include_blank: true %>
-          <%# f.association :power_feed_b, label: "Power supply B", collection: @power_supplies, selected: @power_feed_b, include_blank: true %>
+
+          <%- unless Location.all.empty? -%>
+          <div id="location-tree" class="controls">
+            <%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
+              <%= k(l).location_tree("set_location_for('machine_power_feed_b')",0) %>
+            <%- end -%>
+          </div>
+          <%- end -%>
+
           <%- end -%>
           <%- end -%>
           <%- if @machine.auto_update? -%>
