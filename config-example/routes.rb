@@ -33,7 +33,6 @@ InfrastructureDb::Application.routes.draw do
     get :autocomplete_inventory_name, :on => :collection
     get :autocomplete_inventory_place, :on => :collection
     get :autocomplete_inventory_seller, :on => :collection
-    get :autocomplete_location_name, :on => :collection
   end
   resources :attachments, only: [:destroy]
   resources :locations do

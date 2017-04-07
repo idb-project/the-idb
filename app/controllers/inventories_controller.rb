@@ -3,7 +3,6 @@ class InventoriesController < ApplicationController
   autocomplete :inventory, :place, :full => true, :scopes => [:unique_place]
   autocomplete :inventory, :category, :full => true, :scopes => [:unique_category]
   autocomplete :inventory, :seller, :full => true, :scopes => [:unique_seller]
-  autocomplete :location, :name, :full => true, :display_value => :location_name
 
   def index
     @inventories = Inventory.all #joins(:location).order(:inventory_number)
@@ -25,8 +24,7 @@ class InventoriesController < ApplicationController
 
   def new
     @inventory = Inventory.new
-    #@form_locations = Location.depth_traverse
-    @form_locations = Location.order(:name)
+    @form_locations = Location.depth_traverse
     @all_locations = Location.order(:name)
     @form_status = InventoryStatus.order(name: :asc)
   end
