@@ -40,12 +40,3 @@ li input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree
 li input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-collapse {
   display: inline;
 }
-
-/*
-li .tree-label + input + ul {
-  display: none;         
-}
-
-li .tree-label + input:checked + ul {
-  display: block;         
-}*/
