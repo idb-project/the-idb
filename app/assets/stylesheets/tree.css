@@ -2,41 +2,42 @@
   list-style: none;          /* all list item li dots invisible */
 }
 
-li input[type=checkbox].tree-checkbox {
+li.tree input[type=checkbox].tree-checkbox{
   opacity: 0;
   display: none;
 }
 
-li .tree-checkbox-label {
+li.tree .tree-checkbox-label {
   cursor: pointer;
   display: inline;    
 }
 
-li .tree-checkbox-label + .tree-name-label {
+li.tree .tree-checkbox-label + .tree-name-label {
   cursor: pointer;
   display: inline; 
 }
 
-li input[type=checkbox].tree-checkbox + label.tree-checkbox-label ~ ul {
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label ~ ul.tree {
   display: none;         
 }
 
-li input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label ~ ul {
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label ~ ul.tree {
   display: block;         
 }
 
-li input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-expand {
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-expand {
   display: inline;
 }
 
-li input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-collapse {
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-collapse {
   display: none;
 }
 
-li input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-expand {
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-expand {
   display: none;
 }
 
-li input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-collapse {
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-collapse {
   display: inline;
 }
+

@@ -13,11 +13,11 @@ class LocationPresenter < Keynote::Presenter
     names.join(" → ").html_safe
   end
 
-  def location_tree(onclick=nil,level=0)
+  def location_tree(treeid,onclick=nil,level=0)
     inner = build_html do
-      li do
-        input type: "checkbox", id: "node-#{self.id}", class: "tree-checkbox"
-        label for: "node-#{self.id}", class: "tree-checkbox-label" do
+      li class: "tree" do
+        input type: "checkbox", id: "#{treeid}-node-#{self.id}", class: "tree-checkbox"
+        label for: "#{treeid}-node-#{self.id}", class: "tree-checkbox-label" do
           if not self.children.empty?
             i class: "fa fa-plus-square tree-expand"
             i class: "fa fa-minus-square tree-collapse"
@@ -35,10 +35,10 @@ class LocationPresenter < Keynote::Presenter
           end
         end
         if not self.children.empty?
-          ul do
+          ul class: "tree" do
             children = self.children.sort_by { |child| child.name}
             children.each do |child|
-              text k(child).location_tree(onclick,level+1)
+              text k(child).location_tree(treeid,onclick,level+1)
             end
           end
         end
