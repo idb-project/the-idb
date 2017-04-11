@@ -1,4 +1,4 @@
-class FixupDescriptionColumns < ActiveRecord::Migration
+class FixupDescriptionColumns < ActiveRecord::Migration[4.0]
   def change
     change_column :machines, :description, :string
     change_column :networks, :description, :string

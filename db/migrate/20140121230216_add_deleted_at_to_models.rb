@@ -1,4 +1,4 @@
-class AddDeletedAtToModels < ActiveRecord::Migration
+class AddDeletedAtToModels < ActiveRecord::Migration[4.0]
   def change
     add_column :owners, :deleted_at, :datetime
     add_column :ip_addresses, :deleted_at, :datetime

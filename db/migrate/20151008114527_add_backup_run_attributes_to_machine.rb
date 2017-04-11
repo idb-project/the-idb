@@ -1,4 +1,4 @@
-class AddBackupRunAttributesToMachine < ActiveRecord::Migration
+class AddBackupRunAttributesToMachine < ActiveRecord::Migration[4.2]
   def change
     remove_column :machines, :backup_last_run
     add_column :machines, :backup_last_full_run, :string

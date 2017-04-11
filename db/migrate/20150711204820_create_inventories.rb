@@ -1,4 +1,4 @@
-class CreateInventories < ActiveRecord::Migration
+class CreateInventories < ActiveRecord::Migration[4.0]
   def change
     create_table :inventories do |t|
       t.string :inventory_number

@@ -1,4 +1,4 @@
-class AddPreferencesToNetworks < ActiveRecord::Migration
+class AddPreferencesToNetworks < ActiveRecord::Migration[4.0]
   def change
     add_column :networks, :preferences, :text, limit: 4294967295
   end

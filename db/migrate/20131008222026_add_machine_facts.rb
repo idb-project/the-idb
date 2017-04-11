@@ -1,4 +1,4 @@
-class AddMachineFacts < ActiveRecord::Migration
+class AddMachineFacts < ActiveRecord::Migration[4.0]
   def change
     add_column :machines, :os_release, :string
   end

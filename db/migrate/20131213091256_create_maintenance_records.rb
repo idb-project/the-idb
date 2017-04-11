@@ -1,4 +1,4 @@
-class CreateMaintenanceRecords < ActiveRecord::Migration
+class CreateMaintenanceRecords < ActiveRecord::Migration[4.0]
   def change
     create_table :maintenance_records do |t|
       t.string :fqdn, index: true
