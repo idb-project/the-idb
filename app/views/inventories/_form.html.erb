@@ -48,9 +48,9 @@
           <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>
           <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name }, wrapper: false %>
           <%- unless @all_locations.empty? -%>
-          <div id="location-tree" class="controls">
+          <div id="tree-0" class="controls">
             <%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
-              <%= k(l).location_tree("set_location_for('inventory_location_id')",0) %>
+              <%= k(l).location_tree("tree-0","set_location_for('inventory_location_id')",0) %>
             <%- end -%>
           </div>
           <%- end -%>
