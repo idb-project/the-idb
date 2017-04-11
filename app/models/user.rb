@@ -33,4 +33,14 @@ class User < ActiveRecord::Base
   def self.current=(user)
     Thread.current[:user] = user
   end
+
+  def associates
+    users = []
+    owners.each do |o|
+      o.users.each do |u|
+        users.push(u) unless users.include?(u)
+      end
+    end
+    users
+  end
 end
