@@ -1,4 +1,4 @@
-class MoreOwnerFields < ActiveRecord::Migration[4.0]
+class MoreOwnerFields < ActiveRecord::Migration[4.2]
   def change
     add_column :owners, :nickname, :string
     add_column :owners, :customer_id, :string

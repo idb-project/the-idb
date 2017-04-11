@@ -1,4 +1,4 @@
-class CreateOwners < ActiveRecord::Migration[4.0]
+class CreateOwners < ActiveRecord::Migration[4.2]
   def change
     create_table :owners do |t|
       t.string :name

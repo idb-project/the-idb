@@ -1,4 +1,4 @@
-class AddDeletedAtIndexes < ActiveRecord::Migration[4.0]
+class AddDeletedAtIndexes < ActiveRecord::Migration[4.2]
   def change
     add_index :machines, :deleted_at
     add_index :owners, :deleted_at

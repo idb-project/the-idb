@@ -1,4 +1,4 @@
-class ChangeBackupConfigAttributeType < ActiveRecord::Migration[4.0]
+class ChangeBackupConfigAttributeType < ActiveRecord::Migration[4.2]
   def change
     add_column :machines, :backup_type, :integer, default: 0
 
