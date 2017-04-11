@@ -1,0 +1,47 @@
+.tree-name-label {
+  padding-left: 0.2em;
+}
+
+.tree li {
+  list-style: none;          /* all list item li dots invisible */
+}
+
+li.tree input[type=checkbox].tree-checkbox{
+  opacity: 0;
+  display: none;
+}
+
+li.tree .tree-checkbox-label {
+  cursor: pointer;
+  display: inline;    
+}
+
+li.tree .tree-checkbox-label + .tree-name-label {
+  cursor: pointer;
+  display: inline; 
+}
+
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label ~ ul.tree {
+  display: none;         
+}
+
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label ~ ul.tree {
+  display: block;         
+}
+
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-expand {
+  display: inline;
+}
+
+li.tree input[type=checkbox].tree-checkbox + label.tree-checkbox-label .tree-collapse {
+  display: none;
+}
+
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-expand {
+  display: none;
+}
+
+li.tree input[type=checkbox].tree-checkbox:checked + label.tree-checkbox-label i.tree-collapse {
+  display: inline;
+}
+
