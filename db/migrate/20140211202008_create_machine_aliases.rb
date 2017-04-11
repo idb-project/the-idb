@@ -1,4 +1,4 @@
-class CreateMachineAliases < ActiveRecord::Migration
+class CreateMachineAliases < ActiveRecord::Migration[4.2]
   def change
     create_table :machine_aliases do |t|
       t.string :name
