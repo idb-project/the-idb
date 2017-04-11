@@ -1,8 +1,18 @@
 class NetworksController < ApplicationController
   def index
     @networks = Network.all
-    @duplicated_macs = Nic.find_by_sql(%q{select nics.mac, nics.machine_id from nics join ( select mac, machine_id, count(*) from nics group by mac, machine_id having count(*) > 1) as dups on dups.mac =
+    @duplicated_macs = []
+    dups = Nic.find_by_sql(%q{select nics.mac, nics.machine_id from nics join ( select mac, machine_id, count(*) from nics group by mac, machine_id having count(*) > 1) as dups on dups.mac =
  nics.mac;})
+    dups.each do |d|
+      if User.current
+        if (d.machine && d.machine.owner) || User.current.is_admin?
+          @duplicated_macs << d if User.current.owners.include?(d.machine.owner)
+        end
+      else
+        @duplicated_macs << d
+      end
+    end
     @machines = Machine.all
   end
 

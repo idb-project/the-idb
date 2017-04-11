@@ -5,7 +5,8 @@ describe Network do
     {
       name: 'data center',
       address: '10.0.0.1/26',
-      description: 'nice network!'
+      description: 'nice network!',
+      owner: FactoryGirl.create(:owner)
     }
   end
 
