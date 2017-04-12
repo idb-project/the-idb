@@ -28,4 +28,12 @@ class Owner < ActiveRecord::Base
   def ordered_versions
     PaperTrail::Version.with_item_keys(self.class.name, id).order(created_at: :desc)
   end
+
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      nil
+    else
+      -> { joins(:users).where(users: { id: User.current }) }
+    end
+  end
 end
