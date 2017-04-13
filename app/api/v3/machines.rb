@@ -67,18 +67,7 @@ module V3
         error!("Not found", 404) unless m
 
         p = params.reject { |k| !Machine.attribute_method?(k) }
-
-        p_nics = Hash.new
-        p_nics[:nics] = p.delete("nics")
-
-        p_aliases = Hash.new
-        p_aliases[:aliases] = p.delete("aliases")
-
-        p_power_feed_a = Hash.new
-        p_power_feed_a[:power_feed_a] = p.delete("power_feed_a")
-
-        p_power_feed_b = Hash.new
-        p_power_feed_b[:power_feed_b] = p.delete("power_feed_b")
+        p.delete("aliases")
 
         m.update_attributes(p)
 
@@ -96,8 +85,15 @@ module V3
         end
 
         m.backup_type = 1 if is_backed_up
-        m.update_details_by_api(p_nics, EditableMachineForm.new(m))
-        m.update_details_by_api(p_aliases, EditableMachineForm.new(m))
+
+        m.power_feed_a = params[:power_feed_a_id] ? Location.find_by_id(params[:power_feed_a_id]) : m.power_feed_a
+        m.power_feed_b = params[:power_feed_b_id] ? Location.find_by_id(params[:power_feed_b_id]) : m.power_feed_b
+
+        aliases = MachineAlias.where(name: params[:aliases])
+
+        m.aliases = aliases
+        m.save
+
         m
       end
     end
