@@ -163,4 +163,19 @@ class Machine < ActiveRecord::Base
   def update_details_by_api(params, machine_details)
     machine_details.update(params)
   end
+
+  class Entity < Grape::Entity
+    expose :fqdn
+    expose :os
+    expose :power_feed_a, merge: true do
+      expose :id, as: :power_feed_a
+    end
+    expose :power_feed_b, merge: true do
+      expose :id, as: :power_feed_b
+    end
+
+    expose :aliases, merge: ->(key,old_val,new_val){ [ old_val, new_val.id ].flatten }
+
+  end
+
 end

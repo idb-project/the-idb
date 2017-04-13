@@ -66,4 +66,5 @@ class API < Grape::API
   error_formatter :json, ErrorFormatter
   mount V1::API
   mount V2::API
+  mount V3::API
 end
