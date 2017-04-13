@@ -5,6 +5,7 @@ module V3
 
     version 'v3'
     format :json
+    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :machines do
       before do
@@ -41,7 +42,7 @@ module V3
           error!("Bad Request", 400)
         end
 
-        present query, with: Machine::Entity
+        query
       end
 
       desc 'Create a new machine'
@@ -49,14 +50,15 @@ module V3
         can_write!
         p = params.reject { |k| !Machine.attribute_method?(k) }
         m = Machine.create(p)
-        present m, with: Machine::Entity
+        m
       end
 
       desc "Get a machine by fqdn"
       get ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
         m = Machine.find_by_fqdn params[:fqdn]
         error!("Not found", 404) unless m
-        present m, with: Machine::Entity
+
+        m
       end
 
       desc "Update a single machine"
