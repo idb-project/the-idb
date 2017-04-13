@@ -9,6 +9,7 @@ gem 'net-ldap'
 gem 'stomp', '1.3.4'
 gem 'bcrypt'
 gem 'grape'
+gem 'grape-active_model_serializers'
 
 gem 'sass-rails'
 gem 'uglifier'
