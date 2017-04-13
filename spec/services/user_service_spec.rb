@@ -49,8 +49,8 @@ describe UserService do
         described_class.update_from_virtual_user(vuser, 'foo')
       end
 
-      it 'sets the admin flag to false if not specified' do
-        expect(new_user).to receive(:admin=).with(false)
+      it 'does not change the admin flag if not specified' do
+        expect(new_user).not_to receive(:admin=).with(false)
 
         described_class.update_from_virtual_user(vuser, 'foo')
       end
@@ -59,6 +59,12 @@ describe UserService do
         expect(new_user).to receive(:admin=).with(true)
 
         described_class.update_from_virtual_user(vuser, 'foo', true)
+      end
+
+      it 'sets the admin flag to false' do
+        expect(new_user).to receive(:admin=).with(false)
+
+        described_class.update_from_virtual_user(vuser, 'foo', false)
       end
     end
 
