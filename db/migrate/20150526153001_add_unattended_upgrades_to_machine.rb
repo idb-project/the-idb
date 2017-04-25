@@ -1,4 +1,4 @@
-class AddUnattendedUpgradesToMachine < ActiveRecord::Migration
+class AddUnattendedUpgradesToMachine < ActiveRecord::Migration[4.2]
   def change
     add_column :machines, :unattended_upgrades, :boolean, default: false
     add_column :machines, :unattended_upgrades_blacklisted_packages, :text

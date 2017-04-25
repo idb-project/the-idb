@@ -1,4 +1,6 @@
 class LocationLevelsController < ApplicationController
+  before_action :require_admin_user
+
   def index
     @location_levels = LocationLevel.all
   end

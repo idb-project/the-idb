@@ -15,7 +15,7 @@ class MachineUpdateService
 
     machine.auto_update = true
     machine.os = facts.operatingsystem
-    machine.os_release = facts.operatingsystemrelease
+    machine.os_release = facts.operatingsystemrelease || facts.lsbdistrelease
     machine.arch = facts.architecture
     machine.ram = facts.memorysize_mb
     machine.cores = facts.processorcount
@@ -33,6 +33,7 @@ class MachineUpdateService
     machine.pending_updates_package_names = facts.idb_pending_updates_package_names
     machine.diskspace = facts.diskspace
     machine.needs_reboot = facts.idb_reboot_required
+    machine.software = parse_installed_packages(facts.idb_installed_packages)
 
     # First check if a network interface has been removed.
     machine.nics.each do |nic|
@@ -67,5 +68,22 @@ class MachineUpdateService
     end
 
     machine.save!
+  end
+
+  def self.parse_installed_packages(packages)
+    return nil if packages.blank?
+
+    software = Array.new
+    packages.gsub(/[\[\]]/,'').split(' ').each do |package|
+      if matched_package = package.match(/\S*=\S*/)
+        # deb package
+        name, version = matched_package.to_s.split('=')
+        software << (version.nil? ? { name: name } : { name: name, version: version })
+      elsif matched_package = package.match(/(?<name>.*)-(?<version>.*-.*\..*)/)
+        # rpm package
+        software << { name: matched_package[:name], version: matched_package[:version] }
+      end
+    end
+    software.empty? ? nil : software
   end
 end

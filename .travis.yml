@@ -1,8 +1,13 @@
 language: ruby
+sudo: required
 rvm:
-  - 2.2.5
+  - 2.2.6
 services:
   - mysql
+before_install:
+  -  chmod +x ./scripts/* #thanks https://medium.com/@psaunders
+  - ./scripts/travis-mysql-5.7.sh
+  - ./scripts/travis-reset-mysql-root-password.sh
 before_script:
   - mysql -e 'create database idb_test;'
   - mv config-example config

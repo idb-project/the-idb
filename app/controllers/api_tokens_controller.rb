@@ -1,4 +1,6 @@
 class ApiTokensController < ApplicationController
+  before_action :require_admin_user
+
   def index
     @api_tokens = ApiToken.all
   end

@@ -5,7 +5,11 @@ module Puppetdb
       data = api.get("/pdb/query/v4/nodes/#{node}/facts").data
 
       facts = Array(data).each_with_object({}) do |fact, hash|
-        hash[fact['name'].gsub("-", "_")] = fact['value']
+        if fact.class == Array && fact.first == "error"
+          # usually "No information is known about node ..."
+        else
+          hash[fact['name'].gsub("-", "_")] = fact['value']
+        end
       end
 
       if facts["blockdevices"]
@@ -14,12 +18,6 @@ module Puppetdb
           i += facts["blockdevice_#{d}_size"].to_i if facts["blockdevice_#{d}_size"]
         end
         facts["diskspace"] = i
-      end
-
-      if facts["memorysize"].end_with?("GB")
-        facts["memorysize_mb"] = facts["memorysize"].to_f*1024.to_i
-      elsif facts["memorysize"].end_with?("MB")
-        facts["memorysize_mb"] = facts["memorysize"].to_f.to_i
       end
 
       new(facts)
@@ -31,11 +29,7 @@ module Puppetdb
     end
 
     attribute :lsbdistrelease, String
-
-    def operatingsystemrelease
-      # this fact got renamed from puppetDB API v3 to v4
-      lsbdistrelease
-    end
+    attribute :operatingsystemrelease, String
 
     def windows_fixes
       return unless operatingsystem =~ /windows/i

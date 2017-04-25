@@ -18,6 +18,9 @@
         </a>
         <ul class="nav">
           <li><%= link_to '<i class="fa fa-plane"></i> Machines'.html_safe, machines_path %></li>
+          <%- if IDB.config.modules.software_packages -%>
+          <li><%= link_to '<i class="fa fa-file-code-o"></i> Software'.html_safe, softwares_path %></li>
+          <%- end -%>
           <li><%= link_to '<i class="fa fa-wrench"></i> Maintenance'.html_safe, maintenance_records_path %></li>
           <li><%= link_to '<i class="fa fa-sitemap"></i> Switches'.html_safe, switches_path %></li>
           <li><%= link_to '<i class="fa fa-cloud"></i> Networks'.html_safe, networks_path %></li>
@@ -38,12 +41,14 @@
             <a href="" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-user"></i> <%= current_user.display_name %>
               <ul class="dropdown-menu text-right">
-                <li><%= link_to '<i class="icon-tasks"></i> Api Tokens'.html_safe, api_tokens_path %></li>
-                <li><%= link_to '<i class="icon-tasks"></i> Cloud Providers'.html_safe, cloud_providers_path %></li>
-                <li><%= BackgroundJobs.new.link('Background Jobs', 'icon-tasks', background_jobs_sidekiq_path) %></li>
-                <li><%= link_to '<i class="icon-tasks"></i> Location Levels'.html_safe, location_levels_path %></li>
-                <%- if IDB.config.modules.inventory -%>
-                <li><%= link_to '<i class="fa fa-tasks"></i> Inventory Status'.html_safe, inventory_status_index_path %></li>
+                <% if current_user.is_admin? %>
+                  <li><%= link_to '<i class="icon-tasks"></i> Api Tokens'.html_safe, api_tokens_path %></li>
+                  <li><%= link_to '<i class="icon-tasks"></i> Cloud Providers'.html_safe, cloud_providers_path %></li>
+                  <li><%= BackgroundJobs.new.link('Background Jobs', 'icon-tasks', background_jobs_sidekiq_path) %></li>
+                  <li><%= link_to '<i class="icon-tasks"></i> Location Levels'.html_safe, location_levels_path %></li>
+                  <%- if IDB.config.modules.inventory -%>
+                  <li><%= link_to '<i class="fa fa-tasks"></i> Inventory Status'.html_safe, inventory_status_index_path %></li>
+                  <%- end -%>
                 <%- end -%>
                 <li><%= link_to '<i class="icon-frown"></i> Logout'.html_safe, logout_path, method: :delete %></li>
               </ul>

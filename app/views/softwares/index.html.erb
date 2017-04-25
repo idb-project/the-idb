@@ -1,0 +1,16 @@
+<%= render partial: 'form' %>
+
+<%- if @software && @machines -%>
+<%= render partial: 'machines/table', locals: {machines: @machines} %>
+<%- end -%>
+
+<div class="alert" style="margin-top: 15px">
+<h5>Query format</h5>
+<p>
+Search requests are in the format
+<code>name=version</code> where the <code>=version</code> part is optional.
+A request <code>openvpn=2.3.11 nmap=7.12</code> would return all machines with openvpn version 2.3.11 and nmap version 7.12 installed.<br/>
+Currently only conjunction of search terms is supported, every term stated must be fulfilled.
+</p>
+</div>
+

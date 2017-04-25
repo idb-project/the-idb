@@ -96,6 +96,12 @@ class MachinesController < ApplicationController
     else
       render :edit, error: 'Update failed!'
     end
+
+    @machine_details.nics.each do |nic|
+      if Nic.where(mac: nic.mac).count > 1
+        flash.alert = "Duplicate MAC address " + nic.mac
+      end
+    end
   end
 
   def destroy

@@ -57,6 +57,7 @@ class EditableMachineForm
     nics = recursive_symbolize_keys(nics) || Array.new
 
     aliases = params.delete(:aliases) || Array.new
+    aliases = recursive_symbolize_keys(aliases)
 
     nics_changed = false
 
@@ -93,10 +94,6 @@ class EditableMachineForm
     begin
       changed_attributes = machine.changed_attributes
       if valid? && machine.save
-        if nics_changed
-          # trigger mco worker to try to map this machine with vmhosts
-          ScheduledMcoVirshWorker.perform_async unless IDB.config.mco.socket_path.blank?
-        end
         changed_attributes.empty? ? {} : changed_attributes
       else
         @show_errors = true
@@ -114,14 +111,7 @@ class EditableMachineForm
   def nic_for(data)
     return if data.nil? || data[:name].blank?
     nic =  machine.nics.where(name: data[:name]).first
-
-    if data[:mac].blank? || Nic.where(mac: data[:mac]).size == 0
-      machine.nics.build(data)
-    else
-      @show_errors = true
-      self.errors.add(data[:name], 'mac address already taken')
-      nil
-    end
+    machine.nics.build(data)
   end
 
   def alias_for(data)

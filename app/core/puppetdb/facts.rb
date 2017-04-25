@@ -13,6 +13,7 @@ module Puppetdb
 
     attribute :operatingsystem, String
     attribute :operatingsystemrelease, String
+    attribute :lsbdistrelease, String
     attribute :architecture, String
     attribute :memorysize_mb, Float
     attribute :memorysize, Float
@@ -37,6 +38,7 @@ module Puppetdb
     attribute :idb_pending_updates_sum, Integer
     attribute :idb_pending_updates_package_names, Array
     attribute :idb_reboot_required, Boolean
+    attribute :idb_installed_packages, JSON
 
     attr_reader :interfaces
 
@@ -50,10 +52,10 @@ module Puppetdb
 
       @interfaces = {}
 
-      attributes = HashWithIndifferentAccess.new(attributes)
+      attributes = ActiveSupport::HashWithIndifferentAccess.new(attributes)
 
       attributes[:interfaces].to_s.split(',').each do |interface|
-        nic = build_nic(interface.downcase, attributes)
+        nic = build_nic(interface, attributes)
 
         if nic
           @interfaces[nic.name] = nic
@@ -98,15 +100,17 @@ module Puppetdb
     def build_nic(name, attributes)
       # We don't need local loopback interfaces.
       return if name == 'lo'
+      name_alt = name.gsub("-", "_")
 
       Nic.new(name: name).tap do |nic|
         # XXX Revisit: Windows seems to only set "macaddress".
-        nic.mac = attributes["macaddress_#{name}"] || attributes['macaddress']
+        nic.mac = attributes["macaddress_#{name}"] || attributes["macaddress_#{name}".downcase] || attributes["macaddress_#{name_alt}"] || attributes['macaddress']
         nic.mac = nic.mac.downcase if nic.mac
         nic.ip_address = IpAddress.new
-        nic.ip_address.addr = attributes["ipaddress_#{name}"]
-        nic.ip_address.addr_v6 = attributes["ipaddress6_#{name}"]
-        nic.ip_address.netmask = attributes["netmask_#{name}"]
+
+        nic.ip_address.addr = attributes["ipaddress_#{name}"] || attributes["ipaddress_#{name}".downcase] || attributes["ipaddress_#{name_alt}"]
+        nic.ip_address.addr_v6 = attributes["ipaddress6_#{name}"] || attributes["ipaddress6_#{name}".downcase] || attributes["ipaddress6_#{name_alt}"]
+        nic.ip_address.netmask = attributes["netmask_#{name}"] || attributes["netmask_#{name}".downcase] || attributes["netmask_#{name_alt}"]
         # XXX Hardcoded for now! Not sure how facter displays ipv6 addresses.
         nic.ip_address.family = 'inet'
       end

@@ -24,6 +24,9 @@
           <%- if machine.switch? -%>
             <li><a href="#portsettings" data-toggle="tab">Ports</a></li>
           <%- end -%>
+          <%- if machine.software -%>
+            <li><a href="#software" data-toggle="tab">Software</a></li>
+          <%- end -%>
           <li><a href="#maintenance" data-toggle="tab">Maintenance</a></li>
           <li><a href="#history" data-toggle="tab">History</a></li>
         </ul>
@@ -352,7 +355,7 @@
                 <div class="span12">
                   <table class="table table-condensed">
                     <tr>
-                      <th class="span12">PuppetDB data:</th>
+                      <th class="span12"><span class="puppet_db_data_headline">PuppetDB data:<span class="icon-resize-vertical">&nbsp;</span></span></th>
                     </tr>
                     <tr>
                       <td class="span12" style="width: 250px"><%= machine.puppetdb_data.html_safe %></td>
@@ -434,6 +437,9 @@
         <%- end -%>
       </table>
     </div>
+    <div class="tab-pane" id="software">
+      <%= render partial: 'softwares/table', locals: {object: @machine} %>
+    </div>
     <div class="tab-pane" id="history">
       <%= render partial: 'shared/history', locals: {object: @machine} %>
     </div>
@@ -441,3 +447,9 @@
 </div>
 
 </div>
+
+<script>
+$(window).load(function () {
+window.location.hash && $('ul.nav a[href="' + window.location.hash + '"]').tab('show');
+});
+</script>

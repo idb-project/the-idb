@@ -4,6 +4,7 @@ $(function() {
     .bind('filterEnd', function() {
       var totalCores = 0;
       var totalMemory = 0;
+      var totalRows = 0;
       // ignore summary row
       $(this).find('tbody:not(".summary") tr:visible').each(function(){
         // cores in sixth column
@@ -12,9 +13,12 @@ $(function() {
         totalMemory += $(this).find('td:eq(8)').text() == ""?0:parseFloat($(this).find('td:eq(8)').text());
       });
 
+      // count selected rows
+      totalRows = $(this).find('tbody:not(".summary") tr:visible').length;
+
       $('.total-cores').text(totalCores + " C");
       $('.total-memory').text(Math.round(totalMemory) + " GB");
-      $('.summary-td').html('Summary');
+      $('.summary-td').html('Machines: '+totalRows);
 
       // find out if only one vmhost is filtered
       // the vmhost of the first filtered machine, use it as reference

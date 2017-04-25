@@ -20,4 +20,8 @@ class User < ActiveRecord::Base
   def valid_password?(password)
     !!(!password_digest.blank? && authenticate(password))
   end
+
+  def is_admin?
+    admin || false
+  end
 end

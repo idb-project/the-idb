@@ -7,7 +7,7 @@ class MachinePresenter < Keynote::Presenter
            :pending_updates, :pending_security_updates,
            :pending_updates_sum, :virtual?,
            :backup_last_full_run, :backup_last_inc_run,
-           :backup_last_diff_run, :is_backed_up?, :connected_to_power_feed?,
+           :backup_last_diff_run, :is_backed_up?, :connected_to_power_feed?, :software,
            to: :machine
 
   def id
@@ -329,9 +329,11 @@ class MachinePresenter < Keynote::Presenter
   def puppetdb_data
     output = ""
     if machine.raw_data_puppetdb
+      output += "<div id='puppet_db_data'>"
       JSON.parse(machine.raw_data_puppetdb).each do |h|
         output += "#{h['name']}: #{h['value']}<br/>"
       end
+      output += "</div>"
     end
     output
   end
@@ -341,7 +343,12 @@ class MachinePresenter < Keynote::Presenter
     if machine.raw_data_api
       raw = JSON.parse(machine.raw_data_api)
       raw.keys.each do |k|
-        output += "#{k}: #{raw[k]}<br/>"
+        token = ApiToken.find_by_token(k).try(:name) || "unknown"
+        output += "<span class='raw_api_data_headline'>#{token}:<span class='icon-resize-vertical'>&nbsp;</span></span><div class='raw_data_api'>"
+          raw[k].keys.each do |key|
+            output += "#{key}: #{raw[k][key]}<br/>"
+          end
+        output += "</div><hr/>"
       end
     end
     output
