@@ -53,7 +53,6 @@ group :development do
   gem 'timecop'
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
-  gem 'guard-rspec', require: false
   gem 'ruby-ldapserver', require: false
 end
 
