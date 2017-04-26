@@ -19,7 +19,7 @@ describe 'Inventories API' do
     it 'should not allow access' do
       IDB.config.modules.api.v2_enabled = false
 
-      api_get "inventories", @api_token_r
+      api_get(action: "inventories", token: @api_token_r)
       body = JSON.parse(response.body)
       expect(response.status).to eq(501)
       expect(body["response_type"]).to eq("error")
@@ -29,7 +29,7 @@ describe 'Inventories API' do
 
   describe "GET /inventories" do
     it "returns error with invalid token" do
-      api_get "inventories", @api_token
+      api_get( action: "inventories", token: @api_token)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(401)
@@ -38,7 +38,7 @@ describe 'Inventories API' do
     end
 
     it "returns all inventories" do
-      api_get "inventories", @api_token_r
+      api_get(action: "inventories", token: @api_token_r)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -47,7 +47,7 @@ describe 'Inventories API' do
     end
 
     it "returns the inventory by id if id param is set" do
-      api_get "inventories?id=#{@inventory_a.id}", @api_token_r
+      api_get(action: "inventories?id=#{@inventory_a.id}", token: @api_token_r)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -55,7 +55,7 @@ describe 'Inventories API' do
     end
 
     it "returns inventory items by number if number param is set" do
-      api_get "inventories?number=#{@inventory_a.inventory_number}", @api_token_r
+      api_get(action: "inventories?number=#{@inventory_a.inventory_number}", token: @api_token_r)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -63,7 +63,7 @@ describe 'Inventories API' do
     end
 
     it "returns the inventory by id if id param is set" do
-      api_get "inventories?id=#{@inventory_a.id}", @api_token_r
+      api_get(action: "inventories?id=#{@inventory_a.id}",token: @api_token_r)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -71,7 +71,7 @@ describe 'Inventories API' do
     end
 
     it "returns a 404 if no inventory is found" do
-      api_get "inventories?id=0", @api_token_r
+      api_get(action: "inventories?id=0",token: @api_token_r)
 
       inventories = JSON.parse(response.body)
       expect(response.status).to eq(404)
@@ -85,7 +85,7 @@ describe 'Inventories API' do
         "inventory_number": "test123",
         "name": "test"
       }
-      api_post_json "inventories", @api_token_w, p
+      api_post_json(action: "inventories", token: @api_token_w, payload: p)
 
       new_inventory = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -102,7 +102,7 @@ describe 'Inventories API' do
         "inventory_number": "updated"
       }
 
-      api_put_json "inventories", @api_token_w, p
+      api_put_json(action: "inventories", token: @api_token_w, payload: p)
 
       updated_inventory = JSON.parse(response.body)
       expect(response.status).to eq(200)

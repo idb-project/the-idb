@@ -26,7 +26,7 @@ describe 'Machines API' do
       IDB.config.modules.api.v1_enabled = false
       IDB.config.modules.api.v2_enabled = false
 
-      api_get "machines", @api_token_r
+      api_get(action: "machines", token: @api_token_r)
       expect(response.status).to eq(501)
       expect(JSON.parse(response.body)).to eq({})
     end
@@ -34,7 +34,7 @@ describe 'Machines API' do
 
   describe "GET /machines but unauthorized" do
     it 'should return json error message' do
-      api_get_unauthorized "machines"
+      api_get_unauthorized(action: "machines")
       expect(response.status).to eq(401)
       expect(JSON.parse(response.body)).to eq({"response_type"=>"error", "response"=>"Unauthorized."})
     end
@@ -42,7 +42,7 @@ describe 'Machines API' do
 
   describe "GET /machines" do
     it 'should return all machines' do
-      api_get "machines", @api_token_r
+      api_get(action: "machines", token: @api_token_r)
       expect(response.status).to eq(200)
 
       machines = JSON.parse(response.body)
@@ -53,7 +53,7 @@ describe 'Machines API' do
 
   describe "GET /machines with header authorization" do
     it 'should return all machines' do
-      api_get_auth_header "machines", @api_token_r
+      api_get_auth_header(action: "machines", token: @api_token_r)
       expect(response.status).to eq(200)
 
       machines = JSON.parse(response.body)
@@ -64,7 +64,7 @@ describe 'Machines API' do
 
   describe "GET /machines?fqdn=" do
     it 'should return the corresponding machine' do
-      api_get "machines?fqdn=#{Machine.last.fqdn}", @api_token_r
+      api_get(action: "machines?fqdn=#{Machine.last.fqdn}", token: @api_token_r)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -72,7 +72,7 @@ describe 'Machines API' do
     end
 
     it 'should return empty JSON and code 404 if machine not found' do
-      api_get "machines?fqdn=does.not.exist", @api_token_r
+      api_get(action: "machines?fqdn=does.not.exist", token: @api_token_r)
       expect(response.status).to eq(404)
 
       machines = JSON.parse(response.body)
@@ -82,11 +82,11 @@ describe 'Machines API' do
 
   describe "PUT /machines?fqdn=" do
     it 'does not create a machine if fqdn is invalid' do
-      api_get "machines?fqdn=new-machine", @api_token_r
+      api_get(action: "machines?fqdn=new-machine", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put "machines?fqdn=new-machine&ucs_role=master&create_machine=true", @api_token_w
+      api_put(action: "machines?fqdn=new-machine&ucs_role=master&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(409)
 
       machine = JSON.parse(response.body)
@@ -94,11 +94,11 @@ describe 'Machines API' do
     end
 
     it 'creates a machine if not existing' do
-      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", @api_token_w
+      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -107,11 +107,11 @@ describe 'Machines API' do
     end
 
     it 'creates a machine if not existing, entering the API token name into the history' do
-      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", @api_token_w
+      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -119,11 +119,11 @@ describe 'Machines API' do
     end
 
     it 'does not create a machine if not explicitely specified' do
-      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put "machines?fqdn=new-machine.example.com&ucs_role=master", @api_token_w
+      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -131,7 +131,7 @@ describe 'Machines API' do
     end
 
     it 'creates a machine if not existing, JSON payload' do
-      api_get "machines?fqdn=new-machine2.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine2.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
@@ -140,7 +140,7 @@ describe 'Machines API' do
         "ucs_role":"master",
         "create_machine":true
       }
-      api_put_json "machines?fqdn=new-machine2.example.com&ucs_role=master", @api_token_w, payload
+      api_put_json(action: "machines?fqdn=new-machine2.example.com&ucs_role=master", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -151,11 +151,11 @@ describe 'Machines API' do
     it 'updates a machine if existing' do
       FactoryGirl.create(:machine, fqdn: "existing.example.com")
 
-      api_get "machines?fqdn=existing.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
 
-      api_put "machines?fqdn=existing.example.com&ucs_role=member", @api_token_w
+      api_put(action: "machines?fqdn=existing.example.com&ucs_role=member", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -166,12 +166,12 @@ describe 'Machines API' do
     it 'sets the backup_type if backup parameters are presented' do
       FactoryGirl.create(:machine, fqdn: "existing.example.com")
 
-      api_get "machines?fqdn=existing.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
 
       # set by backup_brand > 0
-      api_put "machines?fqdn=existing.example.com&backup_brand=2", @api_token_w
+      api_put(action: "machines?fqdn=existing.example.com&backup_brand=2", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -179,7 +179,7 @@ describe 'Machines API' do
       expect(machine['backup_type']).to eq(1)
 
       # reset
-      api_put "machines?fqdn=existing.example.com&backup_type=0", @api_token_w
+      api_put(action: "machines?fqdn=existing.example.com&backup_type=0", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -187,7 +187,7 @@ describe 'Machines API' do
       expect(machine['backup_type']).to eq(0)
 
       # set by backup_last_inc_run != ""
-      api_put "machines?fqdn=existing.example.com&backup_last_inc_run=19012016", @api_token_w
+      api_put(action: "machines?fqdn=existing.example.com&backup_last_inc_run=19012016", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -198,7 +198,7 @@ describe 'Machines API' do
     it 'updates a machine if existing, JSON payload' do
       FactoryGirl.create(:machine, fqdn: "existing2.example.com")
 
-      api_get "machines?fqdn=existing2.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing2.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
 
@@ -206,7 +206,7 @@ describe 'Machines API' do
         "fqdn":"existing2.example.com",
         "ucs_role":"masterslavemember"
       }
-      api_put_json "machines?fqdn=existing2.example.com&ucs_role=member", @api_token_w, payload
+      api_put_json(action: "machines?fqdn=existing2.example.com&ucs_role=member", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -215,18 +215,18 @@ describe 'Machines API' do
     end
 
     it 'returns a 404 if no fqdn was provided' do
-      api_put "machines?cores=4", @api_token_w
+      api_put(action: "machines?cores=4", token: @api_token_w)
       expect(response.status).to eq(400)
     end
 
     it 'updates multiple attributes of a machine if existing' do
       FactoryGirl.create(:machine, fqdn: "existing2.example.com", cores: 3)
 
-      api_get "machines?fqdn=existing2.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing2.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
 
-      api_put "machines?fqdn=existing2.example.com&ucs_role=member&cores=7", @api_token_w
+      api_put(action: "machines?fqdn=existing2.example.com&ucs_role=member&cores=7", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -238,7 +238,7 @@ describe 'Machines API' do
     it 'updates multiple attributes of a machine if existing, JSON payload' do
       FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3)
 
-      api_get "machines?fqdn=existing3.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing3.example.com")
 
@@ -248,14 +248,14 @@ describe 'Machines API' do
         "backup_last_full_run":"2015-10-07 12:00:00"
       }
       
-      api_put_json "machines", @api_token_w, payload
+      api_put_json(action: "machines", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing3.example.com")
       expect(machine['backup_brand']).to eq(2)
 
-      api_get "machines?fqdn=existing3.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['backup_brand']).to eq(2)
     end    
@@ -263,18 +263,18 @@ describe 'Machines API' do
     it 'filters out not existing attributes' do
       FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3)
 
-      api_get "machines?fqdn=existing3.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing3.example.com")
 
-      api_put "machines?fqdn=existing3.example.com&zzz=fhfhf", @api_token_w
+      api_put(action: "machines?fqdn=existing3.example.com&zzz=fhfhf", token: @api_token_w)
       expect(response.status).to eq(200)
     end
 
     it 'updates the software of a machine if existing, JSON payload' do
       FactoryGirl.create(:machine, fqdn: "existing.example.com")
 
-      api_get "machines?fqdn=existing.example.com", @api_token_r
+      api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
 
@@ -282,7 +282,7 @@ describe 'Machines API' do
         "fqdn":"existing.example.com",
         "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}]
       }
-      api_put_json "machines?fqdn=existing.example.com", @api_token_w, payload
+      api_put_json(action: "machines?fqdn=existing.example.com", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -295,7 +295,7 @@ describe 'Machines API' do
     end
 
     it 'creates a machine with a software configuration if not existing' do
-      api_get "machines?fqdn=new-machine.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
@@ -304,7 +304,7 @@ describe 'Machines API' do
         "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}],
         "create_machine": true
       }
-      api_put_json "machines?fqdn=new-machine.example.com", @api_token_w, payload
+      api_put_json(action: "machines?fqdn=new-machine.example.com", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -319,10 +319,10 @@ describe 'Machines API' do
 
   describe "PUT /machines with multiple machines" do
     it 'creates the machines if not existing' do
-      api_get "machines?fqdn=new-machine-a.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine-a.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
-      api_get "machines?fqdn=new-machine-b.example.com", @api_token_r
+      api_get(action: "machines?fqdn=new-machine-b.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
@@ -343,7 +343,7 @@ describe 'Machines API' do
           "cores":"5"
         }]
       }
-      api_put_json "machines", @api_token_w, payload
+      api_put_json(action: "machines", token: @api_token_w, payload: payload)
 
       machines = JSON.parse(response.body)
       expect(machines.size).to eq(2)
@@ -377,7 +377,7 @@ describe 'Machines API' do
           "ram":"2048"
         }]
       }
-      api_put_json "machines", @api_token_w, payload
+      api_put_json(action: "machines", token: @api_token_w, payload: payload)
 
       machines = JSON.parse(response.body)
       expect(machines.size).to eq(2)
@@ -399,7 +399,7 @@ describe 'Machines API' do
       fqdn = Machine.last.fqdn
       Machine.last.destroy!
 
-      api_put "machines?fqdn=#{fqdn}&ucs_role=master", @api_token_w
+      api_put(action: "machines?fqdn=#{fqdn}&ucs_role=master", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -410,7 +410,7 @@ describe 'Machines API' do
       fqdn = Machine.last.fqdn
       Machine.last.destroy!
 
-      api_put "machines?fqdn=#{fqdn}&ucs_role=master&create_machine=true", @api_token_w
+      api_put(action: "machines?fqdn=#{fqdn}&ucs_role=master&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(409)
 
       machine = JSON.parse(response.body)
@@ -420,14 +420,14 @@ describe 'Machines API' do
 
   describe "GET with wrong token permissions" do
     it 'should return 401 Unauthorized' do
-      api_get "machines", @api_token
+      api_get(action: "machines", token: @api_token)
       expect(response.status).to eq(401)
     end
   end
 
   describe "PUT with wrong token permissions" do
     it 'should return 401 Unauthorized' do
-      api_put "machines?fqdn=borken.example.com&create_machine=true", @api_token
+      api_put(action: "machines?fqdn=borken.example.com&create_machine=true", token: @api_token)
       expect(response.status).to eq(401)
     end
   end

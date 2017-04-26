@@ -18,7 +18,7 @@ describe 'Cloud providers API' do
     it 'should not allow access' do
       IDB.config.modules.api.v2_enabled = false
 
-      api_get "cloud_providers", @api_token_r
+      api_get(action: "cloud_providers", token: @api_token_r)
       body = JSON.parse(response.body)
       expect(response.status).to eq(501)
       expect(body["response_type"]).to eq("error")
@@ -28,7 +28,7 @@ describe 'Cloud providers API' do
 
   describe "GET /cloud_providers" do
     it "returns error with invalid token" do
-      api_get "cloud_providers", @api_token
+      api_get(action: "cloud_providers", token: @api_token)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(401)
@@ -37,7 +37,7 @@ describe 'Cloud providers API' do
     end
 
     it "returns a cloud provider given an id" do
-      api_get "cloud_providers?id=#{@cloud_provider.id}", @api_token_r
+      api_get( action: "cloud_providers?id=#{@cloud_provider.id}", token: @api_token_r)
 
       cloud_providers = JSON.parse(response.body)
 
@@ -46,7 +46,7 @@ describe 'Cloud providers API' do
     end
 
     it "returns the cloud provider given an name" do
-      api_get "cloud_providers?name=#{@cloud_provider.name}", @api_token_r
+      api_get( action: "cloud_providers?name=#{@cloud_provider.name}", token: @api_token_r)
 
       cloud_providers = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -55,7 +55,7 @@ describe 'Cloud providers API' do
     end
 
     it "returns the cloud provider given an name" do
-      api_get "cloud_providers?owner=#{@user.id}", @api_token_r
+      api_get(action: "cloud_providers?owner=#{@user.id}", token: @api_token_r)
 
       cloud_providers = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -64,7 +64,7 @@ describe 'Cloud providers API' do
     end
 
     it "returns all cloud_providers with no parameter" do
-      api_get "cloud_providers", @api_token_r
+      api_get( action: "cloud_providers", token: @api_token_r)
 
       cloud_providers = JSON.parse(response.body)
       expect(response.status).to eq(200)
