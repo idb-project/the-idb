@@ -37,7 +37,9 @@ module V3
         # otherwise the exception would be thrown when rendering.
         # return 400 for such a request.
         begin
-          query.any?
+          unless query.any?
+            error!("Not Found", 404)
+          end
         rescue ActiveRecord::StatementInvalid
           error!("Bad Request", 400)
         end
