@@ -194,3 +194,8 @@ span.markdown-hint {
 .raw_api_data_headline, .puppet_db_data_headline {
   cursor: pointer;
 }
+
+.ui-helper-hidden-accessible {
+  position: absolute; left: -9999px;
+  height: 1px;
+}
