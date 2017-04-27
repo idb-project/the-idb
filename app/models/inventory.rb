@@ -10,11 +10,6 @@ class Inventory < ActiveRecord::Base
   belongs_to :inventory_status
   has_many :attachments, :dependent => :destroy
 
-  scope :unique_name, -> { group(:id, :name) }
-  scope :unique_place, -> { group(:id, :place) }
-  scope :unique_category, -> { group(:id, :category) }
-  scope :unique_seller, -> { group(:id, :seller) }
-
   validates :purchase_date, format: { with: /\d{4}\-\d{2}\-\d{2}/,
     message: "has to be of format YYYY-MM-DD" }, :allow_blank => true
   validates :warranty_end, format: { with: /\d{4}\-\d{2}\-\d{2}/,
