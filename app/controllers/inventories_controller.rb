@@ -1,8 +1,8 @@
 class InventoriesController < ApplicationController
-  autocomplete :inventory, :name, :full => true, :scopes => [:unique_name]
-  autocomplete :inventory, :place, :full => true, :scopes => [:unique_place]
-  autocomplete :inventory, :category, :full => true, :scopes => [:unique_category]
-  autocomplete :inventory, :seller, :full => true, :scopes => [:unique_seller]
+  autocomplete :inventory, :name, :full => true
+  autocomplete :inventory, :place, :full => true
+  autocomplete :inventory, :category, :full => true
+  autocomplete :inventory, :seller, :full => true
 
   def index
     @inventories = Inventory.all #joins(:location).order(:inventory_number)
@@ -86,7 +86,27 @@ class InventoriesController < ApplicationController
     end
   end
 
+  def autocomplete_inventory_name
+    autocomplete_general("name", params[:term])
+  end
+
+  def autocomplete_inventory_place
+    autocomplete_general("place", params[:term])
+  end
+
+  def autocomplete_inventory_category
+    autocomplete_general("category", params[:term])
+  end
+
+  def autocomplete_inventory_seller
+    autocomplete_general("seller", params[:term])
+  end
+
   private
+
+  def autocomplete_general(attrib, term)
+    render json: Inventory.where("#{attrib} like '%#{term}%'").pluck("distinct #{attrib}")
+  end
 
   def leading_zero_on_single_digits(number)
     number.length > 1 ? number : "0#{number}"
