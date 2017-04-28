@@ -56,17 +56,18 @@ module V3
       end
 
       desc "Get a machine by fqdn"
-      get ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
+      get ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
         m = Machine.find_by_fqdn params[:fqdn]
-        error!("Not found", 404) unless m
+        error!("Not Found", 404) unless m
 
         m
       end
 
       desc "Update a single machine"
-      put ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
+      put ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
+        can_write!
         m = Machine.find_by_fqdn params[:fqdn]
-        error!("Not found", 404) unless m
+        error!("Not Found", 404) unless m
 
         p = params.reject { |k| !Machine.attribute_method?(k) }
         p.delete("aliases")
