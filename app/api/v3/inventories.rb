@@ -37,6 +37,7 @@ module V3
       post do
         can_write!
         p = params.reject { |k| !Inventory.attribute_method?(k) }
+        p.merge(owner_id: token_owner_id)
         i = Inventory.create(p)
         i
       end

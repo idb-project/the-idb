@@ -25,6 +25,16 @@ module V3
       end
     end
 
+    def token_owner_id
+      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
+      x = ApiToken.find_by_token(token)
+      unless x
+        error!("Unauthorized.", 401)
+      end
+
+      return x.owner_id
+    end
+
     def can_read!
       token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
       unless ApiToken.where("token = ?", token).first.read

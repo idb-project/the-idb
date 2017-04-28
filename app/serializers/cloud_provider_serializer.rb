@@ -1,3 +1,3 @@
 class CloudProviderSerializer < ActiveModel::Serializer
-  attributes :owner_id, :name, :description, :config, :apidocs
+  attributes :name, :description, :config, :apidocs
 end

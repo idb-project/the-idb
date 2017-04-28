@@ -33,33 +33,39 @@ module V3
         query
       end
 
-      # desc 'Create a new switch'
-      # post do
-      #   can_write!
-      #   p = params.reject { |k| !Inventory.attribute_method?(k) }
-      #   i = Inventory.create(p)
-      #   i
-      # end
+      # TODO: How to create switch ports?
+      desc 'Create a new switch'
+      post serializer: SwitchSerializer do
+        can_write!
+        unless params['device_type_id'] == 3
+          error!("Bad Request: Not a switch.", 400)
+        end
 
-      # desc "Get a inventory by inventory number"
-      # get ':number', requirements: {number: /[a-zA-Z0-9.]+/ } do
-      #   i = Inventory.find_by_inventory_number params[:number]
-      #   error!("Not found", 404) unless i
+        p = params.reject { |k| !Machine.attribute_method?(k) }
+        i = Machine.create(p)
+        i
+      end
 
-      #   i
-      # end
+      desc "Get a switch by name (fqdn)"
+      get ':name', requirements: {name: /[a-zA-Z0-9.]+/ }, serializer: SwitchSerializer do
+        m = Machine.find_by_fqdn params[:name]
+        error!("Not found", 404) unless m
 
-      # desc "Update a single inventory"
-      # put ':number', requirements: {number: /[a-zA-Z0-9.]+/ } do
-      #   i = Inventory.find_by_inventory_number params[:number]
-      #   error!("Not found", 404) unless i
+        m
+      end
 
-      #   p = params.reject { |k| !Inventory.attribute_method?(k) }
+      # TODO: How to create switch ports?
+      desc "Update a single switch"
+      put ':name', requirements: {name: /[a-zA-Z0-9.]+/ }, serializer: SwitchSerializer do
+        m = Machine.find_by_fqdn params[:name]
+        error!("Not found", 404) unless m
 
-      #   i.update_attributes(p)
+        p = params.reject { |k| !Machine.attribute_method?(k) }
 
-      #   i
-      # end
+        m.update_attributes(p)
+
+        m
+      end
     end
   end
 end
