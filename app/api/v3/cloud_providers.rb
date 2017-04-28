@@ -37,7 +37,6 @@ module V3
       post do
         can_write!
         p = params.reject { |k| !CloudProvider.attribute_method?(k) }
-        p.merge(owner_id: token_owner_id)
         c = CloudProvider.create(p)
         c
       end
