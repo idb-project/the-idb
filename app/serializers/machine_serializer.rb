@@ -6,11 +6,11 @@ class MachineSerializer < ActiveModel::Serializer
   end
 
   def power_feed_a_id
-    object.power_feed_a.id
+    object.power_feed_a ? object.power_feed_a.id : nil
   end
 
   def power_feed_b_id
-    object.power_feed_b.id
+    object.power_feed_b ? object.power_feed_b.id : nil
   end
 
   has_many :aliases
