@@ -2,7 +2,11 @@
 
 ### General Steps
 
-$ sudo dpkg -i idb.deb
+$ sudo dpkg -i idb-$(VERSION).deb
+
+* make sure, that /opt/idb/config is still a symlink to the configuration in /etc/idb/,
+and not to the config-example directory
+
 $ export PATH=/opt/idb/vendor/ruby/bin/:$PATH
 $ cd /opt/idb && RAILS_ENV=production bundle exec rake db:migrate
 $ cd /opt/idb && RAILS_ENV=production bundle exec rake assets:precompile
