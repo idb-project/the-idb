@@ -1,6 +1,6 @@
-## Updating idb
+# Updating IDB
 
-### General Steps
+## General Steps
 
 $ sudo dpkg -i idb-$(VERSION).deb
 
@@ -17,6 +17,21 @@ Always:
 * restart webserver / application server
 * restart sidekiq
 
-### Update Config File
+
+## Update Config File
+
+### 1.6.3
+
+The following settings have been added to configure admin users.
+
+```
+admin_group: 'admins,dc=fra,dc=bytemine,dc=net'
+group_membership_attribute: 'uniqueMember'
+```
+
+Add this to the ldap-setting for the used environment.
+
+
+### 1.6.2
 
 * If present one can remove the puppetDB options "apt_distributions" and "yum_distributions" from application.yml, they are obsolete.
