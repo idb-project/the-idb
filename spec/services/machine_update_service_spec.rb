@@ -75,7 +75,6 @@ describe MachineUpdateService do
     it 'sets the device type' do
         machine = Machine.create!(fqdn: 'test.example.com')
         facts["is_virtual"] = true
-        puts facts
         allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
         described_class.update_from_facts(machine, @url)
         machine = Machine.find_by_fqdn(machine.fqdn)
