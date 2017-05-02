@@ -66,11 +66,22 @@ describe MachineUpdateService do
       @url = "https://puppetdb.example.com"
     end
 
-    it 'sets the device type' do
-      described_class.update_from_facts(machine,  @url)
+    # it 'sets the device type' do
+    #   described_class.update_from_facts(machine,  @url)
 
-      expect(machine.device_type_id).to_not be_nil
+    #   expect(machine.device_type_id).to_not be_nil
+    # end
+
+    it 'sets the device type' do
+        machine = Machine.create!(fqdn: 'test.example.com')
+        facts["is_virtual"] = true
+        puts facts
+        allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
+        described_class.update_from_facts(machine, @url)
+        machine = Machine.find_by_fqdn(machine.fqdn)
+        expect(machine).to be_a VirtualMachine
     end
+
 
     it 'sets the serialnumber' do
       described_class.update_from_facts(machine,  @url)

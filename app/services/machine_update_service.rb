@@ -13,6 +13,12 @@ class MachineUpdateService
     # Also avoids marking the machine as auto-updating.
     return if facts.missing?
 
+    if facts.virtual_machine?
+      machine.becomes!(VirtualMachine)
+    else
+      machine.becomes!(Machine)
+    end
+
     machine.auto_update = true
     machine.os = facts.operatingsystem
     machine.os_release = facts.operatingsystemrelease || facts.lsbdistrelease
@@ -21,7 +27,6 @@ class MachineUpdateService
     machine.cores = facts.processorcount
     machine.uptime = facts.uptime_seconds
     machine.serialnumber = facts.serialnumber
-#    machine.device_type = DeviceType.where(is_virtual: facts.virtual_machine?).first
     machine.unattended_upgrades = facts.unattended_upgrades?
     machine.unattended_upgrades_blacklisted_packages = facts.idb_unattended_upgrades_blacklisted_packages
     machine.unattended_upgrades_reboot = facts.idb_unattended_upgrades_reboot
@@ -65,12 +70,6 @@ class MachineUpdateService
         # Just add the new nic objects. They will be saved automatically.
         machine.nics << new_nic
       end
-    end
-
-    if facts.virtual_machine?
-      machine.becomes!(VirtualMachine)
-    else
-      machine.becomes!(Machine)
     end
 
     machine.save!
