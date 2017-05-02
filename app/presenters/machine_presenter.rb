@@ -87,10 +87,6 @@ class MachinePresenter < Keynote::Presenter
     machine.cores || 0
   end
 
-  # def device_type
-  #   machine.device_type.name if machine.device_type
-  # end
-
   def uptime
     # Do not show the uptime if the machine hasn't been updated in a while.
     # Will avoid confusion if the facts haven't been updated in a while.

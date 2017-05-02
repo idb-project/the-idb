@@ -85,14 +85,6 @@ class Machine < ActiveRecord::Base
     fqdn
   end
 
-  def device_type
-    DeviceType.find(device_type_id)
-  end
-
-  def device_type=(type)
-    self.device_type_id = type.id if type
-  end
-
   def backup_type_string
     BackupType.fetch(backup_type, '')
   end
