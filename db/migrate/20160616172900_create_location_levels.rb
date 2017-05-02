@@ -1,4 +1,4 @@
-class CreateLocationLevels < ActiveRecord::Migration
+class CreateLocationLevels < ActiveRecord::Migration[4.2]
   def change
     create_table :location_levels do |t|
       t.string :name

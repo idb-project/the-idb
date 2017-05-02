@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.5'
+ruby '2.2.4'
 gem 'rails'
 
 gem 'rake'
@@ -53,7 +53,6 @@ group :development do
   gem 'timecop'
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
-  gem 'guard-rspec', require: false
   gem 'ruby-ldapserver', require: false
 end
 

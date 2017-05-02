@@ -1,4 +1,4 @@
-class CreateNics < ActiveRecord::Migration
+class CreateNics < ActiveRecord::Migration[4.2]
   def change
     create_table :nics do |t|
       t.string :name

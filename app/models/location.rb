@@ -21,14 +21,23 @@ class Location < ActiveRecord::Base
     parent.nil? ? false : true
   end
 
-  def self.depth_traverse
+  def sorted_children
     ls = Array.new()
-    Location.roots.each do |r|
-      Location.with_ancestor(r).each do |l|
-        ls << l
-      end
+    cs = children.sort_by { |child| child.name }
+    cs.each do |child|
+      ls << child
+      ls.concat(child.sorted_children.flatten)
     end
     ls
   end
 
+  def self.depth_traverse
+      ls = Array.new()
+
+      Location.roots.each do |r|
+        ls.concat(r.sorted_children)
+      end
+
+      ls
+  end
 end

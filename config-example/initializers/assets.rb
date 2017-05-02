@@ -1,1 +1,1 @@
-Rails.application.config.assets.precompile += ['print.css', 'pikaday.css', 'pikaday.js', 'moment.min.js']
+Rails.application.config.assets.precompile += ['print.css', 'pikaday.css', 'pikaday.js', 'moment.min.js', 'tree.css', 'tree.js']

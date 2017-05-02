@@ -70,4 +70,20 @@ $(function () {
   $("#location_location_id").parent().parent().hide();
 
   $("#markup-source").parent().append("<br/><span class=\"markdown-hint\">Content can be written in <a href=\"http://daringfireball.net/projects/markdown/syntax\" title=\"Markdown syntax reference\" target=\"_blank\">Markdown</a></span>");
+
+  $(".raw_api_data_headline").click(function() {
+    if($(this).next().is(':visible')) {
+      $(this).next().slideUp();
+    } else {
+      $(this).next().slideDown();
+    }
+  });
+
+  $(".puppet_db_data_headline").click(function() {
+    if($("#puppet_db_data").is(':visible')) {
+      $("#puppet_db_data").slideUp();
+    } else {
+      $("#puppet_db_data").slideDown();
+    }
+  });
 });
