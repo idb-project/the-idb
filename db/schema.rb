@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170310105145) do
+ActiveRecord::Schema.define(version: 20170502072418) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -128,7 +128,6 @@ ActiveRecord::Schema.define(version: 20170310105145) do
     t.datetime "updated_at"
     t.string   "os_release"
     t.integer  "uptime"
-    t.integer  "device_type_id"
     t.string   "serialnumber"
     t.integer  "owner_id"
     t.integer  "backup_type",                                                 default: 0
@@ -165,6 +164,7 @@ ActiveRecord::Schema.define(version: 20170310105145) do
     t.bigint   "backup_last_diff_size"
     t.integer  "needs_reboot"
     t.json     "software"
+    t.string   "type"
     t.index ["deleted_at"], name: "index_machines_on_deleted_at", using: :btree
     t.index ["fqdn"], name: "index_machines_on_fqdn", unique: true, using: :btree
   end
