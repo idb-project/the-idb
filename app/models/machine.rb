@@ -39,15 +39,15 @@ class Machine < ActiveRecord::Base
   validates :fqdn, format: {with: FQDN_REGEX}
 
   def self.create_switch!(attributes = {})
-    create(attributes.merge(device_type_id: 3))
+    Switch.create(attributes)
   end
 
   def self.is_switch?(fqdn)
-    exists?(fqdn: fqdn, device_type_id: 3)
+    Switch.exists?(fqdn: fqdn)
   end
 
   def self.switches
-    where(device_type_id: 3)
+    Switch.all
   end
 
   def self.advanced_field_name(index, type="short")
@@ -74,15 +74,11 @@ class Machine < ActiveRecord::Base
   end
 
   def switch?
-    device_type && device_type.name == 'switch'
-  end
-
-  def switch_ports
-    switch? ? SwitchPort.where(switch_id: id) : []
+    instance_of? Switch
   end
 
   def virtual?
-    device_type && device_type.name == 'virtual'
+    instance_of? VirtualMachine
   end
 
   def name
@@ -151,10 +147,10 @@ class Machine < ActiveRecord::Base
 
   def update_details(params, machine_details)
     machine_params = params.require(:machine).permit([
-      :arch, :ram, :cores, :serialnumber, :device_type_id, :vmhost, :os,
+      :arch, :ram, :cores, :serialnumber, :vmhost, :os,
       :os_release, :switch_url, :mrtg_url, :raw_data_api,
       {nics: [:name, :mac, :remove, {ip_address: [:addr, :netmask, :addr_v6]}]},
-      {aliases: [:name, :remove]}, :needs_reboot
+      {aliases: [:name, :remove]}, :needs_reboot, :device_type
     ])
 
     machine_details.update(machine_params)
@@ -162,5 +158,9 @@ class Machine < ActiveRecord::Base
 
   def update_details_by_api(params, machine_details)
     machine_details.update(params)
+  end
+
+  def device_type
+    "Machine"
   end
 end
