@@ -1,3 +1,3 @@
 class SwitchSerializer < ActiveModel::Serializer
-  attributes :name, :switch_ports
+  attributes :fqdn, :switch_ports 
 end

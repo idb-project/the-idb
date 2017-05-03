@@ -14,8 +14,186 @@ module V3
         set_papertrail
       end
 
+      route_param :fqdn, requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
+
+        resource :aliases do
+          route_param :alias, requirements: {alias: /[a-zA-Z0-9.-]+/ } do
+            desc "Get a alias"
+            get do
+              can_read!
+              a = MachineAlias.find_by_name params[:alias]
+              error!("Not Found", 404) unless a
+              a
+            end
+
+            desc "Update an alias"
+            put do
+              can_write!
+              a = MachineAlias.find_by_name params[:alias]
+              error!("Not Found", 404) unless a
+              
+              p = params.reject { |k| !MachineAlias.attribute_method?(k) }
+              
+              a.update_attributes(p)
+              a
+            end
+
+            desc "Delete an alias"
+            delete do
+              can_write!
+              a = MachineAlias.find_by_name params[:alias]
+              error!("Not Found", 404) unless a
+              a.destroy
+            end
+          end
+
+          desc "Get all aliases"
+          get do
+            can_read!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            m.aliases
+          end
+
+          desc "Create an alias"
+          post do
+            can_write!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            p = params.reject { |k| !MachineAlias.attribute_method?(k) }
+            p = p.merge({"machine_id": m.id})
+
+            a = MachineAlias.create(p)
+            a
+          end
+        end
+
+        resource :nics do
+          route_param :name, requirements: {name: /[a-zA-Z0-9.-]+/ } do
+            desc "Get a nic"
+            get do
+              can_read!
+              m = Machine.find_by_fqdn params[:fqdn]
+              error!("Not Found", 404) unless m
+
+              n = Nic.where(machine_id: m.id, name: params[:name])
+              error!("Not Found", 404) unless n
+              n
+            end
+
+            desc "Update a nic"
+            put do
+              can_write!
+              m = Machine.find_by_fqdn params[:fqdn]
+              error!("Not Found", 404) unless m
+
+              n = Nic.where(machine_id: m.id, name: params[:name])
+              error!("Not Found", 404) unless n
+              
+              p = params.reject { |k| !Nic.attribute_method?(k) }
+              
+              n.update_attributes(p)
+              n
+            end
+
+            desc "Delete a nic"
+            delete do
+              can_write!
+              m = Machine.find_by_fqdn params[:fqdn]
+              error!("Not Found", 404) unless m
+
+              n = Nic.find_by machine_id: m.id, name: params[:name]
+              error!("Not Found", 404) unless n
+
+              n.destroy
+            end
+          end
+
+          desc "Get all nics"
+          get do
+            can_read!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            m.nics
+          end
+
+          desc "Create a nic"
+          post do
+            can_write!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            p = params.reject { |k| !Nic.attribute_method?(k) }
+            p = p.merge({machine_id: m.id})
+
+            n = Nic.create(p)
+            n
+          end
+        end
+
+        desc "Get a machine by fqdn"
+        get serializer: MachineSerializer do
+          can_read!
+          m = Machine.find_by_fqdn params[:fqdn]
+          error!("Not Found", 404) unless m
+
+          m
+        end
+
+        desc "Update a single machine"
+        put serializer: MachineSerializer  do
+          can_write!
+          m = Machine.find_by_fqdn params[:fqdn]
+          error!("Not Found", 404) unless m
+
+          p = params.reject { |k| !Machine.attribute_method?(k) }
+          if p["nics"]
+            error!("Update nics via nics subroute")
+          end
+
+          if p["aliases"]
+            error!("Update aliases via aliases subroute")
+          end
+
+          m.update_attributes(p)
+
+          is_backed_up = false
+          if (
+            (p["backup_brand"] && p["backup_brand"].to_i > 0) ||
+            !p["backup_last_full_run"].blank? ||
+            !p["backup_last_inc_run"].blank? ||
+            !p["backup_last_diff_run"].blank? ||
+            !p["backup_last_full_size"].blank? ||
+            !p["backup_last_inc_size"].blank? ||
+            !p["backup_last_diff_size"].blank?
+            )
+            is_backed_up = true
+          end
+
+          m.backup_type = 1 if is_backed_up
+
+          m.power_feed_a = params[:power_feed_a_id] ? Location.find_by_id(params[:power_feed_a_id]) : m.power_feed_a
+          m.power_feed_b = params[:power_feed_b_id] ? Location.find_by_id(params[:power_feed_b_id]) : m.power_feed_b
+
+          m.save
+
+          m
+        end
+
+        desc "Delete a machine"
+        delete do
+          can_write!
+          m = Machine.find_by_fqdn params[:fqdn]
+          error!("Not Found", 404) unless m
+          m.destroy
+        end
+      end
+
       desc "Return a list of machines, possibly filtered"
-      get do
+      get serializer: MachineSerializer do # use MachineSerializer for VirtualMachines and Switches
         can_read!
 
         # first get all machines
@@ -48,103 +226,12 @@ module V3
       end
 
       desc 'Create a new machine'
-      post do
+      post serializer: MachineSerializer do
         can_write!
         p = params.reject { |k| !Machine.attribute_method?(k) }
         m = Machine.create(p)
         m
       end
-
-      desc "Get a machine by fqdn"
-      get ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
-        m = Machine.find_by_fqdn params[:fqdn]
-        error!("Not Found", 404) unless m
-
-        m
-      end
-
-      desc "Update a single machine"
-      put ':fqdn', requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
-        can_write!
-        m = Machine.find_by_fqdn params[:fqdn]
-        error!("Not Found", 404) unless m
-
-        p = params.reject { |k| !Machine.attribute_method?(k) }
-        p.delete("aliases")
-
-        m.update_attributes(p)
-
-        is_backed_up = false
-        if (
-          (p["backup_brand"] && p["backup_brand"].to_i > 0) ||
-          !p["backup_last_full_run"].blank? ||
-          !p["backup_last_inc_run"].blank? ||
-          !p["backup_last_diff_run"].blank? ||
-          !p["backup_last_full_size"].blank? ||
-          !p["backup_last_inc_size"].blank? ||
-          !p["backup_last_diff_size"].blank?
-          )
-          is_backed_up = true
-        end
-
-        m.backup_type = 1 if is_backed_up
-
-        m.power_feed_a = params[:power_feed_a_id] ? Location.find_by_id(params[:power_feed_a_id]) : m.power_feed_a
-        m.power_feed_b = params[:power_feed_b_id] ? Location.find_by_id(params[:power_feed_b_id]) : m.power_feed_b
-
-        aliases = MachineAlias.where(name: params[:aliases])
-
-        m.aliases = aliases
-        m.save
-
-        m
-      end
     end
   end
 end
-
-
-
-        # desc 'Update a machine'
-        # put do
-        #   can_write!
-
-        #   p = params.reject { |k| !Machine.attribute_method?(k) }
-
-        #   if p["fqdn"]
-        #     begin
-        #       m = process_machine_update(p)
-        #       return {} unless m
-        #       m
-        #     rescue ActiveRecord::RecordInvalid => e
-        #       Raven.capture_exception(e)
-        #       status 409
-        #       return {}
-        #     rescue ActiveRecord::RecordNotUnique => e
-        #       Raven.capture_exception(e)
-        #       status 409
-        #       return {}
-        #     end
-        #   elsif p["machines"]
-        #     machine_array = Array.new
-        #     p["machines"].each do |machine_params|
-        #       machine_params["create_machine"] = "true" if (p["create_machine"] == true || p["create_machine"] == "true")
-        #       begin
-        #         m = process_machine_update(machine_params)
-        #         machine_array << m if m
-        #       rescue ActiveRecord::RecordInvalid => e
-        #         Raven.capture_exception(e)
-        #         status 409
-        #         return {}
-        #       rescue ActiveRecord::RecordNotUnique => e
-        #         Raven.capture_exception(e)
-        #         status 409
-        #         return {}
-        #       end
-        #     end
-        #     machine_array
-        #   else
-        #     status 400
-        #     {}
-        #   end
-        # end

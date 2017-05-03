@@ -13,6 +13,39 @@ module V3
         set_papertrail
       end
 
+      route_param :number do
+        desc "Get a inventory by inventory number"
+        get do
+          can_read!
+          i = Inventory.find_by_inventory_number params[:number]
+          error!("Not found", 404) unless i
+
+          i
+        end
+
+        desc "Update a single inventory"
+        put do
+          can_write!
+          i = Inventory.find_by_inventory_number params[:number]
+          error!("Not found", 404) unless i
+
+          p = params.reject { |k| !Inventory.attribute_method?(k) }
+
+          i.update_attributes(p)
+
+          i
+        end
+
+        desc "Delete a inventory"
+        delete do
+          can_write!
+          i = Inventory.find_by_inventory_number params[:number]
+          error!("Not found", 404) unless i
+
+          i.destroy
+        end
+      end
+
       desc "Return a list of inventories, possibly filtered"
       get do
         can_read!
@@ -38,26 +71,6 @@ module V3
         can_write!
         p = params.reject { |k| !Inventory.attribute_method?(k) }
         i = Inventory.create(p)
-        i
-      end
-
-      desc "Get a inventory by inventory number"
-      get ':number', requirements: {number: /[a-zA-Z0-9.]+/ } do
-        i = Inventory.find_by_inventory_number params[:number]
-        error!("Not found", 404) unless i
-
-        i
-      end
-
-      desc "Update a single inventory"
-      put ':number', requirements: {number: /[a-zA-Z0-9.]+/ } do
-        i = Inventory.find_by_inventory_number params[:number]
-        error!("Not found", 404) unless i
-
-        p = params.reject { |k| !Inventory.attribute_method?(k) }
-
-        i.update_attributes(p)
-
         i
       end
     end

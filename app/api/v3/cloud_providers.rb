@@ -43,6 +43,7 @@ module V3
 
       desc "Get cloud provider by name"
       get ':name', requirements: {number: /[a-zA-Z0-9.]+/ } do
+        can_read!
         c = CloudProvider.find_by_name params[:name]
         error!("Not found", 404) unless c
 
@@ -51,6 +52,7 @@ module V3
 
       desc "Update a single cloud provider"
       put ':name', requirements: {name: /[a-zA-Z0-9.]+/ } do
+        can_write!
         c = CloudProvider.find_by_inventory_number params[:name]
         error!("Not found", 404) unless c
 
