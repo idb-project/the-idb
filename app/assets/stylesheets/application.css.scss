@@ -186,3 +186,16 @@ tr.inactive {
 span.markdown-hint {
   font-size: 0.8em;
 }
+
+.raw_data_api, #puppet_db_data {
+  display: none;
+}
+
+.raw_api_data_headline, .puppet_db_data_headline {
+  cursor: pointer;
+}
+
+.ui-helper-hidden-accessible {
+  position: absolute; left: -9999px;
+  height: 1px;
+}

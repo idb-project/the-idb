@@ -1,25 +1,10 @@
-      <%- unless @all_locations.empty? -%>
-        <h3>Existing locations:</h3>
-        <table class="location_table">
-        <tr>
-          <%-  @location_levels.each do |location_level| -%>
-            <th><%= location_level.name %></th>
-          <%- end %>
-        </tr>
-        <%- Location.roots.each do |l| -%>
-          <tr><td><%= l.name %></td><td></td><td></td><td></td><td></td></tr>
-          <%- l.children.each do |l20| -%>
-            <tr><td></td><td><%= l20.name %></td><td></td><td></td><td></td></tr>
-            <%- l20.children.each do |l30| -%>
-              <tr><td></td><td></td><td><%= l30.name %></td><td></td><td></td></tr>
-              <%- l30.children.each do |l40| -%>
-                <tr><td></td><td></td><td></td><td><%= l40.name %></td><td></td></tr>
-                <%- l40.children.each do |l50| -%>
-                  <tr><td></td><td></td><td></td><td></td><td><%= l50.name %></td></tr>
-                <%- end -%>
-              <%- end -%>
-            <%- end -%>
-          <%- end -%>
-        <%- end -%>
-        </table>
-      <%- end -%>
+<%= stylesheet_link_tag "tree", media: "all" %>
+
+<%- unless @all_locations.empty? -%>
+<h3>Existing locations:</h3>
+<div id="location-tree">
+<%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
+  <%= k(l).location_tree("",0) %>
+<%- end -%>
+</div>
+<%- end -%>

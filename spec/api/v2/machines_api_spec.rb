@@ -14,6 +14,7 @@ describe 'Machines API' do
     @api_token = FactoryGirl.build :api_token
     @api_token_r = FactoryGirl.create :api_token_r
     @api_token_w = FactoryGirl.create :api_token_w
+    @api_token_w2 = FactoryGirl.create :api_token_w
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -161,6 +162,50 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
       expect(machine['ucs_role']).to eq("member")
+    end
+
+    it 'sets the API raw data on machine update' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_get "machines?fqdn=existing.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("existing.example.com")
+
+      # sets the raw api data
+      api_put "machines?fqdn=existing.example.com&backup_brand=2", @api_token_w
+      m = Machine.find_by_fqdn("existing.example.com")
+      data = JSON.parse(m.raw_data_api)
+      expect(data.keys.first).to eq(@api_token_w.token)
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
+    end
+
+    it 'keeps the API raw data from different API token on machine update' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_get "machines?fqdn=existing.example.com", @api_token_r
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq("existing.example.com")
+
+      # sets the raw api data
+      api_put "machines?fqdn=existing.example.com&backup_brand=2", @api_token_w
+      api_put "machines?fqdn=existing.example.com&backup_brand=12&custom_attribute=test", @api_token_w2
+      m = Machine.find_by_fqdn("existing.example.com")
+      data = JSON.parse(m.raw_data_api)
+      expect(data.keys.size).to eq(2)
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
+      expect(data[@api_token_w2.token]["custom_attribute"]).to eq("test")
+      expect(data[@api_token_w2.token]["backup_brand"]).to eq("12")
+    end
+
+    it 'keeps the API raw data from different API token on machine update, but not the idb_api_token' do
+      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+
+      api_put "machines?fqdn=existing.example.com&backup_brand=3&idb_api_token=#{@api_token_w.token}", @api_token_w
+      m = Machine.find_by_fqdn("existing.example.com")
+      data = JSON.parse(m.raw_data_api)
+      expect(data.keys.size).to eq(1)
+      expect(data[@api_token_w.token]["backup_brand"]).to eq("3")
+      expect(data[@api_token_w.token]["idb_api_token"]).to be_nil
     end
 
     it 'sets the backup_type if backup parameters are presented' do

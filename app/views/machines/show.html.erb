@@ -355,7 +355,7 @@
                 <div class="span12">
                   <table class="table table-condensed">
                     <tr>
-                      <th class="span12">PuppetDB data:</th>
+                      <th class="span12"><span class="puppet_db_data_headline">PuppetDB data:<span class="icon-resize-vertical">&nbsp;</span></span></th>
                     </tr>
                     <tr>
                       <td class="span12" style="width: 250px"><%= machine.puppetdb_data.html_safe %></td>
@@ -441,7 +441,7 @@
       <%= render partial: 'softwares/table', locals: {object: @machine} %>
     </div>
     <div class="tab-pane" id="history">
-      <%= render partial: 'shared/history', locals: {object: @machine} %>
+      <%= render partial: 'shared/history', locals: {object: @history_machine} %>
     </div>
   </div>
 </div>

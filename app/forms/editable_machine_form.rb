@@ -7,8 +7,8 @@ class EditableMachineForm
   end
 
   delegate :fqdn, :arch, :ram, :cores, :vmhost, :description,
-           :os, :os_release, :serialnumber, :device_type_id,
-           :switch_url, :mrtg_url, :config_instructions,
+           :os, :os_release, :serialnumber,
+           :switch_url, :mrtg_url, :config_instructions, :device_type,
            :sw_characteristics, :business_purpose, to: :machine
 
   delegate :nics, :aliases, to: :machine
@@ -49,6 +49,15 @@ class EditableMachineForm
   end
 
   def update(params)
+    case params["device_type"]
+      when "Machine"
+        @machine.becomes!(Machine)
+      when "Virtual Machine"
+        @machine.becomes!(VirtualMachine)
+      when "Switch"
+        @machine.becomes!(Switch)
+    end
+
     params.permit! if params.is_a? ActionController::Parameters
     @parms = params.to_h.clone
     params = params.to_h
@@ -135,15 +144,11 @@ class EditableMachineForm
   end
 
   def device_types
-    DeviceType.types.map do |type|
-      [type.name, type.id]
-    end
+    return ["Machine","Virtual Machine","Switch"]
   end
 
   def vmhost_list
-    type = DeviceType.where(name: 'physical').first
-
-    type ? Machine.where(device_type_id: type.id).map(&:fqdn).sort : []
+    Machine.where("type = 'Machine'")
   end
 
   def os_list

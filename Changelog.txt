@@ -1,5 +1,20 @@
-HEAD
-====
+1.6.3
+=====
+- [feature] Improve location selection by using tree view. #4887 
+- [bugfix] Admin status gets lost by storing a maintenance record. #4878
+- [feature] Group raw API data by API token. #4858
+- [feature] Enhance attachment model by checksum attribute. #4848
+- [feature] Set user admin status by LDAP group membership. #4841
+- [feature] Update Rails to 5.0.2. #4840
+- [bugfix] puppetDB facts: operatingsystemrelase vs. lsbdistrelease
+- [bugfix] Check for missing puppet facts on machine update. #4817
+- [feature] Implement a database dump script. #4812
+- [bugfix] Interfaces with upper-case letters where not created. #4811
+- [feature] Implement an import filter for puppetDB sources. #4795
+- [feature] Display number of selected rows. #4757
+- [bugfix] Correct an encoding issue in maintenance log view. #4705
+- [bugfix] Repair display of locations. #4524
+- [feature] Log the adapter/API token on update or create actions. #4355
 - [feature] Fetch owner information live via rt-crm-api. #4799
 - [feature] Simplify installed packages processing. #4798
 - [bugfix] redirect to login page, if no valid user in session

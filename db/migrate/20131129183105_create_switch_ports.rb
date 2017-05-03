@@ -1,4 +1,4 @@
-class CreateSwitchPorts < ActiveRecord::Migration
+class CreateSwitchPorts < ActiveRecord::Migration[4.2]
   def change
     create_table :switch_ports do |t|
       t.integer :number, index: true, null: false

@@ -17,18 +17,15 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def user
+    return '?' unless version.whodunnit
+
     if version.whodunnit.to_i > 0 
       u = User.find_by_id(version.whodunnit.to_i)
-      if u
-        return u.display_name
-      end
+      return u.display_name if u
+    else
+      t = ApiToken.find_by_token(version.whodunnit)
+      return link_to(t.name, t) if t
     end
-
-    t = ApiToken.find_by_token(version.whodunnit)
-    if t
-      return link_to(t.name, t)
-    end
-
     return '?'
   end
 

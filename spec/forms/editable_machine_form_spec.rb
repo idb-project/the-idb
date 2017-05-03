@@ -13,7 +13,6 @@ describe EditableMachineForm do
       ram: 1024,
       cores: 2,
       serialnumber: '123',
-      device_type_id: 2,
       vmhost: 'foo.example.com',
       os: 'Ubuntu',
       os_release: '12.04',
@@ -88,12 +87,6 @@ describe EditableMachineForm do
       form.update(attributes)
 
       expect(machine.serialnumber).to eq('123')
-    end
-
-    it 'updates the device type id' do
-      form.update(attributes)
-
-      expect(machine.device_type_id).to eq(2)
     end
 
     it 'updates the vmhost' do
@@ -248,12 +241,6 @@ describe EditableMachineForm do
   describe '#core_collection' do
     it 'returns a list of even core numbers' do
       expect(form.core_collection[0, 4]).to eq([1, 2, 4, 6])
-    end
-  end
-
-  describe '#device_types' do
-    it 'returns a list of device types' do
-      expect(form.device_types.first).to eq(['physical', 1])
     end
   end
 
