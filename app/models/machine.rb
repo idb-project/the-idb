@@ -142,7 +142,7 @@ class Machine < ActiveRecord::Base
       :arch, :ram, :cores, :serialnumber, :vmhost, :os,
       :os_release, :switch_url, :mrtg_url, :raw_data_api,
       {nics: [:name, :mac, :remove, {ip_address: [:addr, :netmask, :addr_v6]}]},
-      {aliases: [:name, :remove]}, :needs_reboot, :device_type
+      {aliases: [:name, :remove]}, :needs_reboot, :device_type_name
     ])
 
     machine_details.update(machine_params)
@@ -152,7 +152,26 @@ class Machine < ActiveRecord::Base
     machine_details.update(params)
   end
 
-  def device_type
+  def self.device_type_name
     "Machine"
+  end
+
+  def device_type_name
+    self.class.device_type_name
+  end
+
+  def self.device_type_names
+    Machine.subclasses.map { |klass| klass.device_type_name } << self.device_type_name
+  end
+
+  def self.device_type_by_name(name)
+    Machine.subclasses.each do |klass|
+      xname = klass.device_type_name
+      if xname == name
+        return klass
+      end
+    end
+
+    return nil
   end
 end

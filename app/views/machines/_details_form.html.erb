@@ -29,8 +29,8 @@
         collection: @machine_details.os_release_list %>
       <%= f.input :serialnumber, disabled: @machine.auto_update %>
 
-      <%= f.input :device_type, disabled: @machine.auto_update,
-        collection: @machine_details.device_types %>
+      <%= f.input :device_type_name, disabled: @machine.auto_update,
+        collection: Machine.device_type_names %>
 
       <%= f.input :vmhost, disabled: @machine.auto_update,
         collection: @machine_details.vmhost_list %>

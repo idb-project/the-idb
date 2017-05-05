@@ -3,7 +3,7 @@ class Switch < Machine
     Machine.model_name
   end
 
-  def device_type
+  def self.device_type_name
     "Switch"
   end
 

@@ -8,7 +8,7 @@ class MachinePresenter < Keynote::Presenter
            :pending_updates_sum, :virtual?,
            :backup_last_full_run, :backup_last_inc_run,
            :backup_last_diff_run, :is_backed_up?, :connected_to_power_feed?, :software,
-           :device_type,
+           :device_type_name,
            to: :machine
 
   def id
