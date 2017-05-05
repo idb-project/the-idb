@@ -50,6 +50,15 @@ module V3
       get do
         can_read!
 
+        if params["machine"] 
+          if Machine.find_by_fqdn(params["machine"])
+            params[:machine_id] = Machine.find_by_fqdn(params["machine"]).id
+          else
+            return []
+          end
+        end
+        params.delete "machine"
+
         query = Inventory.all
         params.delete("idb_api_token")
         params.each do |key, value|

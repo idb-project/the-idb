@@ -89,6 +89,15 @@ module V3
       get do
         can_read!
 
+        if params["level"] 
+          if LocationLevel.find_by_level(params["level"])
+            params[:location_level_id] = LocationLevel.find_by_level(params["level"]).id
+          else
+            return []
+          end
+        end
+        params.delete "level"
+
         query = Location.all
         params.delete("idb_api_token")
         params.each do |key, value|
