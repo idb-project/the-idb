@@ -8,7 +8,7 @@ class EditableMachineForm
 
   delegate :fqdn, :arch, :ram, :cores, :vmhost, :description,
            :os, :os_release, :serialnumber,
-           :switch_url, :mrtg_url, :config_instructions, :device_type,
+           :switch_url, :mrtg_url, :config_instructions, :device_type_name,
            :sw_characteristics, :business_purpose, to: :machine
 
   delegate :nics, :aliases, to: :machine
@@ -49,13 +49,9 @@ class EditableMachineForm
   end
 
   def update(params)
-    case params["device_type"]
-      when "Machine"
-        @machine.becomes!(Machine)
-      when "Virtual Machine"
-        @machine.becomes!(VirtualMachine)
-      when "Switch"
-        @machine.becomes!(Switch)
+    klass = Machine.device_type_by_name(params["device_type_name"])
+    if klass
+      @machine.becomes!(klass)
     end
 
     params.permit! if params.is_a? ActionController::Parameters
@@ -141,10 +137,6 @@ class EditableMachineForm
 
   def core_collection
     [1] + 2.step(48, 2).to_a # Show even number of cores.
-  end
-
-  def device_types
-    return ["Machine","Virtual Machine","Switch"]
   end
 
   def vmhost_list
