@@ -13,6 +13,39 @@ module V3
         set_papertrail
       end
 
+      route_param :name, type: String, requirements: {name: /[a-zA-Z0-9.]+/ } do
+        desc "Get cloud provider by name"
+        get do
+          can_read!
+          c = CloudProvider.find_by_name params[:name]
+          error!("Not found", 404) unless c
+
+          c
+        end
+
+        desc "Update a single cloud provider"
+        put do
+          can_write!
+          c = CloudProvider.find_by_inventory_number params[:name]
+          error!("Not found", 404) unless c
+
+          p = params.reject { |k| !CloudProvider.attribute_method?(k) }
+
+          c.update_attributes(p)
+
+          c
+        end
+
+        desc "Delete cloud provider by name"
+        get do
+          can_write!
+          c = CloudProvider.find_by_name params[:name]
+          error!("Not found", 404) unless c
+
+          c.destroy!
+        end
+      end
+
       desc "Return a list of cloud providers, possibly filtered"
       get do
         can_read!
@@ -38,28 +71,6 @@ module V3
         can_write!
         p = params.reject { |k| !CloudProvider.attribute_method?(k) }
         c = CloudProvider.create(p)
-        c
-      end
-
-      desc "Get cloud provider by name"
-      get ':name', requirements: {number: /[a-zA-Z0-9.]+/ } do
-        can_read!
-        c = CloudProvider.find_by_name params[:name]
-        error!("Not found", 404) unless c
-
-        c
-      end
-
-      desc "Update a single cloud provider"
-      put ':name', requirements: {name: /[a-zA-Z0-9.]+/ } do
-        can_write!
-        c = CloudProvider.find_by_inventory_number params[:name]
-        error!("Not found", 404) unless c
-
-        p = params.reject { |k| !CloudProvider.attribute_method?(k) }
-
-        c.update_attributes(p)
-
         c
       end
     end
