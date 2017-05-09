@@ -98,7 +98,7 @@ class MachinesController < ApplicationController
     end
 
     @machine_details.nics.each do |nic|
-      if Nic.where(mac: nic.mac).count > 1
+      if nic.mac and Nic.where(mac: nic.mac).count > 1
         flash.alert = "Duplicate MAC address " + nic.mac
       end
     end
