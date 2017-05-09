@@ -128,6 +128,8 @@ GEM
     grape-active_model_serializers (1.5.0)
       active_model_serializers (>= 0.10.0)
       grape (>= 0.8.0)
+    grape-swagger (0.25.3)
+      grape (>= 0.12.0)
     hashie (3.5.5)
     high_voltage (3.0.0)
     highline (1.7.8)
@@ -328,6 +330,7 @@ DEPENDENCIES
   foreman
   grape
   grape-active_model_serializers
+  grape-swagger
   high_voltage
   ipaddress
   jquery-rails
