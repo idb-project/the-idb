@@ -13,11 +13,11 @@ module V3
         set_papertrail
       end
 
-      route_param :number do
+      route_param :number, type: String do
 
         resource :attachments do
 
-          route_param :fingerprint, requirements: {fingerprint: /[a-f0-9]+/} do
+          route_param :fingerprint, type: String, requirements: {fingerprint: /[a-f0-9]+/} do
             desc "Get an attachment"
             get do
               can_read!

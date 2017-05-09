@@ -13,7 +13,7 @@ module V3
         set_papertrail
       end
 
-      route_param :id, requirements: {id: /[0-9]+/ } do
+      route_param :id, type: Integer, requirements: {id: /[0-9]+/ } do
         desc "Get a nic by id"
         get do
           can_read!

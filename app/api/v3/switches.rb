@@ -13,7 +13,7 @@ module V3
         set_papertrail
       end
 
-      route_param :fqdn, requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
+      route_param :fqdn, type: String, requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
         desc "Get a switch by fqdn"
         get do
           can_read!
@@ -42,7 +42,7 @@ module V3
         end
 
         resource :ports do
-          route_param :number, requirements: {number: /[0-9]+/ } do
+          route_param :number, type: Integer, requirements: {number: /[0-9]+/ } do
             desc "Get a switch port"
             get do
               can_read!

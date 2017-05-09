@@ -14,11 +14,11 @@ module V3
         set_papertrail
       end
 
-      route_param :fqdn, requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
+      route_param :fqdn, type: String, requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
 
         resource :attachments do
 
-          route_param :fingerprint, requirements: {fingerprint: /[a-f0-9]+/} do
+          route_param :fingerprint, type: String, requirements: {fingerprint: /[a-f0-9]+/} do
             desc "Get an attachment"
             get do
               can_read!
@@ -66,7 +66,7 @@ module V3
         end
 
         resource :aliases do
-          route_param :alias, requirements: {alias: /[a-zA-Z0-9.-]+/ } do
+          route_param :alias, type: String, requirements: {alias: /[a-zA-Z0-9.-]+/ } do
             desc "Get a alias"
             get do
               can_read!
@@ -120,7 +120,7 @@ module V3
         end
 
         resource :nics do
-          route_param :name, requirements: {name: /[a-zA-Z0-9.-]+/ } do
+          route_param :name, type: String, requirements: {name: /[a-zA-Z0-9.-]+/ } do
             desc "Get a nic"
             get do
               can_read!

@@ -14,7 +14,7 @@ module V3
       end
 
       resource :id do
-        route_param :id do
+        route_param :id, type: Integer do
           desc "Get location by id"
           get do
             l = Location.find_by_id params[:id]
