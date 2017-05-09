@@ -16,6 +16,55 @@ module V3
 
       route_param :fqdn, requirements: {fqdn: /[a-zA-Z0-9.-]+/ } do
 
+        resource :attachments do
+
+          route_param :fingerprint, requirements: {fingerprint: /[a-f0-9]+/} do
+            desc "Get an attachment"
+            get do
+              can_read!
+              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              error!("Not Found", 404) unless a
+
+              a
+            end
+
+            desc "Delete an attachment"
+            delete do
+              can_write!
+              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              error!("Not Found", 404) unless a
+
+              a.destroy!
+            end
+          end
+
+          desc "Get all attachments"
+          get do
+            can_read!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            m.attachments
+          end
+
+          desc "Create an attachment"
+          post do
+            can_write!
+            m = Machine.find_by_fqdn params[:fqdn]
+            error!("Not Found", 404) unless m
+
+            x = {
+            filename: params[:data][:filename],
+            size: params[:data][:tempfile].size,
+            tempfile: params[:data][:tempfile]
+            }
+            
+            attachment = ActionDispatch::Http::UploadedFile.new(x)
+
+            m.attachments.create(attachment: attachment)
+          end
+        end
+
         resource :aliases do
           route_param :alias, requirements: {alias: /[a-zA-Z0-9.-]+/ } do
             desc "Get a alias"
