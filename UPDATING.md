@@ -2,35 +2,32 @@
 
 ## General Steps
 
-$ sudo dpkg -i idb-$(VERSION).deb
+1.	Install the new version
 
-* make sure, that /opt/idb/config is still a symlink to the configuration in /etc/idb/,
-and not to the config-example directory
+		$ sudo dpkg -i idb-$(VERSION).deb
 
-$ export PATH=/opt/idb/vendor/ruby/bin/:$PATH
-$ cd /opt/idb && RAILS_ENV=production bundle exec rake db:migrate
-$ cd /opt/idb && RAILS_ENV=production bundle exec rake assets:precompile
-$ cp config.sample/initializers/version.rb config/initializers/
+	**make sure, that /opt/idb/config is still a symlink to the configuration in /etc/idb/, and not to the config-example directory**
 
-Always:
+2.	Perform database migrations etc.
 
-* restart webserver / application server
-* restart sidekiq
+		$ export PATH=/opt/idb/vendor/ruby/bin/:$PATH
+		$ cd /opt/idb && RAILS_ENV=production bundle exec rake db:migrate
+		$ cd /opt/idb && RAILS_ENV=production bundle exec rake assets:precompile
+		$ cp config.sample/initializers/version.rb config/initializers/
 
+3.	- restart webserver / application server
+	- restart sidekiq
 
 ## Update Config File
 
 ### 1.6.3
 
-The following settings have been added to configure admin users.
+- 	The following settings have been added to configure admin users.
 
-```
-admin_group: 'admins,dc=fra,dc=bytemine,dc=net'
-group_membership_attribute: 'uniqueMember'
-```
+		admin_group: 'cn=admins,dc=example,dc=com'
+		group_membership_attribute: 'uniqueMember'
 
-Add this to the ldap-setting for the used environment.
-
+	Add this to the ldap-setting for the used environment.
 
 ### 1.6.2
 
