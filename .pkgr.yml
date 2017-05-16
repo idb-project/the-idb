@@ -43,7 +43,7 @@ targets:
       - libtool 
       - libmysqlclient-dev 
       - mysql-client
-      - libxslt1
+      - libxslt1.1
       - libxslt1-dev 
       - mysql-server
     dependencies:
