@@ -5,7 +5,7 @@ maintainer: info@bytemine.net
 homepage: https://www.bytemine.net/
 before: 
     - ln -s config-example config
-	- ./scripts/mark-version.sh
+    - ./scripts/mark-version.sh
 targets:
   centos-7:
    build_dependencies:
