@@ -48,7 +48,6 @@ targets:
       - mysql-client
       - libxslt1.1
       - libxslt1-dev 
-      - mysql-server
     dependencies:
       - apache2
       - mysql-server
@@ -80,7 +79,6 @@ targets:
       - mysql-client
       - libxslt1.1
       - libxslt1-dev 
-      - mysql-server
     dependencies:
       - apache2
       - mysql-server
