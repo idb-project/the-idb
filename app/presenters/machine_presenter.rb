@@ -8,6 +8,7 @@ class MachinePresenter < Keynote::Presenter
            :pending_updates_sum, :virtual?,
            :backup_last_full_run, :backup_last_inc_run,
            :backup_last_diff_run, :is_backed_up?, :connected_to_power_feed?, :software,
+           :device_type_name,
            to: :machine
 
   def id
@@ -86,10 +87,6 @@ class MachinePresenter < Keynote::Presenter
     machine.cores || 0
   end
 
-  def device_type
-    machine.device_type.name if machine.device_type
-  end
-
   def uptime
     # Do not show the uptime if the machine hasn't been updated in a while.
     # Will avoid confusion if the facts haven't been updated in a while.
@@ -113,11 +110,9 @@ class MachinePresenter < Keynote::Presenter
   end
 
   def vmhost
-    # The device type might not be filled yet.
-    return unless machine.device_type
-
-    # Return n/a for non virtual machines.
-    return 'n/a' unless machine.device_type.is_virtual
+    unless machine.instance_of? VirtualMachine
+      return "n/a"
+    end
 
     return if machine.vmhost.blank?
 

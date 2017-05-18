@@ -39,15 +39,15 @@ class Machine < ActiveRecord::Base
   validates :fqdn, format: {with: FQDN_REGEX}
 
   def self.create_switch!(attributes = {})
-    create(attributes.merge(device_type_id: 3))
+    Switch.create(attributes)
   end
 
   def self.is_switch?(fqdn)
-    exists?(fqdn: fqdn, device_type_id: 3)
+    Switch.exists?(fqdn: fqdn)
   end
 
   def self.switches
-    where(device_type_id: 3)
+    Switch.all
   end
 
   def self.advanced_field_name(index, type="short")
@@ -74,27 +74,15 @@ class Machine < ActiveRecord::Base
   end
 
   def switch?
-    device_type && device_type.name == 'switch'
-  end
-
-  def switch_ports
-    switch? ? SwitchPort.where(switch_id: id) : []
+    instance_of? Switch
   end
 
   def virtual?
-    device_type && device_type.name == 'virtual'
+    instance_of? VirtualMachine
   end
 
   def name
     fqdn
-  end
-
-  def device_type
-    DeviceType.find(device_type_id)
-  end
-
-  def device_type=(type)
-    self.device_type_id = type.id if type
   end
 
   def backup_type_string
@@ -151,10 +139,10 @@ class Machine < ActiveRecord::Base
 
   def update_details(params, machine_details)
     machine_params = params.require(:machine).permit([
-      :arch, :ram, :cores, :serialnumber, :device_type_id, :vmhost, :os,
+      :arch, :ram, :cores, :serialnumber, :vmhost, :os,
       :os_release, :switch_url, :mrtg_url, :raw_data_api,
       {nics: [:name, :mac, :remove, {ip_address: [:addr, :netmask, :addr_v6]}]},
-      {aliases: [:name, :remove]}, :needs_reboot
+      {aliases: [:name, :remove]}, :needs_reboot, :device_type_name
     ])
 
     machine_details.update(machine_params)
@@ -162,5 +150,28 @@ class Machine < ActiveRecord::Base
 
   def update_details_by_api(params, machine_details)
     machine_details.update(params)
+  end
+
+  def self.device_type_name
+    "Machine"
+  end
+
+  def device_type_name
+    self.class.device_type_name
+  end
+
+  def self.device_type_names
+    Machine.subclasses.map { |klass| klass.device_type_name } << self.device_type_name
+  end
+
+  def self.device_type_by_name(name)
+    Machine.subclasses.each do |klass|
+      xname = klass.device_type_name
+      if xname == name
+        return klass
+      end
+    end
+
+    return nil
   end
 end

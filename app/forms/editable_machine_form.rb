@@ -7,8 +7,8 @@ class EditableMachineForm
   end
 
   delegate :fqdn, :arch, :ram, :cores, :vmhost, :description,
-           :os, :os_release, :serialnumber, :device_type_id,
-           :switch_url, :mrtg_url, :config_instructions,
+           :os, :os_release, :serialnumber,
+           :switch_url, :mrtg_url, :config_instructions, :device_type_name,
            :sw_characteristics, :business_purpose, to: :machine
 
   delegate :nics, :aliases, to: :machine
@@ -49,6 +49,11 @@ class EditableMachineForm
   end
 
   def update(params)
+    klass = Machine.device_type_by_name(params["device_type_name"])
+    if klass
+      @machine.becomes!(klass)
+    end
+
     params.permit! if params.is_a? ActionController::Parameters
     @parms = params.to_h.clone
     params = params.to_h
@@ -134,16 +139,8 @@ class EditableMachineForm
     [1] + 2.step(48, 2).to_a # Show even number of cores.
   end
 
-  def device_types
-    DeviceType.types.map do |type|
-      [type.name, type.id]
-    end
-  end
-
   def vmhost_list
-    type = DeviceType.where(name: 'physical').first
-
-    type ? Machine.where(device_type_id: type.id).map(&:fqdn).sort : []
+    Machine.where("type = 'Machine'")
   end
 
   def os_list

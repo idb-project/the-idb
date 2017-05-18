@@ -15,6 +15,12 @@ class MachinesController < ApplicationController
 
   def show
     @machine = Machine.find(params[:id])
+
+    # we need this because papertrail cant be given a item_type to use for storage, it always
+    # uses the classname. as switches and virtual machines are machines, cast them to machine 
+    # for showing the history.
+    @history_machine = Machine.find(params[:id]).becomes(Machine)
+
     @inventories = Inventory.where(machine_id: @machine.id)
   end
 
@@ -98,7 +104,7 @@ class MachinesController < ApplicationController
     end
 
     @machine_details.nics.each do |nic|
-      if Nic.where(mac: nic.mac).count > 1
+      if nic.mac and Nic.where(mac: nic.mac).count > 1
         flash.alert = "Duplicate MAC address " + nic.mac
       end
     end

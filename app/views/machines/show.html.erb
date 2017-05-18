@@ -58,7 +58,7 @@
                       <td class="span3"><%= machine.os%></td>
                       <td class="span3"><%= machine.os_release %></td>
                       <td class="span3"><%= machine.arch %></td>
-                      <td class="span3"><%= machine.device_type %></td>
+                      <td class="span3"><%= machine.device_type_name %></td>
                     </tr>
                   </table>
                 </div>
@@ -441,7 +441,7 @@
       <%= render partial: 'softwares/table', locals: {object: @machine} %>
     </div>
     <div class="tab-pane" id="history">
-      <%= render partial: 'shared/history', locals: {object: @machine} %>
+      <%= render partial: 'shared/history', locals: {object: @history_machine} %>
     </div>
   </div>
 </div>
