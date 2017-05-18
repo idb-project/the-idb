@@ -20,6 +20,12 @@
 
 ## Update Config File
 
+### 1.7.0
+
+- 	The following settings have been added within the api settings in 'application.yml' to enable the APIv3.
+
+        v3_enabled: true 
+
 ### 1.6.3
 
 - 	The following settings have been added to configure admin users.
