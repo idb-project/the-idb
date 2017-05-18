@@ -3,7 +3,7 @@ module V3
     extend Grape::API::Helpers
 
     def api_enabled!
-      unless IDB.config.modules.api.v2_enabled
+      unless IDB.config.modules.api.v3_enabled
         error!("API disabled.", 501)
       end
      end
