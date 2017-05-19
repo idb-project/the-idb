@@ -43,6 +43,7 @@ InfrastructureDb::Application.routes.draw do
   resources :api_tokens
   resources :softwares, only: [:index]
   resources :cloud_providers
+  resources :users, only: [:index, :edit, :update]
 
   post 'markup/render', to: 'markup#do_render'
 
