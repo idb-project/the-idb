@@ -120,7 +120,7 @@ describe Machine do
 
   describe '.create_switch!' do
     it 'creates a Switch' do
-      described_class.create_switch!(fqdn: 'foo.example.com')
+      described_class.create_switch!(fqdn: 'foo.example.com', owner: @owner)
 
       expect(Switch.first.fqdn).to eq('foo.example.com')
     end
@@ -130,7 +130,7 @@ describe Machine do
     let(:fqdn) { 'switch.example.com' }
 
     context 'which an existing switch for the fqdn' do
-      before { Switch.create!(fqdn:fqdn) }
+      before { Switch.create!(fqdn:fqdn, owner: @owner) }
 
       it 'returns true' do
         expect(described_class.is_switch?(fqdn)).to eq(true)
