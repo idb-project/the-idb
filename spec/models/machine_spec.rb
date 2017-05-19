@@ -119,10 +119,10 @@ describe Machine do
   end
 
   describe '.create_switch!' do
-    it 'creates a machine with device type switch' do
-      described_class.create_switch!(fqdn: 'foo.example.com', owner: @owner)
+    it 'creates a Switch' do
+      described_class.create_switch!(fqdn: 'foo.example.com')
 
-      expect(Machine.first.device_type.name).to eq('switch')
+      expect(Switch.first.fqdn).to eq('foo.example.com')
     end
   end
 
@@ -130,7 +130,7 @@ describe Machine do
     let(:fqdn) { 'switch.example.com' }
 
     context 'which an existing switch for the fqdn' do
-      before { Machine.create!(fqdn:fqdn, device_type_id: 3, owner: @owner) }
+      before { Switch.create!(fqdn:fqdn) }
 
       it 'returns true' do
         expect(described_class.is_switch?(fqdn)).to eq(true)
