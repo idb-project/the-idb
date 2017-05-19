@@ -278,7 +278,11 @@ module V3
       post serializer: MachineSerializer do
         can_write!
         p = params.reject { |k| !Machine.attribute_method?(k) }
-        m = Machine.create(p)
+        begin
+          m = Machine.create!(p)
+        rescue ActiveRecord::RecordInvalid
+          error!("Invalid Machine", 409)
+        end
         m
       end
     end

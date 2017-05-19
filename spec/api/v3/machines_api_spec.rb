@@ -93,10 +93,11 @@ describe 'Machines API V3' do
         "create_machine":true
       }
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
+
       expect(response.status).to eq(409)
 
       machine = JSON.parse(response.body)
-      expect(machine).to eq({})
+      expect(machine).to eq({"response_type" => "error", "response" => "Invalid Machine"})
     end
 
     it 'creates a machine if not existing' do
@@ -166,6 +167,9 @@ describe 'Machines API V3' do
       expect(machine['fqdn']).to eq("existing.example.com")
 
       machine['ucs_role'] = "member"
+      # remove nics and aliases because they can only be updated via nics subroute
+      machine.delete('nics')
+      machine.delete('aliases')
 
       api_put_json(action: "machines/existing.example.com", token: @api_token_w, payload: machine, version: "3")
       expect(response.status).to eq(200)
@@ -184,6 +188,10 @@ describe 'Machines API V3' do
 
       machine['ucs_role'] = "member"
       machine['cores'] = 7
+
+      # remove nics and aliases because they can only be updated via nics subroute
+      machine.delete('nics')
+      machine.delete('aliases')
 
       api_put_json(action: "machines/existing2.example.com", token: @api_token_w, payload: machine, version: "3")
       expect(response.status).to eq(200)
