@@ -1,5 +1,5 @@
-HEAD
-====
+1.6.5
+=====
 - [security] Update nokogiri gem. #4952
 
 1.6.4
