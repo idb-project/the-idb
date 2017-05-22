@@ -1,3 +1,7 @@
+HEAD
+====
+- [security] Update nokogiri gem. #4952
+
 1.6.3
 =====
 - [feature] Improve location selection by using tree view. #4887 
