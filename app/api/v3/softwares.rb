@@ -11,12 +11,15 @@ module V3
         authenticate!
       end
 
-      desc "Searches machines with specific software configurations"
+      desc "Searches machines with specific software configurations", {
+	is_array: true,
+	success: Machine::Entity
+      }
       get do
         can_read!
         if params["q"].empty?
             status 200
-            {}
+            []
         else
           software,versions = SoftwareHelper.parse_query(params["q"])
           if software.empty?

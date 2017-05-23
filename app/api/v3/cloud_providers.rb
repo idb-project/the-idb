@@ -4,7 +4,6 @@ module V3
 
     version 'v3'
     format :json
-    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :cloud_providers do
       before do
@@ -14,16 +13,20 @@ module V3
       end
 
       route_param :name, type: String, requirements: {name: /[a-zA-Z0-9.]+/ } do
-        desc "Get cloud provider by name"
+        desc "Get cloud provider by name", {
+	  success: CloudProvider::Entity
+	}
         get do
           can_read!
           c = CloudProvider.find_by_name params[:name]
           error!("Not found", 404) unless c
 
-          c
+          present c
         end
 
-        desc "Update a single cloud provider"
+        desc "Update a single cloud provider", {
+	  success: CloudProvider::Entity
+	}
         put do
           can_write!
           c = CloudProvider.find_by_inventory_number params[:name]
@@ -33,7 +36,7 @@ module V3
 
           c.update_attributes(p)
 
-          c
+          present c
         end
 
         desc "Delete cloud provider by name"
@@ -46,7 +49,10 @@ module V3
         end
       end
 
-      desc "Return a list of cloud providers, possibly filtered"
+      desc "Return a list of cloud providers, possibly filtered", {
+	is_array: true,
+	success: CloudProvider::Entity
+      }
       get do
         can_read!
 
@@ -63,15 +69,17 @@ module V3
           error!("Bad Request", 400)
         end
 
-        query
+        present query
       end
 
-      desc 'Create a new cloud provider'
+      desc 'Create a new cloud provider', {
+	success: CloudProvider::Entity
+      }
       post do
         can_write!
         p = params.reject { |k| !CloudProvider.attribute_method?(k) }
         c = CloudProvider.create(p)
-        c
+        present c
       end
     end
   end

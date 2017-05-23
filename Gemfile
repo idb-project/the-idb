@@ -11,6 +11,7 @@ gem 'bcrypt'
 gem 'grape'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
+gem 'grape-swagger-entity', path: '/home/ruben/btm/grape-swagger-entity'
 
 gem 'sass-rails'
 gem 'uglifier'

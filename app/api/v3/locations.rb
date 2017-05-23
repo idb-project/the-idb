@@ -4,7 +4,6 @@ module V3
 
     version 'v3'
     format :json
-    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :locations do
       before do
@@ -15,7 +14,9 @@ module V3
 
       resource :id do
         route_param :id, type: Integer do
-          desc "Get location by id"
+          desc "Get location by id", {
+	    success: Location::Entity
+	  }
           get do
             l = Location.find_by_id params[:id]
             error!("Not Found", 404) unless l
@@ -24,12 +25,16 @@ module V3
           end
 
           # FIXME
-          desc "Create a new child location"
+          desc "Create a new child location", {
+	    success: Location::Entity
+	  }
           post do
           end
 
           # FIXME
-          desc "Update a location"
+          desc "Update a location", {
+	    success: Location::Entity
+	  }
           put do
           end
 
@@ -41,19 +46,26 @@ module V3
       end
 
       resource :roots do
-        desc "Get the location roots"
+        desc "Get the location roots", {
+	  is_array: true,
+	  success: Location::Entity
+	}
         get do
           can_read!
           Location.roots.sort_by {|l| l.name}
         end
 
         # FIXME
-        desc "Create a new location root"
+        desc "Create a new location root", {
+	  success: Location::Entity
+	}
         post do
         end
 
         # FIXME
-        desc "Update a location root"
+        desc "Update a location root", {
+	  success: Location::Entity
+	}
         put do
         end
 
@@ -64,7 +76,10 @@ module V3
       end
 
       resource :levels do
-        desc "Get a list of all location levels, possibly filtered"
+        desc "Get a list of all location levels, possibly filtered", {
+	  is_array: true,
+	  success: LocationLevel::Entity
+	}
         get do
           can_read!
 
@@ -85,7 +100,10 @@ module V3
         end
       end  
 
-      desc "Return a list of locations, possibly filtered"
+      desc "Return a list of location levels, possibly filtered", {
+	is_array: true,
+	success: LocationLevel::Entity
+      }
       get do
         can_read!
 

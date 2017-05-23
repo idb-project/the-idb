@@ -40,4 +40,26 @@ class Location < ActiveRecord::Base
 
       ls
   end
+  
+  class Entity < Grape::Entity
+    expose :id, documentation: { type: "Integer", desc: "Id" }
+    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :description, documentation: { type: "String", desc: "Description" }
+    expose :parent, documentation: { type: "Integer", desc: "Parent location id" }
+    expose :children, documentation: { type: "Integer", is_array: true, desc: "Child location ids" }
+    expose :level, documentation: { type: "String", desc: "Location level" }
+    
+    def children
+      object.children.map { |c| c.id }
+    end
+
+    def parent
+      object.parent ? object.parent.id : nil
+    end
+
+    def level
+      l = LocationLevel.find_by_id object.location_level_id
+      l.level
+    end
+  end
 end

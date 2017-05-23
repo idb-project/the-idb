@@ -5,7 +5,7 @@ module V3
 
     version 'v3'
     format :json
-    formatter :json, Grape::Formatter::ActiveModelSerializers
+#    formatter :json #, Grape::Formatter::ActiveModelSerializers
 
     resource :machines do
       before do
@@ -19,13 +19,15 @@ module V3
         resource :attachments do
 
           route_param :fingerprint, type: String, requirements: {fingerprint: /[a-f0-9]+/} do
-            desc "Get an attachment"
+            desc "Get an attachment" do
+	      success Attachment::Entity
+	    end
             get do
               can_read!
               a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
               error!("Not Found", 404) unless a
 
-              a
+              present a
             end
 
             desc "Delete an attachment"
@@ -38,16 +40,22 @@ module V3
             end
           end
 
-          desc "Get all attachments"
+          desc "Get all attachments", {
+	    is_array: true,
+	    success: Attachment::Entity
+	  }
           get do
             can_read!
             m = Machine.find_by_fqdn params[:fqdn]
             error!("Not Found", 404) unless m
 
-            m.attachments
+            present m.attachments
           end
 
-          desc "Create an attachment"
+          desc "Create an attachment", {
+	    detail: "WAT?",
+	    success: Attachment::Entity
+	  }
           post do
             can_write!
             m = Machine.find_by_fqdn params[:fqdn]
@@ -61,21 +69,25 @@ module V3
             
             attachment = ActionDispatch::Http::UploadedFile.new(x)
 
-            m.attachments.create(attachment: attachment)
+            present m.attachments.create(attachment: attachment)
           end
         end
 
         resource :aliases do
           route_param :alias, type: String, requirements: {alias: /[a-zA-Z0-9.-]+/ } do
-            desc "Get a alias"
+            desc "Get a alias", {
+	      success: MachineAlias::Entity
+	    }
             get do
               can_read!
               a = MachineAlias.find_by_name params[:alias]
               error!("Not Found", 404) unless a
-              a
+              present a
             end
 
-            desc "Update an alias"
+            desc "Update an alias", {
+	      success: MachineAlias::Entity
+	    }
             put do
               can_write!
               a = MachineAlias.find_by_name params[:alias]
@@ -84,7 +96,7 @@ module V3
               p = params.reject { |k| !MachineAlias.attribute_method?(k) }
               
               a.update_attributes(p)
-              a
+              present a
             end
 
             desc "Delete an alias"
@@ -96,32 +108,39 @@ module V3
             end
           end
 
-          desc "Get all aliases"
+          desc "Get all aliases", {
+	    is_array: true,
+	    success: MachineAlias::Entity
+	  }
           get do
             can_read!
             m = Machine.find_by_fqdn params[:fqdn]
             error!("Not Found", 404) unless m
 
-            m.aliases
+            present m.aliases
           end
 
-          desc "Create an alias"
+          desc "Create an alias", {
+	    success: MachineAlias::Entity
+	  }
           post do
             can_write!
             m = Machine.find_by_fqdn params[:fqdn]
             error!("Not Found", 404) unless m
 
             p = params.reject { |k| !MachineAlias.attribute_method?(k) }
-            p = p.merge({"machine_id": m.id})
+            p["machine"] = m
 
             a = MachineAlias.create(p)
-            a
+            present a
           end
         end
 
         resource :nics do
           route_param :name, type: String, requirements: {name: /[a-zA-Z0-9.-]+/ } do
-            desc "Get a nic"
+            desc "Get a nic", {
+	      success: Nic::Entity
+	    }
             get do
               can_read!
               m = Machine.find_by_fqdn params[:fqdn]
@@ -129,10 +148,12 @@ module V3
 
               n = Nic.where(machine_id: m.id, name: params[:name])
               error!("Not Found", 404) unless n
-              n
+              present n
             end
 
-            desc "Update a nic"
+            desc "Update a nic", {
+	      success: Nic::Entity
+	    }
             put do
               can_write!
               m = Machine.find_by_fqdn params[:fqdn]
@@ -144,7 +165,7 @@ module V3
               p = params.reject { |k| !Nic.attribute_method?(k) }
               
               n.update_attributes(p)
-              n
+              present n
             end
 
             desc "Delete a nic"
@@ -160,39 +181,54 @@ module V3
             end
           end
 
-          desc "Get all nics"
+          desc "Get all nics", {
+	    is_array: true,
+	    success: Nic::Entity
+	  }
           get do
             can_read!
             m = Machine.find_by_fqdn params[:fqdn]
             error!("Not Found", 404) unless m
 
-            m.nics
+            present m.nics
           end
 
-          desc "Create a nic"
+          desc "Create a nic", {
+	    success: Nic::Entity
+	  }
           post do
             can_write!
-            m = Machine.find_by_fqdn params[:fqdn]
-            error!("Not Found", 404) unless m
-
-            p = params.reject { |k| !Nic.attribute_method?(k) }
-            p = p.merge({machine_id: m.id})
-
-            n = Nic.create(p)
-            n
+	    m = Machine.find_by_fqdn params[:fqdn]
+	    error!("Not Found", 404) unless m
+	    
+	    nic_p = params.reject { |k| !Nic.attribute_method?(k) }
+	    ip_address_p = params["ip_address"].reject { |k| !IpAddress.attribute_method?(k) }
+	    
+	    i = IpAddress.new(ip_address_p)
+	    
+	    nic_p.delete("ip_address")
+	    nic_p["ip_address"] = i
+	    nic_p["machine"] = m
+	    n = Nic.create!(nic_p)
+	    
+	    present n
           end
         end
 
-        desc "Get a machine by fqdn"
+        desc "Get a machine by fqdn", {
+	  success: Machine::Entity
+	}
         get serializer: MachineSerializer do
           can_read!
           m = Machine.find_by_fqdn params[:fqdn]
           error!("Not Found", 404) unless m
 
-          m
+          present m
         end
 
-        desc "Update a single machine"
+        desc "Update a single machine", {
+	  success: Machine::Entity
+	}
         put serializer: MachineSerializer  do
           can_write!
           m = Machine.find_by_fqdn params[:fqdn]
@@ -229,7 +265,7 @@ module V3
 
           m.save
 
-          m
+          present m
         end
 
         desc "Delete a machine"
@@ -241,7 +277,10 @@ module V3
         end
       end
 
-      desc "Return a list of machines, possibly filtered"
+      desc "Return a list of machines, possibly filtered", {
+	is_array: true,
+	success: Machine::Entity
+      }
       get serializer: MachineSerializer do # use MachineSerializer for VirtualMachines and Switches
         can_read!
 
@@ -271,10 +310,12 @@ module V3
           error!("Bad Request", 400)
         end
 
-        query
+        present query
       end
 
-      desc 'Create a new machine'
+      desc 'Create a new machine', {
+	success: Machine::Entity
+      }
       post serializer: MachineSerializer do
         can_write!
         p = params.reject { |k| !Machine.attribute_method?(k) }
@@ -283,7 +324,7 @@ module V3
         rescue ActiveRecord::RecordInvalid
           error!("Invalid Machine", 409)
         end
-        m
+        present m
       end
     end
   end

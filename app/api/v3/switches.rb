@@ -4,7 +4,6 @@ module V3
 
     version 'v3'
     format :json
-    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :switches do
       before do
@@ -14,23 +13,27 @@ module V3
       end
 
       route_param :fqdn, type: String, requirements: {fqdn: /[a-zA-Z0-9.]+/ } do
-        desc "Get a switch by fqdn"
+        desc "Get a switch by fqdn", {
+	  success: Switch::Entity
+	}
         get do
           can_read!
           s = Switch.find_by_fqdn params[:fqdn]
           error!("Not found", 404) unless s
 
-          s
+          present s
         end
 
-        desc "Update a switch"
+        desc "Update a switch", {
+	  success: Switch::Entity
+	}
         put do
           can_write!
           s = Switch.find_by_fqdn params[:fqdn]
           error!("Not found", 404) unless s
           p = params.reject { |k| !Switch.attribute_method?(k) }
           s.update_attributes(p)
-          s
+          present s
         end
 
         desc "Delete a switch"
@@ -43,7 +46,9 @@ module V3
 
         resource :ports do
           route_param :number, type: Integer, requirements: {number: /[0-9]+/ } do
-            desc "Get a switch port"
+            desc "Get a switch port", {
+	      success: SwitchPort::Entity
+	    }
             get do
               can_read!
               s = Switch.find_by_fqdn params[:fqdn]
@@ -51,10 +56,12 @@ module V3
 
               p = SwitchPort.find_by number: params[:number], switch_id: s.id
               error!("Not found", 404) unless p
-              p
+              present p
             end
 
-            desc "Update a switch port"
+            desc "Update a switch port", {
+	      success: SwitchPort::Entity
+	    }
             put do
               can_write!
               s = Switch.find_by_fqdn params[:fqdn]
@@ -65,7 +72,7 @@ module V3
 
               p = params.reject { |k| !SwitchPort.attribute_method?(k) }
               port.update_attributes(p)
-              port
+              present port
             end
 
             desc "Delete a switch port"
@@ -78,31 +85,44 @@ module V3
             end
           end
 
-          desc "Return a list of switch ports"
+          desc "Return a list of switch ports", {
+	    is_array: true,
+	    success: SwitchPort::Entity
+	  }
           get do
             can_read!
             s = Switch.find_by_fqdn params[:fqdn]
             error!("Not found", 404) unless s
 
-            SwitchPort.where(switch_id: s.id)
+            present SwitchPort.where(switch_id: s.id)
           end
 
-          desc "Add a new switch port"
+          desc "Add a new switch port", {
+	    success: SwitchPort::Entity
+	  }
           post do
             can_write!
-            s = Switch.find_by_fqdn params[:fqdn]
+            s = Switch.find_by_fqdn params[:switch]
             error!("Not found", 404) unless s
-            
+
+	    n = Nic.find_by_id params[:nic]
+	    error!("Not found", 404) unless n
+
             p = params.reject { |k| !SwitchPort.attribute_method?(k) }
-            p = p.merge({switch_id: s.id})
+	    p.delete("switch")
+	    p.delete("nic")
+            p = p.merge({"switch_id": s.id, "nic_id": n.id})
 
             port = SwitchPort.create(p)
-            port
+            present port
           end
         end
       end
 
-      desc "Return a list of switches, possibly filtered"
+      desc "Return a list of switches, possibly filtered", {
+	is_array: true,
+	success: Switch::Entity
+      }
       get do
         can_read!
 
@@ -119,7 +139,7 @@ module V3
           error!("Bad Request", 400)
         end
 
-        query
+        present query
       end
     end
   end

@@ -4,7 +4,6 @@ module V3
 
     version 'v3'
     format :json
-    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :nics do
       before do
@@ -14,7 +13,9 @@ module V3
       end
 
       route_param :id, type: Integer, requirements: {id: /[0-9]+/ } do
-        desc "Get a nic by id"
+        desc "Get a nic by id", {
+	  success: Nic::Entity
+	}
         get do
           can_read!
           n = Nic.find_by_id params[:id]
@@ -23,7 +24,9 @@ module V3
           n
         end
 
-        desc "Update a single nic"
+        desc "Update a single nic", {
+	  success: Nic::Entity
+	}
         put do
           can_write!
           n = Nic.find_by_fqdn params[:id]
@@ -46,7 +49,10 @@ module V3
         end
       end
 
-      desc "Return a list of nics, possibly filtered"
+      desc "Return a list of nics, possibly filtered", {
+	is_array: true,
+	success: Nic::Entity
+      }
       get do
         can_read!
 
@@ -72,10 +78,12 @@ module V3
           error!("Bad Request", 400)
         end
 
-        query
+        present query
       end
 
-      desc 'Create a new nic'
+      desc 'Create a new nic', {
+	success: Nic::Entity
+      }
       post do
         can_write!
 

@@ -28,4 +28,34 @@ class Inventory < ActiveRecord::Base
   def active?
     inventory_status.nil? ? false : !inventory_status.inactive
   end
+  
+  class Entity < Grape::Entity
+    expose :id, documentation: { type: "Integer", desc: "Id" }
+    expose :inventory_number, documentation: { type: "String", desc: "Inventory Number" }
+    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :serial, documentation: { type: "String", desc: "Factory serial number" }
+    expose :part_number, documentation: { type: "String", desc: "Factory part number" }
+    expose :purchase_date, documentation: { type: "String", desc: "Purchase date as YYYY-MM-DD" }
+    expose :warranty_end, documentation: { type: "String", desc: "Warranty end date as YYYY-MM-DD" }
+    expose :seller, documentation: { type: "String", desc: "Seller" }
+    expose :created_at, documentation: { type: "String", desc: "Creation date RFC3999 formatted" }
+    expose :updated_at, documentation: { type: "String", desc: "Update date RFC3999 formatted" }
+    expose :user_id
+    expose :machine, documentation: { type: "String", desc: "machines FQDN if this inventoy is a machine" }
+    expose :deleted_at, documentation: { type: "String", desc: "Deletion date RFC3999 formatted" }
+    expose :comment, documentation: { type: "String", desc: "Comment field" }
+    expose :place, documentation: { type: "String", desc: "Additional place description" }
+    expose :category, documentation: { type: "String", desc: "Additional category description" }
+    expose :location_id, documentation: { type: "Integer", desc: "ID of the location" }
+    expose :install_date, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
+    expose :inventory_status_id, documentation: { type: "Integer", desc: "Inventory status id" } # FIXME
+
+    def machine
+      m = Machine.find_by_id(object.machine_id)
+      unless m
+	return nil
+      end
+      m.fqdn
+    end
+  end
 end

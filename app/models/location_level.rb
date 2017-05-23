@@ -14,4 +14,10 @@ class LocationLevel < ActiveRecord::Base
     return false
   end
 
+  class Entity < Grape::Entity
+    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :level, documentation: { type: "Integer", desc: "Level" }
+    expose :description, documentation: { type: "String", desc: "Description" }
+  end
+  
 end
