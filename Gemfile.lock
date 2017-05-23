@@ -1,15 +1,16 @@
 GIT
-  remote: https://github.com/bytemine/rubius.git
-  revision: 3ce9b4056538fa774f52de773e67d22636c69477
-  specs:
-    rubius (0.0.5)
-
-PATH
-  remote: /home/ruben/btm/grape-swagger-entity
+  remote: git://github.com/bytemine/grape-swagger-entity.git
+  revision: e98460cbb4fe0bfd540c395a9bd8805ede0cbe64
   specs:
     grape-swagger-entity (0.2.0)
       grape-entity (>= 0.5.0)
       grape-swagger (>= 0.20.4)
+
+GIT
+  remote: https://github.com/bytemine/rubius.git
+  revision: 3ce9b4056538fa774f52de773e67d22636c69477
+  specs:
+    rubius (0.0.5)
 
 GEM
   remote: https://rubygems.org/
@@ -340,6 +341,7 @@ DEPENDENCIES
   foreman
   grape
   grape-active_model_serializers
+  grape-entity
   grape-swagger
   grape-swagger-entity!
   high_voltage
