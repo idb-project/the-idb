@@ -38,7 +38,7 @@ class Nic < ActiveRecord::Base
     def machine
       m = Machine.find_by_id(object.machine_id)
       unless m
-	return nil
+	      return nil
       end
       m.fqdn
     end 

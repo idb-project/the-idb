@@ -11,25 +11,23 @@ module V3
         authenticate!
       end
 
-      desc "Searches machines with specific software configurations", {
-	is_array: true,
-	success: Machine::Entity
-      }
+      desc 'Searches machines with specific software configurations', is_array: true,
+                                                                      success: Machine::Entity
       get do
         can_read!
-        if params["q"].empty?
-            status 200
-            []
+        if params['q'].empty?
+          status 200
+          []
         else
-          software,versions = SoftwareHelper.parse_query(params["q"])
+          software, versions = SoftwareHelper.parse_query(params['q'])
           if software.empty?
             status 200
             []
           end
           machines = SoftwareHelper.software_machines(software, versions)
           status 200
-          machines.map { |m| m.fqdn }
-        end        
+          machines.map(&:fqdn)
+        end
       end
     end
   end
