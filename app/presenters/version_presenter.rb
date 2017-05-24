@@ -161,52 +161,35 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def diff_html_machine(changeset)
-    if (changeset)
-      old = changeset[0] ? Machine.find_by_id(*changeset[0]).fqdn : ""
-      new = changeset[1] ? Machine.find_by_id(*changeset[1]).fqdn : ""
-      diff_html([old, new])
-    else
-      ""
-    end
+    diff_html(changeset_values(changeset, Machine, "fqdn"))
   end
 
   def diff_html_owner(changeset)
-    if (changeset)
-      old = changeset[0] ? Owner.find_by_id(*changeset[0]).display_name : ""
-      new = changeset[1] ? Owner.find_by_id(*changeset[1]).display_name : ""
-      diff_html([old, new])
-    else
-      ""
-    end
+    diff_html(changeset_values(changeset, Owner, "display_name"))
   end
 
   def diff_html_location(changeset)
-    if (changeset)
-      old = changeset[0] ? Location.find_by_id(*changeset[0]).location_name : ""
-      new = changeset[1] ? Location.find_by_id(*changeset[1]).location_name : ""
-      diff_html([old, new])
-    else
-      ""
-    end
+    diff_html(changeset_values(changeset, Location, "location_name"))
   end
 
   def diff_html_status(changeset)
-    if (changeset)
-      old = changeset[0] ? InventoryStatus.find_by_id(*changeset[0]).name : ""
-      new = changeset[1] ? InventoryStatus.find_by_id(*changeset[1]).name : ""
-      diff_html([old, new])
-    else
-      ""
-    end
+    diff_html(changeset_values(changeset, InventoryStatus, "name"))
   end
 
   def diff_html_user(changeset)
-    if (changeset)
-      old = changeset[0] ? User.find_by_id(*changeset[0]).display_name : ""
-      new = changeset[1] ? User.find_by_id(*changeset[1]).display_name : ""
-      diff_html([old, new])
-    else
-      ""
+    diff_html(changeset_values(changeset, User, "display_name"))
+  end
+
+  def changeset_values(changeset, klass, attribute)
+    if not changeset or changeset.size != 2
+      return ["",""]
     end
+
+    oldo = changeset[0] ? klass.find_by_id(changeset[0]) : nil
+    newo = changeset[1] ? klass.find_by_id(changeset[1]) : nil
+
+    old = oldo ? oldo.send(attribute) : ""
+    new = newo ? newo.send(attribute) : ""
+    return [old,new]
   end
 end
