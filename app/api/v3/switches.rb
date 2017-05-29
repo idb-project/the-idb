@@ -59,12 +59,23 @@ module V3
               s = Switch.find_by_fqdn params[:fqdn]
               error!('Not found', 404) unless s
 
+              m = Machine.find_by_fqdn params[:machine]
+              error!('Machine not found', 404) unless m
+
+              n = Nic.find_by(name: params[:nic], machine: m.id)
+              error!('Nic not found', 404) unless n
+
               port = SwitchPort.find_by number: params[:number], switch_id: s.id
               error!('Not found', 404) unless port
 
               p = params.select { |k| SwitchPort.attribute_method?(k) }
-              port.update_attributes(p)
+              p.delete('switch')
+              p.delete('nic')
+              p = p.merge('switch_id' => s.id, 'nic_id' => n.id)
+              port.update_attributes!(p)
+
               present port
+              status 201
             end
 
             desc 'Delete a switch port'
