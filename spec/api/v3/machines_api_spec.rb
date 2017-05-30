@@ -6,8 +6,9 @@ require 'timecop'
 describe 'Machines API V3' do
 
   before :each do
-    IDB.config.modules.api.v1_enabled = true
-    IDB.config.modules.api.v2_enabled = true
+    IDB.config.modules.api.v1_enabled = false
+    IDB.config.modules.api.v2_enabled = false
+    IDB.config.modules.api.v3_enabled = true
     FactoryGirl.create :machine
     FactoryGirl.create :owner
     FactoryGirl.create :api_token
@@ -25,10 +26,11 @@ describe 'Machines API V3' do
     it 'should not allow access' do
       IDB.config.modules.api.v1_enabled = false
       IDB.config.modules.api.v2_enabled = false
+      IDB.config.modules.api.v3_enabled = false
 
-      api_get(action: "machines", token: @api_token_r)
+      api_get(action: "machines", token: @api_token_r, version: "3")
       expect(response.status).to eq(501)
-      expect(JSON.parse(response.body)).to eq({})
+      expect(JSON.parse(response.body)).to eq({"response_type"=>"error", "response"=>"API disabled."})
     end
   end
 
@@ -215,7 +217,7 @@ describe 'Machines API V3' do
         "backup_last_full_run":"2015-10-07 12:00:00"
       }
       
-      api_put_json(action: "machines", token: @api_token_w, payload: payload)
+      api_put_json(action: "machines/existing3.example.com", token: @api_token_w, version: "3", payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
