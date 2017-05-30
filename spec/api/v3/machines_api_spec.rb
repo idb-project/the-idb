@@ -286,6 +286,69 @@ describe 'Machines API V3' do
     end
   end
 
+  describe "GET /machines/{fqdn}/aliases" do
+    it "returns the aliases of the machine" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
+      FactoryGirl.create(:machine_alias, name: "alias-2.example.com", machine: m)
+
+      api_get(action: "machines/test.example.com/aliases", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+
+      aliases = JSON.parse(response.body)
+      expect(aliases.size).to eq(2)
+      expect(aliases[0]['name']).to eq("alias-1.example.com")
+      expect(aliases[1]['name']).to eq("alias-2.example.com")
+    end
+  end
+
+  describe "POST /machines/{fqdn}/aliases" do
+    it "creates a new alias for the machine" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+
+      payload = {
+        "name":"alias-1.example.com"
+      }
+
+      api_post_json(action: "machines/test.example.com/aliases", token: @api_token_w, payload: payload, version: "3")
+      expect(response.status).to eq(201)
+
+      as = JSON.parse(response.body)
+      expect(as['name']).to eq("alias-1.example.com")
+    end
+  end
+
+  describe "PUT /machines/{fqdn}/aliases/{name}" do
+    it "updates an alias" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      a = FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
+
+      payload = {
+        "name":"alias-2.example.com"
+      }
+
+      api_put_json(action: "machines/test.example.com/aliases/alias-1.example.com", token: @api_token_w, payload: payload, version: "3")
+      expect(response.status).to eq(200)
+
+      as = JSON.parse(response.body)
+      expect(as['name']).to eq("alias-2.example.com")
+
+      expect(MachineAlias.last.name).to eq("alias-2.example.com")
+    end
+  end
+
+  describe "DELETE /machines/{fqdn}/aliases/{name}" do
+    it "deletes an alias" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      a = FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
+
+      api_delete(action: "machines/test.example.com/aliases/alias-1.example.com", token: @api_token_w, version: "3")
+      expect(response.status).to eq(204)
+
+      expect(MachineAlias.find_by_name "alias-1.example.com").to be_nil
+    end
+  end
+
   describe "GET with wrong token permissions" do
     it 'should return 401 Unauthorized' do
       api_get(action: "machines", token: @api_token, version: "3")
