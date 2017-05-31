@@ -159,7 +159,6 @@ describe 'Switches API V3' do
         "number":1,"nic": n2.name, "machine": m.fqdn
       }
       api_put_json(action: "switches/switch.example.org/ports/1", token: @api_token_w, version: 3, payload: payload)
-      puts(response.body)
       expect(response.status).to eq(201)
       switch_port = JSON.parse(response.body)
       expect(switch_port["number"]).to eq(1)
