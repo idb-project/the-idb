@@ -349,6 +349,56 @@ describe 'Machines API V3' do
     end
   end
 
+  describe "GET /machines/{fqdn}/attachments" do
+    it "shows all attachments" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      FactoryGirl.create(:attachment, machine: m)
+      FactoryGirl.create(:attachment, machine: m)
+
+      api_get(action: "machines/test.example.com/attachments", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+
+      attachments = JSON.parse(response.body)
+      expect(attachments.size).to eq(2)
+    end
+  end
+
+  describe "POST /machines/{fqdn}/attachments" do
+    it "create a new attachment" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+
+      post "/api/v3/machines/test.example.com/attachments", headers: {'X-IDB-API-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
+      expect(response.status).to eq(201)
+
+      attachments = JSON.parse(response.body)
+      expect(attachments["attachment_fingerprint"]).to eq("85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4")
+      expect(Attachment.last.attachment_fingerprint).to eq("85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4")
+    end
+  end
+
+  describe "GET /machines/{fqdn}/attachments/{fingerprint}" do
+    it "shows a single attachment" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      FactoryGirl.create(:attachment, machine: m, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")))
+
+      api_get(action: "machines/test.example.com/attachments/85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+
+      attachment = JSON.parse(response.body)
+      expect(attachment["attachment_fingerprint"]).to eq("85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4")
+    end
+  end
+
+  describe "DELETE /machines/{fqdn}/attachments/{fingerprint}" do
+    it "deletes a single attachment" do
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      a = FactoryGirl.create(:attachment, machine: m)
+
+      api_delete(action: "machines/test.example.com/attachments/#{Attachment.last.attachment_fingerprint}", token: @api_token_w, version: "3")
+      expect(response.status).to eq(204)
+    end
+  end
+
   describe "GET with wrong token permissions" do
     it 'should return 401 Unauthorized' do
       api_get(action: "machines", token: @api_token, version: "3")
