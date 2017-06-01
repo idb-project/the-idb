@@ -19,9 +19,9 @@ module V2
         p = params.to_hash
 
         unless p["fqdn"]
-          Machine.all
+          Machine.includes(:aliases, :nics).all.as_json(include: [ :aliases, :nics ])
         else
-          m = Machine.find_by_fqdn(p["fqdn"])
+          m = Machine.includes(:aliases, :nics).find_by_fqdn(p["fqdn"]).as_json(include: [:aliases, :nics])
           unless m
             status 404
             {}
@@ -48,6 +48,7 @@ module V2
           begin
             m = process_machine_update(p)
             return {} unless m
+            m = Machine.includes(:aliases, :nics).find_by_fqdn(p["fqdn"]).as_json(include: [:aliases, :nics])
             m
           rescue ActiveRecord::RecordInvalid => e
             Raven.capture_exception(e)
@@ -64,7 +65,10 @@ module V2
             machine_params["create_machine"] = "true" if (p["create_machine"] == true || p["create_machine"] == "true")
             begin
               m = process_machine_update(machine_params)
-              machine_array << m if m
+              if m
+                m = Machine.includes(:aliases, :nics).find_by_fqdn(m["fqdn"]).as_json(include: [:aliases, :nics])
+                machine_array << m
+              end
             rescue ActiveRecord::RecordInvalid => e
               Raven.capture_exception(e)
               status 409
