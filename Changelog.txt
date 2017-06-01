@@ -1,6 +1,14 @@
-HEAD
-====
+1.6.6
+=====
+- [bugfix] show aliases and nics when querying machines via v2 API.
+
+1.6.5
+=====
 - [security] Update nokogiri gem. #4952
+
+1.6.4
+=====
+- [bugfix] check for nil mac. #4933
 
 1.6.3
 =====
