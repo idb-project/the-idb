@@ -10,6 +10,9 @@ class Owner < ActiveRecord::Base
   has_many :attachments, :dependent => :destroy
   has_many :cloud_providers, :dependent => :destroy
 
+  has_many :owner_api_tokens
+  has_many :api_tokens, through: :owner_api_tokens
+
   validates :name, :nickname, presence: true
   validates :name, :nickname, uniqueness: true
 
