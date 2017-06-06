@@ -29,6 +29,7 @@
           <th>Owners</th>
         </tr>
         <tr>
+          <%- @api_token = k(:api_token, @api_token) -%>
           <td><%= @api_token.token %></td>
           <td><%= @api_token.name %></td>
           <td><%= @api_token.description %></td>
