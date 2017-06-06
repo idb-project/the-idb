@@ -12,7 +12,7 @@ class ApiTokensController < ApplicationController
   end
 
   def create
-    @api_token = ApiToken.new(params.require(:api_token).permit(:token, :read, :write, :name, :description, :owner_ids))
+    @api_token = ApiToken.new(params.require(:api_token).permit(:token, :read, :write, :name, :description, :owner_ids => []))
     if @api_token.save
       redirect_to api_tokens_path
     else
