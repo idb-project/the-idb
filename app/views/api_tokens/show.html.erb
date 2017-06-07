@@ -26,13 +26,16 @@
           <th>Description</th>
           <th>Read</th>
           <th>Write</th>
+          <th>Owners</th>
         </tr>
         <tr>
+          <%- @api_token = k(:api_token, @api_token) -%>
           <td><%= @api_token.token %></td>
           <td><%= @api_token.name %></td>
           <td><%= @api_token.description %></td>
           <td><%= @api_token.read %></td>
           <td><%= @api_token.write %></td>
+          <td><%= @api_token.owners %></td>
         </tr>
       </table>
     </div>
