@@ -33,8 +33,6 @@ class ApiTokensController < ApplicationController
 
   def update
     @api_token = ApiToken.find(params[:id])
-    puts params
-
     if @api_token.update(params.require(:api_token).permit(:token, :read, :write, :name, :description, :owner_ids => []))
       redirect_to api_tokens_path, notice: 'Api Token updated'
     else
