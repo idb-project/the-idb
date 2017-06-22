@@ -2,8 +2,11 @@ class Location < ActiveRecord::Base
   has_many :machines_feed_a, class_name: 'Machine', foreign_key: :power_feed_a
   has_many :machines_feed_b, class_name: 'Machine', foreign_key: :power_feed_b
   belongs_to :location_level
+  belongs_to :owner
+
   validates :name, presence: true
   has_closure_tree parent_column_name: :location_id
+
 
   def level_string
     location_level.fetch(level, '')

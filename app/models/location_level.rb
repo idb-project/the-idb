@@ -1,5 +1,5 @@
 class LocationLevel < ActiveRecord::Base
-
+  belongs_to :owner
   has_many :locations
   validates :name, presence: true, uniqueness: true
   validates :level, presence: true, uniqueness: true
