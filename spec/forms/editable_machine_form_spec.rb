@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe EditableMachineForm do
   let(:machine) do
-    Machine.new(fqdn: 'box.example.com')
+    owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(owner.users.first)
+    Machine.new(fqdn: 'box.example.com', owner: owner)
   end
 
   let(:attributes) do

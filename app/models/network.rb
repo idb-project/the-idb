@@ -19,6 +19,14 @@ class Network < ActiveRecord::Base
     end
   end
 
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      nil
+    else
+      -> { where(owner: User.current.owners) }
+    end
+  end
+
   def ip
     return if address.blank? # Do not try to parse if missing.
     ::IPAddress.parse(address)

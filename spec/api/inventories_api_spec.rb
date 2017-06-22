@@ -7,9 +7,10 @@ describe 'Inventories API' do
 
   before :each do
     IDB.config.modules.api.v2_enabled = true
-    @user = FactoryGirl.create :owner
-    @inventory_a = FactoryGirl.create :inventory
-    @inventory_b = FactoryGirl.create :inventory
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+    @inventory_a = FactoryGirl.create :inventory, owner: @owner
+    @inventory_b = FactoryGirl.create :inventory, owner: @owner
     @api_token = FactoryGirl.create :api_token
     @api_token_r = FactoryGirl.create :api_token_r
     @api_token_w = FactoryGirl.create :api_token_w
@@ -95,7 +96,7 @@ describe 'Inventories API' do
 
   describe "PUT /inventories" do
     it "updates an existing inventory" do
-      new_inventory = Inventory.create({inventory_number: "old"})
+      new_inventory = Inventory.create({inventory_number: "old", owner: @owner})
 
       p = {
         "id": new_inventory.id,
@@ -107,6 +108,20 @@ describe 'Inventories API' do
       updated_inventory = JSON.parse(response.body)
       expect(response.status).to eq(200)
       expect(updated_inventory["inventory_number"]).to eq("updated")
+    end
+
+    it "does not update an existing inventory if user is not an owner" do
+      new_inventory = Inventory.create({inventory_number: "old"})
+
+      p = {
+        "id": new_inventory.id,
+        "inventory_number": "updated"
+      }
+
+      api_put_json "inventories", @api_token_w, p
+
+      updated_inventory = JSON.parse(response.body)
+      expect(response.status).to eq(404)
     end
   end
 end

@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :inventory_status do
-    name "my_status"
+    sequence(:name) { |n| "my_status_#{n}" }
   end
 end

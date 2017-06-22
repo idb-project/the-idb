@@ -14,6 +14,14 @@ class Attachment < ActiveRecord::Base
 
   after_save :check_sha256_fingerprint
 
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      nil
+    else
+      -> { where(owner: User.current.owners) }
+    end
+  end
+
   private
 
   def check_sha256_fingerprint

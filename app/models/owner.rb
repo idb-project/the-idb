@@ -9,6 +9,7 @@ class Owner < ActiveRecord::Base
   has_many :machines, :dependent => :destroy
   has_many :attachments, :dependent => :destroy
   has_many :cloud_providers, :dependent => :destroy
+  has_and_belongs_to_many :users
 
   validates :name, :nickname, presence: true
   validates :name, :nickname, uniqueness: true
@@ -26,5 +27,13 @@ class Owner < ActiveRecord::Base
 
   def ordered_versions
     PaperTrail::Version.with_item_keys(self.class.name, id).order(created_at: :desc)
+  end
+
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      nil
+    else
+      -> { joins(:users).where(users: { id: User.current }) }
+    end
   end
 end

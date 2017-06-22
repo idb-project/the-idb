@@ -48,8 +48,6 @@ describe User do
   end
 
   describe '#update' do
-    let(:updated_user) { User.first }
-
     before do
       user.save!
     end
@@ -62,7 +60,7 @@ describe User do
       it 'updates the user' do
         user.update(attributes)
 
-        expect(updated_user.email).to eq('johnny@example.com')
+        expect(user.email).to eq('johnny@example.com')
       end
     end
 
@@ -74,7 +72,7 @@ describe User do
       it 'keeps the previous one' do
         user.update(attributes)
 
-        expect(updated_user.name).to eq('John Doe')
+        expect(user.name).to eq('John Doe')
       end
     end
 
@@ -86,7 +84,7 @@ describe User do
       it 'keeps the previous one' do
         user.update(attributes)
 
-        expect(updated_user.name).to eq('John Doe')
+        expect(user.name).to eq('John Doe')
       end
     end
   end
@@ -121,6 +119,60 @@ describe User do
     context 'with incorrect password' do
       it 'returns false' do
         expect(user.valid_password?('__foo')).to eq(false)
+      end
+    end
+  end
+
+  describe "#associates" do
+    before(:each) do
+      @ass1 = FactoryGirl.create(:user)
+      @ass2 = FactoryGirl.create(:user)
+      @ass3 = FactoryGirl.create(:user)
+      @ass_out = FactoryGirl.create(:user)
+      @owner = FactoryGirl.create(:owner)
+      @owner2 = FactoryGirl.create(:owner)
+      @owner_out = FactoryGirl.create(:owner)
+    end
+
+    context "without other users associated by owners" do
+      it "returns empty list" do
+        expect(user.associates).to eq([])
+      end
+    end
+
+    context "with other users associated by one owner" do
+      it "returns one associate" do
+        @owner.users << @ass1
+        user.owners << @owner
+        expect(user.associates).to eq([@ass1])
+      end
+
+      it "returns all associates" do
+        @owner.users << @ass1
+        @owner.users << @ass2
+        user.owners << @owner
+        expect(user.associates).to eq([@ass1, @ass2])
+      end
+    end
+
+    context "with other users associated by other owners" do
+      it "returns one associate" do
+        @owner.users << @ass1
+        user.owners << @owner
+        expect(user.associates).to eq([@ass1])
+      end
+
+      it "returns all associates" do
+        @owner.users << @ass1
+        @owner.users << @ass2
+        @owner2.users << @ass3
+        user.owners << @owner
+        user.owners << @owner2
+        expect(user.associates).to eq([@ass1, @ass2, @ass3])
+      end
+
+      it "does not return a user not associated" do
+        expect(user.associates).not_to include(@ass_out)
       end
     end
   end

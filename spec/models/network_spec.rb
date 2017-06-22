@@ -1,11 +1,17 @@
 require 'spec_helper'
 
 describe Network do
+  before :each do
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+  end
+
   let(:attributes) do
     {
       name: 'data center',
       address: '10.0.0.1/26',
-      description: 'nice network!'
+      description: 'nice network!',
+      owner: @owner
     }
   end
 
@@ -38,11 +44,10 @@ describe Network do
   end
 
   it 'can have an owner' do
-    owner = Owner.create!(name: 'test owner', nickname: 'test')
-    network.owner = owner
+    network.owner = @owner
     network.save!
 
-    expect(network.reload.owner).to eq(owner)
+    expect(network.reload.owner).to eq(@owner)
   end
 
   describe '#preferences' do

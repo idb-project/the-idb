@@ -59,8 +59,12 @@ module V2
         p = params.to_hash
         begin
           i = Inventories.inventory_update(p)
-          status 200
-          i
+          unless i
+            error!("No such inventory", 404)
+          else
+            status 200
+            i
+          end
         rescue ActiveRecord::RecordInvalid => e
           Raven.capture_exception(e)
           status 409
@@ -83,10 +87,8 @@ module V2
       inventory = Inventory.find_by id: p["id"]
       if inventory != nil
         inventory.update_attributes(p)
-        inventory
-      else
-        error("No such inventory", 404)
       end
+      inventory
     end
   end
 end

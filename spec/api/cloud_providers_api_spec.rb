@@ -7,6 +7,7 @@ describe 'Cloud providers API' do
 
   before :each do
     IDB.config.modules.api.v2_enabled = true
+    allow(User).to receive(:current).and_return(nil)
     @user = FactoryGirl.create :owner
     @cloud_provider = FactoryGirl.create :cloud_provider, owner: @user
     @cloud_provider_no_owner = FactoryGirl.create :cloud_provider

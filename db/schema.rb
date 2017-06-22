@@ -238,6 +238,13 @@ ActiveRecord::Schema.define(version: 20170502072418) do
     t.index ["nickname"], name: "index_owners_on_nickname", unique: true, using: :btree
   end
 
+  create_table "owners_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "owner_id"
+    t.integer "user_id"
+    t.index ["owner_id"], name: "index_owners_users_on_owner_id", using: :btree
+    t.index ["user_id"], name: "index_owners_users_on_user_id", using: :btree
+  end
+
   create_table "switch_ports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "number",     null: false
     t.string   "identifier"

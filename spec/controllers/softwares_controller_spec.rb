@@ -3,9 +3,11 @@ require 'spec_helper'
 describe SoftwaresController do
   before(:each) do
     @current_user = FactoryGirl.create :user
+    owner = FactoryGirl.create(:owner, users: [@current_user])
+    allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
-    create(:machine, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}])
-    create(:machine, software: [{name: "nginx", version: "1.10.1-0ubuntu1.2"}])
+    create(:machine, owner: owner, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}])
+    create(:machine, owner: owner, software: [{name: "nginx", version: "1.10.1-0ubuntu1.2"}])
   end
 
   describe "GET index" do

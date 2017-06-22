@@ -55,7 +55,10 @@ describe MachineUpdateService do
     end
 
     let(:machine) do
-      Machine.create!(fqdn: 'test.example.com')
+      current_user = FactoryGirl.create(:user, admin: true)
+      owner = FactoryGirl.create(:owner, users: [current_user])
+      allow(User).to receive(:current).and_return(current_user)
+      machine = FactoryGirl.create(:machine, fqdn: 'test.example.com', owner: owner)
     end
 
     before do
@@ -73,11 +76,11 @@ describe MachineUpdateService do
     # end
 
     it 'sets the device type' do
-        machine = Machine.create!(fqdn: 'test.example.com')
+        fqdn = machine.fqdn
         facts["is_virtual"] = true
         allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
         described_class.update_from_facts(machine, @url)
-        machine = Machine.find_by_fqdn(machine.fqdn)
+        machine = Machine.find_by_fqdn(fqdn)
         expect(machine).to be_a VirtualMachine
     end
 
