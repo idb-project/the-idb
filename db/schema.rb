@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502072418) do
+ActiveRecord::Schema.define(version: 20170622120928) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 20170502072418) do
     t.string  "name"
     t.string  "description"
     t.integer "level"
+    t.integer "owner_id"
   end
 
   create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20170502072418) do
     t.integer "level"
     t.integer "location_id"
     t.integer "location_level_id"
+    t.integer "owner_id"
   end
 
   create_table "machine_aliases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
