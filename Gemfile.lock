@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/bytemine/grape-swagger-entity.git
+  revision: e98460cbb4fe0bfd540c395a9bd8805ede0cbe64
+  specs:
+    grape-swagger-entity (0.2.0)
+      grape-entity (>= 0.5.0)
+      grape-swagger (>= 0.20.4)
+
+GIT
   remote: https://github.com/bytemine/rubius.git
   revision: 3ce9b4056538fa774f52de773e67d22636c69477
   specs:
@@ -30,6 +38,11 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_model_serializers (0.10.5)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.2)
     activejob (5.0.2)
       activesupport (= 5.0.2)
       globalid (>= 0.3.6)
@@ -59,6 +72,8 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
+    case_transform (0.2)
+      activesupport
     celluloid (0.17.3)
       celluloid-essentials
       celluloid-extras
@@ -118,6 +133,14 @@ GEM
       rack (>= 1.3.0)
       rack-accept
       virtus (>= 1.0.0)
+    grape-active_model_serializers (1.5.0)
+      active_model_serializers (>= 0.10.0)
+      grape (>= 0.8.0)
+    grape-entity (0.6.0)
+      activesupport
+      multi_json (>= 1.3.2)
+    grape-swagger (0.25.3)
+      grape (>= 0.12.0)
     hashie (3.5.5)
     high_voltage (3.0.0)
     highline (1.7.8)
@@ -132,6 +155,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    jsonapi-renderer (0.1.2)
     keynote (0.3.1)
       rails (>= 3.1.0)
     libv8 (3.16.14.17)
@@ -316,6 +340,10 @@ DEPENDENCIES
   font-awesome-rails
   foreman
   grape
+  grape-active_model_serializers
+  grape-entity
+  grape-swagger
+  grape-swagger-entity!
   high_voltage
   ipaddress
   jquery-rails

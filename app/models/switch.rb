@@ -10,4 +10,8 @@ class Switch < Machine
   def switch_ports
     SwitchPort.where(switch_id: id)
   end
+  
+  class Entity < Grape::Entity
+    expose :fqdn, documentation: { type: "String", desc: "FQDN" }
+  end
 end

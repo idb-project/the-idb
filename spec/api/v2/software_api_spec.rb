@@ -19,7 +19,7 @@ describe 'Software API' do
     it 'should not allow access' do
       IDB.config.modules.api.v2_enabled = false
 
-      api_get "software", @api_token_r
+      api_get(action: "software", token: @api_token_r)
       body = JSON.parse(response.body)
       expect(response.status).to eq(501)
       expect(body["response_type"]).to eq("error")
@@ -29,7 +29,7 @@ describe 'Software API' do
 
   describe "GET /software" do
     it "returns error with invalid token" do
-      api_get "software", @api_token
+      api_get(action: "software", token: @api_token)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(401)
@@ -38,7 +38,7 @@ describe 'Software API' do
     end
 
     it "returns an empty array for a empty query" do
-      api_get "software?q=", @api_token_r
+      api_get(action: "software?q=", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -46,13 +46,13 @@ describe 'Software API' do
     end
 
     it "returns all machines matching the search parameters, name only" do
-      api_get "software?q=nginx", @api_token_r
+      api_get(action: "software?q=nginx", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)
       expect(machines.size).to eq(2)
 
-      api_get "software?q=ruby", @api_token_r
+      api_get(action: "software?q=ruby", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)
