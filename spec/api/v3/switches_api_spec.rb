@@ -9,12 +9,15 @@ describe 'Switches API V3' do
     IDB.config.modules.api.v1_enabled = false
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
-    FactoryGirl.create :switch
-    FactoryGirl.create :owner
-    FactoryGirl.create :api_token
-    @api_token = FactoryGirl.build :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
-    @api_token_w = FactoryGirl.create :api_token_w
+
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+
+    FactoryGirl.create :switch, owner: @owner
+    FactoryGirl.create :api_token, owner: @owner
+    @api_token = FactoryGirl.build :api_token, owner: @owner
+    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
+    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -116,7 +119,7 @@ describe 'Switches API V3' do
 
   describe "GET /switches/{fqdn}/ports" do
     it "gets all switch ports" do
-      s = FactoryGirl.create(:switch, fqdn: "switch.example.org")
+      s = FactoryGirl.create(:switch, fqdn: "switch.example.org", owner: @owner)
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 1)
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 2)
 
@@ -130,8 +133,8 @@ describe 'Switches API V3' do
 
   describe "POST /switches/{fqdn}/ports" do
     it "creates a new switch port" do
-      s = FactoryGirl.create(:switch, fqdn: "switch.example.org")
-      m = FactoryGirl.create(:machine)
+      s = FactoryGirl.create(:switch, fqdn: "switch.example.org", owner: @owner)
+      m = FactoryGirl.create(:machine, owner: @owner)
       n = FactoryGirl.create(:nic, machine: m)
 
       payload = {
@@ -149,8 +152,8 @@ describe 'Switches API V3' do
 
   describe "PUT /switches/{fqdn}/ports/{number}" do
     it "updates a switch port" do
-      s = FactoryGirl.create(:switch, fqdn: "switch.example.org")
-      m = FactoryGirl.create(:machine)
+      s = FactoryGirl.create(:switch, fqdn: "switch.example.org", owner: @owner)
+      m = FactoryGirl.create(:machine, owner: @owner)
       n1 = FactoryGirl.create(:nic, machine: m)
       n2 = FactoryGirl.create(:nic, machine: m)
       p = FactoryGirl.create(:switch_port, number: 1, nic: n1, switch: s)

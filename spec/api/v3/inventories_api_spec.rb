@@ -9,12 +9,15 @@ describe 'Inventories API V3' do
     IDB.config.modules.api.v1_enabled = false
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
-    FactoryGirl.create :inventory
-    FactoryGirl.create :owner
-    FactoryGirl.create :api_token
-    @api_token = FactoryGirl.build :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
-    @api_token_w = FactoryGirl.create :api_token_w
+
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+
+    FactoryGirl.create :inventory, owner: @owner
+    FactoryGirl.create :api_token, owner: @owner
+    @api_token = FactoryGirl.build :api_token, owner: @owner
+    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
+    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -116,7 +119,7 @@ describe 'Inventories API V3' do
 
   describe "PUT /inventories/{inventory_number}" do
     it 'updates an inventory item' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory")
+      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -133,7 +136,7 @@ describe 'Inventories API V3' do
     end
 
     it 'updates multiple attributes of in inventory item if existing' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory")
+      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -152,7 +155,7 @@ describe 'Inventories API V3' do
     end
 
     it 'filters out not existing attributes' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory")
+      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -173,9 +176,9 @@ describe 'Inventories API V3' do
 
   describe "GET /inventories/{inventory_number}/attachments" do
     it "shows all attachments" do
-      i = FactoryGirl.create(:inventory)
-      FactoryGirl.create(:attachment, inventory: i)
-      FactoryGirl.create(:attachment, inventory: i)
+      i = FactoryGirl.create(:inventory, owner: @owner)
+      FactoryGirl.create(:attachment, inventory: i, owner: @owner)
+      FactoryGirl.create(:attachment, inventory: i, owner: @owner)
 
       api_get(action: "inventories/#{Inventory.last.inventory_number}/attachments", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -187,7 +190,7 @@ describe 'Inventories API V3' do
 
   describe "POST /inventories/{inventory_number}/attachments" do
     it "create a new attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc")
+      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
 
       post "/api/v3/inventories/123abc/attachments", headers: {'X-IDB-API-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
       expect(response.status).to eq(201)
@@ -198,10 +201,10 @@ describe 'Inventories API V3' do
     end
   end
 
-  describe "GET /inventories/{inventory_number}/{fingerprint}" do
+  describe "GET /inventories/{inventory_number}/attachments/{fingerprint}" do
     it "shows a single attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc")
-      FactoryGirl.create(:attachment, inventory: i, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")))
+      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
+      FactoryGirl.create(:attachment, inventory: i, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")), owner: @owner)
 
       api_get(action: "inventories/123abc/attachments/85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -211,10 +214,10 @@ describe 'Inventories API V3' do
     end
   end
 
-  describe "DELETE /inventories/{inventory_number}/{fingerprint}" do
+  describe "DELETE /inventories/{inventory_number}/attachments/{fingerprint}" do
     it "deletes a single attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc")
-      a = FactoryGirl.create(:attachment, inventory: i)
+      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
+      a = FactoryGirl.create(:attachment, inventory: i, owner: @owner)
 
       api_delete(action: "inventories/123abc/attachments/#{Attachment.last.attachment_fingerprint}", token: @api_token_w, version: "3")
       expect(response.status).to eq(204)

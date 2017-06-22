@@ -9,12 +9,16 @@ describe 'Machines API V3' do
     IDB.config.modules.api.v1_enabled = false
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
-    FactoryGirl.create :machine
-    FactoryGirl.create :owner
-    FactoryGirl.create :api_token
-    @api_token = FactoryGirl.build :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
-    @api_token_w = FactoryGirl.create :api_token_w
+
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+
+    FactoryGirl.create :machine, owner: @owner
+    FactoryGirl.create :api_token, owner: @owner
+    @api_token = FactoryGirl.build :api_token, owner: @owner
+    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
+    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
+
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -162,7 +166,7 @@ describe 'Machines API V3' do
 
   describe "PUT /machines/fqdn" do
     it 'updates a machine if existing' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines/existing.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
@@ -182,7 +186,7 @@ describe 'Machines API V3' do
     end
 
     it 'updates multiple attributes of a machine if existing' do
-      FactoryGirl.create(:machine, fqdn: "existing2.example.com", cores: 3)
+      FactoryGirl.create(:machine, fqdn: "existing2.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines/existing2.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
@@ -205,7 +209,7 @@ describe 'Machines API V3' do
     end
 
     it 'updates multiple attributes of a machine if existing, JSON payload' do
-      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3)
+      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines/existing3.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
@@ -230,7 +234,7 @@ describe 'Machines API V3' do
     end    
 
     it 'filters out not existing attributes' do
-      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3)
+      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines/existing3.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
@@ -247,7 +251,7 @@ describe 'Machines API V3' do
     end
 
     it 'updates the software of a machine if existing, JSON payload' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com")
+      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines/existing.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
@@ -288,7 +292,7 @@ describe 'Machines API V3' do
 
   describe "GET /machines/{fqdn}/aliases" do
     it "returns the aliases of the machine" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
       FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
       FactoryGirl.create(:machine_alias, name: "alias-2.example.com", machine: m)
 
@@ -304,7 +308,7 @@ describe 'Machines API V3' do
 
   describe "POST /machines/{fqdn}/aliases" do
     it "creates a new alias for the machine" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
 
       payload = {
         "name":"alias-1.example.com"
@@ -320,7 +324,7 @@ describe 'Machines API V3' do
 
   describe "PUT /machines/{fqdn}/aliases/{name}" do
     it "updates an alias" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
       a = FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
 
       payload = {
@@ -339,7 +343,7 @@ describe 'Machines API V3' do
 
   describe "DELETE /machines/{fqdn}/aliases/{name}" do
     it "deletes an alias" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
       a = FactoryGirl.create(:machine_alias, name: "alias-1.example.com", machine: m)
 
       api_delete(action: "machines/test.example.com/aliases/alias-1.example.com", token: @api_token_w, version: "3")
@@ -351,9 +355,9 @@ describe 'Machines API V3' do
 
   describe "GET /machines/{fqdn}/attachments" do
     it "shows all attachments" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
-      FactoryGirl.create(:attachment, machine: m)
-      FactoryGirl.create(:attachment, machine: m)
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
+      FactoryGirl.create(:attachment, machine: m, owner: @owner)
+      FactoryGirl.create(:attachment, machine: m, owner: @owner)
 
       api_get(action: "machines/test.example.com/attachments", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -365,7 +369,7 @@ describe 'Machines API V3' do
 
   describe "POST /machines/{fqdn}/attachments" do
     it "create a new attachment" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
 
       post "/api/v3/machines/test.example.com/attachments", headers: {'X-IDB-API-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
       expect(response.status).to eq(201)
@@ -378,8 +382,8 @@ describe 'Machines API V3' do
 
   describe "GET /machines/{fqdn}/attachments/{fingerprint}" do
     it "shows a single attachment" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
-      FactoryGirl.create(:attachment, machine: m, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")))
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
+      FactoryGirl.create(:attachment, machine: m, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")), owner: @owner)
 
       api_get(action: "machines/test.example.com/attachments/85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -391,8 +395,8 @@ describe 'Machines API V3' do
 
   describe "DELETE /machines/{fqdn}/attachments/{fingerprint}" do
     it "deletes a single attachment" do
-      m = FactoryGirl.create(:machine, fqdn: "test.example.com")
-      a = FactoryGirl.create(:attachment, machine: m)
+      m = FactoryGirl.create(:machine, fqdn: "test.example.com", owner: @owner)
+      a = FactoryGirl.create(:attachment, machine: m, owner: @owner)
 
       api_delete(action: "machines/test.example.com/attachments/#{Attachment.last.attachment_fingerprint}", token: @api_token_w, version: "3")
       expect(response.status).to eq(204)
@@ -408,7 +412,7 @@ describe 'Machines API V3' do
 
   describe "PUT with wrong token permissions" do
     it 'should return 401 Unauthorized' do
-      FactoryGirl.create(:machine, fqdn: "borken.example.com")
+      FactoryGirl.create(:machine, fqdn: "borken.example.com", owner: @owner)
 
       payload = {
         "fqdn":"borken.example.com"
