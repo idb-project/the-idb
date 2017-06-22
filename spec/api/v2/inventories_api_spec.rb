@@ -118,7 +118,7 @@ describe 'Inventories API' do
         "inventory_number": "updated"
       }
 
-      api_put_json "inventories", @api_token_w, p
+      api_put_json(action: "inventories", token: @api_token_w, payload: p)
 
       updated_inventory = JSON.parse(response.body)
       expect(response.status).to eq(404)
