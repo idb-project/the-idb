@@ -62,7 +62,7 @@ module V3
 
             attachment = ActionDispatch::Http::UploadedFile.new(x)
 
-            present m.attachments.create(attachment: attachment)
+            present m.attachments.create(attachment: attachment, owner: m.owner)
           end
         end
 
