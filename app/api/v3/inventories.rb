@@ -11,6 +11,7 @@ module V3
         api_enabled!
         authenticate!
         set_papertrail
+        @owner = get_owner
       end
 
       route_param :number, type: String do
@@ -130,7 +131,9 @@ module V3
       post do
         can_write!
         p = params.select { |k| Inventory.attribute_method?(k) }
-        i = Inventory.create(p)
+        i = Inventory.new(p)
+        i.owner = @owner
+        i.save!
         present i
       end
     end

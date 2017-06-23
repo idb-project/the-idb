@@ -39,6 +39,13 @@ module V3
       end
     end
 
+    def get_owner
+      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
+      x = ApiToken.find_by_token token
+
+      return Owner.find_by_id x.owner_id
+    end
+
     def set_papertrail
       PaperTrail.whodunnit = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
     end

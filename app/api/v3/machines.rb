@@ -11,6 +11,7 @@ module V3
         api_enabled!
         authenticate!
         set_papertrail
+        @owner = get_owner
       end
 
       route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.-]+/ } do
@@ -283,7 +284,9 @@ module V3
         can_write!
         p = params.select { |k| Machine.attribute_method?(k) }
         begin
-          m = Machine.create!(p)
+          m = Machine.new(p)
+          m.owner = @owner
+          m.save!
         rescue ActiveRecord::RecordInvalid
           error!('Invalid Machine', 409)
         end

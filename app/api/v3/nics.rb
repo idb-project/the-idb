@@ -80,7 +80,7 @@ module V3
         can_write!
 
         p = params.select { |k| Nic.attribute_method?(k) }
-        n = Nic.create(p)
+        n = Nic.create!(p)
         n
       end
     end

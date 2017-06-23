@@ -10,6 +10,7 @@ module V3
         api_enabled!
         authenticate!
         set_papertrail
+        @owner = get_owner
       end
 
       route_param :name, type: String, requirements: { name: /[a-zA-Z0-9.]+/ } do
@@ -70,7 +71,9 @@ module V3
       post do
         can_write!
         p = params.select { |k| CloudProvider.attribute_method?(k) }
-        c = CloudProvider.create(p)
+        c = CloudProvider.new(p)
+        c.owner = @owner
+        c.save!
         present c
       end
     end

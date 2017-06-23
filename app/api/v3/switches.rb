@@ -10,6 +10,7 @@ module V3
         api_enabled!
         authenticate!
         set_papertrail
+        @owner = get_owner
       end
 
       route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.]+/ } do
@@ -148,7 +149,9 @@ module V3
         end
         p = params.select { |k| Switch.attribute_method?(k) }
 
-        m = Switch.create!(p)
+        m = Switch.new(p)
+        m.owner = @owner
+        m.save!
 
         present m
       end
