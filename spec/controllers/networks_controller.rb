@@ -37,5 +37,13 @@ describe NetworksController do
       get :index
       expect(assigns(:duplicated_macs).size).to eq(2)
     end
+
+    it "returns all machines with duplicate mac addresses, assigned to the current owner" do
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff"
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: FactoryGirl.create(:machine, owner: FactoryGirl.create(:owner))
+      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa"
+      get :index
+      expect(assigns(:duplicated_macs).size).to eq(1)
+    end
   end
 end

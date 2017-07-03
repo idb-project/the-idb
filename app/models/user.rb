@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
+  has_and_belongs_to_many :owners
   
   has_secure_password validations: false
 
@@ -23,5 +24,23 @@ class User < ActiveRecord::Base
 
   def is_admin?
     admin || false
+  end
+
+  def self.current
+    Thread.current[:user]
+  end
+
+  def self.current=(user)
+    Thread.current[:user] = user
+  end
+
+  def associates
+    users = []
+    owners.each do |o|
+      o.users.each do |u|
+        users.push(u) unless users.include?(u)
+      end
+    end
+    users
   end
 end

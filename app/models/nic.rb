@@ -28,4 +28,19 @@ class Nic < ActiveRecord::Base
   def ipv6mask
     ip_address.netmask_v6 if ip_address
   end
+  
+  class Entity < Grape::Entity
+    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :mac, documentation: { type: "String", desc: "MAC address" }
+    expose :machine, documentation: { type: "String", desc: "Machine FQDN this nic belongs to" }    
+    expose :ip_address, documentation: { type: "Object", desc: "IP address of the nic" }, using: IpAddress::Entity
+    
+    def machine
+      m = Machine.find_by_id(object.machine_id)
+      unless m
+	      return nil
+      end
+      m.fqdn
+    end 
+  end
 end

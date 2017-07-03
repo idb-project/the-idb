@@ -1,0 +1,32 @@
+<div id="users-form">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= edit_user_path(@user) %>"><%= @user.name %></a>
+          <ul class="nav pull-right">
+            <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, users_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= simple_form_for(@user, html: {class: 'form-vertical', multipart: true },
+          defaults: {input_html: {class: 'input-xxlarge'}}) do |f| %>
+      <h5>Owners:</h5>
+      <div class="span12" style="padding-left: 8px">
+        <%= f.association :owners, as: :check_boxes, label: false %>
+      </div>
+      <%= f.button :submit %>
+    <%- end -%>
+  </div>
+</div>
+
+</div>
+

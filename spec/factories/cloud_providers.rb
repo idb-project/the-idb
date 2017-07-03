@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :cloud_provider do
-    sequence(:name) { |n| "CloudProvider#{n}" }
+    sequence(:name) { |n| "CloudProvider_#{n}" }
   end
 end

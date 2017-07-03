@@ -42,6 +42,7 @@
               <i class="fa fa-user"></i> <%= current_user.display_name %>
               <ul class="dropdown-menu text-right">
                 <% if current_user.is_admin? %>
+                  <li><%= link_to '<i class="icon-tasks"></i> Users'.html_safe, users_path %></li>
                   <li><%= link_to '<i class="icon-tasks"></i> Api Tokens'.html_safe, api_tokens_path %></li>
                   <li><%= link_to '<i class="icon-tasks"></i> Cloud Providers'.html_safe, cloud_providers_path %></li>
                   <li><%= BackgroundJobs.new.link('Background Jobs', 'icon-tasks', background_jobs_sidekiq_path) %></li>

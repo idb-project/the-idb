@@ -1,5 +1,5 @@
 class LocationLevel < ActiveRecord::Base
-
+  belongs_to :owner
   has_many :locations
   validates :name, presence: true, uniqueness: true
   validates :level, presence: true, uniqueness: true
@@ -14,4 +14,10 @@ class LocationLevel < ActiveRecord::Base
     return false
   end
 
+  class Entity < Grape::Entity
+    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :level, documentation: { type: "Integer", desc: "Level" }
+    expose :description, documentation: { type: "String", desc: "Description" }
+  end
+  
 end
