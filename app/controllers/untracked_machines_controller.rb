@@ -1,4 +1,6 @@
 class UntrackedMachinesController < ApplicationController
+  before_action :require_admin_user
+
   def index
     @untracked_machines = UntrackedMachinesList.new($redis).get.sort
     @untracked_machines.each do |m|
