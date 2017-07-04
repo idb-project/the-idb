@@ -4,6 +4,7 @@
       <th>Token</th>
       <th>Name</th>
       <th>Description</th>
+      <th>Owner</th>
       <th>Read</th>
       <th>Write</th>
     </tr>
@@ -13,8 +14,10 @@
       <%- api_token = k(:api_token, api_token) -%>
       <tr id="#api-token-<%= api_token.id %>">
         <td><%= api_token.token_link %></td>
-        <td><%= api_token.name %>
-        <td><%= api_token.description %>
+        <td><%= api_token.name %></td>
+        <td><%= api_token.description %></td>
+        <%- owner = k(:owner, api_token.owner) -%>
+        <td><%= owner.name_link %></td>
         <td><%= api_token.read %></td>
         <td><%= api_token.write %></td>
       </tr>

@@ -2,7 +2,7 @@
 class ApiTokenPresenter < Keynote::Presenter
   presents :api_token
 
-  delegate :id, :token, :read, :write, :name, :description,
+  delegate :id, :token, :read, :write, :name, :description, :owner,
            to: :api_token
 
   def token_link
