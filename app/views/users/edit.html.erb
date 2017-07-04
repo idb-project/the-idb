@@ -21,7 +21,7 @@
           defaults: {input_html: {class: 'input-xxlarge'}}) do |f| %>
       <h5>Owners:</h5>
       <div class="span12" style="padding-left: 8px">
-        <%= f.association :owners, as: :check_boxes, label: false %>
+        <%= f.association :owners, collection: Owner.order('name ASC'), as: :check_boxes, label: false %>
       </div>
       <%= f.button :submit %>
     <%- end -%>
