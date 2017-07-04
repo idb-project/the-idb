@@ -11,6 +11,7 @@
           <ul class="nav">
             <li class="active"><a href="#data" data-toggle="tab">Owner Data</a></li>
             <li><a href="#machines" data-toggle="tab">Machines</a></li>
+            <li><a href="#users" data-toggle="tab">Users</a></li>
             <%- if @owner.cloud_providers.count > 0 -%>
             <li><a href="#cloud-providers" data-toggle="tab">Cloud Providers</a></li>
             <%- end -%>
@@ -59,6 +60,27 @@
 
     <div class="tab-pane" id="machines">
       <%= render partial: 'machines/table', locals: {machines: @owner.machines} %>
+    </div>
+
+    <div class="tab-pane" id="users">
+      <table class="table table-condensed">
+        <tr>
+          <th>login:</th>
+          <th>name:</th>
+          <th>e-mail:</th>
+          <th>admin:</th>
+        </tr>
+
+        <%- @owner.users.each do |user| -%>
+        <%- user = k(:user, user) -%>
+        <tr>
+          <td><%= user.login %></td>
+          <td><%= user.name_link %></td>
+          <td><%= user.email %></td>
+          <td><%= user.admin %></td>
+        </tr>
+        <%- end -%>
+      </table>
     </div>
 
     <div class="tab-pane" id="cloud-providers">

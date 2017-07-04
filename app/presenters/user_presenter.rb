@@ -9,4 +9,12 @@ class UserPresenter < Keynote::Presenter
     link_to(user.name ? user.name : "-no name-", edit_user_path(user)) if user
   end
 
+  def admin
+    if user.admin
+      return "yes"
+    end
+
+    "no"
+  end
+
 end
