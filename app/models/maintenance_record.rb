@@ -8,7 +8,7 @@ class MaintenanceRecord < ActiveRecord::Base
     if User.current.nil? || User.current.is_admin?
       nil
     else
-      -> { where(user: User.current.associates) }
+      -> { where(machine: Machine.where(owner: User.current.owners)) }
     end
   end
 end
