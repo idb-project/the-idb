@@ -203,15 +203,50 @@ module V3
         end
 
         desc 'Update a single machine', success: Machine::Entity
+        params do
+          optional :os, type: String
+          optional :os_release, type: String
+          optional :arch, type: String
+          optional :ram, type: Integer
+          optional :cores, type: Integer
+          optional :vmhost, type: String
+          optional :serviced_at, type: String
+          optional :description, type: String
+          optional :deleted_at, type: String
+          optional :created_at, type: String
+          optional :updated_at, type: String
+          optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
+          optional :serialnumber, type: String
+          optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
+          optional :auto_update, type: Boolean, documentation: { type: "Bool", desc: "true if the machine is updated automatically" }
+          optional :switch_url, type: String
+          optional :mrtg_url, type: String
+          optional :config_instructions, type: String
+          optional :sw_characteristics, type: String
+          optional :business_purpose, type: String
+          optional :business_criticality, type: String
+          optional :business_notification, type: String
+          optional :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
+          optional :severity_class, type: String
+          optional :ucs_role, type: String
+          optional :backup_brand, type: String
+          optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Name" }
+          optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Name" }
+          optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Name" }
+          optional :backup_last_full_size, type: String, documentation: { type: "String", desc: "Name" }
+          optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
+          optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
+          optional :needs_reboot, type: Integer
+          optional :software, type: JSON, documentation: { type: "JSON", desc: "Known installed doftware packages" }
+          optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
+          optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
+        end
         put do
           can_write!
           m = Machine.find_by_fqdn params[:fqdn]
           error!('Not Found', 404) unless m
 
-          p = params.select { |k| Machine.attribute_method?(k) }
-          error!('Update nics via nics subroute') if p['nics']
-
-          error!('Update aliases via aliases subroute') if p['aliases']
+          p = declared(params).to_h
 
           m.update_attributes(p)
 
@@ -280,9 +315,48 @@ module V3
       end
 
       desc 'Create a new machine', success: Machine::Entity
+      params do
+        requires :fqdn, type: String
+        optional :os, type: String
+        optional :os_release, type: String
+        optional :arch, type: String
+        optional :ram, type: Integer
+        optional :cores, type: Integer
+        optional :vmhost, type: String
+        optional :serviced_at, type: String
+        optional :description, type: String
+        optional :deleted_at, type: String
+        optional :created_at, type: String
+        optional :updated_at, type: String
+        optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
+        optional :serialnumber, type: String
+        optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
+        optional :auto_update, type: Boolean, documentation: { type: "Bool", desc: "true if the machine is updated automatically" }
+        optional :switch_url, type: String
+        optional :mrtg_url, type: String
+        optional :config_instructions, type: String
+        optional :sw_characteristics, type: String
+        optional :business_purpose, type: String
+        optional :business_criticality, type: String
+        optional :business_notification, type: String
+        optional :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
+        optional :severity_class, type: String
+        optional :ucs_role, type: String
+        optional :backup_brand, type: String
+        optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Name" }
+        optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Name" }
+        optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Name" }
+        optional :backup_last_full_size, type: String, documentation: { type: "String", desc: "Name" }
+        optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
+        optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
+        optional :needs_reboot, type: Integer
+        optional :software, type: JSON, documentation: { type: "JSON", desc: "Known installed software packages" }
+        optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
+        optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
+      end
       post do
         can_write!
-        p = params.select { |k| Machine.attribute_method?(k) }
+        p = declared(params).to_h
         begin
           m = Machine.new(p)
           m.owner = @owner
