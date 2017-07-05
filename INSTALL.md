@@ -1,6 +1,6 @@
 # Install instructions for The IDB on Ubuntu 16.04
 
-* clone the repo
+* clone the repo into /opt/the-idb
 
 * install the following packages
     * mysql-server
