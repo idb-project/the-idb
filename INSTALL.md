@@ -1,42 +1,155 @@
-# setup idb
+# Install instructions for The IDB on Ubuntu 16.04
 
-## Basic requirements
+* clone the repo into /opt/the-idb
 
-* MySQL Server (>= 5.7)
-* LDAP or ActiveDirectory
-* Redis (>= 2.8)
-* Ruby 2.2
-* For more than just tests a webserver (for example Apache+Passenger)
+* install the following packages
+    * mysql-server
+    * redis-server
+    * ruby-dev
+ 
+ 
+ 
 
-## Setup
+* install [Phusion Passenger](https://www.phusionpassenger.com/library/install/nginx/install/oss/xenial/) from the official repo
 
-* Copy the directory 'config-example' to 'config'
-* Set up a MySQL database 'idb' and set credentials from config/database.yml
-* Set up a MySQL database 'idb_test' and set credentials from config/database.yml
-* Install bundler gem via `gem install bundler`
-* Install packages via `sudo apt-get install libssl-dev libmysqlclient-dev`
-* Install a recent (>=2.8 is needed by Sidekiq) version of redis-server e.g. from this PPA: ppa:chris-lea/redis-server
-* Install some build dependencies: 'sudo apt-get install make g++'
-* Bundle dependencies via `bundle install --path vendor/bundle`
-* Setup database via `bundle exec rake db:schema:load`
-* Start development environment via `bundle exec foreman start`
+## create a database and a user
+```
+mysql -u root -p
+CREATE DATABASE idb;
+GRANT ALL ON idb.* TO 'idb'@'localhost' IDENTIFIED BY '<somepassword>';
+FLUSH PRIVILEGES;
+```
 
-The application uses LDAP to authenticate users. To allow LDAP logins during
-development on a local machine, foreman will start a small LDAP server.
+* set the database configuration in /opt/the-idb/config/database.yml
 
-There are two user accounts in the development LDAP database. (db/ldapdb.json)
+## Install a LDAP server
 
-* admin / smada
-* john / niwdlab
+* if you are not using an foreign LDAP server, you have to install one: `apt install slapd ldapvi ldap-utils`
+* add a basic user to your LDAP: `ldapvi --discover -D cn=admin,dc=vm,dc=office,dc=bytemine,dc=net` (or what else your DN is)
 
-## Run tests
+```
+add ou=Users,dc=vm,dc=office,dc=bytemine,dc=net
+objectClass: organizationalUnit
+objectClass: top
+ou: Users
 
-* `bundle exec rspec`
-* Automatically run tests when files change: `bundle exec guard`
+add cn=testuser1,ou=Users,dc=vm,dc=office,dc=bytemine,dc=net
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: testuser1
+givenName: Tim
+sn: Tester
+uid: testuser1
+userPassword: {SSHA} somehash
+```
 
-### Things to think of when updating Ruby
+* the password can be generated with `slappasswd -h {SSHA} -s somepassword`
+* configure the LDAP access in /opt/the-idb/config/application.yml
 
-ruby -S gem update --system
-ruby -S gem install bundler --no-ri --no-rdoc
-ruby -S gem install rake --no-ri --no-rdoc
+## create an user and group
 
+`useradd --user-group idb --home /opt/the-idb --no-create-home`
+
+## change owner and group
+
+`chown -R idb.idb /opt/the-idb`
+
+## install  RVM
+
+* go to the [RVM](https://rvm.io/) website and install RVM
+* add idb to the rvm group `adduser idb rvm`
+* enter a shell for user idb `sudo -u idb -H /bin/bash`
+* enter /opt/the-idb `cd /opt/the-idb` 
+* run the following commands for installing ruby 2.2.4:
+```
+source /etc/profile.d/rvm.sh
+rvm autolibs disable
+rvm install ruby-2.2.4
+rvm use --default ruby-2.2.4
+```
+
+## install bundler and gems
+
+```
+gem install bundler
+RAILS_ENV=production bundle install
+```
+
+## fill the database and precompile the assets
+```
+export RAILS_ENV=production
+bundle exec rake db:migrate
+bundle exec rake assets:precompile
+```
+
+## config files for apache and sidekiq
+
+### /etc/apache2/sites-available/idb.conf
+
+```
+<VirtualHost *:80>
+    ServerName idb.example.com
+        DocumentRoot /opt/the-idb/public
+        <Directory /opt/the-idb/public>
+          # Relax Apache security settings
+          Options FollowSymLinks
+          AllowOverride all
+          Require all granted
+          # MultiViews must be turned off
+          Options -MultiViews
+        </Directory>
+        PassengerUser idb 
+        PassengeGroup idb
+</VirtualHost>
+
+<VirtualHost *:443>
+        ServerName idb.example.com
+        DocumentRoot /opt/the-idb/public
+
+        <Directory /opt/the-idb/public>
+            Options FollowSymLinks
+        AllowOverride All
+            Require all granted
+    </Directory>
+
+        SSLEngine on
+        #SSLProtocol all -SSLv2 -SSLv3 
+   SSLProtocol           all -SSLv3 -TLSv1.1
+   SSLHonorCipherOrder   On
+   SSLCipherSuite        DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA
+   SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+   SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+   PassengerUser idb 
+   PassengeGroup idb
+# and all the other regular ssl options like certificate etc. pp.
+</VirtualHost>
+```
+
+* run `a2ensite idb && apache2ctl graceful`
+
+### /etc/init/idb-sidekiq.conf
+
+```
+description "idb-sidekiq" 
+
+start on (local-filesystems and net-device-up IFACE=lo and runlevel [2345])
+stop on runlevel [!2345]
+
+respawn
+chdir /opt/the-idb
+
+console log
+setuid idb
+setgid idb
+
+env LANG=en_US.UTF-8
+env RAILS_ENV="production" 
+sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+
+exec ruby -S bundle exec sidekiq -L log/sidekiq.log
+```
+
+* reload upstart: `initctl reload-configuration`
+* start sidekiq: `service idb-sidekiq start`
