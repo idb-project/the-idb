@@ -24,12 +24,18 @@ module V3
         end
 
         desc 'Update a single cloud provider', success: CloudProvider::Entity
+        params do
+          requires :name, type: String, documentation: { type: "String", desc: "Cloud Provider name" }
+          optional :description, type: String, documentation: { type: "String", desc: "Cloud Provider description" }
+          requires :config, type: String, documentation: { type: "String", desc: "Cloud Provider configuration" }
+          optional :apidocs, type: String, documentation: { type: "String", desc: "Link to API documentation for this Cloud Provider" }
+        end        
         put do
           can_write!
           c = CloudProvider.find_by_inventory_number params[:name]
           error!('Not found', 404) unless c
 
-          p = params.select { |k| CloudProvider.attribute_method?(k) }
+          p = declared(params).to_h
 
           c.update_attributes(p)
 
@@ -68,9 +74,15 @@ module V3
       end
 
       desc 'Create a new cloud provider', success: CloudProvider::Entity
+      params do
+        requires :name, type: String, documentation: { type: "String", desc: "Cloud Provider name" }
+        optional :description, type: String, documentation: { type: "String", desc: "Cloud Provider description" }
+        requires :config, type: String, documentation: { type: "String", desc: "Cloud Provider configuration" }
+        optional :apidocs, type: String, documentation: { type: "String", desc: "Link to API documentation for this Cloud Provider" }
+      end
       post do
         can_write!
-        p = params.select { |k| CloudProvider.attribute_method?(k) }
+        p = declared(params).to_h
         c = CloudProvider.new(p)
         c.owner = @owner
         c.save!
