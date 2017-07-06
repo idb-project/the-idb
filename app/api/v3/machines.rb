@@ -48,8 +48,10 @@ module V3
             present m.attachments
           end
 
-          desc 'Create an attachment', detail: 'WAT?',
-                                       success: Attachment::Entity
+          desc 'Create an attachment', success: Attachment::Entity
+          params do
+            requires :data, type: Rack::Multipart::UploadedFile
+          end
           post do
             can_write!
             m = Machine.find_by_fqdn params[:fqdn]
@@ -78,12 +80,15 @@ module V3
             end
 
             desc 'Update an alias', success: MachineAlias::Entity
+            params do
+              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
+            end
             put do
               can_write!
               a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
 
-              p = params.select { |k| MachineAlias.attribute_method?(k) }
+              p = declared(params, include_parent_namespaces: false).to_h
 
               a.update_attributes(p)
               present a
@@ -109,12 +114,15 @@ module V3
           end
 
           desc 'Create an alias', success: MachineAlias::Entity
+          params do
+              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
+          end
           post do
             can_write!
             m = Machine.find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
-            p = params.select { |k| MachineAlias.attribute_method?(k) }
+            p = declared(params, include_parent_namespaces: false).to_h
             p['machine'] = m
 
             a = MachineAlias.create(p)
@@ -204,42 +212,40 @@ module V3
 
         desc 'Update a single machine', success: Machine::Entity
         params do
-          optional :os, type: String
-          optional :os_release, type: String
-          optional :arch, type: String
-          optional :ram, type: Integer
-          optional :cores, type: Integer
-          optional :vmhost, type: String
-          optional :serviced_at, type: String
-          optional :description, type: String
-          optional :deleted_at, type: String
-          optional :created_at, type: String
-          optional :updated_at, type: String
-          optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
-          optional :serialnumber, type: String
-          optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
-          optional :auto_update, type: Boolean, documentation: { type: "Bool", desc: "true if the machine is updated automatically" }
-          optional :switch_url, type: String
-          optional :mrtg_url, type: String
-          optional :config_instructions, type: String
-          optional :sw_characteristics, type: String
-          optional :business_purpose, type: String
-          optional :business_criticality, type: String
-          optional :business_notification, type: String
-          optional :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
-          optional :severity_class, type: String
-          optional :ucs_role, type: String
-          optional :backup_brand, type: String
-          optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Name" }
-          optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Name" }
-          optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Name" }
-          optional :backup_last_full_size, type: String, documentation: { type: "String", desc: "Name" }
-          optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
-          optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
-          optional :needs_reboot, type: Integer
-          optional :software, type: Array, documentation: { type: "JSON", desc: "Known installed doftware packages" }
-          optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
-          optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
+          requires :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
+          optional :os,                     type: String,   documentation: { type: "String",  desc: "Operating system" }
+          optional :os_release,             type: String,   documentation: { type: "String",  desc: "Operating system release" }
+          optional :arch,                   type: String,   documentation: { type: "String",  desc: "Architecture" }
+          optional :ram,                    type: Integer,  documentation: { type: "Integer", desc: "RAM" }
+          optional :cores,                  type: Integer,  documentation: { type: "Integer", desc: "CPU Cores" }
+          optional :vmhost,                 type: String,   documentation: { type: "String",  desc: "VM host" }
+          optional :serviced_at,            type: String,   documentation: { type: "String",  desc: "Service date" }
+          optional :description,            type: String,   documentation: { type: "String",  desc: "Description" }
+          optional :uptime,                 type: Integer,  documentation: { type: "Integer", desc: "Uptime in seconds" }
+          optional :serialnumber,           type: String,   documentation: { type: "String",  desc: "Serial number" }
+          optional :backup_type,            type: Integer,  documentation: { type: "Integer", desc: "Backup type" }
+          optional :auto_update,            type: Boolean,  documentation: { type: "Bool",    desc: "True if the machine is updated automatically" }
+          optional :switch_url,             type: String,   documentation: { type: "String",  desc: "Switch management URL" }
+          optional :mrtg_url,               type: String,   documentation: { type: "String",  desc: "MRTG URL" }
+          optional :config_instructions,    type: String,   documentation: { type: "String",  desc: "'Config instructions'" }
+          optional :sw_characteristics,     type: String,   documentation: { type: "String",  desc: "'Software characteristics'" }
+          optional :business_purpose,       type: String,   documentation: { type: "String",  desc: "'Business purpose'" }
+          optional :business_criticality,   type: String,   documentation: { type: "String",  desc: "'Business criticality'" }
+          optional :business_notification,  type: String,   documentation: { type: "String",  desc: "'Business notification'" }
+          optional :diskspace,              type: Integer,  documentation: { type: "Integer", desc: "Disc space in bytes" }
+          optional :severity_class,         type: String,   documentation: { type: "String",  desc: "" }
+          optional :ucs_role,               type: String,   documentation: { type: "String",  desc: "" }
+          optional :backup_brand,           type: String,   documentation: { type: "String",  desc: "" }
+          optional :backup_last_full_run,   type: String,   documentation: { type: "String",  desc: "Last full backup timestamp" }
+          optional :backup_last_inc_run,    type: String,   documentation: { type: "String",  desc: "Last incremental backup timestamp" }
+          optional :backup_last_diff_run,   type: String,   documentation: { type: "String",  desc: "Last differential backup timestamp" }
+          optional :backup_last_full_size,  type: String,   documentation: { type: "String",  desc: "Last full backup size" }
+          optional :backup_last_inc_size,   type: String,   documentation: { type: "String",  desc: "Last incremental backup size" }
+          optional :backup_last_diff_size,  type: String,   documentation: { type: "String",  desc: "Last differential backup size" }
+          optional :needs_reboot,           type: Integer,  documentation: { type: "String",  desc: "Needs reboot" }
+          optional :software,               type: Array,    documentation: { type: "JSON",    desc: "Known installed doftware packages" }
+          optional :power_feed_a,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed a" }
+          optional :power_feed_b,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed b" }
         end
         put do
           can_write!
@@ -316,47 +322,44 @@ module V3
 
       desc 'Create a new machine', success: Machine::Entity
       params do
-        requires :fqdn, type: String
-        optional :os, type: String
-        optional :os_release, type: String
-        optional :arch, type: String
-        optional :ram, type: Integer
-        optional :cores, type: Integer
-        optional :vmhost, type: String
-        optional :serviced_at, type: String
-        optional :description, type: String
-        optional :deleted_at, type: String
-        optional :created_at, type: String
-        optional :updated_at, type: String
-        optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
-        optional :serialnumber, type: String
-        optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
-        optional :auto_update, type: Boolean, documentation: { type: "Bool", desc: "true if the machine is updated automatically" }
-        optional :switch_url, type: String
-        optional :mrtg_url, type: String
-        optional :config_instructions, type: String
-        optional :sw_characteristics, type: String
-        optional :business_purpose, type: String
-        optional :business_criticality, type: String
-        optional :business_notification, type: String
-        optional :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
-        optional :severity_class, type: String
-        optional :ucs_role, type: String
-        optional :backup_brand, type: String
-        optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Name" }
-        optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Name" }
-        optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Name" }
-        optional :backup_last_full_size, type: String, documentation: { type: "String", desc: "Name" }
-        optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
-        optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
-        optional :needs_reboot, type: Integer
-        optional :software, type: Array, documentation: { type: "JSON", desc: "Known installed software packages" }
-        optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
-        optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
+        requires :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
+        optional :os,                     type: String,   documentation: { type: "String",  desc: "Operating system" }
+        optional :os_release,             type: String,   documentation: { type: "String",  desc: "Operating system release" }
+        optional :arch,                   type: String,   documentation: { type: "String",  desc: "Architecture" }
+        optional :ram,                    type: Integer,  documentation: { type: "Integer", desc: "RAM" }
+        optional :cores,                  type: Integer,  documentation: { type: "Integer", desc: "CPU Cores" }
+        optional :vmhost,                 type: String,   documentation: { type: "String",  desc: "VM host" }
+        optional :serviced_at,            type: String,   documentation: { type: "String",  desc: "Service date" }
+        optional :description,            type: String,   documentation: { type: "String",  desc: "Description" }
+        optional :uptime,                 type: Integer,  documentation: { type: "Integer", desc: "Uptime in seconds" }
+        optional :serialnumber,           type: String,   documentation: { type: "String",  desc: "Serial number" }
+        optional :backup_type,            type: Integer,  documentation: { type: "Integer", desc: "Backup type" }
+        optional :auto_update,            type: Boolean,  documentation: { type: "Bool",    desc: "True if the machine is updated automatically" }
+        optional :switch_url,             type: String,   documentation: { type: "String",  desc: "Switch management URL" }
+        optional :mrtg_url,               type: String,   documentation: { type: "String",  desc: "MRTG URL" }
+        optional :config_instructions,    type: String,   documentation: { type: "String",  desc: "'Config instructions'" }
+        optional :sw_characteristics,     type: String,   documentation: { type: "String",  desc: "'Software characteristics'" }
+        optional :business_purpose,       type: String,   documentation: { type: "String",  desc: "'Business purpose'" }
+        optional :business_criticality,   type: String,   documentation: { type: "String",  desc: "'Business criticality'" }
+        optional :business_notification,  type: String,   documentation: { type: "String",  desc: "'Business notification'" }
+        optional :diskspace,              type: Integer,  documentation: { type: "Integer", desc: "Disc space in bytes" }
+        optional :severity_class,         type: String,   documentation: { type: "String",  desc: "" }
+        optional :ucs_role,               type: String,   documentation: { type: "String",  desc: "" }
+        optional :backup_brand,           type: String,   documentation: { type: "String",  desc: "" }
+        optional :backup_last_full_run,   type: String,   documentation: { type: "String",  desc: "Last full backup timestamp" }
+        optional :backup_last_inc_run,    type: String,   documentation: { type: "String",  desc: "Last incremental backup timestamp" }
+        optional :backup_last_diff_run,   type: String,   documentation: { type: "String",  desc: "Last differential backup timestamp" }
+        optional :backup_last_full_size,  type: String,   documentation: { type: "String",  desc: "Last full backup size" }
+        optional :backup_last_inc_size,   type: String,   documentation: { type: "String",  desc: "Last incremental backup size" }
+        optional :backup_last_diff_size,  type: String,   documentation: { type: "String",  desc: "Last differential backup size" }
+        optional :needs_reboot,           type: Integer,  documentation: { type: "String",  desc: "Needs reboot" }
+        optional :software,               type: Array,    documentation: { type: "JSON",    desc: "Known installed doftware packages" }
+        optional :power_feed_a,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed a" }
+        optional :power_feed_b,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed b" }
       end
       post do
         can_write!
-        p = declared(params).to_h
+        p = declared(params).to_h # we need to_h here as active record doesn't like the hashie mash params
         begin
           m = Machine.new(p)
           m.owner = @owner

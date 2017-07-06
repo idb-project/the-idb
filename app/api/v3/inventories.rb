@@ -48,6 +48,9 @@ module V3
           end
 
           desc 'Create an attachment', success: Attachment::Entity
+          params do
+            requires :data, type: Rack::Multipart::UploadedFile
+          end
           post do
             can_write!
             i = Inventory.find_by_inventory_number params[:number]
