@@ -14,7 +14,7 @@ defaults: &defaults
     from: 'donotreply@example.com'
     to: 'idb-admin@example.com'
   modules:
-    app_pages: true
+    app_pages: false
     advanced_fields: true
     advanced_field_names:
       advanced_field_1:
