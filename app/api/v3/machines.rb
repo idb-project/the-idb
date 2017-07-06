@@ -237,7 +237,7 @@ module V3
           optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
           optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
           optional :needs_reboot, type: Integer
-          optional :software, type: JSON, documentation: { type: "JSON", desc: "Known installed doftware packages" }
+          optional :software, type: Array, documentation: { type: "JSON", desc: "Known installed doftware packages" }
           optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
           optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
         end
@@ -350,7 +350,7 @@ module V3
         optional :backup_last_inc_size, type: String, documentation: { type: "String", desc: "Name" }
         optional :backup_last_diff_size, type: String, documentation: { type: "String", desc: "Name" }
         optional :needs_reboot, type: Integer
-        optional :software, type: JSON, documentation: { type: "JSON", desc: "Known installed software packages" }
+        optional :software, type: Array, documentation: { type: "JSON", desc: "Known installed software packages" }
         optional :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
         optional :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
       end
