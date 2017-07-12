@@ -9,4 +9,4 @@ end
 ln -s /etc/idb /opt/idb/config
 
 # copy initializers
-cp -R /opt/idb/config-example/initializers /etc/idb/initializers
+cp /opt/idb/config-example/initializers/{app_config.rb,assets.rb,backtrace_silencers.rb,filter_parameter_logging.rb,inflections.rb,mime_types.rb,paper_trail.rb,raven.rb,redis.rb,rubius.rb,session_store.rb,sidekiq.rb,simple_form.rb,simple_form_bootstrap.rb,version.rb,wrap_parameters.rb} /etc/idb/initializers
