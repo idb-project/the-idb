@@ -9,15 +9,17 @@
     </tr>
   </thead>
   <tbody>
-    <%- object.ordered_versions.each do |version| -%>
-      <%- version = k(:version, version) -%>
-      <tr id="#version-<%= version.id %>">
-        <td><%= version.index %></td>
-        <td><%= version.event %></td>
-        <td><%= version.user %></td>
-        <td><%= version.created_at %></td>
-        <td><%= version.show_link %></td>
-      </tr>
+    <%- if object -%>
+      <%- object.ordered_versions.each do |version| -%>
+        <%- version = k(:version, version) -%>
+        <tr id="#version-<%= version.id %>">
+          <td><%= version.index %></td>
+          <td><%= version.event %></td>
+          <td><%= version.user %></td>
+          <td><%= version.created_at %></td>
+          <td><%= version.show_link %></td>
+        </tr>
+      <%- end -%>
     <%- end -%>
   </tbody>
 </table>
