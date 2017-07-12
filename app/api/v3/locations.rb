@@ -10,6 +10,7 @@ module V3
         api_enabled!
         authenticate!
         set_papertrail
+        @owner = get_owner
       end
 
       resource :id do
@@ -22,19 +23,50 @@ module V3
             l
           end
 
-          # FIXME
           desc 'Create a new child location', success: Location::Entity
+          params do
+            requires :id, type: Integer
+            requires :name, type: String, documentation: { type: "String", desc: "Name" }
+            optional :description, type: String, documentation: { type: "String", desc: "Description" }
+            requires :level, type: Integer, documentation: { type: "String", desc: "Location level" }
+          end
           post do
+            can_write!
+
+            parent = Location.find_by_id params[:id]
+            error!('Not Found', 404) unless parent
+
+            p = declared(params).to_h
+            child = Location.new(p)
+            child.owner = @owner
+            child.save!
+            parent.add_child(child)
           end
 
-          # FIXME
           desc 'Update a location', success: Location::Entity
+          params do
+            requires :id, type: Integer
+            requires :name, type: String, documentation: { type: "String", desc: "Name" }
+            optional :description, type: String, documentation: { type: "String", desc: "Description" }
+            requires :level, type: Integer, documentation: { type: "String", desc: "Location level" }
+          end
           put do
+            can_write!
+
+            l = Location.find_by_id params[:id]
+            error!('Not Found', 404) unless l
+
+            p = declared(params).to_h
+            l.update_attributes(p)
+            l.save!
           end
 
-          # FIXME
           desc 'Delete a location'
           delete do
+            can_write!
+            l = Location.find_by_id params[:id]
+            error!('Not Found', 404) unless l
+            l.destroy
           end
         end
       end
@@ -49,17 +81,19 @@ module V3
 
         # FIXME
         desc 'Create a new location root', success: Location::Entity
+        params do
+          requires :name, type: String, documentation: { type: "String", desc: "Name" }
+          optional :description, type: String, documentation: { type: "String", desc: "Description" }
+        end
         post do
-        end
+          can_write!
 
-        # FIXME
-        desc 'Update a location root', success: Location::Entity
-        put do
-        end
+          p = declared(params).to_h
+          l = Location.new(p)
+          l.owner = @owner
+          l.save!
 
-        # FIXME
-        desc 'Delete a location root'
-        delete do
+          l
         end
       end
 
@@ -86,8 +120,8 @@ module V3
         end
       end
 
-      desc 'Return a list of location levels, possibly filtered', is_array: true,
-                                                                  success: LocationLevel::Entity
+      desc 'Return a list of locations, possibly filtered', is_array: true,
+                                                                  success: Location::Entity
       get do
         can_read!
 

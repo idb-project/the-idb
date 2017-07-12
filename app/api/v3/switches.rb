@@ -24,11 +24,15 @@ module V3
         end
 
         desc 'Update a switch', success: Switch::Entity
+        params do
+          requires :fqdn, type: String
+        end
         put do
           can_write!
           s = Switch.find_by_fqdn params[:fqdn]
           error!('Not found', 404) unless s
-          p = params.select { |k| Switch.attribute_method?(k) }
+          
+          p = declared(params).to_h
           s.update_attributes(p)
           present s
         end
@@ -55,6 +59,11 @@ module V3
             end
 
             desc 'Update a switch port', success: SwitchPort::Entity
+            params do
+              requires :number, type: Integer, documentation: { type: "Integer", desc: "Port number" }
+              requires :nic, type: String, documentation: { type: "String", desc: "Nic name" }
+              requires :machine, type: String, documentation: { type: "String", desc: "Machine nic belongs to" }
+            end
             put do
               can_write!
               s = Switch.find_by_fqdn params[:fqdn]
@@ -69,10 +78,7 @@ module V3
               port = SwitchPort.find_by number: params[:number], switch_id: s.id
               error!('Not found', 404) unless port
 
-              p = params.select { |k| SwitchPort.attribute_method?(k) }
-              p.delete('switch')
-              p.delete('nic')
-              p = p.merge('switch_id' => s.id, 'nic_id' => n.id)
+              p = {'switch_id' => s.id, 'nic_id' => n.id, 'number' => params[:number]}
               port.update_attributes!(p)
 
               present port
@@ -99,6 +105,11 @@ module V3
           end
 
           desc 'Add a new switch port', success: SwitchPort::Entity
+          params do
+            requires :number, type: Integer, documentation: { type: "Integer", desc: "Port number" }
+            requires :nic, type: String, documentation: { type: "String", desc: "Nic name" }
+            requires :machine, type: String, documentation: { type: "String", desc: "Machine nic belongs to" }
+          end
           post do
             can_write!
             s = Switch.find_by_fqdn params[:fqdn]
@@ -110,10 +121,7 @@ module V3
             n = Nic.find_by(name: params[:nic], machine: m.id)
             error!('Nic not found', 404) unless n
 
-            p = params.select { |k| SwitchPort.attribute_method?(k) }
-            p.delete('switch')
-            p.delete('nic')
-            p = p.merge('switch_id' => s.id, 'nic_id' => n.id)
+            p = {'switch_id' => s.id, 'nic_id' => n.id, 'number' => params[:number]}
 
             port = SwitchPort.create(p)
             present port
@@ -142,12 +150,15 @@ module V3
       end
 
       desc 'Create a new switch', success: Switch::Entity
+      params do
+        requires :fqdn, type: String
+      end
       post do
         can_write!
         if Switch.find_by_fqdn params['fqdn']
           error!('Entry with this FQDN already exists.', 409)
         end
-        p = params.select { |k| Switch.attribute_method?(k) }
+        p = declared(params).to_h
 
         m = Switch.new(p)
         m.owner = @owner
