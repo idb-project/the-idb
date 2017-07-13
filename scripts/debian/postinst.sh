@@ -1,12 +1,29 @@
 #!/bin/sh
 
+# abort on errors
+set -e
+
+IDBBASENAME=the-idb
+IDBPATH=/opt/$IDBBASENAME
+IDBETC=/etc/$IDBBASENAME
+
 # remove existing symlink to config
-if [ -L /opt/the-idb/config ]; then
-  rm /opt/idb/config
+if [ -L $IDBPATH/config ]; then
+  rm $IDBPATH/config
 end
 
-# create symlink to config
-ln -s /etc/the-idb /opt/the-idb/config
+# test if configuration dir exists, create if not
+if [ ! -d "$IDBETC" ]; then
+  mkdir $IDBETC
+fi 
 
-# copy initializers
-cp /opt/the-idb/config-example/initializers/{app_config.rb,assets.rb,backtrace_silencers.rb,filter_parameter_logging.rb,inflections.rb,mime_types.rb,paper_trail.rb,raven.rb,redis.rb,rubius.rb,session_store.rb,sidekiq.rb,simple_form.rb,simple_form_bootstrap.rb,version.rb,wrap_parameters.rb} /etc/the-idb/initializers
+# create symlink to config
+ln -s $IDBETC $IDBPATH/config
+
+# check if initializers dir exists, create if not
+if [ ! -d "$IDBETC/initializers" ]; then
+  mkdir $IDBETC/initializers
+fi
+
+# copy selected initializers
+cp $IDBPATH/config-example/initializers/{app_config.rb,assets.rb,backtrace_silencers.rb,filter_parameter_logging.rb,inflections.rb,mime_types.rb,paper_trail.rb,raven.rb,redis.rb,rubius.rb,session_store.rb,sidekiq.rb,simple_form.rb,simple_form_bootstrap.rb,version.rb,wrap_parameters.rb} $IDBETC/initializers
