@@ -11,4 +11,5 @@ before_install:
 before_script:
   - mysql -e 'create database idb_test;'
   - mv config-example config
+  - echo "InfrastructureDb::Application.config.secret_key_base = ('a' * 30)" > config/initializers/secret_token.rb
   - bundle exec rake db:migrate
