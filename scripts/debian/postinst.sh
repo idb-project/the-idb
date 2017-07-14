@@ -10,7 +10,7 @@ IDBETC=/etc/$IDBBASENAME
 # remove existing symlink to config
 if [ -L $IDBPATH/config ]; then
   rm $IDBPATH/config
-end
+fi
 
 # test if configuration dir exists, create if not
 if [ ! -d "$IDBETC" ]; then
