@@ -14,6 +14,5 @@ enhancement requests, bug reports, or code contributions!
 ## Submitting Patches
 
 The idb source code is managed using the git distributed source control management tool <https://www.git-scm.org/>.
-The code repository is publicly hosted on BitBucket <https://bitbucket.org/bytemine-idb/idb-core/>.
-This project tracks patch provenance and licensing using the Developer Certificate of Origin and Signed-off-by 
-tags initially developed by the Linux kernel project.
+The code repository is publicly hosted on github. <https://github.com/idb-project/the-idb/>.
+
