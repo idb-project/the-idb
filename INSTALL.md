@@ -101,7 +101,7 @@ bundle exec rake assets:precompile
           Options -MultiViews
         </Directory>
         PassengerUser idb 
-        PassengeGroup idb
+        PassengerGroup idb
 </VirtualHost>
 
 <VirtualHost *:443>
