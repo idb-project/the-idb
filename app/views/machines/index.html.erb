@@ -15,7 +15,7 @@
               </div>
             </li>
             <li><%= link_to '<i class="fa fa-plus"></i> New Machine'.html_safe, new_machine_path %></li>
-            <%- if !(IDB.config.puppetdb.auto_create) && current_user.is_admin? %> -%>
+            <%- if !(IDB.config.puppetdb.auto_create) && current_user.is_admin? -%>
             <li><%= link_to '<i class="fa fa-question"></i> Untracked'.html_safe, untracked_machines_path %></li>
             <%- end -%>
             <li><%= link_to '<i class="fa fa-question"></i> Outdated'.html_safe, outdated_machines_path %></li>
