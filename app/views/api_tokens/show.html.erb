@@ -24,13 +24,16 @@
           <th>Token</th>
           <th>Name</th>
           <th>Description</th>
+          <th>Owner</th>
           <th>Read</th>
           <th>Write</th>
         </tr>
         <tr>
+          <%- owner = k(:owner, @api_token.owner) -%>
           <td><%= @api_token.token %></td>
           <td><%= @api_token.name %></td>
           <td><%= @api_token.description %></td>
+          <td><%= owner.name_link %></td>
           <td><%= @api_token.read %></td>
           <td><%= @api_token.write %></td>
         </tr>
