@@ -43,6 +43,7 @@ module LDAP
 
     def is_admin?(login)
       if @config.admin_group.blank?
+        Rails.logger.info "LDAP admin group not configured - default behaviour: all users are admins"
         return true
       else
         begin
