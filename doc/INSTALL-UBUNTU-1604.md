@@ -15,6 +15,8 @@ $ ln -s /etc/the-idb config
     * mysql-server
     * redis-server
     * ruby-dev
+    * libmysqld-dev
+    * build-essential
  
 
 * install [Phusion Passenger](https://www.phusionpassenger.com/library/install/nginx/install/oss/xenial/) from the official repo
