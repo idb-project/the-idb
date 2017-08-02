@@ -155,7 +155,7 @@ Type=forking
 PIDFile=/run//sidekiq.pid
 WorkingDirectory=/opt/the-idb/
 Environment="RAILS_ENV=production"
-ExecStart=/usr/local/rvm/bin/bootup_sidekiq sidekiq -d -P /run/sidekiq.pid -L /opt/the-idb/log/sidekiq.log
+ExecStart=/usr/local/rvm/bin/bootup_sidekiq -d -P /run/sidekiq.pid -L /opt/the-idb/log/sidekiq.log
 User=idb
 Group=idb
 
