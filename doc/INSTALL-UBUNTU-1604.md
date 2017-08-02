@@ -11,13 +11,10 @@ $ sudo cp config-example /etc/the-idb
 $ ln -s /etc/the-idb config
 ```
 
-
 * install the following packages
     * mysql-server
     * redis-server
     * ruby-dev
- 
- 
  
 
 * install [Phusion Passenger](https://www.phusionpassenger.com/library/install/nginx/install/oss/xenial/) from the official repo
@@ -57,6 +54,9 @@ userPassword: {SSHA} somehash
 
 * the password can be generated with `slappasswd -h {SSHA} -s somepassword`
 * configure the LDAP access in /opt/the-idb/config/application.yml
+* for further infos on the user handling see ldap-and-usermanagement.md
+
+Be aware that without configuring 
 
 ## create an user and group
 
