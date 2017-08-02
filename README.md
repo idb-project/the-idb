@@ -34,3 +34,11 @@ without puppet just fine.
 
 Either contact us through github or use team AT the-idb.org.
 
+
+## Commercial support
+
+While the idb is an open source project, there is commercial support available
+from the fine folks at [bytemine](https://www.bytemine.net/). They offer 
+the idb packaged for various platforms and these come with support and services.
+(Disclaimer: currently all people working on the idb are employed by bytemine)
+
