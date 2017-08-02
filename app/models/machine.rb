@@ -38,6 +38,10 @@ class Machine < ActiveRecord::Base
   validates :fqdn, presence: true, uniqueness: true
   validates :fqdn, format: {with: FQDN_REGEX}
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
+
   def self.default_scope
     if User.current.nil? || User.current.is_admin?
       -> { where(deleted_at: nil) }

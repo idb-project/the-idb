@@ -17,7 +17,7 @@ module V3
         route_param :id, type: Integer do
           desc 'Get location by id', success: Location::Entity
           get do
-            l = Location.find_by_id params[:id]
+            l = Location.owned_by(@owner).find_by_id params[:id]
             error!('Not Found', 404) unless l
 
             l
@@ -33,7 +33,7 @@ module V3
           post do
             can_write!
 
-            parent = Location.find_by_id params[:id]
+            parent = Location.owned_by(@owner).find_by_id params[:id]
             error!('Not Found', 404) unless parent
 
             p = declared(params).to_h
@@ -53,7 +53,7 @@ module V3
           put do
             can_write!
 
-            l = Location.find_by_id params[:id]
+            l = Location.owned_by(@owner).find_by_id params[:id]
             error!('Not Found', 404) unless l
 
             p = declared(params).to_h
@@ -64,7 +64,7 @@ module V3
           desc 'Delete a location'
           delete do
             can_write!
-            l = Location.find_by_id params[:id]
+            l = Location.owned_by(@owner).find_by_id params[:id]
             error!('Not Found', 404) unless l
             l.destroy
           end
@@ -76,7 +76,7 @@ module V3
                                        success: Location::Entity
         get do
           can_read!
-          Location.roots.sort_by(&:name)
+          Location.owned_by(@owner).roots.sort_by(&:name)
         end
 
         # FIXME
@@ -103,7 +103,7 @@ module V3
         get do
           can_read!
 
-          query = LocationLevel.all
+          query = LocationLevel.owned_by(@owner).all
           params.delete('idb_api_token')
           params.each do |key, value|
             keysym = key.to_sym
@@ -126,15 +126,15 @@ module V3
         can_read!
 
         if params['level']
-          if LocationLevel.find_by_level(params['level'])
-            params[:location_level_id] = LocationLevel.find_by_level(params['level']).id
+          if LocationLevel.owned_by(@owner).find_by_level(params['level'])
+            params[:location_level_id] = LocationLevel.owned_by(@owner).find_by_level(params['level']).id
           else
             return []
           end
         end
         params.delete 'level'
 
-        query = Location.all
+        query = Location.owned_by(@owner).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym

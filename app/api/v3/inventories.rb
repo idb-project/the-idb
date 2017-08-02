@@ -21,7 +21,7 @@ module V3
                                       success: Attachment::Entity
             get do
               can_read!
-              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               present a
@@ -30,7 +30,7 @@ module V3
             desc 'Delete an attachment'
             delete do
               can_write!
-              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               a.destroy!
@@ -41,7 +41,7 @@ module V3
                                       success: Attachment::Entity
           get do
             can_read!
-            i = Inventory.find_by_inventory_number params[:inventory_number]
+            i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
             error!('Not Found', 404) unless i
 
             present i.attachments
@@ -53,7 +53,7 @@ module V3
           end
           post do
             can_write!
-            i = Inventory.find_by_inventory_number params[:inventory_number]
+            i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
             error!('Not Found', 404) unless i
 
             x = {
@@ -71,7 +71,7 @@ module V3
         desc 'Get a inventory by inventory number', success: Inventory::Entity
         get do
           can_read!
-          i = Inventory.find_by_inventory_number params[:inventory_number]
+          i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
           present i
@@ -96,7 +96,7 @@ module V3
         end
         put do
           can_write!
-          i = Inventory.find_by_inventory_number params[:inventory_number]
+          i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
           p = params.select { |k| Inventory.attribute_method?(k) }
@@ -109,7 +109,7 @@ module V3
         desc 'Delete a inventory'
         delete do
           can_write!
-          i = Inventory.find_by_inventory_number params[:inventory_number]
+          i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
           present i.destroy
@@ -130,7 +130,7 @@ module V3
         end
         params.delete 'machine'
 
-        query = Inventory.all
+        query = Inventory.owned_by(@owner).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym

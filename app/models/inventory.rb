@@ -17,6 +17,10 @@ class Inventory < ActiveRecord::Base
   validates :install_date, format: { with: /\d{4}\-\d{2}\-\d{2}/,
     message: "has to be of format YYYY-MM-DD" }, :allow_blank => true
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
+
   def status_string
     inventory_status.nil? ? "" : inventory_status.name
   end

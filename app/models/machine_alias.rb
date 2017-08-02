@@ -1,5 +1,9 @@
 class MachineAlias < ActiveRecord::Base
   belongs_to :machine
+
+  def self.owned_by(o)
+    where(owner: o)
+  end
   
   class Entity < Grape::Entity
     expose :name, documentation: { type: "String", desc: "Name" }

@@ -7,6 +7,9 @@ class Location < ActiveRecord::Base
   validates :name, presence: true
   has_closure_tree parent_column_name: :location_id
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
 
   def level_string
     location_level.fetch(level, '')

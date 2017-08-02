@@ -4,6 +4,10 @@ class LocationLevel < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :level, presence: true, uniqueness: true
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
+
   def orphaned?
 
     locations= Location.where(:location_level_id => @id)
