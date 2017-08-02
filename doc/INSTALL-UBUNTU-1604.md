@@ -139,27 +139,25 @@ bundle exec rake assets:precompile
 
 * run `a2ensite idb && apache2ctl graceful`
 
-### /etc/init/idb-sidekiq.conf
+### /etc/systemd/system/sidekiq.service
+```
+[Unit]
+Description=The IDB sidekiq service
+After=syslog.target network.target remote-fs.target
+
+[Service]
+Type=forking
+PIDFile=/opt/the-idb/tmp/sidekiq.pid
+WorkingDirectory=/opt/the-idb/
+Environment="PATH=/opt/the-idb/vendor/ruby-2.2.4/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" "GEM_PATH=/opt/the-idb/vendor/bundle/ruby/2.2.0/gems" "RAILS_ENV=production"
+ExecStart=/opt/the-idb/vendor/ruby-2.2.4/bin/bundle exec sidekiq -d -P tmp/sidekiq.pid -L log/sidekiq.log
+User=idb
+Group=idb
+
+[Install]
+WantedBy=multi-user.target
 
 ```
-description "idb-sidekiq" 
 
-start on (local-filesystems and net-device-up IFACE=lo and runlevel [2345])
-stop on runlevel [!2345]
-
-respawn
-chdir /opt/the-idb
-
-console log
-setuid idb
-setgid idb
-
-env LANG=en_US.UTF-8
-env RAILS_ENV="production" 
-sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
-
-exec ruby -S bundle exec sidekiq -L log/sidekiq.log
-```
-
-* reload upstart: `initctl reload-configuration`
-* start sidekiq: `service idb-sidekiq start`
+* reload systemd: `systemctl daemon-reload`
+* enable and start sidekiq: `systemctl enable sidekiq && systemctl start sidekiq`
