@@ -70,19 +70,22 @@ Be aware that without configuring
 
 * go to the [RVM](https://rvm.io/) website and install RVM
 * add idb to the rvm group `adduser idb rvm`
-* enter a shell for user idb `sudo -u idb -H /bin/bash`
 * enter /opt/the-idb `cd /opt/the-idb` 
 * run the following commands for installing ruby 2.2.4:
 ```
 source /etc/profile.d/rvm.sh
-rvm autolibs disable
+
 rvm install ruby-2.2.4
 rvm use --default ruby-2.2.4
+rvm wrapper current bootup sidekiq
 ```
 
 ## install bundler and gems
 
+* enter a shell for user idb `sudo -u idb -H /bin/bash`
+
 ```
+source /etc/profile.d/rvm.sh
 gem install bundler
 RAILS_ENV=production bundle install
 ```
