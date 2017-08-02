@@ -150,10 +150,10 @@ After=syslog.target network.target remote-fs.target
 
 [Service]
 Type=forking
-PIDFile=/opt/the-idb/tmp/sidekiq.pid
+PIDFile=/run//sidekiq.pid
 WorkingDirectory=/opt/the-idb/
-Environment="PATH=/opt/the-idb/vendor/ruby-2.2.4/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" "GEM_PATH=/opt/the-idb/vendor/bundle/ruby/2.2.0/gems" "RAILS_ENV=production"
-ExecStart=/opt/the-idb/vendor/ruby-2.2.4/bin/bundle exec sidekiq -d -P tmp/sidekiq.pid -L log/sidekiq.log
+Environment="RAILS_ENV=production"
+ExecStart=/usr/local/rvm/bin/bootup_sidekiq sidekiq -d -P /run/sidekiq.pid -L /opt/the-idb/log/sidekiq.log
 User=idb
 Group=idb
 
