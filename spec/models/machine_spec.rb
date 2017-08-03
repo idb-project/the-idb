@@ -101,10 +101,11 @@ describe Machine do
       end
 
       context 'fqdn = server_1.example.com' do
+        # underscores are allowed now though not RFC-compliant
         before { machine.fqdn = 'server_1.example.com' }
 
-        it 'is invalid' do
-          expect(machine).to be_invalid
+        it 'is valid' do
+          expect(machine).to be_valid
         end
       end
 
