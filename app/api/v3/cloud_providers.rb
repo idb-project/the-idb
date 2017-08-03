@@ -17,7 +17,7 @@ module V3
         desc 'Get cloud provider by name',           success: CloudProvider::Entity
         get do
           can_read!
-          c = CloudProvider.find_by_name params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_name params[:name]
           error!('Not found', 404) unless c
 
           present c
@@ -32,7 +32,7 @@ module V3
         end        
         put do
           can_write!
-          c = CloudProvider.find_by_inventory_number params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_inventory_number params[:name]
           error!('Not found', 404) unless c
 
           p = declared(params).to_h
@@ -45,7 +45,7 @@ module V3
         desc 'Delete cloud provider by name'
         get do
           can_write!
-          c = CloudProvider.find_by_name params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_name params[:name]
           error!('Not found', 404) unless c
 
           c.destroy!
@@ -57,7 +57,7 @@ module V3
       get do
         can_read!
 
-        query = CloudProvider.all
+        query = CloudProvider.owned_by(@owner).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym
