@@ -1,3 +1,15 @@
+1.7.1
+=====
+From now on we'll use GitHub issue numbers to reference issues.
+- [feature] Include Git revision in version string.
+- [bugfix] Allow underscore in machine FQDNs.
+- [bugfix] Correctly sort IP-addresses. #324
+- [documentation] Add documentation about user management. #405
+- [documentation] Improve installation documentation.
+- [documentation] Add description of development / branching model.
+- [bugfix] Show API token owner in token details.
+- [feature] Log if no admin group is defined.
+
 1.7.0
 =====
 - [feature] Multi-tenancy support #4860 
