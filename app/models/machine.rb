@@ -15,7 +15,7 @@ class Machine < ActiveRecord::Base
   }.freeze
 
   # http://stackoverflow.com/questions/11809631/fully-qualified-domain-name-validation
-  FQDN_REGEX = /(?=^.{4,255}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)/
+  FQDN_REGEX = /(?=^.{4,255}$)(^((?!-)[_a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)/
 
   acts_as_paranoid if IDB.config.modules.softdelete
 
