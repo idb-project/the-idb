@@ -74,7 +74,7 @@ module V3
             desc 'Get a alias', success: MachineAlias::Entity
             get do
               can_read!
-              a = MachineAlias.owned_by(@owner).find_by_name params[:alias]
+              a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
               present a
             end
@@ -85,7 +85,7 @@ module V3
             end
             put do
               can_write!
-              a = MachineAlias.owned_by(@owner).find_by_name params[:alias]
+              a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
 
               p = declared(params, include_parent_namespaces: false).to_h
@@ -97,7 +97,7 @@ module V3
             desc 'Delete an alias'
             delete do
               can_write!
-              a = MachineAlias.owned_by(@owner).find_by_name params[:alias]
+              a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
               a.destroy
             end
