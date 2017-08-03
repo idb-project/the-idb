@@ -28,5 +28,19 @@ such as owner restrictions.
 
 If _no_ `admin_group` is defined, all users are treated as admins.
 
+## Members of the admin group
 
+There are several ways of handling groups within LDAP. One way is via the `uniqueMember`
+attribute.
+
+Example:
+
+```
+cn=admins,ou=Users,dc=nodomain
+objectClass: top
+objectClass: posixGroup
+gidNumber: 678
+cn: admins
+memberUid: testadmin1
+```
 
