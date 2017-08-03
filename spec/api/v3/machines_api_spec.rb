@@ -55,6 +55,19 @@ describe 'Machines API V3' do
       expect(machines.size).to eq(1)
       expect(machines[0]['fqdn']).to eq(Machine.last.fqdn)
     end
+
+    it 'should only return machines of the api token owner' do
+      wrong_owner = FactoryGirl.create(:owner)
+      # this machine should not be returned
+      FactoryGirl.create :machine, owner: wrong_owner
+
+      api_get(action: "machines", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+
+      machines = JSON.parse(response.body)
+      # expect just the machine added in before block
+      expect(machines.size).to eq(1)
+    end
   end
 
   describe "GET /machines with header authorization" do
