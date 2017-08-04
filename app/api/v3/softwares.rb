@@ -9,6 +9,7 @@ module V3
       before do
         api_enabled!
         authenticate!
+        @owner = get_owner
       end
 
       desc 'Searches machines with specific software configurations', is_array: true,
@@ -24,7 +25,7 @@ module V3
             status 200
             []
           end
-          machines = SoftwareHelper.software_machines(software, versions)
+          machines = SoftwareHelper.software_machines(Machines.owned_by(@owner), software, versions)
           status 200
           machines.map(&:fqdn)
         end

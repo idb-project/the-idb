@@ -22,7 +22,7 @@ module V3
             end
             get do
               can_read!
-              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               present a
@@ -31,7 +31,7 @@ module V3
             desc 'Delete an attachment'
             delete do
               can_write!
-              a = Attachment.find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               a.destroy!
@@ -42,7 +42,7 @@ module V3
                                       success: Attachment::Entity
           get do
             can_read!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             present m.attachments
@@ -54,7 +54,7 @@ module V3
           end
           post do
             can_write!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             x = {
@@ -107,7 +107,7 @@ module V3
                                   success: MachineAlias::Entity
           get do
             can_read!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             present m.aliases
@@ -119,7 +119,7 @@ module V3
           end
           post do
             can_write!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             p = declared(params, include_parent_namespaces: false).to_h
@@ -135,7 +135,7 @@ module V3
             desc 'Get a nic', success: Nic::Entity
             get do
               can_read!
-              m = Machine.find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.where(machine_id: m.id, name: params[:name])
@@ -146,7 +146,7 @@ module V3
             desc 'Update a nic', success: Nic::Entity
             put do
               can_write!
-              m = Machine.find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.where(machine_id: m.id, name: params[:name])
@@ -161,7 +161,7 @@ module V3
             desc 'Delete a nic'
             delete do
               can_write!
-              m = Machine.find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.find_by machine_id: m.id, name: params[:name]
@@ -175,7 +175,7 @@ module V3
                                success: Nic::Entity
           get do
             can_read!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             present m.nics
@@ -184,7 +184,7 @@ module V3
           desc 'Create a nic', success: Nic::Entity
           post do
             can_write!
-            m = Machine.find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Not Found', 404) unless m
 
             nic_p = params.select { |k| Nic.attribute_method?(k) }
@@ -204,7 +204,7 @@ module V3
         desc 'Get a machine by fqdn', success: Machine::Entity
         get do
           can_read!
-          m = Machine.find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
           error!('Not Found', 404) unless m
 
           present m
@@ -249,7 +249,7 @@ module V3
         end
         put do
           can_write!
-          m = Machine.find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
           error!('Not Found', 404) unless m
 
           p = declared(params).to_h
@@ -282,7 +282,7 @@ module V3
         desc 'Delete a machine'
         delete do
           can_write!
-          m = Machine.find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
           error!('Not Found', 404) unless m
           m.destroy
         end
@@ -294,7 +294,7 @@ module V3
         can_read!
 
         # first get all machines
-        query = Machine.all
+        query = Machine.owned_by(@owner).all
 
         # strip possible idb_api_token parameter, this isn't a key of machines
         params.delete('idb_api_token')

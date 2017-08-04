@@ -20,9 +20,9 @@ module SoftwareHelper
     return software, versions
   end
 
-  def self.software_machines(software, versions)
+  def self.software_machines(all_machines, software, versions)
     machines = Array.new
-    ms = Machine.includes(:owner, nics: [:ip_address]).order(:fqdn).where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(software))
+    ms = all_machines.includes(:owner, nics: [:ip_address]).order(:fqdn).where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(software))
 
     ms.each { |m|
       ignore = false

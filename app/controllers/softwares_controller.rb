@@ -4,6 +4,6 @@ class SoftwaresController < ApplicationController
     if @software.empty?
       return
     end
-    @machines = SoftwareHelper.software_machines(@software, @versions)
+    @machines = SoftwareHelper.software_machines(Machine.all, @software, @versions)
   end
 end

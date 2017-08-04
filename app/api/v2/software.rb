@@ -22,7 +22,7 @@ module V2
             status 200
             []
           end
-          machines = SoftwareHelper.software_machines(software, versions)
+          machines = SoftwareHelper.software_machines(Machine.all, software, versions)
           status 200
           machines
         end        

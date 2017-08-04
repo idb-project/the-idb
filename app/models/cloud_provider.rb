@@ -2,6 +2,10 @@ class CloudProvider < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   belongs_to :owner
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
+
   def self.default_scope
     if User.current.nil? || User.current.is_admin?
       nil

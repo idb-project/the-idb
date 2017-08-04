@@ -5,6 +5,10 @@ class Nic < ActiveRecord::Base
   has_one :ip_address, dependent: :destroy, autosave: true
   has_one :switch_port, dependent: :destroy, autosave: true
 
+  def self.owned_by(o)
+    includes(:machine).where("machines.owner_id": o.id)
+  end
+
   before_save do |record|
     # Make sure mac is nil if the input is an empty string.
     record.mac = nil if record.mac.blank?

@@ -19,6 +19,10 @@ class Network < ActiveRecord::Base
     end
   end
 
+  def self.owned_by(o)
+    where(owner: o)
+  end
+
   def self.default_scope
     if User.current.nil? || User.current.is_admin?
       nil
