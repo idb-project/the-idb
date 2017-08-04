@@ -79,7 +79,6 @@ source /etc/profile.d/rvm.sh
 
 rvm install ruby-2.2.4
 rvm use --default ruby-2.2.4
-rvm wrapper current bootup sidekiq
 ```
 
 ## install bundler and gems
@@ -91,6 +90,8 @@ source /etc/profile.d/rvm.sh
 gem install bundler
 RAILS_ENV=production bundle install
 ```
+* setup rvm wrapper for sidekiq `rvm wrapper current bootup sidekiq`
+
 
 ## fill the database and precompile the assets
 ```
