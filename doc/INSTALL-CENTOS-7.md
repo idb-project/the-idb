@@ -1,4 +1,5 @@
-# Install instructions for The IDB on Ubuntu 16.04
+# Install instructions for The IDB on CentOS 7
+
 
 * clone the repo into /opt/the-idb
 
@@ -11,54 +12,50 @@ $ sudo cp config-example /etc/the-idb
 $ ln -s /etc/the-idb config
 ```
 
+## package / repo prerequisites
+
+* install epel-release and enable the epel repo
 * install the following packages
-    * mysql-server
-    * redis-server
-    * ruby-dev
-    * libmysqld-dev
-    * build-essential
+	* git
+	* ruby-devel
+	* redis
+
+* enable and start redis `systemctl enable redis  && systemctl start redis`
+
  
+ * install [Phusion Passenger](https://www.phusionpassenger.com/library/install/apache/install/oss/el7/) from the official repo
 
-* install [Phusion Passenger](https://www.phusionpassenger.com/library/install/nginx/install/oss/xenial/) from the official repo
-
-## create a database and a user
+ 
+## install and setup mysql
+* install the mysql 5.7 repo 
 ```
+yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+```
+* and the following packages from there
+	* mysql-community-server
+  	* mysql-community-devel
+* enable and start the mysql-server `systemctl enable mysqld  && systemctl start mysqld`
+* set a new mysql root password, you can find the temporary one in /var/log/mysqld.log
+```
+grep password /var/log/mysqld.log 
 mysql -u root -p
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('securepass');
 CREATE DATABASE idb;
 GRANT ALL ON idb.* TO 'idb'@'localhost' IDENTIFIED BY '<somepassword>';
 FLUSH PRIVILEGES;
 ```
 
-* set the database configuration in /opt/the-idb/config/database.yml
-
 ## Install a LDAP server
 
-* if you are not using an foreign LDAP server, you have to install one: `apt install slapd ldapvi ldap-utils`
-* add a basic user to your LDAP: `ldapvi --discover -D cn=admin,dc=vm,dc=office,dc=bytemine,dc=net` (or what else your DN is)
+* if you are not using an foreign LDAP server, you have to install one: `yum install -y 389-ds-base 389-admin`
+* run `setup-ds-admin.pl`to set it up
 
-```
-add ou=Users,dc=vm,dc=office,dc=bytemine,dc=net
-objectClass: organizationalUnit
-objectClass: top
-ou: Users
+## configuration
 
-add cn=testuser1,ou=Users,dc=vm,dc=office,dc=bytemine,dc=net
-objectClass: top
-objectClass: person
-objectClass: organizationalPerson
-objectClass: inetOrgPerson
-cn: testuser1
-givenName: Tim
-sn: Tester
-uid: testuser1
-userPassword: {SSHA} somehash
-```
-
-* the password can be generated with `slappasswd -h {SSHA} -s somepassword`
 * configure the LDAP access in /opt/the-idb/config/application.yml
+* set the database configuration in /opt/the-idb/config/database.yml
+* _Caution:_ adjust the socket to /var/lib/mysql/mysql.sock
 * for further infos on the user handling see ldap-and-usermanagement.md
-
-Be aware that without configuring 
 
 ## create an user and group
 
@@ -71,27 +68,23 @@ Be aware that without configuring
 ## install  RVM
 
 * go to the [RVM](https://rvm.io/) website and install RVM
-* add idb to the rvm group `adduser idb rvm`
-* enter /opt/the-idb `cd /opt/the-idb` 
 * run the following commands for installing ruby 2.2.4:
 ```
 source /etc/profile.d/rvm.sh
-
 rvm install ruby-2.2.4
 rvm use --default ruby-2.2.4
+
 ```
 
 ## install bundler and gems
 
-* enter a shell for user idb `sudo -u idb -H /bin/bash`
-
 ```
-source /etc/profile.d/rvm.sh
+cd /opt/the-idb
 gem install bundler
 RAILS_ENV=production bundle install
 ```
-* setup rvm wrapper for sidekiq `rvm wrapper current bootup sidekiq`
 
+* setup rvm wrapper for sidekiq `rvm wrapper current bootup sidekiq`
 
 ## fill the database and precompile the assets
 ```
@@ -102,7 +95,7 @@ bundle exec rake assets:precompile
 
 ## config files for apache and sidekiq
 
-### /etc/apache2/sites-available/idb.conf
+### /etc/httpd/conf.d/idb.conf
 
 ```
 <VirtualHost *:80>
@@ -121,7 +114,7 @@ bundle exec rake assets:precompile
 </VirtualHost>
 
 <VirtualHost *:443>
-        ServerName idb.example.com
+        ServerName idb.example.com⁠⁠
         DocumentRoot /opt/the-idb/public
 
         <Directory /opt/the-idb/public>
@@ -138,12 +131,11 @@ bundle exec rake assets:precompile
    SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
    SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
    PassengerUser idb 
-   PassengeGroup idb
+   PassengerGroup idb
 # and all the other regular ssl options like certificate etc. pp.
 </VirtualHost>
 ```
 
-* run `a2ensite idb && apache2ctl graceful`
 
 ### /etc/systemd/system/sidekiq.service
 ```
@@ -163,6 +155,6 @@ Group=idb
 WantedBy=multi-user.target
 
 ```
-
 * reload systemd: `systemctl daemon-reload`
 * enable and start sidekiq: `systemctl enable sidekiq && systemctl start sidekiq`
+
