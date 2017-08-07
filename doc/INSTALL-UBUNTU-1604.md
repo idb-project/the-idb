@@ -152,11 +152,10 @@ Description=The IDB sidekiq service
 After=syslog.target network.target remote-fs.target
 
 [Service]
-Type=forking
-PIDFile=/run//sidekiq.pid
+Type=simple
 WorkingDirectory=/opt/the-idb/
 Environment="RAILS_ENV=production"
-ExecStart=/usr/local/rvm/bin/bootup_sidekiq -d -P /run/sidekiq.pid -L /opt/the-idb/log/sidekiq.log
+ExecStart=/usr/local/rvm/bin/bootup_sidekiq -L /opt/the-idb/log/sidekiq.log
 User=idb
 Group=idb
 
