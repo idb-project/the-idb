@@ -12,4 +12,5 @@ should be no big hassle.
 We have a detailled install guide available for these environments:
 
 * [Ubuntu 16.04 LTS](doc/INSTALL-UBUNTU-1604.md).
-
+* [Centos 6](doc/INSTALL-CENTOS-6.md).
+* [Centos 7](doc/INSTALL-CENTOS-7.md).
