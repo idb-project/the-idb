@@ -197,7 +197,7 @@ class MachinePresenter < Keynote::Presenter
   end
 
   def unattended_upgrades_reboot_string
-    machine.unattended_upgrades ? "yes" : "no"
+    machine.unattended_upgrades_reboot ? "yes" : "no"
   end
 
   def needs_reboot_string
