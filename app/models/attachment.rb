@@ -22,7 +22,7 @@ class Attachment < ActiveRecord::Base
     if User.current.nil? || User.current.is_admin?
       nil
     else
-      -> { where(owner: User.current.owners) }
+      -> { where(owner: User.current.owners.to_a) }
     end
   end
 
