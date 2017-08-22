@@ -46,7 +46,7 @@ class Machine < ActiveRecord::Base
     if User.current.nil? || User.current.is_admin?
       -> { where(deleted_at: nil) }
     else
-      -> { where(owner: User.current.owners, deleted_at: nil) }
+      -> { where(owner: User.current.owners.to_a, deleted_at: nil) }
     end
   end
 
