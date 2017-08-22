@@ -111,7 +111,7 @@ describe 'Inventories API' do
     end
 
     it "does not update an existing inventory if user is not an owner" do
-      new_inventory = Inventory.create({inventory_number: "old"})
+      new_inventory = Inventory.create(owner: FactoryGirl.create(:owner), inventory_number: "old")
 
       p = {
         "id": new_inventory.id,

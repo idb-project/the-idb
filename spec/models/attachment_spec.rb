@@ -4,7 +4,7 @@ describe Attachment do
   before (:each) do
     @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
-    @attachment = FactoryGirl.create :attachment
+    @attachment = FactoryGirl.create :attachment, owner: FactoryGirl.create(:owner)
   end
 
   it "calls the 'check_sha256_fingerprint' method after saving" do
@@ -18,8 +18,8 @@ describe Attachment do
 
   it "returns one attachment that is assigned to the current users owner" do
     attachment2 = FactoryGirl.create(:attachment, owner: @owner)
-    expect(Attachment.all).not_to include @attachment
     expect(Attachment.all).to include attachment2
+    expect(Attachment.all).not_to include @attachment
   end
 
   it "returns no attachment that is assigned to another owner" do
