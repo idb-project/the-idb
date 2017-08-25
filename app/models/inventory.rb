@@ -61,6 +61,11 @@ class Inventory < ActiveRecord::Base
     expose :location_id, documentation: { type: "Integer", desc: "ID of the location" }
     expose :install_date, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
     expose :inventory_status_id, documentation: { type: "Integer", desc: "Inventory status id" } # FIXME
+    expose :inventory_status, documentation: { type: "String", desc: "Inventory status" }
+
+    def inventory_status
+      object.status_string
+    end
 
     def machine
       m = Machine.find_by_id(object.machine_id)
