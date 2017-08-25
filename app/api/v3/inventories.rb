@@ -92,14 +92,26 @@ module V3
           optional :category, type: String, documentation: { type: "String", desc: "Additional category description" }
           optional :location_id, type: Integer, documentation: { type: "Integer", desc: "ID of the location" }
           optional :install_date, type: String, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
-          optional :inventory_status_id, type: Integer, documentation: { type: "Integer", desc: "Inventory status id" }
+          optional :inventory_status_id, type: Integer, documentation: { type: "Integer", desc: "Inventory status id" }     
+          optional :inventory_status, type: String, documentation: { type: "String", desc: "Inventory status, overrides inventory_status_id if set" }
         end
         put do
           can_write!
           i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
-          p = params.select { |k| Inventory.attribute_method?(k) }
+          p = declared(params).to_h
+
+          if p["inventory_status"]
+            s = InventoryStatus.find_by_name p["inventory_status"]
+            if s
+              p["inventory_status_id"] = s.id
+            else
+              p["inventory_status_id"] = nil
+            end
+          end
+
+          p.delete("inventory_status")
 
           i.update_attributes(p)
 
@@ -162,10 +174,23 @@ module V3
         optional :location_id, type: Integer, documentation: { type: "Integer", desc: "ID of the location" }
         optional :install_date, type: String, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
         optional :inventory_status_id, type: Integer, documentation: { type: "Integer", desc: "Inventory status id" }
+        optional :inventory_status, type: String, documentation: { type: "String", desc: "Inventory status, overrides inventory_status_id if set" }
       end
       post do
         can_write!
-        p = params.select { |k| Inventory.attribute_method?(k) }
+        p = declared(params).to_h
+        
+        if p["inventory_status"]
+          s = InventoryStatus.find_by_name p["inventory_status"]
+          if s
+            p["inventory_status_id"] = s.id
+          else
+            p["inventory_status_id"] = nil
+          end
+        end
+
+        p.delete("inventory_status")
+
         i = Inventory.new(p)
         i.owner = @owner
         i.save!
