@@ -102,15 +102,7 @@ module V3
 
           p = declared(params).to_h
 
-          if p["inventory_status"]
-            s = InventoryStatus.find_by_name p["inventory_status"]
-            if s
-              p["inventory_status_id"] = s.id
-            else
-              p["inventory_status_id"] = nil
-            end
-          end
-
+          p["inventory_status_id"] = InventoryStatus.where(name: p["inventory_status"]).pluck(:id).first
           p.delete("inventory_status")
 
           i.update_attributes(p)
@@ -180,15 +172,7 @@ module V3
         can_write!
         p = declared(params).to_h
         
-        if p["inventory_status"]
-          s = InventoryStatus.find_by_name p["inventory_status"]
-          if s
-            p["inventory_status_id"] = s.id
-          else
-            p["inventory_status_id"] = nil
-          end
-        end
-
+        p["inventory_status_id"] = InventoryStatus.where(name: p["inventory_status"]).pluck(:id).first
         p.delete("inventory_status")
 
         i = Inventory.new(p)
