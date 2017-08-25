@@ -25,20 +25,19 @@ if [ ! -d "$IDBETC/initializers" ]; then
   mkdir $IDBETC/initializers
 fi
 
-# copy selected initializers
-cp $IDBPATH/config-example/initializers/app_config.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/assets.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/backtrace_silencers.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/filter_parameter_logging.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/inflections.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/mime_types.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/paper_trail.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/raven.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/redis.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/rubius.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/session_store.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/sidekiq.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/simple_form.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/simple_form_bootstrap.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/version.rb $IDBETC/initializers
-cp $IDBPATH/config-example/initializers/wrap_parameters.rb $IDBETC/initializers
+# copy initializers
+for f in $IDBPATH/config-example/initializers/*; do
+  # don't overwrite existing initializers as they may be customized
+  cp -n $f $IDBETC/initializers
+done
+
+# copy config files
+for f in $IDBPATH/config-example/*; do
+  # don't overwrite existing configs
+  cp -n $f $IDBETC
+fi
+
+# fix ownership of config and symlinks
+chown -R idb:idb $IDBETC
+chown idb:idb $IDBPATH/config
+chown idb:idb $IDBPATH/log
