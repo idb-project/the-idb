@@ -35,7 +35,7 @@ done
 for f in $IDBPATH/config-example/*; do
   # don't overwrite existing configs
   cp -n $f $IDBETC
-fi
+done
 
 # fix ownership of config and symlinks
 chown -R idb:idb $IDBETC
