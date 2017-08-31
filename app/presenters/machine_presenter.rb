@@ -226,10 +226,20 @@ class MachinePresenter < Keynote::Presenter
 
     # fact is returned as "hour.min", e.g. "5.4". Make it human readable
     str = machine.unattended_upgrades_time
-    hours = str.split(".")[0]
-    hours = "0"+hours if hours.length == 1
-    minutes = str.split(".")[1]
-    minutes = "0"+minutes if minutes.length == 1
+    hours, minutes = str.split(".")
+
+    # abort if hours or minutes is nil
+    if not (hours and minutes)
+      return "-"
+    end
+
+    if hours.length == 1
+      hours = "0"+hours
+    end
+
+    if minutes.length == 1
+      minutes = "0"+minutes
+    end
 
     hours+":"+minutes
   end
