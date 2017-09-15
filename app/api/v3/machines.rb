@@ -14,7 +14,7 @@ module V3
         @owner = get_owner
       end
 
-      route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.-]+/ } do
+      route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
         resource :attachments do
           route_param :fingerprint, type: String, requirements: { fingerprint: /[a-f0-9]+/ } do
             desc 'Get an attachment' do
@@ -42,7 +42,7 @@ module V3
                                       success: Attachment::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.attachments
@@ -54,7 +54,7 @@ module V3
           end
           post do
             can_write!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             x = {
@@ -70,7 +70,7 @@ module V3
         end
 
         resource :aliases do
-          route_param :alias, type: String, requirements: { alias: /[a-zA-Z0-9.-]+/ } do
+          route_param :alias, type: String, requirements: { alias: /.+/ } do
             desc 'Get a alias', success: MachineAlias::Entity
             get do
               can_read!
@@ -107,7 +107,7 @@ module V3
                                   success: MachineAlias::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.aliases
@@ -119,7 +119,7 @@ module V3
           end
           post do
             can_write!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             p = declared(params, include_parent_namespaces: false).to_h
@@ -135,7 +135,7 @@ module V3
             desc 'Get a nic', success: Nic::Entity
             get do
               can_read!
-              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.where(machine_id: m.id, name: params[:name])
@@ -146,7 +146,7 @@ module V3
             desc 'Update a nic', success: Nic::Entity
             put do
               can_write!
-              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.where(machine_id: m.id, name: params[:name])
@@ -161,7 +161,7 @@ module V3
             desc 'Delete a nic'
             delete do
               can_write!
-              m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.find_by machine_id: m.id, name: params[:name]
@@ -175,7 +175,7 @@ module V3
                                success: Nic::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.nics
@@ -184,7 +184,7 @@ module V3
           desc 'Create a nic', success: Nic::Entity
           post do
             can_write!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             nic_p = params.select { |k| Nic.attribute_method?(k) }
@@ -204,7 +204,7 @@ module V3
         desc 'Get a machine by fqdn', success: Machine::Entity
         get do
           can_read!
-          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
 
           present m
@@ -212,7 +212,7 @@ module V3
 
         desc 'Update a single machine', success: Machine::Entity
         params do
-          requires :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
+          optional :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
           optional :os,                     type: String,   documentation: { type: "String",  desc: "Operating system" }
           optional :os_release,             type: String,   documentation: { type: "String",  desc: "Operating system release" }
           optional :arch,                   type: String,   documentation: { type: "String",  desc: "Architecture" }
@@ -249,10 +249,19 @@ module V3
         end
         put do
           can_write!
-          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
-
+                    
           p = declared(params).to_h
+
+          if not p['fqdn']
+            p['fqdn'] = p['rfqdn']
+          end
+          p.delete('rfqdn')
+
+          if not Machine::FQDN_REGEX.match(p['fqdn'])
+            error!('Invalid Machine', 409)
+          end
 
           m.update_attributes(p)
 
@@ -282,7 +291,7 @@ module V3
         desc 'Delete a machine'
         delete do
           can_write!
-          m = Machine.owned_by(@owner).find_by_fqdn params[:fqdn]
+          m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
           m.destroy
         end
@@ -360,6 +369,11 @@ module V3
       post do
         can_write!
         p = declared(params).to_h # we need to_h here as active record doesn't like the hashie mash params
+
+        if not Machine::FQDN_REGEX.match(p['fqdn'])
+          error!('Invalid Machine', 409)
+        end
+
         begin
           m = Machine.new(p)
           m.owner = @owner
