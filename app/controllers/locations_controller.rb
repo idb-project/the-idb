@@ -8,6 +8,7 @@ class LocationsController < ApplicationController
     @locations = {}
     @all_locations = Location.all
     @location_levels = LocationLevel.all
+    @location.owner = Owner.first
   end
 
   def create
@@ -15,10 +16,10 @@ class LocationsController < ApplicationController
     @all_locations = Location.all
 
     if params[:location][:location_level_id].to_i == 1
-      @location = Location.new(params.require(:location).permit(:name, :description, :location_level_id))
+      @location = Location.new(params.require(:location).permit(:name, :description, :location_level_id, :owner_id))
     else
       parent_location = Location.find(params[:location][:location_id].to_i)
-      @location = Location.new(params.require(:location).permit(:name, :description, :location_level_id))
+      @location = Location.new(params.require(:location).permit(:name, :description, :location_level_id, :owner_id))
       parent_location.add_child(@location)
     end
 
@@ -30,7 +31,7 @@ class LocationsController < ApplicationController
   end
 
   def show
-    @location = Location.find(params[:id])
+    @location = Location.includes(:owner).find(params[:id])
     @all_locations = Location.all
   end
 
@@ -44,7 +45,7 @@ class LocationsController < ApplicationController
   def update
     @location = Location.find(params[:id])
 
-    if @location.update(params.require(:location).permit(:name, :level, :description, :location_id))
+    if @location.update(params.require(:location).permit(:name, :level, :description, :location_id, :owner_id))
       redirect_to locations_path, notice: 'Location updated'
     else
       render :edit
