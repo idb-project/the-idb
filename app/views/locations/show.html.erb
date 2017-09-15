@@ -24,11 +24,13 @@
         <tr>
           <th>Location:</th>
           <th>Description:</th>
+          <th>Owner:</th>
         </tr>
         <tr>
           <%- location = k(:location, @location) -%>
           <td><%= location.location_link.html_safe %></td>
           <td><%= location.description %></td>
+          <td><%= location.owner_link %></td>
         </tr>
       </table>
     </div>

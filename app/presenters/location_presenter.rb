@@ -1,8 +1,12 @@
 class LocationPresenter < Keynote::Presenter
   presents :location
 
-  delegate :id, :name, :location_id, :description, :self_and_ancestors, :location_name, :children,
+  delegate :id, :name, :location_id, :description, :self_and_ancestors, :location_name, :children, 
            to: :location
+
+  def owner_link
+    link_to(location.owner.name, location.owner).html_safe if location.owner
+  end
 
   def location_link
     return "" unless location

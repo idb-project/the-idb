@@ -7,6 +7,14 @@ class Location < ActiveRecord::Base
   validates :name, presence: true
   has_closure_tree parent_column_name: :location_id
 
+  def self.default_scope
+    if User.current.nil? || User.current.is_admin?
+      nil
+    else
+      -> { where(owner: User.current.owners.to_a) }
+    end
+  end
+
   def self.owned_by(o)
     where(owner: o)
   end

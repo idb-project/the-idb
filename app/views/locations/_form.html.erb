@@ -37,6 +37,7 @@
           <%= f.input :location_id, collection: Location.joins(:location_level).where("location_levels.level < ?", 50).order(:name), include_blank: true, label_method: lambda { |location| k(location).location_name }, label: "Parent" %>
           <%= f.input :name %>
           <%= f.input :description %>
+          <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
           <%= f.button :submit %>
         <%- end -%>
       </div>
