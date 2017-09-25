@@ -38,6 +38,8 @@ class Machine < ActiveRecord::Base
   validates :fqdn, presence: true, uniqueness: true
   validates :fqdn, format: {with: FQDN_REGEX}
 
+  after_commit :flapping_detection
+
   def self.owned_by(o)
     where(owner: o)
   end
@@ -162,6 +164,33 @@ class Machine < ActiveRecord::Base
 
   def update_details_by_api(params, machine_details)
     machine_details.update(params)
+  end
+
+  # try to detect minimal changes triggered by two adapters delivering
+  # the same information with slight changes (amount of RAM < 5%)
+  # or a VM detected on two different hosts (DRBD or one shut down)
+  def flapping_detection
+    begin
+      v = versions.last
+      if (v.changeset.keys.size == 1)
+        # if only one attribute has changed
+        lastkey = v.changeset.keys.last
+        if (lastkey == "ram")
+          ram1 = v.changeset.values.first.first
+          ram2 = v.changeset.values.first.last
+          if (!ram1.blank? && !ram2.blank?)
+            percentage = ((ram1.to_f - ram2.to_f)/ram1*100).abs
+            # difference must be less than 5%
+            v.destroy if (percentage < 5)
+          end
+        elsif (lastkey == "vmhost")
+          # vmhost change is the same as two versions earlier -> flapping
+          v.destroy if m.versions.size > 2 and (v.changeset == m.versions[-3].changeset)
+        end
+      end
+    rescue => e
+      logger.error e
+    end
   end
 
   def self.device_type_name
