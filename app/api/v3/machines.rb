@@ -210,57 +210,9 @@ module V3
           present m
         end
 
-        desc 'Update a single machine', success: Machine::Entity
-        params do
-          requires :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
-          optional :os, type: String, documentation: { type: "String", desc: "Operating system" }
-          optional :os_release, type: String, documentation: { type: "String", desc: "Operating system release" }
-          optional :arch, type: String, documentation: { type: "String", desc: "Architecture" }
-          optional :ram, type: Integer, documentation: { type: "Integer", desc: "Amount of RAM in MB" }
-          optional :cores, documentation: { type: "Integer", desc: "Number of CPU cores" }
-          optional :vmhost, type: String, documentation: { type: "String", desc: "FQDN of virtual machine host if this is a virtual machine" }
-          optional :serviced_at, type: String, documentation: { type: "String", desc: "Service date RFC3999 formatted" }
-          optional :description, type: String, documentation: { type: "String", desc: "Description" }
-          optional :deleted_at, type: String, documentation: { type: "String", desc: "Deletion date RFC3999 formatted" }
-          optional :created_at, type: String, documentation: { type: "String", desc: "Creation date RFC3999 formatted" }
-          optional :updated_at, type: String, documentation: { type: "String", desc: "Update date RFC3999 formatted" }
-          optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
-          optional :serialnumber, type: String, documentation: { type: "String", desc: "Serial number" }
-          optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
-          optional :auto_update, type: Boolean, documentation: { type: "Boolean", desc: "true if the machine is updated automatically" }
-          optional :switch_url, type: String, documentation: { type: "String" }
-          optional :mrtg_url, type: String, documentation: { type: "String" }
-          optional :config_instructions, type: String, documentation: { type: "String", desc: "Configuration instructions" }
-          optional :sw_characteristics , type: String, documentation: { type: "String", desc: "Software characteristics" }
-          optional :business_purpose, type: String, documentation: { type: "String", desc: "Business purpose" }
-          optional :business_criticality, type: String, documentation: { type: "String", desc: "Business Criticality" }
-          optional :business_notification, type: String, documentation: { type: "String", desc: "Business Notification" }
-          optional :unattended_upgrades, type: Boolean, documentation: { type: "Boolean" }
-          optional :unattended_upgrades_blacklisted_packages, type: String, documentation: { type: "String" }
-          optional :unattended_upgrades_reboot, type: Boolean, documentation: { type: "Boolean" }
-          optional :unattended_upgrades_time, type: String, documentation: { type: "String" }
-          optional :unattended_upgrades_repos, type: String, documentation: { type: "String" }
-          optional :pending_updates, type: Integer, documentation: { type: "Integer" }
-          optional :pending_security_updates, type: Integer, documentation: { type: "Integer" }
-          optional :pending_updates_sum, type: Integer, documentation: { type: "Integer" }
-          optional :diskspace, type: Integer, documentation: { type: "Integer", desc: "Disc space in bytes" }
-          optional :pending_updates_package_names, type: String, documentation: { type: "String" }
-          optional :severity_class, type: String, documentation: { type: "String" }
-          optional :ucs_role, type: String, documentation: { type: "String" }
-          optional :backup_brand, type: Integer, documentation: { type: "Integer" }
-          optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Last full backup time" }
-          optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Last incremental backup time" }
-          optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Last differential backup time" }
-          optional :raw_data_api, type: String, documentation: { type: "String" }
-          optional :raw_data_puppetdb, type: String, documentation: { type: "String" }
-          optional :backup_last_full_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last full backup size" }
-          optional :backup_last_inc_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last incremental backup size" }
-          optional :backup_last_diff_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last differential backup size" }
-          optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }
-          optional :software, type: Array, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
-          optional :power_feed_a, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed a" }
-          optional :power_feed_b, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed b" }
-        end
+        desc 'Update a single machine',
+          params: Machine::Entity.documentation,
+          success: Machine::Entity
         put do
           can_write!
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -392,57 +344,9 @@ module V3
         present query
       end
 
-      desc 'Create a new machine', success: Machine::Entity
-      params do
-        requires :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
-        optional :os, type: String, documentation: { type: "String", desc: "Operating system" }
-        optional :os_release, type: String, documentation: { type: "String", desc: "Operating system release" }
-        optional :arch, type: String, documentation: { type: "String", desc: "Architecture" }
-        optional :ram, type: Integer, documentation: { type: "Integer", desc: "Amount of RAM in MB" }
-        optional :cores, documentation: { type: "Integer", desc: "Number of CPU cores" }
-        optional :vmhost, type: String, documentation: { type: "String", desc: "FQDN of virtual machine host if this is a virtual machine" }
-        optional :serviced_at, type: String, documentation: { type: "String", desc: "Service date RFC3999 formatted" }
-        optional :description, type: String, documentation: { type: "String", desc: "Description" }
-        optional :deleted_at, type: String, documentation: { type: "String", desc: "Deletion date RFC3999 formatted" }
-        optional :created_at, type: String, documentation: { type: "String", desc: "Creation date RFC3999 formatted" }
-        optional :updated_at, type: String, documentation: { type: "String", desc: "Update date RFC3999 formatted" }
-        optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
-        optional :serialnumber, type: String, documentation: { type: "String", desc: "Serial number" }
-        optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
-        optional :auto_update, type: Boolean, documentation: { type: "Boolean", desc: "true if the machine is updated automatically" }
-        optional :switch_url, type: String, documentation: { type: "String" }
-        optional :mrtg_url, type: String, documentation: { type: "String" }
-        optional :config_instructions, type: String, documentation: { type: "String", desc: "Configuration instructions" }
-        optional :sw_characteristics , type: String, documentation: { type: "String", desc: "Software characteristics" }
-        optional :business_purpose, type: String, documentation: { type: "String", desc: "Business purpose" }
-        optional :business_criticality, type: String, documentation: { type: "String", desc: "Business Criticality" }
-        optional :business_notification, type: String, documentation: { type: "String", desc: "Business Notification" }
-        optional :unattended_upgrades, type: Boolean, documentation: { type: "Boolean" }
-        optional :unattended_upgrades_blacklisted_packages, type: String, documentation: { type: "String" }
-        optional :unattended_upgrades_reboot, type: Boolean, documentation: { type: "Boolean" }
-        optional :unattended_upgrades_time, type: String, documentation: { type: "String" }
-        optional :unattended_upgrades_repos, type: String, documentation: { type: "String" }
-        optional :pending_updates, type: Integer, documentation: { type: "Integer" }
-        optional :pending_security_updates, type: Integer, documentation: { type: "Integer" }
-        optional :pending_updates_sum, type: Integer, documentation: { type: "Integer" }
-        optional :diskspace, type: Integer, documentation: { type: "Integer", desc: "Disc space in bytes" }
-        optional :pending_updates_package_names, type: String, documentation: { type: "String" }
-        optional :severity_class, type: String, documentation: { type: "String" }
-        optional :ucs_role, type: String, documentation: { type: "String" }
-        optional :backup_brand, type: Integer, documentation: { type: "Integer" }
-        optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Last full backup time" }
-        optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Last incremental backup time" }
-        optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Last differential backup time" }
-        optional :raw_data_api, type: String, documentation: { type: "String" }
-        optional :raw_data_puppetdb, type: String, documentation: { type: "String" }
-        optional :backup_last_full_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last full backup size" }
-        optional :backup_last_inc_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last incremental backup size" }
-        optional :backup_last_diff_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last differential backup size" }
-        optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }
-        optional :software, type: Array, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
-        optional :power_feed_a, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed a" }
-        optional :power_feed_b, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed b" }
-      end
+      desc 'Create a new machine', 
+        params: Machine::Entity.documentation,
+        success: Machine::Entity
       post do
         can_write!
         p = declared(params).to_h # we need to_h here as active record doesn't like the hashie mash params

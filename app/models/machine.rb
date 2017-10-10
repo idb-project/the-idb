@@ -217,7 +217,7 @@ class Machine < ActiveRecord::Base
   end
 
   class Entity < Grape::Entity
-    expose :fqdn, documentation: { type: "String", desc: "FQDN" }
+    expose :fqdn, documentation: { type: "String", desc: "FQDN", param_type: 'body' }
     expose :os, documentation: { type: "String", desc: "Operating system" }
     expose :os_release, documentation: { type: "String", desc: "Operating system release" }
     expose :arch, documentation: { type: "String", desc: "Architecture" }
