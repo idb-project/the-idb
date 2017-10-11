@@ -34,6 +34,7 @@ module V3
               error!('Not Found', 404) unless a
 
               a.destroy!
+              body false
             end
           end
 
