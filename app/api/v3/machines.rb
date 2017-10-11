@@ -35,6 +35,7 @@ module V3
               error!('Not Found', 404) unless a
 
               a.destroy!
+              body false
             end
           end
 
@@ -100,6 +101,7 @@ module V3
               a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
               a.destroy
+              body false
             end
           end
 
@@ -168,6 +170,7 @@ module V3
               error!('Not Found', 404) unless n
 
               n.destroy
+              body false
             end
           end
 
@@ -218,28 +221,31 @@ module V3
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
                     
-          p = declared(params).to_h
-
-          if not p['fqdn']
-            p['fqdn'] = p['rfqdn']
+          # move route parameter to params
+          if not params['fqdn']
+            params['fqdn'] = params['rfqdn']
           end
-          p.delete('rfqdn')
+          params.delete('rfqdn')
 
-          if not Machine::FQDN_REGEX.match(p['fqdn'])
+          if not Machine::FQDN_REGEX.match(params['fqdn'])
             error!('Invalid Machine', 409)
           end
 
-          m.update_attributes(p)
+          begin
+            m.update_attributes(params)
+          rescue ActiveModel::UnknownAttributeError
+            error!('Invalid Machine', 409)
+          end
 
           is_backed_up = false
           if
-            (p['backup_brand'] && p['backup_brand'].to_i > 0) ||
-            !p['backup_last_full_run'].blank? ||
-            !p['backup_last_inc_run'].blank? ||
-            !p['backup_last_diff_run'].blank? ||
-            !p['backup_last_full_size'].blank? ||
-            !p['backup_last_inc_size'].blank? ||
-            !p['backup_last_diff_size'].blank?
+            (params['backup_brand'] && params['backup_brand'].to_i > 0) ||
+            !params['backup_last_full_run'].blank? ||
+            !params['backup_last_inc_run'].blank? ||
+            !params['backup_last_diff_run'].blank? ||
+            !params['backup_last_full_size'].blank? ||
+            !params['backup_last_inc_size'].blank? ||
+            !params['backup_last_diff_size'].blank?
 
             is_backed_up = true
           end
@@ -260,12 +266,13 @@ module V3
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
           m.destroy
+          body false
         end
       end
 
       desc 'Return a list of machines, possibly filtered', is_array: true, success: Machine::Entity
       params do
-        requires :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
+        optional :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
         optional :os, type: String, documentation: { type: "String", desc: "Operating system" }
         optional :os_release, type: String, documentation: { type: "String", desc: "Operating system release" }
         optional :arch, type: String, documentation: { type: "String", desc: "Architecture" }
@@ -345,18 +352,17 @@ module V3
       end
 
       desc 'Create a new machine', 
-        params: Machine::Entity.documentation,
+        params: Machine::Entity.documentation.to_h,
         success: Machine::Entity
       post do
         can_write!
-        p = declared(params).to_h # we need to_h here as active record doesn't like the hashie mash params
 
-        if not Machine::FQDN_REGEX.match(p['fqdn'])
+        if not Machine::FQDN_REGEX.match(params['fqdn'])
           error!('Invalid Machine', 409)
         end
 
         begin
-          m = Machine.new(p)
+          m = Machine.new(params)
           m.owner = @owner
           m.save!
         rescue ActiveRecord::RecordInvalid
