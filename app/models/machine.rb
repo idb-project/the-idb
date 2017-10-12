@@ -216,6 +216,11 @@ class Machine < ActiveRecord::Base
     return nil
   end
 
+  class SoftwareEntity < Grape::Entity
+    expose :name, documentation: { type: "String", desc: "Software name", param_type: 'body' }
+    expose :version, documentation: { type: "String", desc: "Software version", param_type: 'body' }
+  end
+
   class Entity < Grape::Entity
     expose :fqdn, documentation: { type: "String", desc: "FQDN", param_type: 'body' }
     expose :os, documentation: { type: "String", desc: "Operating system" }
@@ -262,7 +267,7 @@ class Machine < ActiveRecord::Base
     expose :backup_last_inc_size, documentation: { type: "Integer", format: "int64", desc: "Last incremental backup size" }
     expose :backup_last_diff_size, documentation: { type: "Integer", format: "int64", desc: "Last differential backup size" }
     expose :needs_reboot, documentation: { type: "Boolean" }
-    expose :software, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
+    expose :software, documentation: {is_array: true, type: "Machine::SoftwareEntity", desc: "Known installed doftware packages" }
     expose :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
     expose :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
 
