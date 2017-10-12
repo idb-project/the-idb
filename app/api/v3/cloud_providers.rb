@@ -13,31 +13,27 @@ module V3
         @owner = get_owner
       end
 
-      route_param :name, type: String, requirements: { name: /[a-zA-Z0-9.]+/ } do
-        desc 'Get cloud provider by name',           success: CloudProvider::Entity
+      route_param :rname, type: String, requirements: { name: /[a-zA-Z0-9.]+/ } do
+        desc 'Get cloud provider by name',
+          success: CloudProvider::Entity
         get do
           can_read!
-          c = CloudProvider.owned_by(@owner).find_by_name params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_name params[:rname]
           error!('Not found', 404) unless c
 
           present c
         end
 
-        desc 'Update a single cloud provider', success: CloudProvider::Entity
-        params do
-          requires :name, type: String, documentation: { type: "String", desc: "Cloud Provider name" }
-          optional :description, type: String, documentation: { type: "String", desc: "Cloud Provider description" }
-          requires :config, type: String, documentation: { type: "String", desc: "Cloud Provider configuration" }
-          optional :apidocs, type: String, documentation: { type: "String", desc: "Link to API documentation for this Cloud Provider" }
-        end        
+        desc 'Update a single cloud provider',
+          params: CloudProvider::Entity.documentation,
+          success: CloudProvider::Entity
         put do
           can_write!
-          c = CloudProvider.owned_by(@owner).find_by_inventory_number params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_name params[:rname]
           error!('Not found', 404) unless c
 
-          p = declared(params).to_h
-
-          c.update_attributes(p)
+          params.delete("rname")
+          c.update_attributes(params)
 
           present c
         end
@@ -45,7 +41,7 @@ module V3
         desc 'Delete cloud provider by name'
         get do
           can_write!
-          c = CloudProvider.owned_by(@owner).find_by_name params[:name]
+          c = CloudProvider.owned_by(@owner).find_by_name params[:rname]
           error!('Not found', 404) unless c
 
           c.destroy!
@@ -73,17 +69,13 @@ module V3
         present query
       end
 
-      desc 'Create a new cloud provider', success: CloudProvider::Entity
-      params do
-        requires :name, type: String, documentation: { type: "String", desc: "Cloud Provider name" }
-        optional :description, type: String, documentation: { type: "String", desc: "Cloud Provider description" }
-        requires :config, type: String, documentation: { type: "String", desc: "Cloud Provider configuration" }
-        optional :apidocs, type: String, documentation: { type: "String", desc: "Link to API documentation for this Cloud Provider" }
-      end
+      desc 'Create a new cloud provider',
+        params: CloudProvider::Entity.documentation,
+        success: CloudProvider::Entity
       post do
         can_write!
-        p = declared(params).to_h
-        c = CloudProvider.new(p)
+
+        c = CloudProvider.new(params)
         c.owner = @owner
         c.save!
         present c
