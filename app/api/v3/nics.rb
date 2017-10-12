@@ -23,26 +23,29 @@ module V3
           n
         end
 
-        desc 'Update a single nic', success: Nic::Entity
+        desc 'Update a single nic',
+          params: Nic::Entity.documentation,
+          success: Nic::Entity
         put do
           can_write!
           n = Nic.owned_by(@owner).find_by_fqdn params[:id]
           error!('Not found', 404) unless n
 
-          p = params.select { |k| Nic.attribute_method?(k) }
+          params.delete("id")
 
-          n.update_attributes(p)
+          n.update_attributes(params)
 
-          n
+          present n
         end
 
         desc 'Delete a single nic'
-        put do
+        delete do
           can_write!
           n = Nic.owned_by(@owner).find_by_fqdn params[:id]
           error!('Not found', 404) unless n
 
           n.destroy
+          body false
         end
       end
 
@@ -84,13 +87,14 @@ module V3
         present nics
       end
 
-      desc 'Create a new nic', success: Nic::Entity
+      desc 'Create a new nic', 
+        params: Nic::Entity.documentation,
+        success: Nic::Entity
       post do
         can_write!
 
-        p = params.select { |k| Nic.attribute_method?(k) }
-        n = Nic.create!(p)
-        n
+        n = Nic.create!(params)
+        present n
       end
     end
   end
