@@ -133,30 +133,33 @@ module V3
         end
 
         resource :nics do
-          route_param :name, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
+          route_param :nic, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
             desc 'Get a nic', success: Nic::Entity
             get do
               can_read!
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:name])
+              n = Nic.where(machine_id: m.id, name: params[:nic])
               error!('Not Found', 404) unless n
               present n
             end
 
-            desc 'Update a nic', success: Nic::Entity
+            desc 'Update a nic',
+              params: Nic::Entity.documentation,
+              success: Nic::Entity
             put do
               can_write!
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:name])
+              n = Nic.where(machine_id: m.id, name: params[:nic])
               error!('Not Found', 404) unless n
 
-              p = params.select { |k| Nic.attribute_method?(k) }
+              params.delete("nic")
+              params.delete("rfqdn")
 
-              n.update_attributes(p)
+              n.update_attributes(params)
               present n
             end
 
@@ -166,7 +169,7 @@ module V3
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.find_by machine_id: m.id, name: params[:name]
+              n = Nic.find_by machine_id: m.id, name: params[:nic]
               error!('Not Found', 404) unless n
 
               n.destroy
@@ -184,7 +187,9 @@ module V3
             present m.nics
           end
 
-          desc 'Create a nic', success: Nic::Entity
+          desc 'Create a nic',
+            params: Nic::Entity.documentation,
+            success: Nic::Entity
           post do
             can_write!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]

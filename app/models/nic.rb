@@ -34,10 +34,10 @@ class Nic < ActiveRecord::Base
   end
   
   class Entity < Grape::Entity
-    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :name, documentation: { type: "String", desc: "Name", param_type: 'body' }
     expose :mac, documentation: { type: "String", desc: "MAC address" }
     expose :machine, documentation: { type: "String", desc: "Machine FQDN this nic belongs to" }    
-    expose :ip_address, documentation: { type: "Object", desc: "IP address of the nic" }, using: IpAddress::Entity
+    expose :ip_address, documentation: { type: "IpAddress::Entity", desc: "IP address of the nic" }, using: IpAddress::Entity
     
     def machine
       m = Machine.find_by_id(object.machine_id)
