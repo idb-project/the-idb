@@ -80,18 +80,19 @@ module V3
               present a
             end
 
-            desc 'Update an alias', success: MachineAlias::Entity
-            params do
-              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
-            end
+            desc 'Update an alias',
+              params: MachineAlias::Entity.documentation,
+              success: MachineAlias::Entity
             put do
               can_write!
               a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
 
-              p = declared(params, include_parent_namespaces: false).to_h
+              # remove route parameters for updating
+              params.delete('rfqdn')
+              params.delete('alias')
 
-              a.update_attributes(p)
+              a.update_attributes(params)
               present a
             end
 
@@ -115,19 +116,18 @@ module V3
             present m.aliases
           end
 
-          desc 'Create an alias', success: MachineAlias::Entity
-          params do
-              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
-          end
+          desc 'Create an alias',
+            params: MachineAlias::Entity.documentation,
+            success: MachineAlias::Entity
           post do
             can_write!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
-            p = declared(params, include_parent_namespaces: false).to_h
-            p['machine'] = m
+            params["machine"] = m
+            params.delete("rfqdn")
 
-            a = MachineAlias.create(p)
+            a = MachineAlias.create(params)
             present a
           end
         end
