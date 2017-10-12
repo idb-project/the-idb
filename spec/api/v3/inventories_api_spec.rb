@@ -154,7 +154,7 @@ describe 'Inventories API V3' do
       expect(inventory['comment']).to eq("test_comment")
     end
 
-    it 'filters out not existing attributes' do
+    it 'returns 409 Bad Request for not defined attributes' do
       FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
@@ -166,11 +166,7 @@ describe 'Inventories API V3' do
         "foobar": "foobaz"
       }
       api_put_json(action: "inventories/existing_inventory", token: @api_token_w, version: "3", payload: payload)
-      expect(response.status).to eq(200)
-      inventory = JSON.parse(response.body)
-      expect(inventory['inventory_number']).to eq("existing_inventory")
-      expect(inventory['place']).to eq("test_place")
-      expect(inventory['foobar']).to be_nil
+      expect(response.status).to eq(409)
     end
   end
 

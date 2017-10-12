@@ -42,7 +42,7 @@ class Inventory < ActiveRecord::Base
   end
   
   class Entity < Grape::Entity
-    expose :id, documentation: { type: "Integer", desc: "Id" }
+    expose :id, documentation: { type: "Integer", desc: "Id", param_type: 'body' }
     expose :inventory_number, documentation: { type: "String", desc: "Inventory Number" }
     expose :name, documentation: { type: "String", desc: "Name" }
     expose :serial, documentation: { type: "String", desc: "Factory serial number" }

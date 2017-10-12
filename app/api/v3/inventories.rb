@@ -4,7 +4,6 @@ module V3
 
     version 'v3'
     format :json
-    #    formatter :json, Grape::Formatter::ActiveModelSerializers
 
     resource :inventories do
       before do
@@ -78,35 +77,22 @@ module V3
           present i
         end
 
-        desc 'Update a single inventory', success: Inventory::Entity
-        params do
-          requires :inventory_number, type: String, documentation: { type: "String", desc: "Inventory Number" }
-          optional :name, type: String, documentation: { type: "String", desc: "Name" }
-          optional :serial, type: String, documentation: { type: "String", desc: "Factory serial number" }
-          optional :part_number, type: String, documentation: { type: "String", desc: "Factory part number" }
-          optional :purchase_date, type: String, documentation: { type: "String", desc: "Purchase date as YYYY-MM-DD" }
-          optional :warranty_end, type: String, documentation: { type: "String", desc: "Warranty end date as YYYY-MM-DD" }
-          optional :seller, type: String, documentation: { type: "String", desc: "Seller" }
-          optional :machine, type: String, documentation: { type: "String", desc: "machines FQDN if this inventoy is a machine" }
-          optional :comment, type: String, documentation: { type: "String", desc: "Comment field" }
-          optional :place, type: String, documentation: { type: "String", desc: "Additional place description" }
-          optional :category, type: String, documentation: { type: "String", desc: "Additional category description" }
-          optional :location_id, type: Integer, documentation: { type: "Integer", desc: "ID of the location" }
-          optional :install_date, type: String, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
-          optional :inventory_status_id, type: Integer, documentation: { type: "Integer", desc: "Inventory status id" }     
-          optional :inventory_status, type: String, documentation: { type: "String", desc: "Inventory status, overrides inventory_status_id if set" }
-        end
+        desc 'Update a single inventory',
+          params: Inventory::Entity.documentation,
+          success: Inventory::Entity
         put do
           can_write!
           i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
-          p = declared(params).to_h
+          params["inventory_status_id"] = InventoryStatus.where(name: params["inventory_status"]).pluck(:id).first
+          params.delete("inventory_status")
 
-          p["inventory_status_id"] = InventoryStatus.where(name: p["inventory_status"]).pluck(:id).first
-          p.delete("inventory_status")
-
-          i.update_attributes(p)
+          begin
+            i.update_attributes(params)
+          rescue
+            error!('Invalid Machine', 409)
+          end
 
           present i
         end
@@ -125,7 +111,6 @@ module V3
                                                               success: Inventory::Entity
       get do
         can_read!
-
         if params['machine']
           if Machine.find_by_fqdn(params['machine'])
             params[:machine_id] = Machine.find_by_fqdn(params['machine']).id
@@ -151,32 +136,16 @@ module V3
         present query
       end
 
-      desc 'Create a new inventory', success: Inventory::Entity
-      params do
-        requires :inventory_number, type: String, documentation: { type: "String", desc: "Inventory Number" }
-        optional :name, type: String, documentation: { type: "String", desc: "Name" }
-        optional :serial, type: String, documentation: { type: "String", desc: "Factory serial number" }
-        optional :part_number, type: String, documentation: { type: "String", desc: "Factory part number" }
-        optional :purchase_date, type: String, documentation: { type: "String", desc: "Purchase date as YYYY-MM-DD" }
-        optional :warranty_end, type: String, documentation: { type: "String", desc: "Warranty end date as YYYY-MM-DD" }
-        optional :seller, type: String, documentation: { type: "String", desc: "Seller" }
-        optional :machine, type: String, documentation: { type: "String", desc: "machines FQDN if this inventoy is a machine" }
-        optional :comment, type: String, documentation: { type: "String", desc: "Comment field" }
-        optional :place, type: String, documentation: { type: "String", desc: "Additional place description" }
-        optional :category, type: String, documentation: { type: "String", desc: "Additional category description" }
-        optional :location_id, type: Integer, documentation: { type: "Integer", desc: "ID of the location" }
-        optional :install_date, type: String, documentation: { type: "String", desc: "Installation date as YYYY-MM-DD" }
-        optional :inventory_status_id, type: Integer, documentation: { type: "Integer", desc: "Inventory status id" }
-        optional :inventory_status, type: String, documentation: { type: "String", desc: "Inventory status, overrides inventory_status_id if set" }
-      end
+      desc 'Create a new inventory',
+        params: Inventory::Entity.documentation,
+        success: Inventory::Entity
       post do
         can_write!
-        p = declared(params).to_h
         
-        p["inventory_status_id"] = InventoryStatus.where(name: p["inventory_status"]).pluck(:id).first
-        p.delete("inventory_status")
+        params["inventory_status_id"] = InventoryStatus.where(name: params["inventory_status"]).pluck(:id).first
+        params.delete("inventory_status")
 
-        i = Inventory.new(p)
+        i = Inventory.new(params)
         i.owner = @owner
         i.save!
         present i
