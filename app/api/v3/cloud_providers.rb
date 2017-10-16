@@ -39,7 +39,7 @@ module V3
         end
 
         desc 'Delete cloud provider by name'
-        get do
+        delete do
           can_write!
           c = CloudProvider.owned_by(@owner).find_by_name params[:rname]
           error!('Not found', 404) unless c
@@ -48,8 +48,9 @@ module V3
         end
       end
 
-      desc 'Return a list of cloud providers, possibly filtered', is_array: true,
-                                                                  success: CloudProvider::Entity
+      desc 'Return a list of cloud providers, possibly filtered',
+        is_array: true,
+        success: CloudProvider::Entity
       get do
         can_read!
 
