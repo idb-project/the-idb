@@ -14,7 +14,8 @@ module V3
       end
 
       route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.]+/ } do
-        desc 'Get a switch by fqdn', success: Switch::Entity
+        desc 'Get a switch by fqdn',
+          success: Switch::Entity
         get do
           can_read!
           s = Switch.find_by_fqdn params[:fqdn]
@@ -23,10 +24,8 @@ module V3
           present s
         end
 
-        desc 'Update a switch', success: Switch::Entity
-        params do
-          requires :fqdn, type: String
-        end
+        desc 'Update a switch',
+          success: Switch::Entity
         put do
           can_write!
           s = Switch.find_by_fqdn params[:fqdn]
@@ -47,7 +46,8 @@ module V3
 
         resource :ports do
           route_param :number, type: Integer, requirements: { number: /[0-9]+/ } do
-            desc 'Get a switch port', success: SwitchPort::Entity
+            desc 'Get a switch port',
+              success: SwitchPort::Entity
             get do
               can_read!
               s = Switch.find_by_fqdn params[:fqdn]
@@ -58,12 +58,9 @@ module V3
               present p
             end
 
-            desc 'Update a switch port', success: SwitchPort::Entity
-            params do
-              requires :number, type: Integer, documentation: { type: "Integer", desc: "Port number" }
-              requires :nic, type: String, documentation: { type: "String", desc: "Nic name" }
-              requires :machine, type: String, documentation: { type: "String", desc: "Machine nic belongs to" }
-            end
+            desc 'Update a switch port',
+              params: SwitchPort::Entity.documentation,
+              success: SwitchPort::Entity
             put do
               can_write!
               s = Switch.find_by_fqdn params[:fqdn]
@@ -104,12 +101,9 @@ module V3
             present SwitchPort.where(switch_id: s.id)
           end
 
-          desc 'Add a new switch port', success: SwitchPort::Entity
-          params do
-            requires :number, type: Integer, documentation: { type: "Integer", desc: "Port number" }
-            requires :nic, type: String, documentation: { type: "String", desc: "Nic name" }
-            requires :machine, type: String, documentation: { type: "String", desc: "Machine nic belongs to" }
-          end
+          desc 'Add a new switch port',
+            params: SwitchPort::Entity.documentation,
+            success: SwitchPort::Entity
           post do
             can_write!
             s = Switch.find_by_fqdn params[:fqdn]
@@ -149,18 +143,16 @@ module V3
         present query
       end
 
-      desc 'Create a new switch', success: Switch::Entity
-      params do
-        requires :fqdn, type: String
-      end
+      desc 'Create a new switch',
+        params: Switch::Entity.documentation,
+        success: Switch::Entity
       post do
         can_write!
         if Switch.find_by_fqdn params['fqdn']
           error!('Entry with this FQDN already exists.', 409)
         end
-        p = declared(params).to_h
 
-        m = Switch.new(p)
+        m = Switch.new(params)
         m.owner = @owner
         m.save!
 

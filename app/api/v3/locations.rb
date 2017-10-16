@@ -15,7 +15,8 @@ module V3
 
       resource :id do
         route_param :id, type: Integer do
-          desc 'Get location by id', success: Location::Entity
+          desc 'Get location by id',
+            success: Location::Entity
           get do
             l = Location.owned_by(@owner).find_by_id params[:id]
             error!('Not Found', 404) unless l
@@ -70,14 +71,14 @@ module V3
       end
 
       resource :roots do
-        desc 'Get the location roots', is_array: true,
-                                       success: Location::Entity
+        desc 'Get the location roots',
+          is_array: true,
+          success: Location::Entity
         get do
           can_read!
           Location.owned_by(@owner).roots.sort_by(&:name)
         end
 
-        # FIXME
         desc 'Create a new location root',
           params: Location::Entity.documentation,
           success: Location::Entity
@@ -93,8 +94,9 @@ module V3
       end
 
       resource :levels do
-        desc 'Get a list of all location levels, possibly filtered', is_array: true,
-                                                                     success: LocationLevel::Entity
+        desc 'Get a list of all location levels, possibly filtered',
+          is_array: true,
+          success: LocationLevel::Entity
         get do
           can_read!
 
@@ -115,8 +117,9 @@ module V3
         end
       end
 
-      desc 'Return a list of locations, possibly filtered', is_array: true,
-                                                                  success: Location::Entity
+      desc 'Return a list of locations, possibly filtered',
+        is_array: true,
+        success: Location::Entity
       get do
         can_read!
 

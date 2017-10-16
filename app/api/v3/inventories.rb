@@ -16,8 +16,8 @@ module V3
       route_param :inventory_number, type: String do
         resource :attachments do
           route_param :fingerprint, type: String, requirements: { fingerprint: /[a-f0-9]+/ } do
-            desc 'Get an attachment', detail: 'WAT?',
-                                      success: Attachment::Entity
+            desc 'Get an attachment',
+              success: Attachment::Entity
             get do
               can_read!
               a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
@@ -37,8 +37,9 @@ module V3
             end
           end
 
-          desc 'Get all attachments', is_array: true,
-                                      success: Attachment::Entity
+          desc 'Get all attachments',
+            is_array: true,
+            success: Attachment::Entity
           get do
             can_read!
             i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
@@ -47,7 +48,8 @@ module V3
             present i.attachments
           end
 
-          desc 'Create an attachment', success: Attachment::Entity
+          desc 'Create an attachment',
+            success: Attachment::Entity
           params do
             requires :data, type: Rack::Multipart::UploadedFile
           end
@@ -68,7 +70,8 @@ module V3
           end
         end
 
-        desc 'Get a inventory by inventory number', success: Inventory::Entity
+        desc 'Get a inventory by inventory number',
+          success: Inventory::Entity
         get do
           can_read!
           i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
@@ -107,8 +110,9 @@ module V3
         end
       end
 
-      desc 'Return a list of inventories, possibly filtered', is_array: true,
-                                                              success: Inventory::Entity
+      desc 'Return a list of inventories, possibly filtered',
+        is_array: true,
+        success: Inventory::Entity
       get do
         can_read!
         if params['machine']

@@ -39,8 +39,9 @@ module V3
             end
           end
 
-          desc 'Get all attachments', is_array: true,
-                                      success: Attachment::Entity
+          desc 'Get all attachments',
+            is_array: true,
+            success: Attachment::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -49,7 +50,8 @@ module V3
             present m.attachments
           end
 
-          desc 'Create an attachment', success: Attachment::Entity
+          desc 'Create an attachment',
+            success: Attachment::Entity
           params do
             requires :data, type: Rack::Multipart::UploadedFile
           end
@@ -72,7 +74,8 @@ module V3
 
         resource :aliases do
           route_param :alias, type: String, requirements: { alias: /.+/ } do
-            desc 'Get a alias', success: MachineAlias::Entity
+            desc 'Get a alias',
+              success: MachineAlias::Entity
             get do
               can_read!
               a = MachineAlias.find_by_name params[:alias]
@@ -106,8 +109,9 @@ module V3
             end
           end
 
-          desc 'Get all aliases', is_array: true,
-                                  success: MachineAlias::Entity
+          desc 'Get all aliases',
+            is_array: true,
+            success: MachineAlias::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -134,7 +138,8 @@ module V3
 
         resource :nics do
           route_param :nic, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
-            desc 'Get a nic', success: Nic::Entity
+            desc 'Get a nic',
+              success: Nic::Entity
             get do
               can_read!
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -177,8 +182,9 @@ module V3
             end
           end
 
-          desc 'Get all nics', is_array: true,
-                               success: Nic::Entity
+          desc 'Get all nics',
+            is_array: true,
+            success: Nic::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -209,7 +215,8 @@ module V3
           end
         end
 
-        desc 'Get a machine by fqdn', success: Machine::Entity
+        desc 'Get a machine by fqdn',
+          success: Machine::Entity
         get do
           can_read!
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -275,7 +282,9 @@ module V3
         end
       end
 
-      desc 'Return a list of machines, possibly filtered', is_array: true, success: Machine::Entity
+      desc 'Return a list of machines, possibly filtered',
+        is_array: true,
+        success: Machine::Entity
       params do
         optional :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
         optional :os, type: String, documentation: { type: "String", desc: "Operating system" }
@@ -357,7 +366,7 @@ module V3
       end
 
       desc 'Create a new machine', 
-        params: Machine::Entity.documentation.to_h,
+        params: Machine::Entity.documentation,
         success: Machine::Entity
       post do
         can_write!

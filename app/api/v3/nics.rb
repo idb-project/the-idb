@@ -50,7 +50,7 @@ module V3
       end
 
       desc 'Return a list of nics, possibly filtered', is_array: true,
-                                                       success: Nic::Entity
+        success: Nic::Entity
       get do
         can_read!
 
