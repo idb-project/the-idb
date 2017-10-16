@@ -137,7 +137,7 @@ module V3
         end
 
         resource :nics do
-          route_param :nic, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
+          route_param :rnic, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
             desc 'Get a nic',
               success: Nic::Entity
             get do
@@ -145,7 +145,7 @@ module V3
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:nic])
+              n = Nic.where(machine_id: m.id, name: params[:rnic])
               error!('Not Found', 404) unless n
               present n
             end
@@ -158,10 +158,10 @@ module V3
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:nic])
+              n = Nic.where(machine_id: m.id, name: params[:rnic])
               error!('Not Found', 404) unless n
 
-              params.delete("nic")
+              params.delete("rnic")
               params.delete("rfqdn")
 
               n.update_attributes(params)
@@ -174,7 +174,7 @@ module V3
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.find_by machine_id: m.id, name: params[:nic]
+              n = Nic.find_by machine_id: m.id, name: params[:rnic]
               error!('Not Found', 404) unless n
 
               n.destroy
