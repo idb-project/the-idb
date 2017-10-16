@@ -73,7 +73,7 @@ class Location < ActiveRecord::Base
 
     def level
       l = LocationLevel.find_by_id object.location_level_id
-      l.level
+      l ? l.level : nil
     end
   end
 end
