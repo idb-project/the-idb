@@ -35,11 +35,13 @@ module V3
               error!('Not Found', 404) unless a
 
               a.destroy!
+              body false
             end
           end
 
-          desc 'Get all attachments', is_array: true,
-                                      success: Attachment::Entity
+          desc 'Get all attachments',
+            is_array: true,
+            success: Attachment::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -48,7 +50,8 @@ module V3
             present m.attachments
           end
 
-          desc 'Create an attachment', success: Attachment::Entity
+          desc 'Create an attachment',
+            success: Attachment::Entity
           params do
             requires :data, type: Rack::Multipart::UploadedFile
           end
@@ -71,7 +74,8 @@ module V3
 
         resource :aliases do
           route_param :alias, type: String, requirements: { alias: /.+/ } do
-            desc 'Get a alias', success: MachineAlias::Entity
+            desc 'Get a alias',
+              success: MachineAlias::Entity
             get do
               can_read!
               a = MachineAlias.find_by_name params[:alias]
@@ -79,18 +83,19 @@ module V3
               present a
             end
 
-            desc 'Update an alias', success: MachineAlias::Entity
-            params do
-              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
-            end
+            desc 'Update an alias',
+              params: MachineAlias::Entity.documentation,
+              success: MachineAlias::Entity
             put do
               can_write!
               a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
 
-              p = declared(params, include_parent_namespaces: false).to_h
+              # remove route parameters for updating
+              params.delete('rfqdn')
+              params.delete('alias')
 
-              a.update_attributes(p)
+              a.update_attributes(params)
               present a
             end
 
@@ -100,11 +105,13 @@ module V3
               a = MachineAlias.find_by_name params[:alias]
               error!('Not Found', 404) unless a
               a.destroy
+              body false
             end
           end
 
-          desc 'Get all aliases', is_array: true,
-                                  success: MachineAlias::Entity
+          desc 'Get all aliases',
+            is_array: true,
+            success: MachineAlias::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -113,48 +120,51 @@ module V3
             present m.aliases
           end
 
-          desc 'Create an alias', success: MachineAlias::Entity
-          params do
-              requires :name, type: String, documentation: { type: "String", desc: "New alias" }
-          end
+          desc 'Create an alias',
+            params: MachineAlias::Entity.documentation,
+            success: MachineAlias::Entity
           post do
             can_write!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
-            p = declared(params, include_parent_namespaces: false).to_h
-            p['machine'] = m
+            params["machine"] = m
+            params.delete("rfqdn")
 
-            a = MachineAlias.create(p)
+            a = MachineAlias.create(params)
             present a
           end
         end
 
         resource :nics do
-          route_param :name, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
-            desc 'Get a nic', success: Nic::Entity
+          route_param :rnic, type: String, requirements: { name: /[a-zA-Z0-9.-]+/ } do
+            desc 'Get a nic',
+              success: Nic::Entity
             get do
               can_read!
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:name])
+              n = Nic.where(machine_id: m.id, name: params[:rnic])
               error!('Not Found', 404) unless n
               present n
             end
 
-            desc 'Update a nic', success: Nic::Entity
+            desc 'Update a nic',
+              params: Nic::Entity.documentation,
+              success: Nic::Entity
             put do
               can_write!
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.where(machine_id: m.id, name: params[:name])
+              n = Nic.where(machine_id: m.id, name: params[:rnic])
               error!('Not Found', 404) unless n
 
-              p = params.select { |k| Nic.attribute_method?(k) }
+              params.delete("rnic")
+              params.delete("rfqdn")
 
-              n.update_attributes(p)
+              n.update_attributes(params)
               present n
             end
 
@@ -164,15 +174,17 @@ module V3
               m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
-              n = Nic.find_by machine_id: m.id, name: params[:name]
+              n = Nic.find_by machine_id: m.id, name: params[:rnic]
               error!('Not Found', 404) unless n
 
               n.destroy
+              body false
             end
           end
 
-          desc 'Get all nics', is_array: true,
-                               success: Nic::Entity
+          desc 'Get all nics',
+            is_array: true,
+            success: Nic::Entity
           get do
             can_read!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -181,7 +193,9 @@ module V3
             present m.nics
           end
 
-          desc 'Create a nic', success: Nic::Entity
+          desc 'Create a nic',
+            params: Nic::Entity.documentation,
+            success: Nic::Entity
           post do
             can_write!
             m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -201,7 +215,8 @@ module V3
           end
         end
 
-        desc 'Get a machine by fqdn', success: Machine::Entity
+        desc 'Get a machine by fqdn',
+          success: Machine::Entity
         get do
           can_read!
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
@@ -210,70 +225,39 @@ module V3
           present m
         end
 
-        desc 'Update a single machine', success: Machine::Entity
-        params do
-          optional :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
-          optional :os,                     type: String,   documentation: { type: "String",  desc: "Operating system" }
-          optional :os_release,             type: String,   documentation: { type: "String",  desc: "Operating system release" }
-          optional :arch,                   type: String,   documentation: { type: "String",  desc: "Architecture" }
-          optional :ram,                    type: Integer,  documentation: { type: "Integer", desc: "RAM" }
-          optional :cores,                  type: Integer,  documentation: { type: "Integer", desc: "CPU Cores" }
-          optional :vmhost,                 type: String,   documentation: { type: "String",  desc: "VM host" }
-          optional :serviced_at,            type: String,   documentation: { type: "String",  desc: "Service date" }
-          optional :description,            type: String,   documentation: { type: "String",  desc: "Description" }
-          optional :uptime,                 type: Integer,  documentation: { type: "Integer", desc: "Uptime in seconds" }
-          optional :serialnumber,           type: String,   documentation: { type: "String",  desc: "Serial number" }
-          optional :backup_type,            type: Integer,  documentation: { type: "Integer", desc: "Backup type" }
-          optional :auto_update,            type: Boolean,  documentation: { type: "Bool",    desc: "True if the machine is updated automatically" }
-          optional :switch_url,             type: String,   documentation: { type: "String",  desc: "Switch management URL" }
-          optional :mrtg_url,               type: String,   documentation: { type: "String",  desc: "MRTG URL" }
-          optional :config_instructions,    type: String,   documentation: { type: "String",  desc: "'Config instructions'" }
-          optional :sw_characteristics,     type: String,   documentation: { type: "String",  desc: "'Software characteristics'" }
-          optional :business_purpose,       type: String,   documentation: { type: "String",  desc: "'Business purpose'" }
-          optional :business_criticality,   type: String,   documentation: { type: "String",  desc: "'Business criticality'" }
-          optional :business_notification,  type: String,   documentation: { type: "String",  desc: "'Business notification'" }
-          optional :diskspace,              type: Integer,  documentation: { type: "Integer", desc: "Disc space in bytes" }
-          optional :severity_class,         type: String,   documentation: { type: "String",  desc: "" }
-          optional :ucs_role,               type: String,   documentation: { type: "String",  desc: "" }
-          optional :backup_brand,           type: String,   documentation: { type: "String",  desc: "" }
-          optional :backup_last_full_run,   type: String,   documentation: { type: "String",  desc: "Last full backup timestamp" }
-          optional :backup_last_inc_run,    type: String,   documentation: { type: "String",  desc: "Last incremental backup timestamp" }
-          optional :backup_last_diff_run,   type: String,   documentation: { type: "String",  desc: "Last differential backup timestamp" }
-          optional :backup_last_full_size,  type: String,   documentation: { type: "String",  desc: "Last full backup size" }
-          optional :backup_last_inc_size,   type: String,   documentation: { type: "String",  desc: "Last incremental backup size" }
-          optional :backup_last_diff_size,  type: String,   documentation: { type: "String",  desc: "Last differential backup size" }
-          optional :needs_reboot,           type: Integer,  documentation: { type: "String",  desc: "Needs reboot" }
-          optional :software,               type: Array,    documentation: { type: "JSON",    desc: "Known installed doftware packages" }
-          optional :power_feed_a,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed a" }
-          optional :power_feed_b,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed b" }
-        end
+        desc 'Update a single machine',
+          params: Machine::Entity.documentation,
+          success: Machine::Entity
         put do
           can_write!
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
                     
-          p = declared(params).to_h
-
-          if not p['fqdn']
-            p['fqdn'] = p['rfqdn']
+          # move route parameter to params
+          if not params['fqdn']
+            params['fqdn'] = params['rfqdn']
           end
-          p.delete('rfqdn')
+          params.delete('rfqdn')
 
-          if not Machine::FQDN_REGEX.match(p['fqdn'])
+          if not Machine::FQDN_REGEX.match(params['fqdn'])
             error!('Invalid Machine', 409)
           end
 
-          m.update_attributes(p)
+          begin
+            m.update_attributes(params)
+          rescue ActiveModel::UnknownAttributeError
+            error!('Invalid Machine', 409)
+          end
 
           is_backed_up = false
           if
-            (p['backup_brand'] && p['backup_brand'].to_i > 0) ||
-            !p['backup_last_full_run'].blank? ||
-            !p['backup_last_inc_run'].blank? ||
-            !p['backup_last_diff_run'].blank? ||
-            !p['backup_last_full_size'].blank? ||
-            !p['backup_last_inc_size'].blank? ||
-            !p['backup_last_diff_size'].blank?
+            (params['backup_brand'] && params['backup_brand'].to_i > 0) ||
+            !params['backup_last_full_run'].blank? ||
+            !params['backup_last_inc_run'].blank? ||
+            !params['backup_last_diff_run'].blank? ||
+            !params['backup_last_full_size'].blank? ||
+            !params['backup_last_inc_size'].blank? ||
+            !params['backup_last_diff_size'].blank?
 
             is_backed_up = true
           end
@@ -294,11 +278,63 @@ module V3
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
           m.destroy
+          body false
         end
       end
 
-      desc 'Return a list of machines, possibly filtered', is_array: true,
-                                                           success: Machine::Entity
+      desc 'Return a list of machines, possibly filtered',
+        is_array: true,
+        success: Machine::Entity
+      params do
+        optional :fqdn, type: String, documentation: { type: "String", desc: "FQDN" }
+        optional :os, type: String, documentation: { type: "String", desc: "Operating system" }
+        optional :os_release, type: String, documentation: { type: "String", desc: "Operating system release" }
+        optional :arch, type: String, documentation: { type: "String", desc: "Architecture" }
+        optional :ram, type: Integer, documentation: { type: "Integer", desc: "Amount of RAM in MB" }
+        optional :cores, documentation: { type: "Integer", desc: "Number of CPU cores" }
+        optional :vmhost, type: String, documentation: { type: "String", desc: "FQDN of virtual machine host if this is a virtual machine" }
+        optional :serviced_at, type: String, documentation: { type: "String", desc: "Service date RFC3999 formatted" }
+        optional :description, type: String, documentation: { type: "String", desc: "Description" }
+        optional :deleted_at, type: String, documentation: { type: "String", desc: "Deletion date RFC3999 formatted" }
+        optional :created_at, type: String, documentation: { type: "String", desc: "Creation date RFC3999 formatted" }
+        optional :updated_at, type: String, documentation: { type: "String", desc: "Update date RFC3999 formatted" }
+        optional :uptime, type: Integer, documentation: { type: "Integer", desc: "Uptime in seconds" }
+        optional :serialnumber, type: String, documentation: { type: "String", desc: "Serial number" }
+        optional :backup_type, type: Integer, documentation: { type: "Integer", desc: "Backup type" }
+        optional :auto_update, type: Boolean, documentation: { type: "Boolean", desc: "true if the machine is updated automatically" }
+        optional :switch_url, type: String, documentation: { type: "String" }
+        optional :mrtg_url, type: String, documentation: { type: "String" }
+        optional :config_instructions, type: String, documentation: { type: "String", desc: "Configuration instructions" }
+        optional :sw_characteristics , type: String, documentation: { type: "String", desc: "Software characteristics" }
+        optional :business_purpose, type: String, documentation: { type: "String", desc: "Business purpose" }
+        optional :business_criticality, type: String, documentation: { type: "String", desc: "Business Criticality" }
+        optional :business_notification, type: String, documentation: { type: "String", desc: "Business Notification" }
+        optional :unattended_upgrades, type: Boolean, documentation: { type: "Boolean" }
+        optional :unattended_upgrades_blacklisted_packages, type: String, documentation: { type: "String" }
+        optional :unattended_upgrades_reboot, type: Boolean, documentation: { type: "Boolean" }
+        optional :unattended_upgrades_time, type: String, documentation: { type: "String" }
+        optional :unattended_upgrades_repos, type: String, documentation: { type: "String" }
+        optional :pending_updates, type: Integer, documentation: { type: "Integer" }
+        optional :pending_security_updates, type: Integer, documentation: { type: "Integer" }
+        optional :pending_updates_sum, type: Integer, documentation: { type: "Integer" }
+        optional :diskspace, type: Integer, documentation: { type: "Integer", desc: "Disc space in bytes" }
+        optional :pending_updates_package_names, type: String, documentation: { type: "String" }
+        optional :severity_class, type: String, documentation: { type: "String" }
+        optional :ucs_role, type: String, documentation: { type: "String" }
+        optional :backup_brand, type: Integer, documentation: { type: "Integer" }
+        optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Last full backup time" }
+        optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Last incremental backup time" }
+        optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Last differential backup time" }
+        optional :raw_data_api, type: String, documentation: { type: "String" }
+        optional :raw_data_puppetdb, type: String, documentation: { type: "String" }
+        optional :backup_last_full_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last full backup size" }
+        optional :backup_last_inc_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last incremental backup size" }
+        optional :backup_last_diff_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last differential backup size" }
+        optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }
+        optional :software, type: Array, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
+        optional :power_feed_a, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed a" }
+        optional :power_feed_b, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed b" }
+      end
       get do
         can_read!
 
@@ -329,53 +365,18 @@ module V3
         present query
       end
 
-      desc 'Create a new machine', success: Machine::Entity
-      params do
-        requires :fqdn,                   type: String,   documentation: { type: "String",  desc: "FQDN" }
-        optional :os,                     type: String,   documentation: { type: "String",  desc: "Operating system" }
-        optional :os_release,             type: String,   documentation: { type: "String",  desc: "Operating system release" }
-        optional :arch,                   type: String,   documentation: { type: "String",  desc: "Architecture" }
-        optional :ram,                    type: Integer,  documentation: { type: "Integer", desc: "RAM" }
-        optional :cores,                  type: Integer,  documentation: { type: "Integer", desc: "CPU Cores" }
-        optional :vmhost,                 type: String,   documentation: { type: "String",  desc: "VM host" }
-        optional :serviced_at,            type: String,   documentation: { type: "String",  desc: "Service date" }
-        optional :description,            type: String,   documentation: { type: "String",  desc: "Description" }
-        optional :uptime,                 type: Integer,  documentation: { type: "Integer", desc: "Uptime in seconds" }
-        optional :serialnumber,           type: String,   documentation: { type: "String",  desc: "Serial number" }
-        optional :backup_type,            type: Integer,  documentation: { type: "Integer", desc: "Backup type" }
-        optional :auto_update,            type: Boolean,  documentation: { type: "Bool",    desc: "True if the machine is updated automatically" }
-        optional :switch_url,             type: String,   documentation: { type: "String",  desc: "Switch management URL" }
-        optional :mrtg_url,               type: String,   documentation: { type: "String",  desc: "MRTG URL" }
-        optional :config_instructions,    type: String,   documentation: { type: "String",  desc: "'Config instructions'" }
-        optional :sw_characteristics,     type: String,   documentation: { type: "String",  desc: "'Software characteristics'" }
-        optional :business_purpose,       type: String,   documentation: { type: "String",  desc: "'Business purpose'" }
-        optional :business_criticality,   type: String,   documentation: { type: "String",  desc: "'Business criticality'" }
-        optional :business_notification,  type: String,   documentation: { type: "String",  desc: "'Business notification'" }
-        optional :diskspace,              type: Integer,  documentation: { type: "Integer", desc: "Disc space in bytes" }
-        optional :severity_class,         type: String,   documentation: { type: "String",  desc: "" }
-        optional :ucs_role,               type: String,   documentation: { type: "String",  desc: "" }
-        optional :backup_brand,           type: String,   documentation: { type: "String",  desc: "" }
-        optional :backup_last_full_run,   type: String,   documentation: { type: "String",  desc: "Last full backup timestamp" }
-        optional :backup_last_inc_run,    type: String,   documentation: { type: "String",  desc: "Last incremental backup timestamp" }
-        optional :backup_last_diff_run,   type: String,   documentation: { type: "String",  desc: "Last differential backup timestamp" }
-        optional :backup_last_full_size,  type: String,   documentation: { type: "String",  desc: "Last full backup size" }
-        optional :backup_last_inc_size,   type: String,   documentation: { type: "String",  desc: "Last incremental backup size" }
-        optional :backup_last_diff_size,  type: String,   documentation: { type: "String",  desc: "Last differential backup size" }
-        optional :needs_reboot,           type: Integer,  documentation: { type: "String",  desc: "Needs reboot" }
-        optional :software,               type: Array,    documentation: { type: "JSON",    desc: "Known installed doftware packages" }
-        optional :power_feed_a,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed a" }
-        optional :power_feed_b,           type: Integer,  documentation: { type: "Integer", desc: "Location id of power feed b" }
-      end
+      desc 'Create a new machine', 
+        params: Machine::Entity.documentation,
+        success: Machine::Entity
       post do
         can_write!
-        p = declared(params).to_h # we need to_h here as active record doesn't like the hashie mash params
 
-        if not Machine::FQDN_REGEX.match(p['fqdn'])
+        if not Machine::FQDN_REGEX.match(params['fqdn'])
           error!('Invalid Machine', 409)
         end
 
         begin
-          m = Machine.new(p)
+          m = Machine.new(params)
           m.owner = @owner
           m.save!
         rescue ActiveRecord::RecordInvalid

@@ -57,7 +57,7 @@ class Location < ActiveRecord::Base
   
   class Entity < Grape::Entity
     expose :id, documentation: { type: "Integer", desc: "Id" }
-    expose :name, documentation: { type: "String", desc: "Name" }
+    expose :name, documentation: { type: "String", desc: "Name", param_type: "body" }
     expose :description, documentation: { type: "String", desc: "Description" }
     expose :parent, documentation: { type: "Integer", desc: "Parent location id" }
     expose :children, documentation: { type: "Integer", is_array: true, desc: "Child location ids" }
@@ -73,7 +73,7 @@ class Location < ActiveRecord::Base
 
     def level
       l = LocationLevel.find_by_id object.location_level_id
-      l.level
+      l ? l.level : nil
     end
   end
 end

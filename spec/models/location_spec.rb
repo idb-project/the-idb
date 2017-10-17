@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe Location do
+  before :each do
+    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    allow(User).to receive(:current).and_return(@owner.users.first)
+  end
+
   let(:attributes) do
     {
       name: 'Frankfurt',
@@ -45,20 +50,20 @@ describe Location do
 
   describe 'location_name' do
     it 'returns the name without parent locations' do
-      location = FactoryGirl.create :location
+      location = FactoryGirl.create :location, owner: @owner
       expect(location.location_name).to eq(location.name)
     end
 
     it 'returns full path if one parent' do
-      parent = FactoryGirl.create :location
+      parent = FactoryGirl.create :location, owner: @owner
       parent.add_child(location)
 
       expect(location.location_name).to eq(parent.name + " → " + location.name)
     end
 
     it 'returns full path if more parents' do
-      parent1 = FactoryGirl.create :location
-      parent2 = FactoryGirl.create(:location, name: 'second parent')
+      parent1 = FactoryGirl.create :location, owner: @owner
+      parent2 = FactoryGirl.create(:location, name: 'second parent', owner: @owner)
       parent1.add_child(parent2)
       parent2.add_child(location)
 

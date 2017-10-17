@@ -1,0 +1,3557 @@
+{
+    "basePath": "/api",
+    "definitions": {
+        "Attachment": {
+            "description": "Create an attachment",
+            "properties": {
+                "attachment": {
+                    "description": "Path to attachment, from IDB base URL",
+                    "type": "string"
+                },
+                "attachment_content_type": {
+                    "description": "Attachment mime type",
+                    "type": "string"
+                },
+                "attachment_file_name": {
+                    "description": "Attachment file name",
+                    "type": "string"
+                },
+                "attachment_file_size": {
+                    "description": "File size in bytes",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "attachment_fingerprint": {
+                    "description": "SHA256 fingerprint of the attachment",
+                    "type": "string"
+                },
+                "attachment_updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Attachment description",
+                    "type": "string"
+                },
+                "inventory": {
+                    "description": "Inventory number this attachment belongs to",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "FQDN of the machine this attachment belongs to",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "CloudProvider": {
+            "description": "Create a new cloud provider",
+            "properties": {
+                "apidocs": {
+                    "description": "Link to API documentation for this Cloud Provider",
+                    "type": "string"
+                },
+                "config": {
+                    "description": "Cloud Provider configuration",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Cloud Provider description",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Cloud Provider name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Inventory": {
+            "description": "Create a new inventory",
+            "properties": {
+                "category": {
+                    "description": "Additional category description",
+                    "type": "string"
+                },
+                "comment": {
+                    "description": "Comment field",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "install_date": {
+                    "description": "Installation date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "inventory_number": {
+                    "description": "Inventory Number",
+                    "type": "string"
+                },
+                "inventory_status": {
+                    "description": "Inventory status",
+                    "type": "string"
+                },
+                "inventory_status_id": {
+                    "description": "Inventory status id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "location_id": {
+                    "description": "ID of the location",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "machine": {
+                    "description": "machines FQDN if this inventoy is a machine",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "part_number": {
+                    "description": "Factory part number",
+                    "type": "string"
+                },
+                "place": {
+                    "description": "Additional place description",
+                    "type": "string"
+                },
+                "purchase_date": {
+                    "description": "Purchase date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "seller": {
+                    "description": "Seller",
+                    "type": "string"
+                },
+                "serial": {
+                    "description": "Factory serial number",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "warranty_end": {
+                    "description": "Warranty end date as YYYY-MM-DD",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "IpAddress": {
+            "properties": {
+                "addr": {
+                    "description": "IPv4 address",
+                    "type": "string"
+                },
+                "addr_v6": {
+                    "description": "IPv6 address",
+                    "type": "string"
+                },
+                "family": {
+                    "description": "",
+                    "type": "string"
+                },
+                "netmask": {
+                    "description": "IPv4 netmask",
+                    "type": "string"
+                },
+                "netmask_v6": {
+                    "description": "IPv6 prefix",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Location": {
+            "description": "Return a list of locations, possibly filtered",
+            "properties": {
+                "children": {
+                    "description": "Child location ids",
+                    "items": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "type": "array"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "level": {
+                    "description": "Location level",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "Parent location id",
+                    "format": "int32",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "LocationLevel": {
+            "description": "Get a list of all location levels, possibly filtered",
+            "properties": {
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "level": {
+                    "description": "Level",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Machine": {
+            "description": "Searches machines with specific software configurations",
+            "properties": {
+                "arch": {
+                    "description": "Architecture",
+                    "type": "string"
+                },
+                "auto_update": {
+                    "description": "true if the machine is updated automatically",
+                    "type": "boolean"
+                },
+                "backup_brand": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "backup_last_diff_run": {
+                    "description": "Last differential backup time",
+                    "type": "string"
+                },
+                "backup_last_diff_size": {
+                    "description": "Last differential backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_full_run": {
+                    "description": "Last full backup time",
+                    "type": "string"
+                },
+                "backup_last_full_size": {
+                    "description": "Last full backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_inc_run": {
+                    "description": "Last incremental backup time",
+                    "type": "string"
+                },
+                "backup_last_inc_size": {
+                    "description": "Last incremental backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_type": {
+                    "description": "Backup type",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "business_criticality": {
+                    "description": "Business Criticality",
+                    "type": "string"
+                },
+                "business_notification": {
+                    "description": "Business Notification",
+                    "type": "string"
+                },
+                "business_purpose": {
+                    "description": "Business purpose",
+                    "type": "string"
+                },
+                "config_instructions": {
+                    "description": "Configuration instructions",
+                    "type": "string"
+                },
+                "cores": {
+                    "description": "Number of CPU cores",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "diskspace": {
+                    "description": "Disc space in bytes",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fqdn": {
+                    "description": "FQDN",
+                    "type": "string"
+                },
+                "mrtg_url": {
+                    "type": "string"
+                },
+                "needs_reboot": {
+                    "type": "boolean"
+                },
+                "os": {
+                    "description": "Operating system",
+                    "type": "string"
+                },
+                "os_release": {
+                    "description": "Operating system release",
+                    "type": "string"
+                },
+                "pending_security_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates_package_names": {
+                    "type": "string"
+                },
+                "pending_updates_sum": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_a": {
+                    "description": "Location id of power feed a",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_b": {
+                    "description": "Location id of power feed b",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "ram": {
+                    "description": "Amount of RAM in MB",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "raw_data_api": {
+                    "type": "string"
+                },
+                "raw_data_puppetdb": {
+                    "type": "string"
+                },
+                "serialnumber": {
+                    "description": "Serial number",
+                    "type": "string"
+                },
+                "serviced_at": {
+                    "description": "Service date RFC3999 formatted",
+                    "type": "string"
+                },
+                "severity_class": {
+                    "type": "string"
+                },
+                "software": {
+                    "description": "Known installed doftware packages",
+                    "items": {
+                        "$ref": "#/definitions/SoftwareEntity"
+                    },
+                    "type": "array"
+                },
+                "sw_characteristics": {
+                    "description": "Software characteristics",
+                    "type": "string"
+                },
+                "switch_url": {
+                    "type": "string"
+                },
+                "ucs_role": {
+                    "type": "string"
+                },
+                "unattended_upgrades": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_blacklisted_packages": {
+                    "type": "string"
+                },
+                "unattended_upgrades_reboot": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_repos": {
+                    "type": "string"
+                },
+                "unattended_upgrades_time": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "uptime": {
+                    "description": "Uptime in seconds",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "vmhost": {
+                    "description": "FQDN of virtual machine host if this is a virtual machine",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "MachineAlias": {
+            "description": "Create an alias",
+            "properties": {
+                "machine": {
+                    "description": "Aliased machine FQDN",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Nic": {
+            "description": "Create a new nic",
+            "properties": {
+                "ip_address": {
+                    "$ref": "#/definitions/IpAddress",
+                    "description": "IP address of the nic"
+                },
+                "mac": {
+                    "description": "MAC address",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "Machine FQDN this nic belongs to",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SoftwareEntity": {
+            "properties": {
+                "name": {
+                    "description": "Software name",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Software version",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Switch": {
+            "description": "Create a new switch",
+            "properties": {
+                "fqdn": {
+                    "description": "FQDN",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SwitchPort": {
+            "description": "Add a new switch port",
+            "properties": {
+                "machine": {
+                    "description": "Machine nic belongs to",
+                    "type": "string"
+                },
+                "nic": {
+                    "description": "Nic name",
+                    "type": "string"
+                },
+                "number": {
+                    "description": "Port number",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "switch": {
+                    "description": "Switch FQDN the port belongs to",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3CloudProviders": {
+            "description": "Create a new cloud provider",
+            "properties": {
+                "apidocs": {
+                    "description": "Link to API documentation for this Cloud Provider",
+                    "type": "string"
+                },
+                "config": {
+                    "description": "Cloud Provider configuration",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Cloud Provider description",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Cloud Provider name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3Inventories": {
+            "description": "Create a new inventory",
+            "properties": {
+                "category": {
+                    "description": "Additional category description",
+                    "type": "string"
+                },
+                "comment": {
+                    "description": "Comment field",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "install_date": {
+                    "description": "Installation date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "inventory_number": {
+                    "description": "Inventory Number",
+                    "type": "string"
+                },
+                "inventory_status": {
+                    "description": "Inventory status",
+                    "type": "string"
+                },
+                "inventory_status_id": {
+                    "description": "Inventory status id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "location_id": {
+                    "description": "ID of the location",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "machine": {
+                    "description": "machines FQDN if this inventoy is a machine",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "part_number": {
+                    "description": "Factory part number",
+                    "type": "string"
+                },
+                "place": {
+                    "description": "Additional place description",
+                    "type": "string"
+                },
+                "purchase_date": {
+                    "description": "Purchase date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "seller": {
+                    "description": "Seller",
+                    "type": "string"
+                },
+                "serial": {
+                    "description": "Factory serial number",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "warranty_end": {
+                    "description": "Warranty end date as YYYY-MM-DD",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3LocationsId": {
+            "description": "Create a new child location",
+            "properties": {
+                "children": {
+                    "description": "Child location ids",
+                    "items": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "type": "array"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "level": {
+                    "description": "Location level",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "Parent location id",
+                    "format": "int32",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3LocationsRoots": {
+            "description": "Create a new location root",
+            "properties": {
+                "children": {
+                    "description": "Child location ids",
+                    "items": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "type": "array"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "level": {
+                    "description": "Location level",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "Parent location id",
+                    "format": "int32",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3Machines": {
+            "description": "Create a new machine",
+            "properties": {
+                "arch": {
+                    "description": "Architecture",
+                    "type": "string"
+                },
+                "auto_update": {
+                    "description": "true if the machine is updated automatically",
+                    "type": "boolean"
+                },
+                "backup_brand": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "backup_last_diff_run": {
+                    "description": "Last differential backup time",
+                    "type": "string"
+                },
+                "backup_last_diff_size": {
+                    "description": "Last differential backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_full_run": {
+                    "description": "Last full backup time",
+                    "type": "string"
+                },
+                "backup_last_full_size": {
+                    "description": "Last full backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_inc_run": {
+                    "description": "Last incremental backup time",
+                    "type": "string"
+                },
+                "backup_last_inc_size": {
+                    "description": "Last incremental backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_type": {
+                    "description": "Backup type",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "business_criticality": {
+                    "description": "Business Criticality",
+                    "type": "string"
+                },
+                "business_notification": {
+                    "description": "Business Notification",
+                    "type": "string"
+                },
+                "business_purpose": {
+                    "description": "Business purpose",
+                    "type": "string"
+                },
+                "config_instructions": {
+                    "description": "Configuration instructions",
+                    "type": "string"
+                },
+                "cores": {
+                    "description": "Number of CPU cores",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "diskspace": {
+                    "description": "Disc space in bytes",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fqdn": {
+                    "description": "FQDN",
+                    "type": "string"
+                },
+                "mrtg_url": {
+                    "type": "string"
+                },
+                "needs_reboot": {
+                    "type": "boolean"
+                },
+                "os": {
+                    "description": "Operating system",
+                    "type": "string"
+                },
+                "os_release": {
+                    "description": "Operating system release",
+                    "type": "string"
+                },
+                "pending_security_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates_package_names": {
+                    "type": "string"
+                },
+                "pending_updates_sum": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_a": {
+                    "description": "Location id of power feed a",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_b": {
+                    "description": "Location id of power feed b",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "ram": {
+                    "description": "Amount of RAM in MB",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "raw_data_api": {
+                    "type": "string"
+                },
+                "raw_data_puppetdb": {
+                    "type": "string"
+                },
+                "serialnumber": {
+                    "description": "Serial number",
+                    "type": "string"
+                },
+                "serviced_at": {
+                    "description": "Service date RFC3999 formatted",
+                    "type": "string"
+                },
+                "severity_class": {
+                    "type": "string"
+                },
+                "software": {
+                    "description": "Known installed doftware packages",
+                    "items": {
+                        "$ref": "#/definitions/SoftwareEntity"
+                    },
+                    "type": "array"
+                },
+                "sw_characteristics": {
+                    "description": "Software characteristics",
+                    "type": "string"
+                },
+                "switch_url": {
+                    "type": "string"
+                },
+                "ucs_role": {
+                    "type": "string"
+                },
+                "unattended_upgrades": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_blacklisted_packages": {
+                    "type": "string"
+                },
+                "unattended_upgrades_reboot": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_repos": {
+                    "type": "string"
+                },
+                "unattended_upgrades_time": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "uptime": {
+                    "description": "Uptime in seconds",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "vmhost": {
+                    "description": "FQDN of virtual machine host if this is a virtual machine",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3MachinesRfqdnAliases": {
+            "description": "Create an alias",
+            "properties": {
+                "machine": {
+                    "description": "Aliased machine FQDN",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3MachinesRfqdnNics": {
+            "description": "Create a nic",
+            "properties": {
+                "ip_address": {
+                    "$ref": "#/definitions/IpAddress",
+                    "description": "IP address of the nic"
+                },
+                "mac": {
+                    "description": "MAC address",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "Machine FQDN this nic belongs to",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "postApiV3Nics": {
+            "description": "Create a new nic",
+            "properties": {
+                "ip_address": {
+                    "$ref": "#/definitions/IpAddress",
+                    "description": "IP address of the nic"
+                },
+                "mac": {
+                    "description": "MAC address",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "Machine FQDN this nic belongs to",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3CloudProviders": {
+            "description": "Update a single cloud provider",
+            "properties": {
+                "apidocs": {
+                    "description": "Link to API documentation for this Cloud Provider",
+                    "type": "string"
+                },
+                "config": {
+                    "description": "Cloud Provider configuration",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Cloud Provider description",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Cloud Provider name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3Inventories": {
+            "description": "Update a single inventory",
+            "properties": {
+                "category": {
+                    "description": "Additional category description",
+                    "type": "string"
+                },
+                "comment": {
+                    "description": "Comment field",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "install_date": {
+                    "description": "Installation date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "inventory_status": {
+                    "description": "Inventory status",
+                    "type": "string"
+                },
+                "inventory_status_id": {
+                    "description": "Inventory status id",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "location_id": {
+                    "description": "ID of the location",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "machine": {
+                    "description": "machines FQDN if this inventoy is a machine",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "part_number": {
+                    "description": "Factory part number",
+                    "type": "string"
+                },
+                "place": {
+                    "description": "Additional place description",
+                    "type": "string"
+                },
+                "purchase_date": {
+                    "description": "Purchase date as YYYY-MM-DD",
+                    "type": "string"
+                },
+                "seller": {
+                    "description": "Seller",
+                    "type": "string"
+                },
+                "serial": {
+                    "description": "Factory serial number",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "warranty_end": {
+                    "description": "Warranty end date as YYYY-MM-DD",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3LocationsId": {
+            "description": "Update a location",
+            "properties": {
+                "children": {
+                    "description": "Child location ids",
+                    "items": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "type": "array"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "level": {
+                    "description": "Location level",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "Parent location id",
+                    "format": "int32",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3Machines": {
+            "description": "Update a single machine",
+            "properties": {
+                "arch": {
+                    "description": "Architecture",
+                    "type": "string"
+                },
+                "auto_update": {
+                    "description": "true if the machine is updated automatically",
+                    "type": "boolean"
+                },
+                "backup_brand": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "backup_last_diff_run": {
+                    "description": "Last differential backup time",
+                    "type": "string"
+                },
+                "backup_last_diff_size": {
+                    "description": "Last differential backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_full_run": {
+                    "description": "Last full backup time",
+                    "type": "string"
+                },
+                "backup_last_full_size": {
+                    "description": "Last full backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_last_inc_run": {
+                    "description": "Last incremental backup time",
+                    "type": "string"
+                },
+                "backup_last_inc_size": {
+                    "description": "Last incremental backup size",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "backup_type": {
+                    "description": "Backup type",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "business_criticality": {
+                    "description": "Business Criticality",
+                    "type": "string"
+                },
+                "business_notification": {
+                    "description": "Business Notification",
+                    "type": "string"
+                },
+                "business_purpose": {
+                    "description": "Business purpose",
+                    "type": "string"
+                },
+                "config_instructions": {
+                    "description": "Configuration instructions",
+                    "type": "string"
+                },
+                "cores": {
+                    "description": "Number of CPU cores",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "description": "Creation date RFC3999 formatted",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "Deletion date RFC3999 formatted",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "diskspace": {
+                    "description": "Disc space in bytes",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fqdn": {
+                    "description": "FQDN",
+                    "type": "string"
+                },
+                "mrtg_url": {
+                    "type": "string"
+                },
+                "needs_reboot": {
+                    "type": "boolean"
+                },
+                "os": {
+                    "description": "Operating system",
+                    "type": "string"
+                },
+                "os_release": {
+                    "description": "Operating system release",
+                    "type": "string"
+                },
+                "pending_security_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "pending_updates_package_names": {
+                    "type": "string"
+                },
+                "pending_updates_sum": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_a": {
+                    "description": "Location id of power feed a",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "power_feed_b": {
+                    "description": "Location id of power feed b",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "ram": {
+                    "description": "Amount of RAM in MB",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "raw_data_api": {
+                    "type": "string"
+                },
+                "raw_data_puppetdb": {
+                    "type": "string"
+                },
+                "serialnumber": {
+                    "description": "Serial number",
+                    "type": "string"
+                },
+                "serviced_at": {
+                    "description": "Service date RFC3999 formatted",
+                    "type": "string"
+                },
+                "severity_class": {
+                    "type": "string"
+                },
+                "software": {
+                    "description": "Known installed doftware packages",
+                    "items": {
+                        "$ref": "#/definitions/SoftwareEntity"
+                    },
+                    "type": "array"
+                },
+                "sw_characteristics": {
+                    "description": "Software characteristics",
+                    "type": "string"
+                },
+                "switch_url": {
+                    "type": "string"
+                },
+                "ucs_role": {
+                    "type": "string"
+                },
+                "unattended_upgrades": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_blacklisted_packages": {
+                    "type": "string"
+                },
+                "unattended_upgrades_reboot": {
+                    "type": "boolean"
+                },
+                "unattended_upgrades_repos": {
+                    "type": "string"
+                },
+                "unattended_upgrades_time": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "Update date RFC3999 formatted",
+                    "type": "string"
+                },
+                "uptime": {
+                    "description": "Uptime in seconds",
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "vmhost": {
+                    "description": "FQDN of virtual machine host if this is a virtual machine",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3MachinesRfqdnAliases": {
+            "description": "Update an alias",
+            "properties": {
+                "machine": {
+                    "description": "Aliased machine FQDN",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3MachinesRfqdnNics": {
+            "description": "Update a nic",
+            "properties": {
+                "ip_address": {
+                    "$ref": "#/definitions/IpAddress",
+                    "description": "IP address of the nic"
+                },
+                "mac": {
+                    "description": "MAC address",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "Machine FQDN this nic belongs to",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "putApiV3Nics": {
+            "description": "Update a single nic",
+            "properties": {
+                "ip_address": {
+                    "$ref": "#/definitions/IpAddress",
+                    "description": "IP address of the nic"
+                },
+                "mac": {
+                    "description": "MAC address",
+                    "type": "string"
+                },
+                "machine": {
+                    "description": "Machine FQDN this nic belongs to",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "host": "localhost:5000",
+    "info": {
+        "contact": {
+            "email": "support@bytemine.net",
+            "name": "bytemine GmbH",
+            "url": "https://bytemine.net"
+        },
+        "description": "Infrastructure Database v3",
+        "license": {
+            "name": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3",
+            "url": "https://www.gnu.org/licenses/agpl-3.0.txt"
+        },
+        "title": "IDB API",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/api/v3/cloud_providers": {
+            "get": {
+                "description": "Return a list of cloud providers, possibly filtered",
+                "operationId": "getApiV3CloudProviders",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of cloud providers, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/CloudProvider"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of cloud providers, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new cloud provider",
+                "operationId": "postApiV3CloudProviders",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "CloudProvider",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CloudProvider"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new cloud provider",
+                        "schema": {
+                            "$ref": "#/definitions/CloudProvider"
+                        }
+                    }
+                },
+                "summary": "Create a new cloud provider",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/cloud_providers/{rname}": {
+            "delete": {
+                "description": "Delete cloud provider by name",
+                "operationId": "deleteApiV3CloudProvidersRname",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rname",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete cloud provider by name"
+                    }
+                },
+                "summary": "Delete cloud provider by name",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get cloud provider by name",
+                "operationId": "getApiV3CloudProvidersRname",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rname",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get cloud provider by name",
+                        "schema": {
+                            "$ref": "#/definitions/CloudProvider"
+                        }
+                    }
+                },
+                "summary": "Get cloud provider by name",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a single cloud provider",
+                "operationId": "putApiV3CloudProvidersRname",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rname",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "CloudProvider",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CloudProvider"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a single cloud provider",
+                        "schema": {
+                            "$ref": "#/definitions/CloudProvider"
+                        }
+                    }
+                },
+                "summary": "Update a single cloud provider",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/inventories": {
+            "get": {
+                "description": "Return a list of inventories, possibly filtered",
+                "operationId": "getApiV3Inventories",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of inventories, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Inventory"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of inventories, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new inventory",
+                "operationId": "postApiV3Inventories",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Inventory",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Inventory"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new inventory",
+                        "schema": {
+                            "$ref": "#/definitions/Inventory"
+                        }
+                    }
+                },
+                "summary": "Create a new inventory",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/inventories/{inventory_number}": {
+            "delete": {
+                "description": "Delete a inventory",
+                "operationId": "deleteApiV3InventoriesInventoryNumber",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a inventory"
+                    }
+                },
+                "summary": "Delete a inventory",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a inventory by inventory number",
+                "operationId": "getApiV3InventoriesInventoryNumber",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a inventory by inventory number",
+                        "schema": {
+                            "$ref": "#/definitions/Inventory"
+                        }
+                    }
+                },
+                "summary": "Get a inventory by inventory number",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a single inventory",
+                "operationId": "putApiV3InventoriesInventoryNumber",
+                "parameters": [
+                    {
+                        "description": "Inventory Number",
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Inventory",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Inventory"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a single inventory",
+                        "schema": {
+                            "$ref": "#/definitions/Inventory"
+                        }
+                    }
+                },
+                "summary": "Update a single inventory",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/inventories/{inventory_number}/attachments": {
+            "get": {
+                "description": "Get all attachments",
+                "operationId": "getApiV3InventoriesInventoryNumberAttachments",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get all attachments",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Attachment"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get all attachments",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create an attachment",
+                "operationId": "postApiV3InventoriesInventoryNumberAttachments",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "data",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create an attachment",
+                        "schema": {
+                            "$ref": "#/definitions/Attachment"
+                        }
+                    }
+                },
+                "summary": "Create an attachment",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/inventories/{inventory_number}/attachments/{fingerprint}": {
+            "delete": {
+                "description": "Delete an attachment",
+                "operationId": "deleteApiV3InventoriesInventoryNumberAttachmentsFingerprint",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "fingerprint",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete an attachment"
+                    }
+                },
+                "summary": "Delete an attachment",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get an attachment",
+                "operationId": "getApiV3InventoriesInventoryNumberAttachmentsFingerprint",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "inventory_number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "fingerprint",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get an attachment",
+                        "schema": {
+                            "$ref": "#/definitions/Attachment"
+                        }
+                    }
+                },
+                "summary": "Get an attachment",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/locations": {
+            "get": {
+                "description": "Return a list of locations, possibly filtered",
+                "operationId": "getApiV3Locations",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of locations, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Location"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of locations, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/locations/id/{id}": {
+            "delete": {
+                "description": "Delete a location",
+                "operationId": "deleteApiV3LocationsIdId",
+                "parameters": [
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a location"
+                    }
+                },
+                "summary": "Delete a location",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get location by id",
+                "operationId": "getApiV3LocationsIdId",
+                "parameters": [
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get location by id",
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                },
+                "summary": "Get location by id",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new child location",
+                "operationId": "postApiV3LocationsIdId",
+                "parameters": [
+                    {
+                        "description": "Id",
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Location",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new child location",
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                },
+                "summary": "Create a new child location",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a location",
+                "operationId": "putApiV3LocationsIdId",
+                "parameters": [
+                    {
+                        "description": "Id",
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Location",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a location",
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                },
+                "summary": "Update a location",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/locations/levels": {
+            "get": {
+                "description": "Get a list of all location levels, possibly filtered",
+                "operationId": "getApiV3LocationsLevels",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a list of all location levels, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/LocationLevel"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get a list of all location levels, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/locations/roots": {
+            "get": {
+                "description": "Get the location roots",
+                "operationId": "getApiV3LocationsRoots",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get the location roots",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Location"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get the location roots",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new location root",
+                "operationId": "postApiV3LocationsRoots",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Location",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new location root",
+                        "schema": {
+                            "$ref": "#/definitions/Location"
+                        }
+                    }
+                },
+                "summary": "Create a new location root",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines": {
+            "get": {
+                "description": "Return a list of machines, possibly filtered",
+                "operationId": "getApiV3Machines",
+                "parameters": [
+                    {
+                        "description": "FQDN",
+                        "in": "query",
+                        "name": "fqdn",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Operating system",
+                        "in": "query",
+                        "name": "os",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Operating system release",
+                        "in": "query",
+                        "name": "os_release",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Architecture",
+                        "in": "query",
+                        "name": "arch",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Amount of RAM in MB",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "ram",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Number of CPU cores",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "cores",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "FQDN of virtual machine host if this is a virtual machine",
+                        "in": "query",
+                        "name": "vmhost",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Service date RFC3999 formatted",
+                        "in": "query",
+                        "name": "serviced_at",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Description",
+                        "in": "query",
+                        "name": "description",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Deletion date RFC3999 formatted",
+                        "in": "query",
+                        "name": "deleted_at",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Creation date RFC3999 formatted",
+                        "in": "query",
+                        "name": "created_at",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Update date RFC3999 formatted",
+                        "in": "query",
+                        "name": "updated_at",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Uptime in seconds",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "uptime",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Serial number",
+                        "in": "query",
+                        "name": "serialnumber",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Backup type",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "backup_type",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "true if the machine is updated automatically",
+                        "in": "query",
+                        "name": "auto_update",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "switch_url",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "mrtg_url",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Configuration instructions",
+                        "in": "query",
+                        "name": "config_instructions",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Software characteristics",
+                        "in": "query",
+                        "name": "sw_characteristics",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Business purpose",
+                        "in": "query",
+                        "name": "business_purpose",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Business Criticality",
+                        "in": "query",
+                        "name": "business_criticality",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Business Notification",
+                        "in": "query",
+                        "name": "business_notification",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "unattended_upgrades",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "unattended_upgrades_blacklisted_packages",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "unattended_upgrades_reboot",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "unattended_upgrades_time",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "unattended_upgrades_repos",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "query",
+                        "name": "pending_updates",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "query",
+                        "name": "pending_security_updates",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "query",
+                        "name": "pending_updates_sum",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Disc space in bytes",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "diskspace",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pending_updates_package_names",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "severity_class",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "ucs_role",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "query",
+                        "name": "backup_brand",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Last full backup time",
+                        "in": "query",
+                        "name": "backup_last_full_run",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Last incremental backup time",
+                        "in": "query",
+                        "name": "backup_last_inc_run",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Last differential backup time",
+                        "in": "query",
+                        "name": "backup_last_diff_run",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "raw_data_api",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "raw_data_puppetdb",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Last full backup size",
+                        "format": "int64",
+                        "in": "query",
+                        "name": "backup_last_full_size",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Last incremental backup size",
+                        "format": "int64",
+                        "in": "query",
+                        "name": "backup_last_inc_size",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Last differential backup size",
+                        "format": "int64",
+                        "in": "query",
+                        "name": "backup_last_diff_size",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "needs_reboot",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "description": "Known installed doftware packages",
+                        "in": "formData",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "software",
+                        "required": false,
+                        "type": "array"
+                    },
+                    {
+                        "description": "Location id of power feed a",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "power_feed_a",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Location id of power feed b",
+                        "format": "int32",
+                        "in": "query",
+                        "name": "power_feed_b",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of machines, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Machine"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of machines, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new machine",
+                "operationId": "postApiV3Machines",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Machine",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Machine"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new machine",
+                        "schema": {
+                            "$ref": "#/definitions/Machine"
+                        }
+                    }
+                },
+                "summary": "Create a new machine",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}": {
+            "delete": {
+                "description": "Delete a machine",
+                "operationId": "deleteApiV3MachinesRfqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a machine"
+                    }
+                },
+                "summary": "Delete a machine",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a machine by fqdn",
+                "operationId": "getApiV3MachinesRfqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a machine by fqdn",
+                        "schema": {
+                            "$ref": "#/definitions/Machine"
+                        }
+                    }
+                },
+                "summary": "Get a machine by fqdn",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a single machine",
+                "operationId": "putApiV3MachinesRfqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Machine",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Machine"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a single machine",
+                        "schema": {
+                            "$ref": "#/definitions/Machine"
+                        }
+                    }
+                },
+                "summary": "Update a single machine",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/aliases": {
+            "get": {
+                "description": "Get all aliases",
+                "operationId": "getApiV3MachinesRfqdnAliases",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get all aliases",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/MachineAlias"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get all aliases",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create an alias",
+                "operationId": "postApiV3MachinesRfqdnAliases",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "MachineAlias",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MachineAlias"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create an alias",
+                        "schema": {
+                            "$ref": "#/definitions/MachineAlias"
+                        }
+                    }
+                },
+                "summary": "Create an alias",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/aliases/{alias}": {
+            "delete": {
+                "description": "Delete an alias",
+                "operationId": "deleteApiV3MachinesRfqdnAliasesAlias",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "alias",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete an alias"
+                    }
+                },
+                "summary": "Delete an alias",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a alias",
+                "operationId": "getApiV3MachinesRfqdnAliasesAlias",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "alias",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a alias",
+                        "schema": {
+                            "$ref": "#/definitions/MachineAlias"
+                        }
+                    }
+                },
+                "summary": "Get a alias",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update an alias",
+                "operationId": "putApiV3MachinesRfqdnAliasesAlias",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "alias",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "MachineAlias",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MachineAlias"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update an alias",
+                        "schema": {
+                            "$ref": "#/definitions/MachineAlias"
+                        }
+                    }
+                },
+                "summary": "Update an alias",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/attachments": {
+            "get": {
+                "description": "Get all attachments",
+                "operationId": "getApiV3MachinesRfqdnAttachments",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get all attachments",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Attachment"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get all attachments",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create an attachment",
+                "operationId": "postApiV3MachinesRfqdnAttachments",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "data",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create an attachment",
+                        "schema": {
+                            "$ref": "#/definitions/Attachment"
+                        }
+                    }
+                },
+                "summary": "Create an attachment",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/attachments/{fingerprint}": {
+            "delete": {
+                "description": "Delete an attachment",
+                "operationId": "deleteApiV3MachinesRfqdnAttachmentsFingerprint",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "fingerprint",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete an attachment"
+                    }
+                },
+                "summary": "Delete an attachment",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get an attachment",
+                "operationId": "getApiV3MachinesRfqdnAttachmentsFingerprint",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "fingerprint",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get an attachment",
+                        "schema": {
+                            "$ref": "#/definitions/Attachment"
+                        }
+                    }
+                },
+                "summary": "Get an attachment",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/nics": {
+            "get": {
+                "description": "Get all nics",
+                "operationId": "getApiV3MachinesRfqdnNics",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get all nics",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Nic"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Get all nics",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a nic",
+                "operationId": "postApiV3MachinesRfqdnNics",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Nic",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a nic",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Create a nic",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/machines/{rfqdn}/nics/{rnic}": {
+            "delete": {
+                "description": "Delete a nic",
+                "operationId": "deleteApiV3MachinesRfqdnNicsRnic",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "rnic",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a nic"
+                    }
+                },
+                "summary": "Delete a nic",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a nic",
+                "operationId": "getApiV3MachinesRfqdnNicsRnic",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "rnic",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a nic",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Get a nic",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a nic",
+                "operationId": "putApiV3MachinesRfqdnNicsRnic",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "rfqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "rnic",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Nic",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a nic",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Update a nic",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/nics": {
+            "get": {
+                "description": "Return a list of nics, possibly filtered",
+                "operationId": "getApiV3Nics",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of nics, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Nic"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of nics, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new nic",
+                "operationId": "postApiV3Nics",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Nic",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new nic",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Create a new nic",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/nics/{id}": {
+            "delete": {
+                "description": "Delete a single nic",
+                "operationId": "deleteApiV3NicsId",
+                "parameters": [
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a single nic"
+                    }
+                },
+                "summary": "Delete a single nic",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a nic by id",
+                "operationId": "getApiV3NicsId",
+                "parameters": [
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a nic by id",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Get a nic by id",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a single nic",
+                "operationId": "putApiV3NicsId",
+                "parameters": [
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Nic",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a single nic",
+                        "schema": {
+                            "$ref": "#/definitions/Nic"
+                        }
+                    }
+                },
+                "summary": "Update a single nic",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/softwares": {
+            "get": {
+                "description": "Searches machines with specific software configurations",
+                "operationId": "getApiV3Softwares",
+                "parameters": [
+                    {
+                        "description": "search query, for example 'nmap=4'",
+                        "in": "query",
+                        "name": "q",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Searches machines with specific software configurations",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Machine"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Searches machines with specific software configurations",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/switches": {
+            "get": {
+                "description": "Return a list of switches, possibly filtered",
+                "operationId": "getApiV3Switches",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of switches, possibly filtered",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Switch"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of switches, possibly filtered",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Create a new switch",
+                "operationId": "postApiV3Switches",
+                "parameters": [
+                    {
+                        "description": "FQDN",
+                        "in": "formData",
+                        "name": "fqdn",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create a new switch",
+                        "schema": {
+                            "$ref": "#/definitions/Switch"
+                        }
+                    }
+                },
+                "summary": "Create a new switch",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/switches/{fqdn}": {
+            "delete": {
+                "description": "Delete a switch",
+                "operationId": "deleteApiV3SwitchesFqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a switch"
+                    }
+                },
+                "summary": "Delete a switch",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a switch by fqdn",
+                "operationId": "getApiV3SwitchesFqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a switch by fqdn",
+                        "schema": {
+                            "$ref": "#/definitions/Switch"
+                        }
+                    }
+                },
+                "summary": "Get a switch by fqdn",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a switch",
+                "operationId": "putApiV3SwitchesFqdn",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a switch",
+                        "schema": {
+                            "$ref": "#/definitions/Switch"
+                        }
+                    }
+                },
+                "summary": "Update a switch",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/switches/{fqdn}/ports": {
+            "get": {
+                "description": "Return a list of switch ports",
+                "operationId": "getApiV3SwitchesFqdnPorts",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a list of switch ports",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/SwitchPort"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "summary": "Return a list of switch ports",
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Add a new switch port",
+                "operationId": "postApiV3SwitchesFqdnPorts",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Port number",
+                        "format": "int32",
+                        "in": "formData",
+                        "name": "number",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Nic name",
+                        "in": "formData",
+                        "name": "nic",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Machine nic belongs to",
+                        "in": "formData",
+                        "name": "machine",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Switch FQDN the port belongs to",
+                        "in": "formData",
+                        "name": "switch",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Add a new switch port",
+                        "schema": {
+                            "$ref": "#/definitions/SwitchPort"
+                        }
+                    }
+                },
+                "summary": "Add a new switch port",
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/v3/switches/{fqdn}/ports/{number}": {
+            "delete": {
+                "description": "Delete a switch port",
+                "operationId": "deleteApiV3SwitchesFqdnPortsNumber",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "number",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete a switch port"
+                    }
+                },
+                "summary": "Delete a switch port",
+                "tags": [
+                    "api"
+                ]
+            },
+            "get": {
+                "description": "Get a switch port",
+                "operationId": "getApiV3SwitchesFqdnPortsNumber",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "format": "int32",
+                        "in": "path",
+                        "name": "number",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a switch port",
+                        "schema": {
+                            "$ref": "#/definitions/SwitchPort"
+                        }
+                    }
+                },
+                "summary": "Get a switch port",
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Update a switch port",
+                "operationId": "putApiV3SwitchesFqdnPortsNumber",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fqdn",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Port number",
+                        "format": "int32",
+                        "in": "path",
+                        "name": "number",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "description": "Nic name",
+                        "in": "formData",
+                        "name": "nic",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Machine nic belongs to",
+                        "in": "formData",
+                        "name": "machine",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Switch FQDN the port belongs to",
+                        "in": "formData",
+                        "name": "switch",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update a switch port",
+                        "schema": {
+                            "$ref": "#/definitions/SwitchPort"
+                        }
+                    }
+                },
+                "summary": "Update a switch port",
+                "tags": [
+                    "api"
+                ]
+            }
+        }
+    },
+    "produces": [
+        "application/xml",
+        "application/json",
+        "application/octet-stream",
+        "text/plain"
+    ],
+    "swagger": "2.0",
+    "tags": [
+        {
+            "description": "Operations about apis",
+            "name": "api"
+        }
+    ]
+}

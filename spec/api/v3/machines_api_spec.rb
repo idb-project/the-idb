@@ -162,7 +162,6 @@ describe 'Machines API V3' do
       payload = {
         "fqdn":"new-machine.example.com",
         "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}],
-        "create_machine": true
       }
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
       expect(response.status).to eq(201)
@@ -192,7 +191,6 @@ describe 'Machines API V3' do
 
       api_put_json(action: "machines/existing.example.com", token: @api_token_w, payload: machine, version: "3")
       expect(response.status).to eq(200)
-
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
       expect(machine['ucs_role']).to eq("member")
@@ -246,7 +244,7 @@ describe 'Machines API V3' do
       expect(machine['backup_brand']).to eq(2)
     end    
 
-    it 'filters out not existing attributes' do
+    it 'returns 409 Bad Request for not defined attributes' do
       FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines/existing3.example.com", token: @api_token_r, version: "3")
@@ -260,7 +258,7 @@ describe 'Machines API V3' do
       }
 
       api_put_json(action: "machines/existing3.example.com", token: @api_token_w, payload: payload, version: "3")
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(409)
     end
 
     it 'updates the software of a machine if existing, JSON payload' do

@@ -13,7 +13,10 @@ module V3
       end
 
       desc 'Searches machines with specific software configurations', is_array: true,
-                                                                      success: Machine::Entity
+        success: Machine::Entity
+        params do
+          requires :q, type: String, documentation: { desc: "search query, for example 'nmap=4'", param_type: "query" }
+        end
       get do
         can_read!
         if params['q'].empty?

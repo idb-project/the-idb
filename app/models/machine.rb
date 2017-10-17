@@ -216,13 +216,18 @@ class Machine < ActiveRecord::Base
     return nil
   end
 
+  class SoftwareEntity < Grape::Entity
+    expose :name, documentation: { type: "String", desc: "Software name", param_type: 'body' }
+    expose :version, documentation: { type: "String", desc: "Software version", param_type: 'body' }
+  end
+
   class Entity < Grape::Entity
-    expose :fqdn, documentation: { type: "String", desc: "FQDN" }
+    expose :fqdn, documentation: { type: "String", desc: "FQDN", param_type: 'body' }
     expose :os, documentation: { type: "String", desc: "Operating system" }
     expose :os_release, documentation: { type: "String", desc: "Operating system release" }
     expose :arch, documentation: { type: "String", desc: "Architecture" }
     expose :ram, documentation: { type: "Integer", desc: "Amount of RAM in MB" }
-    expose :cores, documentation: { type: "String", desc: "Number of CPU cores" }
+    expose :cores, documentation: { type: "Integer", desc: "Number of CPU cores" }
     expose :vmhost, documentation: { type: "String", desc: "FQDN of virtual machine host if this is a virtual machine" }
     expose :serviced_at, documentation: { type: "String", desc: "Service date RFC3999 formatted" }
     expose :description, documentation: { type: "String", desc: "Description" }
@@ -232,37 +237,37 @@ class Machine < ActiveRecord::Base
     expose :uptime, documentation: { type: "Integer", desc: "Uptime in seconds" }
     expose :serialnumber, documentation: { type: "String", desc: "Serial number" }
     expose :backup_type, documentation: { type: "Integer", desc: "Backup type" }
-    expose :auto_update, documentation: { type: "Bool", desc: "true if the machine is updated automatically" }
-    expose :switch_url, documentation: { type: "String", desc: "???" }
-    expose :mrtg_url, documentation: { type: "String", desc: "???" }
+    expose :auto_update, documentation: { type: "Boolean", desc: "true if the machine is updated automatically" }
+    expose :switch_url, documentation: { type: "String" }
+    expose :mrtg_url, documentation: { type: "String" }
     expose :config_instructions, documentation: { type: "String", desc: "Configuration instructions" }
     expose :sw_characteristics , documentation: { type: "String", desc: "Software characteristics" }
     expose :business_purpose, documentation: { type: "String", desc: "Business purpose" }
     expose :business_criticality, documentation: { type: "String", desc: "Business Criticality" }
     expose :business_notification, documentation: { type: "String", desc: "Business Notification" }
-    expose :unattended_upgrades
-    expose :unattended_upgrades_blacklisted_packages
-    expose :unattended_upgrades_reboot
-    expose :unattended_upgrades_time
-    expose :unattended_upgrades_repos
-    expose :pending_updates
-    expose :pending_security_updates
-    expose :pending_updates_sum
+    expose :unattended_upgrades, documentation: { type: "Boolean" }
+    expose :unattended_upgrades_blacklisted_packages, documentation: { type: "String" }
+    expose :unattended_upgrades_reboot, documentation: { type: "Boolean" }
+    expose :unattended_upgrades_time, documentation: { type: "String" }
+    expose :unattended_upgrades_repos, documentation: { type: "String" }
+    expose :pending_updates, documentation: { type: "Integer" }
+    expose :pending_security_updates, documentation: { type: "Integer" }
+    expose :pending_updates_sum, documentation: { type: "Integer" }
     expose :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
-    expose :pending_updates_package_names
-    expose :severity_class
-    expose :ucs_role
-    expose :backup_brand
-    expose :backup_last_full_run, documentation: { type: "String", desc: "Name" }
-    expose :backup_last_inc_run, documentation: { type: "String", desc: "Name" }
-    expose :backup_last_diff_run, documentation: { type: "String", desc: "Name" }
-    expose :raw_data_api
-    expose :raw_data_puppetdb
-    expose :backup_last_full_size, documentation: { type: "String", desc: "Name" }
-    expose :backup_last_inc_size, documentation: { type: "String", desc: "Name" }
-    expose :backup_last_diff_size, documentation: { type: "String", desc: "Name" }
-    expose :needs_reboot
-    expose :software, documentation: { type: "JSON", desc: "Known installed doftware packages" }
+    expose :pending_updates_package_names, documentation: { type: "String" }
+    expose :severity_class, documentation: { type: "String" }
+    expose :ucs_role, documentation: { type: "String" }
+    expose :backup_brand, documentation: { type: "Integer" }
+    expose :backup_last_full_run, documentation: { type: "String", desc: "Last full backup time" }
+    expose :backup_last_inc_run, documentation: { type: "String", desc: "Last incremental backup time" }
+    expose :backup_last_diff_run, documentation: { type: "String", desc: "Last differential backup time" }
+    expose :raw_data_api, documentation: { type: "String" }
+    expose :raw_data_puppetdb, documentation: { type: "String" }
+    expose :backup_last_full_size, documentation: { type: "Integer", format: "int64", desc: "Last full backup size" }
+    expose :backup_last_inc_size, documentation: { type: "Integer", format: "int64", desc: "Last incremental backup size" }
+    expose :backup_last_diff_size, documentation: { type: "Integer", format: "int64", desc: "Last differential backup size" }
+    expose :needs_reboot, documentation: { type: "Boolean" }
+    expose :software, documentation: {is_array: true, type: "Machine::SoftwareEntity", desc: "Known installed doftware packages" }
     expose :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
     expose :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
 

@@ -15,8 +15,8 @@ class CloudProvider < ActiveRecord::Base
   end
   
   class Entity < Grape::Entity
-    expose :name, documentation: { type: "String", desc: "Cloud Provider name" }
-    expose :description, documentation: { type: "String", desc: "Cloud Provider description" }
+    expose :name, documentation: { type: "String", desc: "Cloud Provider name", param_type: "body" }
+    expose :description, documentation: { type: "String", desc: "Cloud Provider description", param_type: "body" }
     expose :config, documentation: { type: "String", desc: "Cloud Provider configuration" }
     expose :apidocs, documentation: { type: "String", desc: "Link to API documentation for this Cloud Provider" }
   end
