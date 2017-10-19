@@ -1,3 +1,7 @@
+1.7.3
+=====
+- [bugfix] Add migration to fix type not being set in hardware machines.
+
 1.7.2
 =====
 - [documentation] Improved and added CentOS 6/7 documentation.
