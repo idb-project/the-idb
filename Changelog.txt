@@ -1,3 +1,16 @@
+1.7.2
+=====
+- [documentation] Improved and added CentOS 6/7 documentation.
+- [bugfix] Fixed missing column in machine table #491
+- [bugfix] Owner summary now reports correct machine count. #420
+- [feature] Inventory statuses are now manageable via API v3. #417
+- [bugfix] Check for invalid timestamps in puppet data. #422
+- [bugfix] FQDNs are now tested using the same regexp in UI and in the API. #427
+- [bugfix] Filter locations in multi tenancy. #429
+- [bugfix] Implement flapping detection for values reported via API. #355
+- [feature] Deleted machines are now manageable via API. #432
+- [feature] Correct swagger description of API.
+
 1.7.1
 =====
 From now on we'll use GitHub issue numbers to reference issues.
