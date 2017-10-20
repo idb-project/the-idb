@@ -140,7 +140,7 @@ class EditableMachineForm
   end
 
   def vmhost_list
-    Machine.where(type: nil).pluck(:fqdn).sort
+    Machine.where(type: "Machine").or(Machine.where(type: nil)).pluck(:fqdn).map(&:downcase).sort
   end
 
   def os_list
