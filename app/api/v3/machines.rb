@@ -244,7 +244,11 @@ module V3
           end
 
           token_name = ApiToken.find_by_token(get_token).name
-          params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({token_name => params}).to_json
+          if m.raw_data_api
+            params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({token_name => params}).to_json
+          else
+            params['raw_data_api'] = {token_name => params}.to_json
+          end
 
           begin
             m.update_attributes(params)
