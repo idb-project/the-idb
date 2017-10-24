@@ -432,5 +432,32 @@ describe 'Machines API V3' do
       expect(response.status).to eq(401)
     end
   end
+
+  describe "POST machines" do
+    it "sets raw_api_data" do
+      payload = {
+        "fqdn":"foobar.example.com"
+      }
+      api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
+      raw = Machine.last.raw_data_api
+      expect(JSON.parse(raw)[@api_token_w.token]).to be
+      expect(JSON.parse(raw)[@api_token_w.token]["fqdn"]).to eq("foobar.example.com")
+    end
+  end
+
+  describe "PUT machines/{fqdn}" do
+    it "adds raw_api_data" do
+      m = FactoryGirl.create(:machine, owner: @owner)
+
+      payload = {
+        "fqdn":m.fqdn,
+        "cores":8
+      }
+      api_put_json(action: "machines/#{m.fqdn}", token: @api_token_w, payload: payload, version: "3")
+      raw = Machine.last.raw_data_api
+      expect(JSON.parse(raw)[@api_token_w.token]).to be
+      expect(JSON.parse(raw)[@api_token_w.token]["cores"]).to eq(8)
+    end
+  end      
 end
 

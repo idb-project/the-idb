@@ -243,11 +243,11 @@ module V3
             error!('Invalid Machine', 409)
           end
 
-          token_name = ApiToken.find_by_token(get_token).name
+          tok = get_token
           if m.raw_data_api
-            params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({token_name => params}).to_json
+            params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({tok => params}).to_json
           else
-            params['raw_data_api'] = {token_name => params}.to_json
+            params['raw_data_api'] = {tok => params}.to_json
           end
 
           begin
@@ -382,8 +382,8 @@ module V3
           error!('Invalid Machine', 409)
         end
 
-        token_name = ApiToken.find_by_token(get_token).name
-        params['raw_data_api'] = {token_name => params}.to_json
+        tok = get_token
+        params['raw_data_api'] = {tok => params}.to_json
 
         begin
           m = Machine.new(params)
