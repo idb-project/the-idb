@@ -382,7 +382,7 @@ module V3
           error!('Invalid Machine', 409)
         end
 
-        tok = ApiToken.find_by_token(get_token).token
+        tok = get_token
         params['raw_data_api'] = {tok => params}.to_json
 
         begin
