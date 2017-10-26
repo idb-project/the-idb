@@ -1,6 +1,7 @@
 class MaintenanceRecord < ActiveRecord::Base
   acts_as_paranoid
 
+  has_many :attachments, :dependent => :destroy
   belongs_to :machine
   belongs_to :user
 

@@ -2,6 +2,7 @@ class Attachment < ActiveRecord::Base
   belongs_to :inventory
   belongs_to :owner
   belongs_to :machine
+  belongs_to :maintenance_record
 
   # the digest configuration is not available in current stable 5.1.0
   # that is why the after_save callback is needed
