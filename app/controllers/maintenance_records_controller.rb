@@ -37,6 +37,6 @@ class MaintenanceRecordsController < ApplicationController
   private
 
   def ok_params
-    params.require(:maintenance_record).permit(:logfile, :machine_id)
+    params.require(:maintenance_record).permit(:logfile, :machine_id, :attachments)
   end
 end
