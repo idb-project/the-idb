@@ -27,16 +27,6 @@ module V3
           
                         present a
                       end
-          
-                      desc 'Delete an attachment'
-                      delete do
-                        can_write!
-                        a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
-                        error!('Not Found', 404) unless a
-          
-                        a.destroy!
-                        body false
-                      end
                     end
           
                     desc 'Get all attachments',
@@ -73,11 +63,11 @@ module V3
                       if not m
                           a = MachineAlias.find_by_name(params[:rfqdn])
                           if not a
-                              error!("Not found1", 404)
+                              error!("Not found", 404)
                           end
                           m = Machine.owned_by(@owner).find_by_id(a.machine_id)
                           if not m
-                              error!("Not found2", 404)
+                              error!("Not found", 404)
                           end
                       end
                       
@@ -89,7 +79,7 @@ module V3
                         size: params[:data][:tempfile].size,
                         tempfile: params[:data][:tempfile]
                       }
-          
+                      
                       attachment = ActionDispatch::Http::UploadedFile.new(x)
           
                       present r.attachments.create(attachment: attachment, owner: m.owner)
