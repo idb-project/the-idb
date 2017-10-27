@@ -38,11 +38,11 @@ module V3
                       if not m
                           a = MachineAlias.find_by_name(params[:rfqdn])
                           if not a
-                              error!("Not found1", 404)
+                              error!("Not found", 404)
                           end
                           m = Machine.owned_by(@owner).find_by_id(a.machine_id)
                           if not m
-                              error!("Not found2", 404)
+                              error!("Not found", 404)
                           end
                       end
                       
@@ -89,15 +89,17 @@ module V3
                 desc "Get a maintenance record by machine and creation time",
                     success: MaintenanceRecord::Entity
                 get do
+                    can_read!
+
                     m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
                     if not m
                         a = MachineAlias.find_by_name(params[:rfqdn])
                         if not a
-                            error!("Not found1", 404)
+                            error!("Not found", 404)
                         end
                         m = Machine.owned_by(@owner).find_by_id(a.machine_id)
                         if not m
-                            error!("Not found2", 404)
+                            error!("Not found", 404)
                         end
                     end
                     
@@ -111,6 +113,7 @@ module V3
                 is_array: true,
                 success: MaintenanceRecord::Entity
             get do
+                can_read!
                 m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
                 if not m
                     a = MachineAlias.find_by_name(params[:rfqdn])
@@ -174,15 +177,18 @@ module V3
         post do
           can_write!
           
-          params["machine_id"] = Machine.find_by_fqdn(params["machine"])
+          m = Machine.find_by_fqdn(params["machine"])
+          params["machine_id"] = m.id
+          params["fqdn"] = m.fqdn
           params.delete("machine")
-          params["user_id"] = User.find_by_login(params["user"])
+
+          u = User.find_by_login(params["user"])
+          params["user_id"] = u.id
           params.delete("user")
-            
-          m = MaintenanceRecord.new(params)
-          m.owner = @owner
-          m.save!
-          present m
+
+          r = MaintenanceRecord.new(params)
+          r.save!
+          present r
         end
       end
     end

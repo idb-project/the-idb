@@ -15,7 +15,6 @@ class MaintenanceRecord < ActiveRecord::Base
 
   class Entity < Grape::Entity
     expose :machine, documentation: { type: "String", desc: "FQDN of maintained machine", param_type: "body" }
-    expose :fqdn, documentation: { type: "String", desc: "FQDN the machine was maintained from (alias)" }
     expose :logfile, documentation: { type: "String", desc: "Logfile data" }
     expose :user, documentation: { type: "String", desc: "User loginname" }
     expose :created_at, documentation: { type: "String", desc: "Creation timestamp" }
