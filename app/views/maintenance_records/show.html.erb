@@ -47,4 +47,9 @@
   </div>
 </div>
 
+<%= simple_form_for(@record, html: {multipart: true }) do |f| %>
+  <%= file_field_tag "attachments[]", type: :file, multiple: true %>
+  <%= f.button :submit, "Attach" %>
+<% end %>
+
 </div>

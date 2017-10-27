@@ -28,6 +28,7 @@ class MaintenanceRecordsController < ApplicationController
     @record = MaintenanceRecord.find(params[:id])
 
     if @record.update(ok_params)
+      add_attachments(params[:attachments])
       redirect_to maintenance_record_path(@record), notice: 'Success!'
     else
       redirect_to maintenance_record_path(@record), error: 'Error!'
@@ -37,6 +38,14 @@ class MaintenanceRecordsController < ApplicationController
   private
 
   def ok_params
-    params.require(:maintenance_record).permit(:logfile, :machine_id, :attachments)
+    params.permit(:logfile, :machine_id, :attachments)
+  end
+
+  def add_attachments(attachments)
+    if attachments
+      attachments.each { |attachment|
+        @record.attachments.create(attachment: attachment)
+      }
+    end
   end
 end
