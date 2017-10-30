@@ -69,7 +69,7 @@ describe 'Maintenance Records API V3' do
 
   describe "GET /maintenance_records/{fqdn}/{timestamp}" do
     it 'should return a single maintenance record of a machine' do
-      api_get(action: "maintenance_records/#{@machine.fqdn}/#{@mr.created_at.iso8601}", token: @api_token_r, version: "3")
+      api_get(action: "maintenance_records/#{@machine.fqdn}/#{@mr.created_at.iso8601.to_s}", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
 
       mr = JSON.parse(response.body)

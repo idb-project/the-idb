@@ -13,76 +13,76 @@ module V3
           @owner = get_owner
         end
 
-        route_param :rfqdn, type: String, requirements: { rfqdn: /.*/ } do
-            route_param :rcreated_at, type: String, requirements: { rcreated_at: /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z/ } do
+        route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
+            route_param :rcreated_at, type: String, requirements: { rcreated_at: /.+/ } do
                 resource :attachments do
                     route_param :fingerprint, type: String, requirements: { fingerprint: /[a-f0-9]+/ } do
-                      desc 'Get an attachment' do
+                        desc 'Get an attachment' do
                         success Attachment::Entity
-                      end
-                      get do
+                        end
+                        get do
                         can_read!
                         a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
                         error!('Not Found', 404) unless a
-          
+            
                         present a
-                      end
+                        end
                     end
-          
+            
                     desc 'Get all attachments',
-                      is_array: true,
-                      success: Attachment::Entity
+                        is_array: true,
+                        success: Attachment::Entity
                     get do
-                      can_read!
-                      m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
-                      if not m
-                          a = MachineAlias.find_by_name(params[:rfqdn])
-                          if not a
-                              error!("Not found", 404)
-                          end
-                          m = Machine.owned_by(@owner).find_by_id(a.machine_id)
-                          if not m
-                              error!("Not found", 404)
-                          end
-                      end
-                      
-                      r = MaintenanceRecord.find_by_machine_id_and_created_at(m.id, params[:rcreated_at])
-                      error!('Not Found', 404) unless r
-          
-                      present r.attachments
+                        can_read!
+                        m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
+                        if not m
+                            a = MachineAlias.find_by_name(params[:rfqdn])
+                            if not a
+                                error!("Not found", 404)
+                            end
+                            m = Machine.owned_by(@owner).find_by_id(a.machine_id)
+                            if not m
+                                error!("Not found", 404)
+                            end
+                        end
+                        
+                        r = MaintenanceRecord.find_by_machine_id_and_created_at(m.id, params[:rcreated_at])
+                        error!('Not Found', 404) unless r
+            
+                        present r.attachments
                     end
-          
+            
                     desc 'Create an attachment',
-                      success: Attachment::Entity
+                        success: Attachment::Entity
                     params do
-                      requires :data, type: Rack::Multipart::UploadedFile
+                        requires :data, type: Rack::Multipart::UploadedFile
                     end
                     post do
-                      can_write!
-                      m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
-                      if not m
-                          a = MachineAlias.find_by_name(params[:rfqdn])
-                          if not a
-                              error!("Not found", 404)
-                          end
-                          m = Machine.owned_by(@owner).find_by_id(a.machine_id)
-                          if not m
-                              error!("Not found", 404)
-                          end
-                      end
-                      
-                      r = MaintenanceRecord.find_by_machine_id_and_created_at(m.id, params[:rcreated_at])
-                      error!('Not Found', 404) unless r
-                               
-                      x = {
+                        can_write!
+                        m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
+                        if not m
+                            a = MachineAlias.find_by_name(params[:rfqdn])
+                            if not a
+                                error!("Not found", 404)
+                            end
+                            m = Machine.owned_by(@owner).find_by_id(a.machine_id)
+                            if not m
+                                error!("Not found", 404)
+                            end
+                        end
+                        
+                        r = MaintenanceRecord.find_by_machine_id_and_created_at(m.id, params[:rcreated_at])
+                        error!('Not Found', 404) unless r
+                                
+                        x = {
                         filename: params[:data][:filename],
                         size: params[:data][:tempfile].size,
                         tempfile: params[:data][:tempfile]
-                      }
-                      
-                      attachment = ActionDispatch::Http::UploadedFile.new(x)
-          
-                      present r.attachments.create(attachment: attachment, owner: m.owner)
+                        }
+                        
+                        attachment = ActionDispatch::Http::UploadedFile.new(x)
+            
+                        present r.attachments.create(attachment: attachment, owner: m.owner)
                     end
                 end
 
@@ -108,7 +108,6 @@ module V3
                 end
             end
 
-
             desc "Get maintenance records by machine",
                 is_array: true,
                 success: MaintenanceRecord::Entity
@@ -125,7 +124,7 @@ module V3
                         error!("Not found", 404)
                     end
                 end
-                
+
                 r = MaintenanceRecord.where(machine_id: m.id)
                 present r
             end
