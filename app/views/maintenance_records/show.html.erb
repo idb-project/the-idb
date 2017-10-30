@@ -40,4 +40,16 @@
   </div>
 </div>
 
+<div class="row-fluid">
+  <div class="span12">
+    <h5>Attachments</h5>
+    <p><%= record.attachment_list.html_safe %></p>
+  </div>
+</div>
+
+<%= simple_form_for(@record, html: {multipart: true }) do |f| %>
+  <%= file_field_tag "attachments[]", type: :file, multiple: true %>
+  <%= f.button :submit, "Attach" %>
+<% end %>
+
 </div>

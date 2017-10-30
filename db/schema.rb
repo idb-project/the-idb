@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20170622120928) do
     t.integer  "owner_id"
     t.integer  "machine_id"
     t.string   "attachment_fingerprint"
+    t.integer  "maintenance_record_id"
   end
 
   create_table "cloud_providers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

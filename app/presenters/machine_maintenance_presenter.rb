@@ -47,4 +47,14 @@ class MachineMaintenancePresenter < Keynote::Presenter
   def css_class
     dangling? ? 'text-error' : ''
   end
+
+  def attachment_list
+    return "none" if (record.attachments && record.attachments.size == 0)
+
+    list = "<ul>"
+    record.attachments.each do |att|
+      list += "<li><a href='#{att.attachment.url}' target='_blank'>#{att.attachment_file_name}</a></li>"
+    end
+    list += "</ul>"
+  end
 end

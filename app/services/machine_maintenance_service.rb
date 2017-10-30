@@ -38,11 +38,20 @@ class MachineMaintenanceService
 
     Machine.transaction do
       if record.save
+        add_attachments(params[:attachments])
         record.machine.update(serviced_at: Time.now)
         controller.redirect_to controller.machine_path(record.machine)
       else
         controller.render :new, status: :unprocessable_entity
       end
+    end
+  end
+
+  def add_attachments(attachments)
+    if attachments
+      attachments.each { |attachment|
+        @record.attachments.create(attachment: attachment)
+      }
     end
   end
 end
