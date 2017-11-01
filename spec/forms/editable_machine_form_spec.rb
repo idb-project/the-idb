@@ -263,6 +263,13 @@ describe EditableMachineForm do
     end
   end
 
+  describe '#os_list' do
+    it 'returns a list of operating systems' do
+      form.update(attributes)
+      expect(form.os_list).to eq(["RHEL", "SLES", "UCS", "Ubuntu", "Windows", "Windows Server", "pfSense"])
+    end
+  end
+
   describe '#core_collection' do
     it 'returns a list of even core numbers' do
       expect(form.core_collection[0, 4]).to eq([1, 2, 4, 6])
