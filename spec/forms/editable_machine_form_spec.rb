@@ -266,6 +266,7 @@ describe EditableMachineForm do
   describe '#os_list' do
     it 'returns a list of operating systems' do
       form.update(attributes)
+      m = FactoryGirl.create(:machine, os: "Windows") # create a duplicate Windows entry
       expect(form.os_list).to eq(["RHEL", "SLES", "UCS", "Ubuntu", "Windows", "Windows Server", "pfSense"])
     end
   end

@@ -154,7 +154,7 @@ class EditableMachineForm
   def os_list
     (
       Machine.select(:os).distinct.map(&:os).compact + os_other
-    ).sort
+    ).uniq.sort
   end
 
   def os_release_list
