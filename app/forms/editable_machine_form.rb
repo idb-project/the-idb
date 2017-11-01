@@ -160,7 +160,7 @@ class EditableMachineForm
   def os_release_list
     (
       Machine.select(:os_release).distinct.map(&:os_release).compact + os_release_other
-    ).sort
+    ).uniq.sort
   end
 
   def to_model

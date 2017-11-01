@@ -271,6 +271,14 @@ describe EditableMachineForm do
     end
   end
 
+  describe '#os_release_list' do
+    it 'returns a list of operating releases' do
+      form.update(attributes)
+      m = FactoryGirl.create(:machine, os_release: "7") # create a duplicate "7" entry
+      expect(form.os_release_list.length).to eq(form.os_release_list.uniq.length)
+    end
+  end
+
   describe '#core_collection' do
     it 'returns a list of even core numbers' do
       expect(form.core_collection[0, 4]).to eq([1, 2, 4, 6])
