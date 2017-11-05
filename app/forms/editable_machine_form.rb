@@ -163,6 +163,10 @@ class EditableMachineForm
     ).uniq.sort
   end
 
+  def field_disabled?(name)
+    (machine.auto_update? && !machine.send(name).blank?) ? true : false
+  end
+
   def to_model
     machine
   end

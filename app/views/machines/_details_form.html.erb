@@ -7,32 +7,32 @@
     <div class="span6">
       <h4>Machine Details</h4>
 
-      <%= f.input :arch, disabled: @machine.auto_update, collection: @machine_details.arch_list %>
+      <%= f.input :arch, disabled: @machine_details.field_disabled?("arch"), collection: @machine_details.arch_list %>
 
       <div class="control-group">
         <div class="input-append">
           <%= f.label :ram %>
           <div class="controls">
-            <%= f.input_field :ram, disabled: @machine.auto_update, class: 'input-xl' %>
+            <%= f.input_field :ram, disabled: @machine_details.field_disabled?("ram"), class: 'input-xl' %>
             <span class="add-on">MB</span>
           </div>
         </div>
       </div>
 
-      <%= f.input :cores, disabled: @machine.auto_update,
+      <%= f.input :cores, disabled: @machine_details.field_disabled?("cores"),
         collection: @machine_details.core_collection,
         default: @machine_details.core_collection.first %>
 
-      <%= f.input :os, disabled: @machine.auto_update,
+      <%= f.input :os, disabled: @machine_details.field_disabled?("os"),
         collection: @machine_details.os_list %>
-      <%= f.input :os_release, disabled: @machine.auto_update,
+      <%= f.input :os_release, disabled: @machine_details.field_disabled?("os_release"),
         collection: @machine_details.os_release_list %>
-      <%= f.input :serialnumber, disabled: @machine.auto_update %>
+      <%= f.input :serialnumber, disabled: @machine_details.field_disabled?("serialnumber") %>
 
-      <%= f.input :device_type_name, disabled: @machine.auto_update,
+      <%= f.input :device_type_name, disabled: @machine_details.field_disabled?("device_type_name"),
         collection: Machine.device_type_names %>
 
-      <%= f.input :vmhost, disabled: @machine.auto_update,
+      <%= f.input :vmhost, disabled: @machine_details.field_disabled?("vmhost"),
         collection: @machine_details.vmhost_list %>
 
       <%- if IDB.config.mrtg.base_url && @machine.switch? -%>
