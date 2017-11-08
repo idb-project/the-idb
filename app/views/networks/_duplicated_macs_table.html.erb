@@ -7,10 +7,16 @@
   </thead>
   <tbody>
     <%- @duplicated_macs.each do |nic| -%>
-      <%- machine = k(:machine, @machines.where(id: nic.machine_id).first) %>
+      <%- if nic.machine_id -%>
+        <%- nic_machine = @machines.where(id: nic.machine_id).first %>
+      <%- end -%>
       <tr id="#nic-<%= nic.id %>">
         <td><%= nic.mac %></td>
-        <td><%= machine.name_link %></td>
+        <td>
+           <%- if nic_machine -%>
+             <%= link_to(nic_machine.name, nic_machine) %>
+           <%- end -%>
+        </td>
       </tr>
     <%- end -%>
   </tbody>
