@@ -40,5 +40,16 @@ describe NetworksController do
       get :index
       expect(assigns(:duplicated_macs).size).to eq(2)
     end
+
+    it "returns all machines with duplicate mac addresses, no machine associated, admin user" do
+      allow(@current_user).to receive(:is_admin?).and_return(true)
+      allow(User).to receive(:current).and_return(@current_user)
+
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: nil
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: nil
+      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa", machine: nil
+      get :index
+      expect(assigns(:duplicated_macs).size).to eq(2)
+    end
   end
 end

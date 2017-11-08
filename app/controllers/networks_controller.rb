@@ -7,7 +7,7 @@ class NetworksController < ApplicationController
     dups.each do |d|
       if User.current
         if (d.machine && d.machine.owner) || User.current.is_admin?
-          @duplicated_macs << d if User.current.owners.include?(d.machine.owner)
+          @duplicated_macs << d if (User.current.is_admin? || (d.machine && User.current.owners.include?(d.machine.owner)))
         end
       else
         @duplicated_macs << d
