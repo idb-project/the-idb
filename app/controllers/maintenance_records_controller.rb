@@ -21,7 +21,7 @@ class MaintenanceRecordsController < ApplicationController
   end
 
   def create
-    MachineMaintenanceService.new.process_from_controller(self, ok_params)
+    MachineMaintenanceService.new.process_from_controller(self, params.require(:maintenance_record).permit(:logfile, :machine_id, :attachments, :maintenance_record))
   end
 
   def update
@@ -38,7 +38,7 @@ class MaintenanceRecordsController < ApplicationController
   private
 
   def ok_params
-    params.permit(:logfile, :machine_id, :attachments)
+    params.permit(:logfile, :id, :attachments)
   end
 
   def add_attachments(attachments)
