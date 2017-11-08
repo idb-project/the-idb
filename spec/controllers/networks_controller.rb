@@ -3,6 +3,9 @@ require 'spec_helper'
 describe NetworksController do
   before(:each) do
     @current_user = FactoryGirl.create :user
+    owner = FactoryGirl.create(:owner, users: [@current_user])
+    @machine = FactoryGirl.create(:machine, owner: owner)
+    allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
   end
 
@@ -24,26 +27,18 @@ describe NetworksController do
     end
 
     it "returns all machines with duplicate mac addresses, no duplicates" do
-      FactoryGirl.create :nic
-      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa"
+      FactoryGirl.create :nic, machine: @machine
+      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa", machine: @machine
       get :index
       expect(assigns(:duplicated_macs).size).to eq(0)
     end
 
     it "returns all machines with duplicate mac addresses" do
-      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff"
-      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff"
-      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa"
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: @machine
+      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: @machine
+      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa", machine: @machine
       get :index
       expect(assigns(:duplicated_macs).size).to eq(2)
-    end
-
-    it "returns all machines with duplicate mac addresses, assigned to the current owner" do
-      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff"
-      FactoryGirl.create :nic, mac: "aa:bb:cc:dd:ee:ff", machine: FactoryGirl.create(:machine, owner: FactoryGirl.create(:owner))
-      FactoryGirl.create :nic, mac: "ff:ee:dd:cc:bb:aa"
-      get :index
-      expect(assigns(:duplicated_macs).size).to eq(1)
     end
   end
 end
