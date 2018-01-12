@@ -8,10 +8,12 @@ module V3
 
     resource :machines do
       before do
+        puts "######################################"
+        puts get_owners
         api_enabled!
         authenticate!
         set_papertrail
-        @owner = get_owner
+        @owner = get_owners
       end
 
       route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
