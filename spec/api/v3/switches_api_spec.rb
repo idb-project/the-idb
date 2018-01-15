@@ -53,6 +53,27 @@ describe 'Switches API V3' do
       expect(switches.size).to eq(1)
       expect(switches[0]['fqdn']).to eq(Switch.last.fqdn)
     end
+
+    it "returns switches for all owners for multiple tokens" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      s1 = FactoryGirl.create(:switch, fqdn: "foobar.example.org", owner: owner_1)
+      s2 = FactoryGirl.create(:switch, fqdn: "bazbar.example.org", owner: owner_2)
+
+      get "/api/v3/switches", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      switches = JSON.parse(response.body)
+      expect(switches.size).to eq(2)
+      expect(switches[0]['fqdn']).to eq(Switch.first.fqdn)
+      expect(switches[1]['fqdn']).to eq(Switch.last.fqdn)
+    end
   end
 
   describe "GET /switch?fqdn=" do

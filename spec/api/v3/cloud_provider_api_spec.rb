@@ -53,6 +53,28 @@ describe 'Cloud Provider API V3' do
       expect(cloud_providers.size).to eq(1)
       expect(cloud_providers[0]['name']).to eq(CloudProvider.last.name)
     end
+
+    it "returns cloud providers for all owners for multiple tokens" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      c1 = FactoryGirl.create(:cloud_provider, owner: owner_1)   
+      c2 = FactoryGirl.create(:cloud_provider, owner: owner_2)
+
+      get "/api/v3/cloud_providers", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      cps = JSON.parse(response.body)
+      expect(cps.size).to eq(2)
+      expect(cps[0]['name']).to eq(CloudProvider.first.name)
+      expect(cps[1]['name']).to eq(CloudProvider.last.name)
+    end
+
   end
 
   describe "GET /cloud_providers?fqdn=" do

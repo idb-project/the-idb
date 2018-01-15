@@ -347,7 +347,7 @@ module V3
         can_read!
 
         # first get all machines
-        query = Machine.where(owner: @owners).all
+        query = Machine.owned_by(@owners).all
 
         # strip possible idb_api_token parameter, this isn't a key of machines
         params.delete('idb_api_token')

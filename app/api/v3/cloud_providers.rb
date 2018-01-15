@@ -11,6 +11,7 @@ module V3
         authenticate!
         set_papertrail
         @owner = get_owner
+        @owners = get_owners
       end
 
       route_param :rname, type: String, requirements: { name: /[a-zA-Z0-9.]+/ } do
@@ -18,7 +19,7 @@ module V3
           success: CloudProvider::Entity
         get do
           can_read!
-          c = CloudProvider.owned_by(@owner).find_by_name params[:rname]
+          c = CloudProvider.owned_by(@owners).find_by_name params[:rname]
           error!('Not found', 404) unless c
 
           present c
@@ -54,7 +55,7 @@ module V3
       get do
         can_read!
 
-        query = CloudProvider.owned_by(@owner).all
+        query = CloudProvider.owned_by(@owners).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym
