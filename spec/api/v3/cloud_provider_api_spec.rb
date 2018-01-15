@@ -55,17 +55,6 @@ describe 'Cloud Provider API V3' do
     end
   end
 
-  describe "GET /cloud_providers with header authorization" do
-    it 'should return all cloud provider configurations' do
-      api_get_auth_header(action: "cloud_providers", token: @api_token_r, version: "3")
-      expect(response.status).to eq(200)
-
-      cloud_providers = JSON.parse(response.body)
-      expect(cloud_providers.size).to eq(1)
-      expect(cloud_providers[0]['name']).to eq(CloudProvider.last.name)
-    end
-  end
-
   describe "GET /cloud_providers?fqdn=" do
     it 'should filter cloud provider items for items with this name' do
       api_get(action: "cloud_providers?name=#{CloudProvider.last.name}", token: @api_token_r, version: "3")

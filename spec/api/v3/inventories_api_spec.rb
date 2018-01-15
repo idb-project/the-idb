@@ -55,17 +55,6 @@ describe 'Inventories API V3' do
     end
   end
 
-  describe "GET /inventories with header authorization" do
-    it 'should return all inventories' do
-      api_get_auth_header(action: "inventories", token: @api_token_r, version: "3")
-      expect(response.status).to eq(200)
-
-      inventories = JSON.parse(response.body)
-      expect(inventories.size).to eq(1)
-      expect(inventories[0]['inventory_number']).to eq(Inventory.last.inventory_number)
-    end
-  end
-
   describe "GET /inventory?inventory_number=" do
     it 'should filter inventory items for items with this inventory_number' do
       api_get(action: "inventories?inventory_number=#{Inventory.last.inventory_number}", token: @api_token_r, version: "3")

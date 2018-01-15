@@ -46,7 +46,7 @@ describe 'Location API V3' do
 
   describe "GET /locations" do
     it 'should return all locations' do
-      api_get_auth_header(action: "locations", token: @api_token_r, version: "3")
+      api_get(action: "locations", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
 
       locations = JSON.parse(response.body)

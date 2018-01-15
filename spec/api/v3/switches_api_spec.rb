@@ -55,17 +55,6 @@ describe 'Switches API V3' do
     end
   end
 
-  describe "GET /switches with header authorization" do
-    it 'should return all switches' do
-      api_get_auth_header(action: "switches", token: @api_token_r, version: "3")
-      expect(response.status).to eq(200)
-
-      switches = JSON.parse(response.body)
-      expect(switches.size).to eq(1)
-      expect(switches[0]['fqdn']).to eq(Switch.last.fqdn)
-    end
-  end
-
   describe "GET /switch?fqdn=" do
     it 'should filter switch items for items with this fqdn' do
       api_get(action: "switches?fqdn=#{Switch.last.fqdn}", token: @api_token_r, version: "3")

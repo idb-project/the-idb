@@ -9,14 +9,19 @@ module V3
     end
 
     def get_tokens
+      unless request.headers["X-Idb-Api-Token"]
+        error!("Unauthorized.", 401)
+      end
       request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
     end
 
     def authenticate!
       tokens = get_tokens
       tokens.each do |t|
-        if ApiToken.where("token = ?", t).empty?
-          error!("Unauthorized.", 401)
+        # puts t
+        # puts ApiToken.find_by_token(t)
+        if not ApiToken.find_by_token(t)
+          error!("Unauthorized. 0", 401)
         end
       end
     end
@@ -24,17 +29,18 @@ module V3
     def can_read!
       tokens = get_tokens
       tokens.each do |t|
-        unless ApiToken.where("token = ?", t).first.read
-          error!("Unauthorized.", 401)
+        unless ApiToken.find_by_token(t).read
+          error!("Unauthorized. 1", 401)
         end
       end
     end
 
     def can_write!
       token = get_tokens.first.to_s
-      unless ApiToken.where("token = ?", token).first.write
-        error!("Unauthorized.", 401)
+      unless ApiToken.find_by_token(token).write
+        error!("Unauthorized. 2", 401)
       end
+      ApiToken.find_by_token(token)
     end
 
     def get_owner
@@ -46,8 +52,12 @@ module V3
 
     def get_owners
       tokens = get_tokens
+      # tokens.each do |t|
+      #   puts "TOKEN: ", t, "OWNER:", Owner.find_by_id(ApiToken.find_by_token(t).owner_id)
+      # end
       owners = tokens.map{ |t| Owner.find_by_id(ApiToken.find_by_token(t).owner_id) }
       owners.uniq
+      owners
     end
 
     def set_papertrail

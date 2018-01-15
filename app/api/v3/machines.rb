@@ -8,12 +8,11 @@ module V3
 
     resource :machines do
       before do
-        puts "######################################"
-        puts get_owners
         api_enabled!
         authenticate!
         set_papertrail
-        @owner = get_owners
+        @owners = get_owners
+        @owner = get_owner
       end
 
       route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
@@ -24,7 +23,7 @@ module V3
             end
             get do
               can_read!
-              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owners).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               present a
@@ -46,7 +45,7 @@ module V3
             success: Attachment::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+            m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.attachments
@@ -116,7 +115,7 @@ module V3
             success: MachineAlias::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+            m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.aliases
@@ -144,7 +143,7 @@ module V3
               success: Nic::Entity
             get do
               can_read!
-              m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+              m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
               error!('Not Found', 404) unless m
 
               n = Nic.where(machine_id: m.id, name: params[:rnic])
@@ -189,7 +188,7 @@ module V3
             success: Nic::Entity
           get do
             can_read!
-            m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+            m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
             error!('Not Found', 404) unless m
 
             present m.nics
@@ -221,7 +220,7 @@ module V3
           success: Machine::Entity
         get do
           can_read!
-          m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+          m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
 
           present m
@@ -231,8 +230,9 @@ module V3
           params: Machine::Entity.documentation,
           success: Machine::Entity
         put do
-          can_write!
+          tok = can_write!
           m = Machine.owned_by(@owner).find_by_fqdn params[:rfqdn]
+
           error!('Not Found', 404) unless m
                     
           # move route parameter to params
@@ -245,11 +245,10 @@ module V3
             error!('Invalid Machine', 409)
           end
 
-          tok = get_token
           if m.raw_data_api
-            params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({tok => params}).to_json
+            params['raw_data_api'] = JSON.parse(m.raw_data_api).merge({tok.name => params}).to_json
           else
-            params['raw_data_api'] = {tok => params}.to_json
+            params['raw_data_api'] = {tok.name => params}.to_json
           end
 
           begin
@@ -348,7 +347,7 @@ module V3
         can_read!
 
         # first get all machines
-        query = Machine.owned_by(@owner).all
+        query = Machine.where(owner: @owners).all
 
         # strip possible idb_api_token parameter, this isn't a key of machines
         params.delete('idb_api_token')
@@ -378,14 +377,13 @@ module V3
         params: Machine::Entity.documentation,
         success: Machine::Entity
       post do
-        can_write!
+        tok = can_write!
 
         if not Machine::FQDN_REGEX.match(params['fqdn'])
           error!('Invalid Machine', 409)
         end
 
-        tok = get_token
-        params['raw_data_api'] = {tok => params}.to_json
+        params['raw_data_api'] = {tok.name => params}.to_json
 
         begin
           m = Machine.new(params)

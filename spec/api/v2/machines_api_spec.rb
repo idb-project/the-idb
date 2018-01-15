@@ -53,17 +53,6 @@ describe 'Machines API' do
     end
   end
 
-  describe "GET /machines with header authorization" do
-    it 'should return all machines' do
-      api_get_auth_header(action: "machines", token: @api_token_r)
-      expect(response.status).to eq(200)
-
-      machines = JSON.parse(response.body)
-      expect(machines.size).to eq(1)
-      expect(machines[0]['fqdn']).to eq(Machine.last.fqdn)
-    end
-  end
-
   describe "GET /machines?fqdn=" do
     it 'should return the corresponding machine' do
       api_get(action: "machines?fqdn=#{Machine.last.fqdn}", token: @api_token_r)
