@@ -89,6 +89,31 @@ describe 'Machines API V3' do
       expect(machines[0]['fqdn']).to eq(Machine.first.fqdn)
       expect(machines[1]['fqdn']).to eq(Machine.last.fqdn)
     end
+
+    it "returns machines for all owners for multiple tokens but no machines owned by other owners" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      owner_3 = FactoryGirl.create(:owner, users: [user])
+
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+      allow(User).to receive(:current).and_return(owner_3.users.first)
+
+      m1 = FactoryGirl.create(:machine, fqdn: "foobar.example.org", owner: owner_1)
+      m2 = FactoryGirl.create(:machine, fqdn: "bazbar.example.org", owner: owner_2)
+      m3 = FactoryGirl.create(:machine, fqdn: "notowned.example.org", owner: owner_3)
+
+      get "/api/v3/machines", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      machines = JSON.parse(response.body)
+      expect(machines.size).to eq(2)
+      expect(machines[0]['fqdn']).to eq(Machine.first.fqdn)
+      expect(machines[1]['fqdn']).to eq(Machine.second.fqdn)
+    end
   end
 
   describe "GET /machines?fqdn=" do

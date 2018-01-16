@@ -11,13 +11,14 @@ module V3
         authenticate!
         set_papertrail
         @owner = get_owner
+        @owners = get_owners
       end
 
       route_param :id, type: Integer, requirements: { id: /[0-9]+/ } do
         desc 'Get a nic by id', success: Nic::Entity
         get do
           can_read!
-          n = Nic.owned_by(@owner).find_by_id params[:id]
+          n = Nic.owned_by(@owners).find_by_id params[:id]
           error!('Not found', 404) unless n
 
           n
@@ -55,8 +56,8 @@ module V3
         can_read!
 
         if params['machine']
-          if Machine.owned_by(@owner).find_by_fqdn(params['machine'])
-            params[:machine_id] = Machine.owned_by(@owner).find_by_fqdn(params['machine']).id
+          if Machine.owned_by(@owners).find_by_fqdn(params['machine'])
+            params[:machine_id] = Machine.owned_by(@owners).find_by_fqdn(params['machine']).id
           else
             return []
           end
@@ -79,7 +80,7 @@ module V3
 
         nics = Array.new()
         query.each do |n|
-          if n.machine and n.machine.owner == @owner
+          if n.machine and @owners.include? n.machine.owner
             nics << n
           end
         end

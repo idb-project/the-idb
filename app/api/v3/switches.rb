@@ -11,6 +11,7 @@ module V3
         authenticate!
         set_papertrail
         @owner = get_owner
+        @owners = get_owners
       end
 
       route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.]+/ } do
@@ -18,7 +19,7 @@ module V3
           success: Switch::Entity
         get do
           can_read!
-          s = Switch.find_by_fqdn params[:fqdn]
+          s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
           error!('Not found', 404) unless s
 
           present s
@@ -28,7 +29,7 @@ module V3
           success: Switch::Entity
         put do
           can_write!
-          s = Switch.find_by_fqdn params[:fqdn]
+          s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
           error!('Not found', 404) unless s
           
           p = declared(params).to_h
@@ -39,7 +40,7 @@ module V3
         desc 'Delete a switch'
         delete do
           can_write!
-          s = Switch.find_by_fqdn params[:fqdn]
+          s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
           error!('Not found', 404) unless s
           s.destroy
         end
@@ -50,7 +51,7 @@ module V3
               success: SwitchPort::Entity
             get do
               can_read!
-              s = Switch.find_by_fqdn params[:fqdn]
+              s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
               error!('Not found', 404) unless s
 
               p = SwitchPort.find_by number: params[:number], switch_id: s.id
@@ -63,10 +64,10 @@ module V3
               success: SwitchPort::Entity
             put do
               can_write!
-              s = Switch.find_by_fqdn params[:fqdn]
+              s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
               error!('Not found', 404) unless s
 
-              m = Machine.find_by_fqdn params[:machine]
+              m = Machine.owned_by(@owner).find_by_fqdn params[:machine]
               error!('Machine not found', 404) unless m
 
               n = Nic.find_by(name: params[:nic], machine: m.id)
@@ -95,7 +96,7 @@ module V3
           desc 'Return a list of switch ports', is_array: true, success: SwitchPort::Entity
           get do
             can_read!
-            s = Switch.find_by_fqdn params[:fqdn]
+            s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
             error!('Not found', 404) unless s
 
             present SwitchPort.where(switch_id: s.id)
@@ -106,10 +107,10 @@ module V3
             success: SwitchPort::Entity
           post do
             can_write!
-            s = Switch.find_by_fqdn params[:fqdn]
+            s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
             error!('Switch not found', 404) unless s
 
-            m = Machine.find_by_fqdn params[:machine]
+            m = Machine.owned_by(@owner).find_by_fqdn params[:machine]
             error!('Machine not found', 404) unless m
 
             n = Nic.find_by(name: params[:nic], machine: m.id)
@@ -127,7 +128,7 @@ module V3
       get do
         can_read!
 
-        query = Switch.all
+        query = Switch.owned_by(@owners).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym
@@ -148,7 +149,7 @@ module V3
         success: Switch::Entity
       post do
         can_write!
-        if Switch.find_by_fqdn params['fqdn']
+        if Switch.owned_by(@owner).find_by_fqdn params['fqdn']
           error!('Entry with this FQDN already exists.', 409)
         end
 

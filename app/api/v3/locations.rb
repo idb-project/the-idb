@@ -11,6 +11,7 @@ module V3
         authenticate!
         set_papertrail
         @owner = get_owner
+        @owners = get_owners
       end
 
       resource :id do
@@ -18,7 +19,7 @@ module V3
           desc 'Get location by id',
             success: Location::Entity
           get do
-            l = Location.owned_by(@owner).find_by_id params[:id]
+            l = Location.owned_by(@owners).find_by_id params[:id]
             error!('Not Found', 404) unless l
 
             l
@@ -76,7 +77,7 @@ module V3
           success: Location::Entity
         get do
           can_read!
-          Location.owned_by(@owner).roots.sort_by(&:name)
+          Location.owned_by(@owners).roots.sort_by(&:name)
         end
 
         desc 'Create a new location root',
@@ -100,7 +101,7 @@ module V3
         get do
           can_read!
 
-          query = LocationLevel.owned_by(@owner).all
+          query = LocationLevel.owned_by(@owners).all
           params.delete('idb_api_token')
           params.each do |key, value|
             keysym = key.to_sym
@@ -124,15 +125,15 @@ module V3
         can_read!
 
         if params['level']
-          if LocationLevel.owned_by(@owner).find_by_level(params['level'])
-            params[:location_level_id] = LocationLevel.owned_by(@owner).find_by_level(params['level']).id
+          if LocationLevel.owned_by(@owners).find_by_level(params['level'])
+            params[:location_level_id] = LocationLevel.owned_by(@owners).find_by_level(params['level']).id
           else
             return []
           end
         end
         params.delete 'level'
 
-        query = Location.owned_by(@owner).all
+        query = Location.owned_by(@owners).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym

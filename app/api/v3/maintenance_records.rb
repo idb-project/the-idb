@@ -11,6 +11,7 @@ module V3
           authenticate!
           set_papertrail
           @owner = get_owner
+          @owners = get_owners
         end
 
         route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
@@ -22,7 +23,7 @@ module V3
                         end
                         get do
                         can_read!
-                        a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
+                        a = Attachment.owned_by(@owners).find_by_attachment_fingerprint params[:fingerprint]
                         error!('Not Found', 404) unless a
             
                         present a
@@ -34,13 +35,13 @@ module V3
                         success: Attachment::Entity
                     get do
                         can_read!
-                        m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
+                        m = Machine.owned_by(@owners).find_by_fqdn(params[:rfqdn])
                         if not m
                             a = MachineAlias.find_by_name(params[:rfqdn])
                             if not a
                                 error!("Not found", 404)
                             end
-                            m = Machine.owned_by(@owner).find_by_id(a.machine_id)
+                            m = Machine.owned_by(@owners).find_by_id(a.machine_id)
                             if not m
                                 error!("Not found", 404)
                             end
@@ -91,13 +92,13 @@ module V3
                 get do
                     can_read!
 
-                    m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
+                    m = Machine.owned_by(@owners).find_by_fqdn(params[:rfqdn])
                     if not m
                         a = MachineAlias.find_by_name(params[:rfqdn])
                         if not a
                             error!("Not found", 404)
                         end
-                        m = Machine.owned_by(@owner).find_by_id(a.machine_id)
+                        m = Machine.owned_by(@owners).find_by_id(a.machine_id)
                         if not m
                             error!("Not found", 404)
                         end
@@ -113,13 +114,13 @@ module V3
                 success: MaintenanceRecord::Entity
             get do
                 can_read!
-                m = Machine.owned_by(@owner).find_by_fqdn(params[:rfqdn])
+                m = Machine.owned_by(@owners).find_by_fqdn(params[:rfqdn])
                 if not m
                     a = MachineAlias.find_by_name(params[:rfqdn])
                     if not a
                         error!("Not found", 404)
                     end
-                    m = Machine.owned_by(@owner).find_by_id(a.machine_id)
+                    m = Machine.owned_by(@owners).find_by_id(a.machine_id)
                     if not m
                         error!("Not found", 404)
                     end
@@ -166,8 +167,15 @@ module V3
           rescue ActiveRecord::StatementInvalid
             error!('Bad Request', 400)
           end
+
+          mrs = Array.new()
+          query.each do |mr|
+            if mr.machine and @owners.include? mr.machine.owner
+              mrs << mr
+            end
+          end
   
-          present query
+          present mrs
         end
   
         desc 'Create a new maintenance record',
@@ -176,7 +184,7 @@ module V3
         post do
           can_write!
           
-          m = Machine.find_by_fqdn(params["machine"])
+          m = Machine.owned_by(@owner).find_by_fqdn(params["machine"])
           params["machine_id"] = m.id
           params["fqdn"] = m.fqdn
           params.delete("machine")

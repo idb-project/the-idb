@@ -11,6 +11,7 @@ module V3
           authenticate!
           set_papertrail
           @owner = get_owner
+          @owners = get_owner
         end
   
         resource :machines do
@@ -18,7 +19,7 @@ module V3
                 desc 'Get a deleted machine by fqdn', success: Machine::Entity
                 get do
                   can_read!
-                  m = Machine.owned_by(@owner).only_deleted.find_by_fqdn params[:fqdn]
+                  m = Machine.owned_by(@owners).only_deleted.find_by_fqdn params[:fqdn]
                   error!('Not Found', 404) unless m
         
                   present m
@@ -49,7 +50,7 @@ module V3
                 can_read!
 
                 # first get all machines
-                query = Machine.owned_by(@owner).only_deleted
+                query = Machine.owned_by(@owners).only_deleted
 
                 # strip possible idb_api_token parameter, this isn't a key of machines
                 params.delete('idb_api_token')
