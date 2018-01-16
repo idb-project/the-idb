@@ -11,7 +11,7 @@ module V3
           authenticate!
           set_papertrail
           @owner = get_owner
-          @owners = get_owner
+          @owners = get_owners
         end
   
         resource :machines do
