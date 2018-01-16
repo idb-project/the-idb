@@ -21,6 +21,8 @@ module V3
           n = Nic.owned_by(@owners).find_by_id params[:id]
           error!('Not found', 404) unless n
 
+          set_token item_token(n)
+
           n
         end
 

@@ -22,6 +22,8 @@ module V3
           s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
           error!('Not found', 404) unless s
 
+          set_token item_token(s)
+
           present s
         end
 

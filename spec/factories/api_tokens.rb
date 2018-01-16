@@ -19,4 +19,11 @@ FactoryGirl.define do
     read false
     write true
   end	
+
+  factory :api_token_rw, class: ApiToken do
+    sequence(:token) { |n| "rw-token-#{n}" }
+    sequence(:name) { |n| "rw-token-name-#{n}" }
+    read true
+    write true
+  end	
 end

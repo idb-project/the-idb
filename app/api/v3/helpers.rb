@@ -15,6 +15,22 @@ module V3
       request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
     end
 
+    def set_token(t)
+      header "X-Idb-Api-Token", t
+    end
+
+    # select the first valid token for updating this item
+    # return nil if no token matches
+    def item_token(item)
+      get_tokens.each do |t|
+        x = ApiToken.find_by_token(t)
+        if x.owner == item.owner && x.write
+          return t
+        end
+      end
+      nil
+    end
+
     def authenticate!
       tokens = get_tokens
       tokens.each do |t|

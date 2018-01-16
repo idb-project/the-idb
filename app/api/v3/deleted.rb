@@ -22,6 +22,8 @@ module V3
                   m = Machine.owned_by(@owners).only_deleted.find_by_fqdn params[:fqdn]
                   error!('Not Found', 404) unless m
         
+                  set_token item_token(m)
+
                   present m
                 end
 

@@ -18,7 +18,7 @@ describe 'Machines API V3' do
     @api_token = FactoryGirl.build :api_token, owner: @owner
     @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
     @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
-
+    @api_token_rw = FactoryGirl.create :api_token_rw, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -150,6 +150,15 @@ describe 'Machines API V3' do
 
       machine = JSON.parse(response.body)
       expect(machine).to eq({"response_type" => "error", "response" => "Not Found"})
+    end
+
+    it 'should return the token usable for updating this machine' do
+      api_get(action: "machines/#{Machine.last.fqdn}", token: @api_token_rw, version: "3")
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq(Machine.last.fqdn)
+      expect(response.headers["X-Idb-Api-Token"]).to eq(@api_token_rw.token)
     end
   end
 
