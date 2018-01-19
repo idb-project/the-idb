@@ -78,7 +78,7 @@ module V3
           i = Inventory.owned_by(@owners).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
 
-          set_token item_token(i)
+          set_token item_update_token(i)
 
           present i
         end

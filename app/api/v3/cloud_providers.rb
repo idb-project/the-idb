@@ -22,7 +22,7 @@ module V3
           c = CloudProvider.owned_by(@owners).find_by_name params[:rname]
           error!('Not found', 404) unless c
 
-          set_token item_token(c)
+          set_token item_update_token(c)
 
           present c
         end

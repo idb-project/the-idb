@@ -21,59 +21,51 @@ module V3
 
     # select the first valid token for updating this item
     # return nil if no token matches
-    def item_token(item)
-      get_tokens.each do |t|
-        x = ApiToken.find_by_token(t)
-        if x.owner == item.owner && x.write
-          return t
-        end
+    def item_update_token(item)
+      x = ApiToken.where(token: get_tokens, owner: item.owner, write: true)
+      if x.first
+        # just use the first one
+        return x.first.token
       end
-      nil
+      return nil
     end
 
     def authenticate!
       tokens = get_tokens
-      tokens.each do |t|
-        # puts t
-        # puts ApiToken.find_by_token(t)
-        if not ApiToken.find_by_token(t)
-          error!("Unauthorized. 0", 401)
-        end
+      unless ApiToken.where(token: tokens)
+        error!("Unauthorized.", 401)
       end
     end
 
     def can_read!
       tokens = get_tokens
-      tokens.each do |t|
-        unless ApiToken.find_by_token(t).read
-          error!("Unauthorized. 1", 401)
-        end
+      if ApiToken.where(token: tokens, read: true).empty?
+        error!("Unauthorized.", 401)
       end
     end
 
     def can_write!
-      token = get_tokens.first.to_s
-      unless ApiToken.find_by_token(token).write
-        error!("Unauthorized. 2", 401)
+      tokens = get_tokens
+      x = ApiToken.where(token: tokens, write: true)
+      if x.empty?
+        error!("Unauthorized.", 401)
       end
-      ApiToken.find_by_token(token)
+      x.first
     end
 
+    # get the owner of the first token
     def get_owner
       token = get_tokens.first.to_s
       x = ApiToken.find_by_token token
-
+      unless x
+        return nil
+      end
       return Owner.find_by_id x.owner_id
     end
 
     def get_owners
       tokens = get_tokens
-      # tokens.each do |t|
-      #   puts "TOKEN: ", t, "OWNER:", Owner.find_by_id(ApiToken.find_by_token(t).owner_id)
-      # end
-      owners = tokens.map{ |t| Owner.find_by_id(ApiToken.find_by_token(t).owner_id) }
-      owners.uniq
-      owners
+      Owner.joins(:api_tokens).where(api_tokens: { token: tokens })
     end
 
     def set_papertrail

@@ -223,7 +223,7 @@ module V3
           m = Machine.owned_by(@owners).find_by_fqdn params[:rfqdn]
           error!('Not Found', 404) unless m
 
-          set_token item_token(m)
+          set_token item_update_token(m)
 
           present m
         end

@@ -14,46 +14,15 @@ module V3
         @owners = get_owners
       end
 
-      route_param :fqdn, type: String, requirements: { fqdn: /[a-zA-Z0-9.]+/ } do
-        desc 'Get a switch by fqdn',
-          success: Switch::Entity
-        get do
-          can_read!
-          s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
-          error!('Not found', 404) unless s
-
-          set_token item_token(s)
-
-          present s
-        end
-
-        desc 'Update a switch',
-          success: Switch::Entity
-        put do
-          can_write!
-          s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
-          error!('Not found', 404) unless s
-          
-          p = declared(params).to_h
-          s.update_attributes(p)
-          present s
-        end
-
-        desc 'Delete a switch'
-        delete do
-          can_write!
-          s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
-          error!('Not found', 404) unless s
-          s.destroy
-        end
-
+      route_param :rfqdn, type: String, requirements: { rfqdn: /.+/ } do
         resource :ports do
           route_param :number, type: Integer, requirements: { number: /[0-9]+/ } do
             desc 'Get a switch port',
               success: SwitchPort::Entity
             get do
+              puts "GET /switches/fqdn/ports/number"
               can_read!
-              s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
+              s = Switch.owned_by(@owners).find_by_fqdn params[:rfqdn]
               error!('Not found', 404) unless s
 
               p = SwitchPort.find_by number: params[:number], switch_id: s.id
@@ -66,8 +35,8 @@ module V3
               success: SwitchPort::Entity
             put do
               can_write!
-              s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
-              error!('Not found', 404) unless s
+              s = Switch.owned_by(@owner).find_by_fqdn params[:rfqdn]
+              error!('Not found 1', 404) unless s
 
               m = Machine.owned_by(@owner).find_by_fqdn params[:machine]
               error!('Machine not found', 404) unless m
@@ -98,7 +67,7 @@ module V3
           desc 'Return a list of switch ports', is_array: true, success: SwitchPort::Entity
           get do
             can_read!
-            s = Switch.owned_by(@owners).find_by_fqdn params[:fqdn]
+            s = Switch.owned_by(@owners).find_by_fqdn params[:rfqdn]
             error!('Not found', 404) unless s
 
             present SwitchPort.where(switch_id: s.id)
@@ -109,7 +78,7 @@ module V3
             success: SwitchPort::Entity
           post do
             can_write!
-            s = Switch.owned_by(@owner).find_by_fqdn params[:fqdn]
+            s = Switch.owned_by(@owner).find_by_fqdn params[:rfqdn]
             error!('Switch not found', 404) unless s
 
             m = Machine.owned_by(@owner).find_by_fqdn params[:machine]
@@ -123,6 +92,39 @@ module V3
             port = SwitchPort.create(p)
             present port
           end
+        end
+
+        desc 'Get a switch by fqdn',
+          success: Switch::Entity
+        get do
+          puts "GET /switches/fqdn"
+          can_read!
+          s = Switch.owned_by(@owners).find_by_fqdn params[:rfqdn]
+          error!('Not found', 404) unless s
+
+          set_token item_update_token(s)
+
+          present s
+        end
+
+        desc 'Update a switch',
+          success: Switch::Entity
+        put do
+          can_write!
+          s = Switch.owned_by(@owner).find_by_fqdn params[:rfqdn]
+          error!('Not found', 404) unless s
+          
+          p = declared(params).to_h
+          s.update_attributes(p)
+          present s
+        end
+
+        desc 'Delete a switch'
+        delete do
+          can_write!
+          s = Switch.owned_by(@owner).find_by_fqdn params[:rfqdn]
+          error!('Not found', 404) unless s
+          s.destroy
         end
       end
 

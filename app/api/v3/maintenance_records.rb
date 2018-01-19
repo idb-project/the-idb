@@ -106,7 +106,7 @@ module V3
                     
                     r = MaintenanceRecord.find_by_machine_id_and_created_at(m.id, params[:rcreated_at])
 
-                    set_token item_token(m)
+                    set_token item_update_token(m)
 
                     present r
                 end

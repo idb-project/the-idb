@@ -76,7 +76,29 @@ describe 'Switches API V3' do
     end
   end
 
-  describe "GET /switch?fqdn=" do
+  describe "GET /switches/{fqdn}" do
+    it "should return a switch and set X-Idb-Api-Token header to token usable for updating" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      s = FactoryGirl.create(:switch, owner: owner_1)   
+
+      get "/api/v3/switches/#{s.fqdn}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(token_1.token)
+
+      json_s = JSON.parse(response.body)
+      expect(json_s["fqdn"]).to eq(s.fqdn)
+    end
+  end
+
+  describe "GET /switches?fqdn=" do
     it 'should filter switch items for items with this fqdn' do
       api_get(action: "switches?fqdn=#{Switch.last.fqdn}", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -133,7 +155,8 @@ describe 'Switches API V3' do
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 1)
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 2)
 
-      api_get(action: "switches/switch.example.org/ports", token: @api_token_r, version: "3")
+      api_get(action: "switches/#{s.fqdn}/ports", token: @api_token_r, version: "3")
+      puts "IN SPEC", response.body
       expect(response.status).to eq(200)
       switch_ports = JSON.parse(response.body)
       expect(switch_ports.size).to eq(2)
@@ -172,6 +195,7 @@ describe 'Switches API V3' do
         "number":1,"nic": n2.name, "machine": m.fqdn
       }
       api_put_json(action: "switches/switch.example.org/ports/1", token: @api_token_w, version: 3, payload: payload)
+      puts response.body
       expect(response.status).to eq(201)
       switch_port = JSON.parse(response.body)
       expect(switch_port["number"]).to eq(1)

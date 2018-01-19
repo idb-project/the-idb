@@ -18,10 +18,13 @@ module V3
         desc 'Get a nic by id', success: Nic::Entity
         get do
           can_read!
-          n = Nic.owned_by(@owners).find_by_id params[:id]
+          # owned_by scope doesn't work with joins and IN conditions
+          n = Nic.where(id: params[:id]).first
           error!('Not found', 404) unless n
-
-          set_token item_token(n)
+          m = Machine.owned_by(@owners).find_by_id(n.machine_id)
+          error!('Not found', 404) unless m
+    
+          set_token item_update_token(m)
 
           n
         end

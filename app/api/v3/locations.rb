@@ -22,7 +22,7 @@ module V3
             l = Location.owned_by(@owners).find_by_id params[:id]
             error!('Not Found', 404) unless l
 
-            set_token item_token(l)
+            set_token item_update_token(l)
 
             l
           end

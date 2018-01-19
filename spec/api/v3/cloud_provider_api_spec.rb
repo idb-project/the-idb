@@ -74,10 +74,39 @@ describe 'Cloud Provider API V3' do
       expect(cps[0]['name']).to eq(CloudProvider.first.name)
       expect(cps[1]['name']).to eq(CloudProvider.last.name)
     end
-
   end
 
-  describe "GET /cloud_providers?fqdn=" do
+  describe "GET /cloud_providers/{name}" do
+    it "should return a cloud provider" do
+      api_get(action: "cloud_providers/#{CloudProvider.last.name}", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+      
+      cp = JSON.parse(response.body)
+      expect(cp["name"]).to eq(CloudProvider.last.name)
+    end
+
+    it "should return a cloud provider and set X-Idb-Api-Token header of token usable for updating" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      c1 = FactoryGirl.create(:cloud_provider, owner: owner_1)   
+
+      get "/api/v3/cloud_providers/#{c1.name}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(token_1.token)
+
+      cp = JSON.parse(response.body)
+      expect(cp["name"]).to eq(c1.name)
+    end
+  end
+
+  describe "GET /cloud_providers?name=" do
     it 'should filter cloud provider items for items with this name' do
       api_get(action: "cloud_providers?name=#{CloudProvider.last.name}", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)

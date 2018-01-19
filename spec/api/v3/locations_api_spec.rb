@@ -141,7 +141,7 @@ describe 'Location API V3' do
       payload = {
         "name":"foobar"
       }
-      api_post_json(action: "locations", token: @api_token, payload: payload, version: "3")
+      api_post_json(action: "locations/roots", token: @api_token, payload: payload, version: "3")
       expect(response.status).to eq(401)
     end
   end
