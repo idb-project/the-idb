@@ -20,7 +20,6 @@ module V3
             desc 'Get a switch port',
               success: SwitchPort::Entity
             get do
-              puts "GET /switches/fqdn/ports/number"
               can_read!
               s = Switch.owned_by(@owners).find_by_fqdn params[:rfqdn]
               error!('Not found', 404) unless s
@@ -97,7 +96,6 @@ module V3
         desc 'Get a switch by fqdn',
           success: Switch::Entity
         get do
-          puts "GET /switches/fqdn"
           can_read!
           s = Switch.owned_by(@owners).find_by_fqdn params[:rfqdn]
           error!('Not found', 404) unless s

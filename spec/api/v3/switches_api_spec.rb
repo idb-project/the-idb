@@ -156,7 +156,6 @@ describe 'Switches API V3' do
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 2)
 
       api_get(action: "switches/#{s.fqdn}/ports", token: @api_token_r, version: "3")
-      puts "IN SPEC", response.body
       expect(response.status).to eq(200)
       switch_ports = JSON.parse(response.body)
       expect(switch_ports.size).to eq(2)
@@ -195,7 +194,6 @@ describe 'Switches API V3' do
         "number":1,"nic": n2.name, "machine": m.fqdn
       }
       api_put_json(action: "switches/switch.example.org/ports/1", token: @api_token_w, version: 3, payload: payload)
-      puts response.body
       expect(response.status).to eq(201)
       switch_port = JSON.parse(response.body)
       expect(switch_port["number"]).to eq(1)
