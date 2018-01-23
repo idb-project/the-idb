@@ -26,8 +26,7 @@
 <div class="row-fluid">
   <div class="span12">
     <%= simple_form_for @record do |f| %>
-      <%= f.input :machine_id, collection: record.machine_list,
-        input_html: {class: 'input-xxlarge'} %>
+      <%= select_tag :machine_id, options_for_select(record.machine_list), include_blank: true, class: 'input-xxlarge' %>
       <%= f.submit 'Assign', class: 'btn btn-success' %>
     <%- end -%>
   </div>

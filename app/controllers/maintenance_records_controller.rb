@@ -38,7 +38,7 @@ class MaintenanceRecordsController < ApplicationController
   private
 
   def ok_params
-    params.permit(:logfile, :id, :attachments)
+    params.permit(:logfile, :id, :attachments, :machine_id)
   end
 
   def add_attachments(attachments)
