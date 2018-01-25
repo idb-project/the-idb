@@ -53,20 +53,52 @@ describe 'Switches API V3' do
       expect(switches.size).to eq(1)
       expect(switches[0]['fqdn']).to eq(Switch.last.fqdn)
     end
-  end
 
-  describe "GET /switches with header authorization" do
-    it 'should return all switches' do
-      api_get_auth_header(action: "switches", token: @api_token_r, version: "3")
+    it "returns switches for all owners for multiple tokens" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      s1 = FactoryGirl.create(:switch, fqdn: "foobar.example.org", owner: owner_1)
+      s2 = FactoryGirl.create(:switch, fqdn: "bazbar.example.org", owner: owner_2)
+
+      get "/api/v3/switches", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)
 
       switches = JSON.parse(response.body)
-      expect(switches.size).to eq(1)
-      expect(switches[0]['fqdn']).to eq(Switch.last.fqdn)
+      expect(switches.size).to eq(2)
+      expect(switches[0]['fqdn']).to eq(Switch.first.fqdn)
+      expect(switches[1]['fqdn']).to eq(Switch.last.fqdn)
     end
   end
 
-  describe "GET /switch?fqdn=" do
+  describe "GET /switches/{fqdn}" do
+    it "should return a switch and set X-Idb-Api-Token header to token usable for updating" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      s = FactoryGirl.create(:switch, owner: owner_1)   
+
+      get "/api/v3/switches/#{s.fqdn}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(token_1.token)
+
+      json_s = JSON.parse(response.body)
+      expect(json_s["fqdn"]).to eq(s.fqdn)
+    end
+  end
+
+  describe "GET /switches?fqdn=" do
     it 'should filter switch items for items with this fqdn' do
       api_get(action: "switches?fqdn=#{Switch.last.fqdn}", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -123,7 +155,7 @@ describe 'Switches API V3' do
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 1)
       FactoryGirl.create(:switch_port, switch: s, nic: FactoryGirl.create(:nic), number: 2)
 
-      api_get(action: "switches/switch.example.org/ports", token: @api_token_r, version: "3")
+      api_get(action: "switches/#{s.fqdn}/ports", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
       switch_ports = JSON.parse(response.body)
       expect(switch_ports.size).to eq(2)

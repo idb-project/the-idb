@@ -33,6 +33,29 @@ describe 'Nics API V3' do
     end
   end
 
+  describe "GET /nics/{id}" do
+    it "should return a nic and set X-Idb-Api-Token header to token usable for updating" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m = FactoryGirl.create :machine, owner: owner_1
+      n = FactoryGirl.create :nic, machine: m 
+
+      get "/api/v3/nics/#{n.id}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(token_1.token)
+
+      json_n = JSON.parse(response.body)
+      expect(json_n["id"]).to eq(n.id)
+    end
+  end
+
   describe "GET /nics" do
     it 'should return all nics' do
       wrong_owner = FactoryGirl.create :owner
@@ -47,6 +70,32 @@ describe 'Nics API V3' do
 
       nics = JSON.parse(response.body)
       expect(nics.size).to eq(1)
+    end
+  end
+
+  describe "GET /nics" do
+    it 'should return all nics for multiple owners' do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m1 = FactoryGirl.create :machine, owner: owner_1
+      n1 = FactoryGirl.create :nic, machine: m1
+      m2 = FactoryGirl.create :machine, owner: owner_2
+      n2 = FactoryGirl.create :nic, machine: m2
+
+      get "/api/v3/nics", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      nics = JSON.parse(response.body)
+      expect(nics.size).to eq(2)
+
+      expect(nics[0]["machine"]).to eq(m1.fqdn)
+      expect(nics[1]["machine"]).to eq(m2.fqdn)
     end
   end
 end

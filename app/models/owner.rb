@@ -9,6 +9,7 @@ class Owner < ActiveRecord::Base
   has_many :machines, :dependent => :destroy
   has_many :attachments, :dependent => :destroy
   has_many :cloud_providers, :dependent => :destroy
+  has_many :api_tokens, :dependent => :destroy
   has_and_belongs_to_many :users
 
   validates :name, :nickname, presence: true

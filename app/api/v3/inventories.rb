@@ -11,6 +11,7 @@ module V3
         authenticate!
         set_papertrail
         @owner = get_owner
+        @owners = get_owners
       end
 
       route_param :inventory_number, type: String do
@@ -20,7 +21,7 @@ module V3
               success: Attachment::Entity
             get do
               can_read!
-              a = Attachment.owned_by(@owner).find_by_attachment_fingerprint params[:fingerprint]
+              a = Attachment.owned_by(@owners).find_by_attachment_fingerprint params[:fingerprint]
               error!('Not Found', 404) unless a
 
               present a
@@ -42,7 +43,7 @@ module V3
             success: Attachment::Entity
           get do
             can_read!
-            i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
+            i = Inventory.owned_by(@owners).find_by_inventory_number params[:inventory_number]
             error!('Not Found', 404) unless i
 
             present i.attachments
@@ -74,8 +75,10 @@ module V3
           success: Inventory::Entity
         get do
           can_read!
-          i = Inventory.owned_by(@owner).find_by_inventory_number params[:inventory_number]
+          i = Inventory.owned_by(@owners).find_by_inventory_number params[:inventory_number]
           error!('Not found', 404) unless i
+
+          set_token item_update_token(i)
 
           present i
         end
@@ -124,7 +127,7 @@ module V3
         end
         params.delete 'machine'
 
-        query = Inventory.owned_by(@owner).all
+        query = Inventory.owned_by(@owners).all
         params.delete('idb_api_token')
         params.each do |key, value|
           keysym = key.to_sym

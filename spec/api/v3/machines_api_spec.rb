@@ -18,7 +18,7 @@ describe 'Machines API V3' do
     @api_token = FactoryGirl.build :api_token, owner: @owner
     @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
     @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
-
+    @api_token_rw = FactoryGirl.create :api_token_rw, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -68,16 +68,93 @@ describe 'Machines API V3' do
       # expect just the machine added in before block
       expect(machines.size).to eq(1)
     end
-  end
 
-  describe "GET /machines with header authorization" do
-    it 'should return all machines' do
-      api_get_auth_header(action: "machines", token: @api_token_r, version: "3")
+    it "returns machines for all owners for multiple tokens" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m1 = FactoryGirl.create(:machine, fqdn: "foobar.example.org", owner: owner_1)
+      m2 = FactoryGirl.create(:machine, fqdn: "bazbar.example.org", owner: owner_2)
+
+      get "/api/v3/machines", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)
 
       machines = JSON.parse(response.body)
-      expect(machines.size).to eq(1)
-      expect(machines[0]['fqdn']).to eq(Machine.last.fqdn)
+      expect(machines.size).to eq(2)
+      expect(machines[0]['fqdn']).to eq(Machine.first.fqdn)
+      expect(machines[1]['fqdn']).to eq(Machine.last.fqdn)
+    end
+
+    it "returns machines for all owners for multiple tokens but no machines owned by other owners" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      owner_3 = FactoryGirl.create(:owner, users: [user])
+
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+      allow(User).to receive(:current).and_return(owner_3.users.first)
+
+      m1 = FactoryGirl.create(:machine, fqdn: "foobar.example.org", owner: owner_1)
+      m2 = FactoryGirl.create(:machine, fqdn: "bazbar.example.org", owner: owner_2)
+      m3 = FactoryGirl.create(:machine, fqdn: "notowned.example.org", owner: owner_3)
+
+      get "/api/v3/machines", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      machines = JSON.parse(response.body)
+      expect(machines.size).to eq(2)
+      expect(machines[0]['fqdn']).to eq(Machine.first.fqdn)
+      expect(machines[1]['fqdn']).to eq(Machine.second.fqdn)
+    end
+  end
+
+  describe "GET /machines/{fqdn}" do
+    it "should return a machine and set X-Idb-Api-Token header to token usable for updating" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m = FactoryGirl.create(:machine, owner: owner_1)   
+
+      get "/api/v3/machines/#{m.fqdn}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(token_1.token)
+
+      json_m = JSON.parse(response.body)
+      expect(json_m["fqdn"]).to eq(m.fqdn)
+    end
+
+    it "should return a machine and set no X-Idb-Api-Token header if no usable token in request" do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m = FactoryGirl.create(:machine, owner: owner_1)   
+
+      get "/api/v3/machines/#{m.fqdn}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      expect(response.header["X-Idb-Api-Token"]).to eq(nil)
+
+      json_m = JSON.parse(response.body)
+      expect(json_m["fqdn"]).to eq(m.fqdn)
     end
   end
 
@@ -97,6 +174,33 @@ describe 'Machines API V3' do
 
       machines = JSON.parse(response.body)
       expect(machines).to eq({"response_type" => "error", "response" => "Not Found"})
+    end
+  end
+
+  describe "GET /machines/{fqdn}" do
+    it 'should return the corresponding machine' do
+      api_get(action: "machines/#{Machine.last.fqdn}", token: @api_token_r, version: "3")
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq(Machine.last.fqdn)
+    end
+
+    it 'should return empty JSON and code 404 if machine not found' do
+      api_get(action: "machines/does.not.exist", token: @api_token_r, version: "3")
+      expect(response.status).to eq(404)
+
+      machine = JSON.parse(response.body)
+      expect(machine).to eq({"response_type" => "error", "response" => "Not Found"})
+    end
+
+    it 'should return the token usable for updating this machine' do
+      api_get(action: "machines/#{Machine.last.fqdn}", token: @api_token_rw, version: "3")
+      expect(response.status).to eq(200)
+
+      machine = JSON.parse(response.body)
+      expect(machine['fqdn']).to eq(Machine.last.fqdn)
+      expect(response.headers["X-Idb-Api-Token"]).to eq(@api_token_rw.token)
     end
   end
 
@@ -440,8 +544,8 @@ describe 'Machines API V3' do
       }
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
       raw = Machine.last.raw_data_api
-      expect(JSON.parse(raw)[@api_token_w.token]).to be
-      expect(JSON.parse(raw)[@api_token_w.token]["fqdn"]).to eq("foobar.example.com")
+      expect(JSON.parse(raw)[@api_token_w.name]).to be
+      expect(JSON.parse(raw)[@api_token_w.name]["fqdn"]).to eq("foobar.example.com")
     end
   end
 
@@ -455,9 +559,13 @@ describe 'Machines API V3' do
       }
       api_put_json(action: "machines/#{m.fqdn}", token: @api_token_w, payload: payload, version: "3")
       raw = Machine.last.raw_data_api
-      expect(JSON.parse(raw)[@api_token_w.token]).to be
-      expect(JSON.parse(raw)[@api_token_w.token]["cores"]).to eq(8)
+      expect(JSON.parse(raw)[@api_token_w.name]).to be
+      expect(JSON.parse(raw)[@api_token_w.name]["cores"]).to eq(8)
     end
-  end      
+  end
+  
+  describe "GET machines" do
+
+  end
 end
 

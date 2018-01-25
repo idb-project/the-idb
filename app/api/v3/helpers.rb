@@ -6,44 +6,66 @@ module V3
       unless IDB.config.modules.api.v3_enabled
         error!("API disabled.", 501)
       end
-     end
+    end
 
-    def get_token
-      if params[:idb_api_token]
-        return params[:idb_api_token]
-      elsif request.headers["X-Idb-Api-Token"]
-        return request.headers["X-Idb-Api-Token"]
-      else
+    def get_tokens
+      unless request.headers["X-Idb-Api-Token"]
         error!("Unauthorized.", 401)
       end
+      request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
+    end
+
+    def set_token(t)
+      header "X-Idb-Api-Token", t
+    end
+
+    # select the first valid token for updating this item
+    # return nil if no token matches
+    def item_update_token(item)
+      x = ApiToken.where(token: get_tokens, owner: item.owner, write: true)
+      if x.first
+        # just use the first one
+        return x.first.token
+      end
+      return nil
     end
 
     def authenticate!
-      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-      if ApiToken.where("token = ?", token).empty?
+      tokens = get_tokens
+      unless ApiToken.where(token: tokens)
         error!("Unauthorized.", 401)
       end
     end
 
     def can_read!
-      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-      unless ApiToken.where("token = ?", token).first.read
+      tokens = get_tokens
+      if ApiToken.where(token: tokens, read: true).empty?
         error!("Unauthorized.", 401)
       end
     end
 
     def can_write!
-      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
-      unless ApiToken.where("token = ?", token).first.write
+      tokens = get_tokens
+      x = ApiToken.where(token: tokens, write: true)
+      if x.empty?
         error!("Unauthorized.", 401)
       end
+      x.first
     end
 
+    # get the owner of the first token
     def get_owner
-      token = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"]
+      token = get_tokens.first.to_s
       x = ApiToken.find_by_token token
-
+      unless x
+        return nil
+      end
       return Owner.find_by_id x.owner_id
+    end
+
+    def get_owners
+      tokens = get_tokens
+      Owner.joins(:api_tokens).where(api_tokens: { token: tokens })
     end
 
     def set_papertrail

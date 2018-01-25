@@ -46,12 +46,33 @@ describe 'Location API V3' do
 
   describe "GET /locations" do
     it 'should return all locations' do
-      api_get_auth_header(action: "locations", token: @api_token_r, version: "3")
+      api_get(action: "locations", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
 
       locations = JSON.parse(response.body)
       expect(locations.size).to eq(1)
       expect(locations[0]['name']).to eq(Location.last.name)
+    end
+
+    it 'should return all locations for multiple owners' do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      FactoryGirl.create :location, owner: owner_1
+      FactoryGirl.create :location, owner: owner_2
+
+      get "/api/v3/locations", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      locations = JSON.parse(response.body)
+      expect(locations.size).to eq(2)
+      expect(locations[0]['name']).to eq(Location.first.name)
+      expect(locations[1]['name']).to eq(Location.second.name)
     end
   end
 
@@ -120,7 +141,7 @@ describe 'Location API V3' do
       payload = {
         "name":"foobar"
       }
-      api_post_json(action: "locations", token: @api_token, payload: payload, version: "3")
+      api_post_json(action: "locations/roots", token: @api_token, payload: payload, version: "3")
       expect(response.status).to eq(401)
     end
   end

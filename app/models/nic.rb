@@ -6,7 +6,7 @@ class Nic < ActiveRecord::Base
   has_one :switch_port, dependent: :destroy, autosave: true
 
   def self.owned_by(o)
-    includes(:machine).where("machines.owner_id": o.id)
+    joins(:machine).where(machine: { owner: o })
   end
 
   before_save do |record|

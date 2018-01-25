@@ -35,6 +35,29 @@ describe 'Maintenance Records API V3' do
       expect(mrs.size).to eq(1)
       expect(mrs[0]['machine']).to eq(@machine.fqdn)
     end
+
+    it 'should return all maintenance records for multiple tokens' do
+      user = FactoryGirl.create(:user)
+      owner_1 = FactoryGirl.create(:owner, users: [user])
+      owner_2 = FactoryGirl.create(:owner, users: [user])
+      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      allow(User).to receive(:current).and_return(owner_1.users.first)
+      allow(User).to receive(:current).and_return(owner_2.users.first)
+
+      m1 = FactoryGirl.create :machine, owner: owner_1
+      mr1 = FactoryGirl.create :maintenance_record, machine: m1, created_at: "2017-01-01 00:00:00"
+      m2 = FactoryGirl.create :machine, owner: owner_2
+      mr2 = FactoryGirl.create :maintenance_record, machine: m2, created_at: "2017-01-01 00:00:00"
+
+      get "/api/v3/maintenance_records", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
+      expect(response.status).to eq(200)
+
+      mrs = JSON.parse(response.body)
+      expect(mrs.size).to eq(2)
+      expect(mrs[0]['machine']).to eq(m1.fqdn)
+      expect(mrs[1]['machine']).to eq(m2.fqdn)
+    end
   end
 
   describe "GET /maintenance_records?fqdn=" do
