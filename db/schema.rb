@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622120928) do
+ActiveRecord::Schema.define(version: 20180226145510) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -87,20 +87,20 @@ ActiveRecord::Schema.define(version: 20170622120928) do
     t.index ["nic_id"], name: "index_ip_addresses_on_nic_id", using: :btree
   end
 
-  create_table "location_hierarchies", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "location_hierarchies", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "ancestor_id",   null: false
     t.integer "descendant_id", null: false
     t.integer "generations",   null: false
   end
 
-  create_table "location_levels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "location_levels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "name"
     t.string  "description"
     t.integer "level"
     t.integer "owner_id"
   end
 
-  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "name"
     t.string  "description"
     t.integer "level"
@@ -173,6 +173,21 @@ ActiveRecord::Schema.define(version: 20170622120928) do
     t.index ["fqdn"], name: "index_machines_on_fqdn", unique: true, using: :btree
   end
 
+  create_table "machines_maintenance_tickets", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "maintenance_ticket_id", null: false
+    t.integer "machine_id",            null: false
+  end
+
+  create_table "maintenance_announcements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.datetime "date"
+    t.text     "reason",                  limit: 65535
+    t.text     "impact",                  limit: 65535
+    t.integer  "maintenance_template_id"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.index ["maintenance_template_id"], name: "index_maintenance_announcements_on_maintenance_template_id", using: :btree
+  end
+
   create_table "maintenance_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "fqdn"
     t.integer  "machine_id"
@@ -186,6 +201,22 @@ ActiveRecord::Schema.define(version: 20170622120928) do
     t.index ["fqdn"], name: "index_maintenance_records_on_fqdn", using: :btree
     t.index ["machine_id"], name: "index_maintenance_records_on_machine_id", using: :btree
     t.index ["user_id"], name: "index_maintenance_records_on_user_id", using: :btree
+  end
+
+  create_table "maintenance_templates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.text     "template",   limit: 65535
+    t.string   "name"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "maintenance_tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "ticket_id"
+    t.datetime "date"
+    t.integer  "maintenance_announcement_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["maintenance_announcement_id"], name: "index_maintenance_tickets_on_maintenance_announcement_id", using: :btree
   end
 
   create_table "networks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -287,4 +318,6 @@ ActiveRecord::Schema.define(version: 20170622120928) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   end
 
+  add_foreign_key "maintenance_announcements", "maintenance_templates"
+  add_foreign_key "maintenance_tickets", "maintenance_announcements"
 end

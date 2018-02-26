@@ -1,0 +1,2 @@
+class MaintenanceTemplate < ApplicationRecord
+end

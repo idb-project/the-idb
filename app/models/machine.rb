@@ -34,6 +34,8 @@ class Machine < ActiveRecord::Base
   belongs_to :inventory
   belongs_to :power_feed_a, class_name: 'Location', foreign_key: 'power_feed_a'
   belongs_to :power_feed_b, class_name: 'Location', foreign_key: 'power_feed_b'
+
+  has_and_belongs_to_many :maintenance_tickets
   
   validates :fqdn, presence: true, uniqueness: true
   validates :fqdn, format: {with: FQDN_REGEX}
