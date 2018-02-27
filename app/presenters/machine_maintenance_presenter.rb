@@ -24,10 +24,10 @@ class MachineMaintenancePresenter < Keynote::Presenter
   def logfile
     build_html do
       pre do
-        # Try to display a sane logfile.
-        record.logfile.to_s.split("\r\n").map {|s|
-          s.split("\r").last
-        }.join("\n")
+        # dump to convert nonprintables to escape sequences
+        # replace escaped \\n with \n
+        # remove quotes at front and end
+        record.logfile.to_s.dump.split("\\n").join("\n")[1..-2]
       end
     end
   end
