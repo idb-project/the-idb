@@ -24,10 +24,18 @@ class MachineMaintenancePresenter < Keynote::Presenter
   def logfile
     build_html do
       pre do
-        # dump to convert nonprintables to escape sequences
-        # replace escaped \\n with \n
-        # remove quotes at front and end
-        record.logfile.to_s.dump.split("\\n").join("\n")[1..-2]
+        # Try to display a sane logfile by replacing line breaks and
+        # ANSI escape sequences
+        record.logfile
+          .gsub("\\n", "\n")
+          .gsub(/\e\[(\d);(\d+)(\w)/, '')
+          .gsub(/\e\[(\d+);(\d)(\w)/, '')
+          .gsub(/\e\[(\d+)m/, '')
+          .gsub(/\e8\r\n/, "\n")
+          .gsub(/\e8/, "\n")
+          .gsub(/\e\[(\d)(\w)/, '')
+          .gsub(/\e\[(\w)/, '')
+          .gsub(/\e(\d+)/, '')
       end
     end
   end
