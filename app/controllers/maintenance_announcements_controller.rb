@@ -9,6 +9,9 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def create
+        machines = Machine.where(params[:machine_ids])
+        vms = VirtualMachine.hosted_on(Machine.where(params[:machine_ids]))
+
         # select all different owners
         owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
 
