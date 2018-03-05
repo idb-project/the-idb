@@ -24,10 +24,18 @@ class MachineMaintenancePresenter < Keynote::Presenter
   def logfile
     build_html do
       pre do
-        # Try to display a sane logfile.
-        record.logfile.to_s.split("\r\n").map {|s|
-          s.split("\r").last
-        }.join("\n")
+        # Try to display a sane logfile by replacing line breaks and
+        # ANSI escape sequences
+        record.logfile
+          .gsub("\\n", "\n")
+          .gsub(/\e\[(\d);(\d+)(\w)/, '')
+          .gsub(/\e\[(\d+);(\d)(\w)/, '')
+          .gsub(/\e\[(\d+)m/, '')
+          .gsub(/\e8\r\n/, "\n")
+          .gsub(/\e8/, "\n")
+          .gsub(/\e\[(\d)(\w)/, '')
+          .gsub(/\e\[(\w)/, '')
+          .gsub(/\e(\d+)/, '')
       end
     end
   end
