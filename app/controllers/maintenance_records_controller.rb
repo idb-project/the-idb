@@ -35,6 +35,13 @@ class MaintenanceRecordsController < ApplicationController
     end
   end
 
+  def download_log
+    record = MaintenanceRecord.find(params[:maintenance_record_id])
+    send_data record.logfile,
+      :type => 'text/plain; charset=UTF-8;',
+      :disposition => "attachment; filename=#{record.fqdn}-#{record.created_at.strftime("%Y-%m-%d_%H-%M-%S")}.log"
+  end
+
   private
 
   def ok_params

@@ -19,7 +19,9 @@ InfrastructureDb::Application.routes.draw do
   resources :networks
   resources :owners
   get 'owners_summary/:owner', to: 'owners#summary', as: 'owners_summary'
-  resources :maintenance_records, only: [:show, :index, :new, :create, :update]
+  resources :maintenance_records, only: [:show, :index, :new, :create, :update] do
+    get :download_log, to: 'maintenance_records#download_log'
+  end
   resources :versions
   # we need to allow dots in the fqdn we pass as :id
   resources :untracked_machines, only: [:index, :destroy], :constraints => { :id => /[^\/]+/ }

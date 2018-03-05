@@ -9,6 +9,9 @@
         <div class="container-fluid">
           <a class="brand" href="<%= maintenance_record_path(@record) %>">
             Maintenance Record - <%= record.title %>
+            <ul class="nav pull-right">
+              <li><%= link_to '<i class="fa fa-download"></i> Download Raw'.html_safe, maintenance_record_download_log_path(@record) %></li>
+            </ul>
           </a>
         </div>
       </div>
