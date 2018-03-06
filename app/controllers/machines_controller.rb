@@ -119,6 +119,26 @@ class MachinesController < ApplicationController
     render json: {success: true, redirectTo: machines_path}, notice: 'DELETED'
   end
 
+  def autocomplete_config_instructions
+    autocomplete_general("config_instructions", params[:term])
+  end
+
+  def autocomplete_sw_characteristics
+    autocomplete_general("sw_characteristics", params[:term])
+  end
+
+  def autocomplete_business_purpose
+    autocomplete_general("business_purpose", params[:term])
+  end
+
+  def autocomplete_business_criticality
+    autocomplete_general("business_criticality", params[:term])
+  end
+
+  def autocomplete_business_notification
+    autocomplete_general("business_notification", params[:term])
+  end
+
   private
 
   def machine_params
@@ -131,5 +151,9 @@ class MachinesController < ApplicationController
         @machine.attachments.create(attachment: attachment)
       }
     end
+  end
+
+  def autocomplete_general(attrib, term)
+    render json: Machine.where("#{attrib} like '%#{term}%'").pluck("distinct #{attrib}")
   end
 end
