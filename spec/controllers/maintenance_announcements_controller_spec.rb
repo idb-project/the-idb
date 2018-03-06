@@ -41,4 +41,20 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             expect(MaintenanceTicket.second.machines.second).to eq(@m3)
         end
     end
+
+    describe "POST create, unselected VMs and not ignoring" do
+        before(:each) do
+            @t = Time.now
+            @m0 = FactoryGirl.create(:machine, owner: @owner0)
+            @m1 = FactoryGirl.create(:machine, owner: @owner0)
+            @m2 = FactoryGirl.create(:virtual_machine, owner: @owner1)
+            @m3 = FactoryGirl.create(:virtual_machine, owner: @owner1)
+        end
+    
+        it "shows a flash message if there are unselected vms and renders new" do
+            post :create, params: {maintenance_announcement: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact"}, machine_ids: [ @m0.id, @m1.id ] }
+            expect(response).to render_template("maintenance_announcements/new")
+            expect(flash[:alert]).to be_present
+        end
+    end
 end
