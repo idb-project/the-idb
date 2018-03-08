@@ -9,6 +9,11 @@ InfrastructureDb::Application.routes.draw do
   get 'background_jobs/sidekiq', to: 'background_jobs#sidekiq'
 
   resources :machines do
+    get :autocomplete_config_instructions, :on => :collection
+    get :autocomplete_sw_characteristics, :on => :collection
+    get :autocomplete_business_purpose, :on => :collection
+    get :autocomplete_business_criticality, :on => :collection
+    get :autocomplete_business_notification, :on => :collection
     member do
       get 'maintenance_record/new', to: 'maintenance_records#new'
     end
