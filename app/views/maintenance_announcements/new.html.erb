@@ -1,0 +1,29 @@
+<%# it's a bit hacky to wrap everything as form, but is an easy solution to
+have a wizard style dialog done on the client side #%>
+
+<%= form_tag(controller: "maintenance_announcements", action: "create", method: "post") do %>
+
+  <div class="tabbable">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <ul class="nav">
+            <li class="active"><a href="#machines" data-toggle="tab">Machines</a></li>
+            <li><a href="#info" data-toggle="tab">Announcement</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="machines">
+        <%= render 'machines_table' %>
+      </div>
+
+      <div class="tab-pane" id="info">
+        <input type="submit" />
+      </div>
+    </div>
+  </div>
+
+<% end %>

@@ -6,14 +6,15 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def new
+        @machines = Machine.all
     end
 
     def create
         # get selected machines
-        machines = Machine.where(params[:machine_ids])
+        @machines = Machine.where(params[:machine_ids])
 
         # check if there are vms which are hosted on the selected machines but aren't selected themselves
-        if not unselected_vms(machines).empty? and not params[:ignore_vms]
+        if not unselected_vms(@machines).empty? and not params[:ignore_vms]
             flash.alert = "Unselected VMs"
             render :new
         end
@@ -21,7 +22,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         # select all different owners
         owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
 
-        announcement = MaintenanceAnnouncement.new(params.require(:maintenance_announcement).permit(:date, :reason, :impact, :maintenance_template_id))
+        announcement = MaintenanceAnnouncement.new(date: params[:date], reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id])
 
         # create a ticket per owner
         tickets = new_tickets(announcement, owner_ids, params[:machine_ids])
@@ -43,10 +44,6 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     private
-
-    def create_params(p)
-
-    end
 
     # check if vms hosted on machines are present in machines
     def unselected_vms(machines)
