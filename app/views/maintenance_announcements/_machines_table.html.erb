@@ -41,8 +41,19 @@
           <tbody>
             <%- @machines.each do |machine| -%>
               <%- machine = k(:machine, machine) -%>
-              <tr id="#machine-<%= machine.id %>">
-                <td><%= check_box_tag("machine_ids[]", machine.id) %></td>
+              <%- selected = @selected_machines.pluck(:id).include?(machine.id) %>
+              <%- missing = @missing_vms.pluck(:id).include?(machine.id) %>
+                <tr id="#machine-<%= machine.id %>">
+                <%- if missing %>
+                  <%# the style gets set automatically at so many places, i just set it here and force it with !important #%>
+                  <td style="background-color: #fcf8e3 !important">
+                    <%= check_box_tag("machine_ids[]", value = machine.id, checked = selected ? "yes" : false ) %><i class="fa fa-exclamation-triangle"/></i>
+                  </td>
+                <%- else %>
+                  <td>
+                    <%= check_box_tag("machine_ids[]", value = machine.id, checked = selected ? "yes" : false ) %></i>
+                  </td>
+                <%- end %>
                 <td><%= machine.id %></td>
                 <td style="font-weight:normal <%=";font-style:italic" if machine.outdated && machine.auto_update %>" data-name="<%=machine.fqdn%>"><%= machine.name_link %>
                   <span class="auto-update"><%="*" if machine.auto_update%></span>

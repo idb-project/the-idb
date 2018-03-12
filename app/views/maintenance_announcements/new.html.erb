@@ -1,29 +1,47 @@
 <%# it's a bit hacky to wrap everything as form, but is an easy solution to
 have a wizard style dialog done on the client side #%>
 
+<%= stylesheet_link_tag    "pikaday", media: "all" %>
+
 <%= form_tag(controller: "maintenance_announcements", action: "create", method: "post") do %>
 
   <div class="tabbable">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <ul class="nav">
-            <li class="active"><a href="#machines" data-toggle="tab">Machines</a></li>
-            <li><a href="#info" data-toggle="tab">Announcement</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <%= render("nav_wizard") %>
 
     <div class="tab-content">
       <div class="tab-pane active" id="machines">
+        <%- if not @missing_vms.empty? %>
+          <div class="alert">
+            <strong>Unselected VMs</strong> There are unselected virtual machines which belong to a selected machine.
+            They are marked with <i class="fa fa-exclamation-triangle"/></i>.
+            If you are sure about your selection, you can choose to ignore unselected VMs at the bottom of the table.
+          </div>
+        <%- end %>
         <%= render 'machines_table' %>
+        <label for="ignore_vms">
+        <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
+        </label>
       </div>
 
       <div class="tab-pane" id="info">
+        <%= label_tag(:reason, "Reason") %>
+        <%= text_area_tag(:reason, "", class: "span4", rows: "15") %>
+
+        <%= label_tag(:impact, "Impact") %>
+        <%= text_area_tag(:impact, "", class: "span4", rows: "15") %>
+
+        <%= label_tag(:date, "Date") %>
+        <%= text_field_tag(:date) %>
         <input type="submit" />
       </div>
     </div>
   </div>
 
 <% end %>
+
+<%= javascript_include_tag "pikaday" %>
+<%= javascript_include_tag "moment.min" %>
+
+<script>
+  var date_picker = new Pikaday({ field: document.getElementById('date'), yearRange: [<%= Time.now.year %>, <%= Time.now.year + 1 %>], defaultDate: <%= Time.now.strftime("%F") %> });
+</script>
