@@ -19,7 +19,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement affecting a single owner" do
-            post :create, params: {maintenance_announcement: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact"}, machine_ids: [ @m0.id, @m1.id ] }
+            post :create, params: { date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact", machine_ids: [ @m0.id, @m1.id ] }
             expect(MaintenanceAnnouncement.last.date).to eq("#{@t.year}-#{@t.month}-#{@t.day}")
             expect(MaintenanceAnnouncement.last.reason).to eq("reason")
             expect(MaintenanceAnnouncement.last.impact).to eq("impact")
@@ -29,7 +29,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
 
         it "creates a new maintenance announcement affecting multiple owners" do
-            post :create, params: {maintenance_announcement: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact"}, machine_ids: [ @m0.id, @m1.id, @m2.id, @m3.id ] }
+            post :create, params: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact", machine_ids: [ @m0.id, @m1.id, @m2.id, @m3.id ] }
             expect(MaintenanceAnnouncement.last.date).to eq("#{@t.year}-#{@t.month}-#{@t.day}")
             expect(MaintenanceAnnouncement.last.reason).to eq("reason")
             expect(MaintenanceAnnouncement.last.impact).to eq("impact")
@@ -46,13 +46,12 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         before(:each) do
             @t = Time.now
             @m0 = FactoryGirl.create(:machine, owner: @owner0)
-            @m1 = FactoryGirl.create(:machine, owner: @owner0)
+            @m1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
         end
     
         it "shows a flash message if there are unselected vms and renders new" do
-            post :create, params: {maintenance_announcement: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact"}, machine_ids: [ @m0.id ] }
+            post :create, params: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact", machine_ids: [ @m0.id ] }
             expect(response).to render_template("maintenance_announcements/new")
-            expect(flash[:alert]).to be_present
         end
     end
 
@@ -60,15 +59,16 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         before(:each) do
             @t = Time.now
             @m0 = FactoryGirl.create(:machine, owner: @owner0)
-            @m1 = FactoryGirl.create(:machine, owner: @owner0)
+            @vm0 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
+            @vm1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
         end
     
-        it "shows a flash message if there are unselected vms and renders new" do
-            post :create, params: {maintenance_announcement: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact"}, machine_ids: [ @m0.id ] }
+        it "creates a new maintenance announcement" do
+            post :create, params: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact", machine_ids: [ @m0.id, @vm0.id ], ignore_vms: true }
             expect(MaintenanceAnnouncement.last.date).to eq("#{@t.year}-#{@t.month}-#{@t.day}")
             expect(MaintenanceAnnouncement.last.reason).to eq("reason")
             expect(MaintenanceAnnouncement.last.impact).to eq("impact")
-            expect(MaintenanceTicket.last.machines.size).to eq(1)
+            expect(MaintenanceTicket.last.machines.size).to eq(2)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
         end
     end
