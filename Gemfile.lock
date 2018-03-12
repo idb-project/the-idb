@@ -195,10 +195,10 @@ GEM
     paranoia (2.2.1)
       activerecord (>= 4.0, < 5.1)
     puma (3.7.1)
-    rack (2.0.3)
+    rack (2.0.4)
     rack-accept (0.4.5)
       rack (>= 0.4)
-    rack-protection (1.5.3)
+    rack-protection (2.0.1)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
