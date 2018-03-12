@@ -5,19 +5,22 @@
       <th>Date</th>
       <th>Reason</th>
       <th>Impact</th>
-      <th>Template</th>
+      <th>Machines</th>
       <th>Owners</th>
+      <th>Tickets</th>
     </tr>
   </thead>
   <tbody>
     <%- maintenance_announcements.each do |maintenance_announcement| -%>
+      <%- maintenance_announcement = k(:maintenance_announcement, maintenance_announcement) -%>
       <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
         <td><%= maintenance_announcement.id %></td>
         <td><%= maintenance_announcement.date %></td>
-        <td><%= maintenance_announcement.reason %></td>
-        <td><%= maintenance_announcement.impact %></td>
-        <td><%= maintenance_announcement.maintenance_template_id %></td>
-        <td><%#= maintenance_announcement.owners %></td>
+        <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
+        <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
+        <td><%= maintenance_announcement.machine_links %></td>
+        <td><%= maintenance_announcement.owner_links %></td>
+        <td><%= maintenance_announcement.ticket_links %></td>
       </tr>
     <%- end -%>
   </tbody>
