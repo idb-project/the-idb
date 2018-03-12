@@ -1,5 +1,6 @@
 class MaintenanceAnnouncementsController < ApplicationController
     def index
+        @maintenance_announcements = MaintenanceAnnouncement.all
     end
 
     def show
@@ -7,16 +8,24 @@ class MaintenanceAnnouncementsController < ApplicationController
 
     def new
         @machines = Machine.all
+
+        # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
+        @selected_machines = Machine.where(id: params[:machine_ids])
+
+        @missing_vms = Array.new
     end
 
     def create
         # get selected machines
-        @machines = Machine.where(params[:machine_ids])
+        @selected_machines = Machine.where(id: params[:machine_ids])
 
-        # check if there are vms which are hosted on the selected machines but aren't selected themselves
-        if not unselected_vms(@machines).empty? and not params[:ignore_vms]
-            flash.alert = "Unselected VMs"
-            render :new
+        # get all vms that belong to a selected machine but arent selected themselves
+        @missing_vms = unselected_vms(@selected_machines)
+
+        if not @missing_vms.empty? and not params[:ignore_vms]
+            # new needs all machines to render the table
+            @machines = Machine.all
+            return render :new
         end
 
         # select all different owners
@@ -41,14 +50,22 @@ class MaintenanceAnnouncementsController < ApplicationController
             TicketService.new(ticket).send
             puts "Ticket send as: #{ticket.ticket_id}"
         end
+
+        redirect_to maintenance_announcements_path
     end
 
     private
 
     # check if vms hosted on machines are present in machines
     def unselected_vms(machines)
+        unselected = []
         vms = VirtualMachine.hosted_on(machines)
-        machines.to_set.difference(vms.to_set)
+        vms.each do |vm|
+            if not machines.include?(vm)
+                unselected << vm
+            end
+        end
+        unselected
     end
 
     def new_tickets(announcement, owner_ids, machine_ids)
