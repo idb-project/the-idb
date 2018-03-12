@@ -1,0 +1,24 @@
+<table class="table tablesorter maintenance_announcement-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Reason</th>
+      <th>Impact</th>
+      <th>Template</th>
+      <th>Owners</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- maintenance_announcements.each do |maintenance_announcement| -%>
+      <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
+        <td><%= maintenance_announcement.id %></td>
+        <td><%= maintenance_announcement.date %></td>
+        <td><%= maintenance_announcement.reason %></td>
+        <td><%= maintenance_announcement.impact %></td>
+        <td><%= maintenance_announcement.maintenance_template_id %></td>
+        <td><%#= maintenance_announcement.owners %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>
