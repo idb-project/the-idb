@@ -30,13 +30,14 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # select all different owners
         owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
+        owners = Owner.where(id: owner_ids)
 
         announcement = MaintenanceAnnouncement.new(date: params[:date], reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id])
 
         # create a ticket per owner
-        tickets = new_tickets(announcement, owner_ids, params[:machine_ids])
+        tickets = new_tickets(announcement, owners, @selected_machines)
 
-        # save announcement and tickets
+        # save announcement and tickets in one transaction
         MaintenanceAnnouncement.transaction do
             announcement.save!
             tickets.each do |ticket|
@@ -68,11 +69,11 @@ class MaintenanceAnnouncementsController < ApplicationController
         unselected
     end
 
-    def new_tickets(announcement, owner_ids, machine_ids)
+    def new_tickets(announcement, owners, machines)
         tickets = []
-        owner_ids.each do |owner_id|
+        owners.each do |owner|
             # select all machines of this owner which are selected as affected
-            owner_machines = Machine.where(owner_id: owner_id, id: machine_ids)
+            owner_machines = Machine.where(owner: owner.id, id: machines.pluck(:id))
             tickets << MaintenanceTicket.new(maintenance_announcement: announcement, machines: owner_machines)
         end
 
