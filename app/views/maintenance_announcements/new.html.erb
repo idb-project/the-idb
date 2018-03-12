@@ -25,14 +25,14 @@ have a wizard style dialog done on the client side #%>
 
       <div class="tab-pane" id="info">
         <%= label_tag(:reason, "Reason") %>
-        <%= text_area_tag(:reason, "", class: "span4", rows: "15") %>
+        <%= text_area_tag(:reason, params[:reason], class: "span4", rows: "15") %>
 
         <%= label_tag(:impact, "Impact") %>
-        <%= text_area_tag(:impact, "", class: "span4", rows: "15") %>
+        <%= text_area_tag(:impact, params[:impact], class: "span4", rows: "15") %>
 
         <%= label_tag(:date, "Date") %>
-        <%= text_field_tag(:date) %>
-        <input type="submit" />
+        <%= text_field_tag(:date, params[:date]) %>
+        <input type="submit" value="Send Announcement" />
       </div>
     </div>
   </div>
