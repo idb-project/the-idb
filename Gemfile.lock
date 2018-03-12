@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/bytemine/grape-swagger-entity.git
+  remote: https://github.com/bytemine/grape-swagger-entity.git
   revision: e98460cbb4fe0bfd540c395a9bd8805ede0cbe64
   specs:
     grape-swagger-entity (0.2.0)

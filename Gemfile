@@ -12,7 +12,7 @@ gem 'grape'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-entity'
-gem 'grape-swagger-entity', github: 'bytemine/grape-swagger-entity'
+gem 'grape-swagger-entity', git: 'https://github.com/bytemine/grape-swagger-entity.git'
 
 gem 'sass-rails'
 gem 'uglifier'
