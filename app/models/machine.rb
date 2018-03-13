@@ -218,6 +218,10 @@ class Machine < ActiveRecord::Base
     return nil
   end
 
+  def announcement_deadline_seconds
+    announcement_deadline * 24 * 60 * 60
+  end
+
   class SoftwareEntity < Grape::Entity
     expose :name, documentation: { type: "String", desc: "Software name", param_type: 'body' }
     expose :version, documentation: { type: "String", desc: "Software version", param_type: 'body' }

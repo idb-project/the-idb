@@ -17,6 +17,7 @@
           <%- if IDB.config.modules.advanced_fields -%>
           <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
           <%- end -%>
+          <li><a href="#contract" data-toggle="tab">Contract</a></li>
           <%- if IDB.config.modules.unattended_upgrades && machine.unattended_upgrades -%>
           <li><a href="#unattended" data-toggle="tab">Unattended</a></li>
           <%- end -%>
@@ -369,6 +370,16 @@
       </div>
     </div>
     <%- end -%>
+
+    <div class="tab-pane" id="contract">
+      <div class="row-fluid">
+        <strong>Maintenance announcement deadline:</strong>
+        </br>
+        <%= machine.announcement_deadline %> days
+      </div>
+    </div>
+
+
     <%- if IDB.config.modules.unattended_upgrades -%>
     <div class="tab-pane" id="unattended">
       <p>
