@@ -49,7 +49,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             @m1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
         end
     
-        it "shows a flash message if there are unselected vms and renders new" do
+        it "renders new" do
             post :create, params: {date: "#{@t.year}-#{@t.month}-#{@t.day}", reason: "reason", impact: "impact", machine_ids: [ @m0.id ] }
             expect(response).to render_template("maintenance_announcements/new")
         end
@@ -69,6 +69,50 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             expect(MaintenanceAnnouncement.last.reason).to eq("reason")
             expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(2)
+            expect(MaintenanceTicket.last.machines.first).to eq(@m0)
+        end
+    end
+
+    describe "POST create, deadline exceeded" do
+        before(:each) do
+            @t = (Time.now + 7.days).strftime("%Y-%m-%d")
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 7)
+        end
+    
+        it "renders new" do
+            post :create, params: {date: @t, reason: "reason", impact: "impact", machine_ids: [ @m0.id ] }
+            expect(response).to render_template("maintenance_announcements/new")
+        end
+    end
+
+    describe "POST create, deadline exceeded and ignoring" do
+        before(:each) do
+            @t = (Time.now + 7.days).strftime("%Y-%m-%d")
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 7)
+        end
+    
+        it "creates a new maintenance announcement" do
+            post :create, params: {date: @t, reason: "reason", impact: "impact", machine_ids: [ @m0.id ], ignore_deadlines: true }
+            expect(MaintenanceAnnouncement.last.date).to eq(@t)
+            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
+            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
+            expect(MaintenanceTicket.last.machines.size).to eq(1)
+            expect(MaintenanceTicket.last.machines.first).to eq(@m0)
+        end
+    end
+
+    describe "POST create, deadline not exceeded" do
+        before(:each) do
+            @t = (Time.now + 14.days).strftime("%Y-%m-%d")
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 7)
+        end
+    
+        it "creates a new maintenance announcement" do
+            post :create, params: {date: @t, reason: "reason", impact: "impact", machine_ids: [ @m0.id ], ignore_deadlines: true }
+            expect(MaintenanceAnnouncement.last.date).to eq(@t)
+            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
+            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
+            expect(MaintenanceTicket.last.machines.size).to eq(1)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
         end
     end

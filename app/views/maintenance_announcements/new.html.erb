@@ -13,13 +13,23 @@ have a wizard style dialog done on the client side #%>
         <%- if not @missing_vms.empty? %>
           <div class="alert">
             <strong>Unselected VMs</strong> There are unselected virtual machines which belong to a selected machine.
-            They are marked with <i class="fa fa-exclamation-triangle"/></i>.
+            They are marked with <i class="fa fa-exclamation-triangle"/></i> and the VM host they belong to.
             If you are sure about your selection, you can choose to ignore unselected VMs at the bottom of the table.
+          </div>
+        <%- end %>
+        <%- if not @exceeded_deadlines.empty? %>
+          <div class="alert">
+            <strong>Exceeded deadlines</strong> There are machines where the deadline for announcements is exceeded.
+            They are marked with <i class="fa fa-calendar"/></i> and the nearest possible date.
+            If you are sure about your selection, you can choose to ignore exceeded deadlines at the bottom of the table.
           </div>
         <%- end %>
         <%= render 'machines_table' %>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
+        </label>
+        <label for="ignore_deadlines">
+        <%= check_box_tag("ignore_deadlines") %> Ignore exceeded deadlines
         </label>
       </div>
 

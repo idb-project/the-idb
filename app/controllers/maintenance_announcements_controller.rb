@@ -13,6 +13,8 @@ class MaintenanceAnnouncementsController < ApplicationController
         @selected_machines = Machine.where(id: params[:machine_ids])
 
         @missing_vms = Array.new
+        @exceeded_deadlines = Array.new
+        @date = Time.now
     end
 
     def create
@@ -22,8 +24,24 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all vms that belong to a selected machine but arent selected themselves
         @missing_vms = unselected_vms(@selected_machines)
 
+        begin
+            @date = Time.strptime(params[:date], "%Y-%m-%d")
+        rescue
+            flash.error = "Invalid date"
+            @machines = Machine.all
+            return render :new
+        end
+
+        # get all machines where the deadline is exceeded
+        @exceeded_deadlines = check_deadlines(@selected_machines, @date)
+
         if not @missing_vms.empty? and not params[:ignore_vms]
             # new needs all machines to render the table
+            @machines = Machine.all
+            return render :new
+        end
+
+        if not @exceeded_deadlines.empty? and not params[:ignore_deadlines]
             @machines = Machine.all
             return render :new
         end
@@ -56,6 +74,23 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     private
+
+    # check if deadlines of machines are held
+    def check_deadlines(machines, date, now = Time.now)
+        exceeded = []
+        machines.each do |machine|
+            # no deadline set in the machine, ignore it
+            next unless machine.announcement_deadline
+
+
+
+            # now - date is fewer seconds than the deadline
+            if date - now < machine.announcement_deadline_seconds
+                exceeded << machine
+            end
+        end
+        exceeded
+    end
 
     # check if vms hosted on machines are present in machines
     def unselected_vms(machines)
