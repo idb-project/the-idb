@@ -24,8 +24,11 @@ $ ln -s /etc/the-idb config
 
  
  * install [Phusion Passenger](https://www.phusionpassenger.com/library/install/apache/install/oss/el7/) from the official repo
+```
+ Once passneger is installed update the ruby default path from /usr/bin/ruby to /usr/local/rvm/rubies/ruby-2.2.4/bin/ruby in file below
+ /etc/httpd/conf.d/passenger.conf
+```
 
- 
 ## install and setup mysql
 * install the mysql 5.7 repo 
 ```
@@ -86,11 +89,19 @@ RAILS_ENV=production bundle install
 
 * setup rvm wrapper for sidekiq `rvm wrapper current bootup sidekiq`
 
-## fill the database and precompile the assets
+## fill the database, precompile the assets and create the secret key and update the same in yml file
 ```
 export RAILS_ENV=production
 bundle exec rake db:migrate
 bundle exec rake assets:precompile
+
+rake secret
+And create a secret key with rake as above and update the same in file below
+/opt/the-idb/config/secrets.yml 
+--
+production:
+  secret_key_base: <%%= ENV["your_key"] %>
+--
 ```
 
 ## config files for apache and sidekiq
