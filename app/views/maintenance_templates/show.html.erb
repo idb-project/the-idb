@@ -1,0 +1,26 @@
+<div id="maintenance_template-show">
+
+    <%= render partial: 'nav_show', locals: {maintenance_template: @maintenance_template} %>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-condensed">
+                <tr>
+                  <th>Name:</th>
+                  <th>Announcements:</th>
+                </tr>
+                <tr>
+                    <td><%= @maintenance_template.name %></td>
+                    <td>asdfasd</td>
+                </tr>
+                <tr>
+                    <th>Template:</th>
+                </tr>
+                <tr>
+                    <td><%= @maintenance_template.template %></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

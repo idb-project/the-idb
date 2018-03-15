@@ -1,0 +1,20 @@
+<div id="maintenance_template-form">
+    <div class="row-fluid">
+        <div class="span6">
+            <%= simple_form_for(@maintenance_template) do |f| %>
+            <%= f.input :name %>
+            <%= f.input :template, as: :text, input_html: {rows: 20, style: "width: 80%;"}  %>
+            <%= f.button :submit %>
+            <%- end %>
+        </div>
+        <div class="span6">
+            The template can contain the following placeholders:
+            <ul>
+                <li><code>%{machines}</code> - FQDNs of affected machines</li>
+                <li><code>%{date}</code> - Maintenance date</li>
+                <li><code>%{reason}</code> - Maintenance reason</li>
+                <li><code>%{impact}</code> - Maintenance impact</li>
+            </ul>
+        </div>
+    </div>
+</div>
