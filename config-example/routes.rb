@@ -44,6 +44,8 @@ InfrastructureDb::Application.routes.draw do
   resources :softwares, only: [:index]
   resources :cloud_providers
   resources :users, only: [:index, :edit, :update]
+  resources :maintenance_announcements
+  resources :maintenance_templates
 
   post 'markup/render', to: 'markup#do_render'
 
