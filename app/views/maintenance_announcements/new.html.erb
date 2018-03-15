@@ -34,6 +34,9 @@ have a wizard style dialog done on the client side #%>
       </div>
 
       <div class="tab-pane" id="info">
+        <%= label_tag(:maintenance_template_id, "Template") %>
+        <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
+
         <%= label_tag(:reason, "Reason") %>
         <%= text_area_tag(:reason, params[:reason], class: "span4", rows: "15") %>
 

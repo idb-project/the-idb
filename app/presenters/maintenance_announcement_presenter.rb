@@ -28,4 +28,11 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
         links << "</ul>"
         links.join(" ").html_safe
     end
+
+    def template_link
+        template = maintenance_announcement.maintenance_template
+        if template
+            return link_to(template.name, maintenance_template_path(template)).html_safe
+        end
+    end
 end

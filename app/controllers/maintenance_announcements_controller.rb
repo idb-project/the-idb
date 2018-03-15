@@ -8,6 +8,7 @@ class MaintenanceAnnouncementsController < ApplicationController
 
     def new
         @machines = Machine.all
+        @maintenance_templates = MaintenanceTemplate.all
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
         @selected_machines = Machine.where(id: params[:machine_ids])
@@ -29,6 +30,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         rescue
             flash.error = "Invalid date"
             @machines = Machine.all
+            @maintenance_templates = MaintenanceTemplate.all
             return render :new
         end
 
@@ -38,11 +40,13 @@ class MaintenanceAnnouncementsController < ApplicationController
         if not @missing_vms.empty? and not params[:ignore_vms]
             # new needs all machines to render the table
             @machines = Machine.all
+            @maintenance_templates = MaintenanceTemplate.all
             return render :new
         end
 
         if not @exceeded_deadlines.empty? and not params[:ignore_deadlines]
             @machines = Machine.all
+            @maintenance_templates = MaintenanceTemplate.all
             return render :new
         end
 
