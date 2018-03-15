@@ -359,7 +359,8 @@ class MachinePresenter < Keynote::Presenter
     output
   end
 
+  # returns the first possible date for the set deadline
   def announcement_deadline_target
-    (Time.now + machine.announcement_deadline.days).strftime("%Y-%m-%d")
+    (Time.now + machine.announcement_deadline.days + 1.days).strftime("%Y-%m-%d")
   end
 end
