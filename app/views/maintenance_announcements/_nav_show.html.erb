@@ -1,0 +1,12 @@
+ <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <ul class="nav">
+                <a class="brand" href="<%= maintenance_announcement_path(maintenance_announcement) %>">Announcement <%= maintenance_announcement.id %></a>
+            </ul>
+            <ul class="nav pull-right">
+                <li><%= link_to '<i class="fa fa-level-up"></i> Back'.html_safe, maintenance_announcements_path %></li>
+            </ul>
+        </div>
+    </div>
+</div>

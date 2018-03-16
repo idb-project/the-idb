@@ -1,0 +1,37 @@
+<div id="maintenance_announcement-show">
+
+    <%= render partial: 'nav_show', locals: {maintenance_announcement: @maintenance_announcement} %>
+
+    <%- maintenance_announcement = k(:maintenance_announcement, @maintenance_announcement) %>
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-condensed">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Owners</th>
+                    <th>Machines</th>
+                </tr>
+                <tr>
+                    <td><%= maintenance_announcement.id %></td>
+                    <td><%= maintenance_announcement.date %></td>
+                    <td><%= maintenance_announcement.owner_links %></td>
+                    <td><%= maintenance_announcement.machine_links %></td>
+                </tr>
+                <tr>
+                    <th>Reason</th>
+                    <th>Impact</th>
+                    <th>Template:</th>
+                    <th>Tickets:</th>
+                </tr>
+                <tr>
+                    <td><%= maintenance_announcement.reason %></td>
+                    <td><%= maintenance_announcement.impact %></td>
+                    <td><%= maintenance_announcement.template_link %></td>
+                    <td><%= maintenance_announcement.ticket_links %></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -4,6 +4,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def show
+        @maintenance_announcement = MaintenanceAnnouncement.find(params[:id])
     end
 
     def new
@@ -70,7 +71,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         # try to send each ticket
         tickets.each do |ticket|
             puts "Send ticket for #{ticket.machines.pluck(:id)}"
-            TicketService.new(ticket).send
+            TicketService.send(ticket)
             puts "Ticket send as: #{ticket.ticket_id}"
         end
 

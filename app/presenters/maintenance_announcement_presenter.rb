@@ -6,7 +6,7 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     def ticket_links
         links = Array.new
         maintenance_announcement.maintenance_tickets.pluck(:ticket_id).each do |ticket_id|
-            links << link_to(ticket_id, "http://rt/#{ticket_id}")
+            links << link_to("\##{ticket_id}", IDB.config.rt.ticket_url % ticket_id)
         end
         links.join(", ").html_safe
     end
@@ -22,7 +22,6 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     def machine_links
         links = ['<ul style="list-style-type: none; margin: 0;">']
         maintenance_announcement.machines.each do |machine|
-            puts machine.fqdn
             links << "<li>" + link_to(machine.fqdn, machine_path(machine)) + "</li>"
         end
         links << "</ul>"
