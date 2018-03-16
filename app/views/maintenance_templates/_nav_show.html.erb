@@ -6,6 +6,7 @@
             </ul>
             <ul class="nav pull-right">
                 <li><%= link_to '<i class="fa fa-edit"></i> Edit'.html_safe, edit_maintenance_template_path(maintenance_template) %></li>
+                <li><%= link_to '<i class="fa fa-level-up"></i> Back'.html_safe, maintenance_templates_path %></li>
                 <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, maintenance_template_path(maintenance_template), class: 'maintenance_template-delete', method: 'delete' %></li>
             </ul>
         </div>
