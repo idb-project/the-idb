@@ -3,7 +3,7 @@
         <div class="span6">
             <%= simple_form_for(@maintenance_template) do |f| %>
             <%= f.input :name %>
-            <%= f.input :subject %>
+            <%= f.input :subject, as: :string, input_html: { style: "width: 80%;" } %>
             <%= f.input :body, as: :text, input_html: {rows: 20, style: "width: 80%;"}  %>
             <%= f.button :submit %>
             <%- end %>

@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Subject</th>
       <th>Template</th>
     </tr>
   </thead>
@@ -10,7 +11,8 @@
       <%#- maintenance_template = k(:maintenance_template, maintenance_template) -#%>
       <tr id="#maintenance_template-<%= maintenance_template.id %>">
         <td><%= link_to(maintenance_template.name, maintenance_template) %></td>
-        <td><%= truncate maintenance_template.template, length: 20 %></td>
+        <td><%= truncate maintenance_template.subject, length: 20 %></td>
+        <td><%= truncate maintenance_template.body, length: 20 %></td>
       </tr>
     <%- end -%>
   </tbody>
