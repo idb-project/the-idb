@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :maintenance_template do
-    template "MyText"
-    name "MyString"
+    body "MyBody"
+    subject "MySubject"
+    name "MyName"
   end
 end

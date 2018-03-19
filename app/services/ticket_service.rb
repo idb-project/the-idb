@@ -1,13 +1,16 @@
 class TicketService
     def self.send(ticket)
-        text = ticket.format
+        text = ticket.format_body
+        subject = ticket.format_subject
         queue = IDB.config.rt.queue
         requestor = IDB.config.rt.requestor
         cc = ["schuller@bytemine.net"]
-        ticket_id = TicketService.create_rt_ticket(queue, requestor, cc, "Test Ticket", text)
+        ticket_id = TicketService.create_rt_ticket(queue, requestor, cc, subject, text)
         ticket.ticket_id = ticket_id
         ticket.save!
     end
+
+    private
 
     def self.create_rt_ticket(queue, requestor, cc, subject, text)
         uri = self.build_uri
@@ -45,8 +48,6 @@ Text: %{text}
 )
         x % {queue: queue, requestor: requestor, cc: cc.join(","), subject: subject, text: text }
     end
-
-    private
 
     # RT wants every line except for the first one to be indented with one space
     def self.indent(text)

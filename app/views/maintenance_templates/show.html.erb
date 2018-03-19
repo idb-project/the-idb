@@ -10,16 +10,18 @@
                 <tr>
                   <th>Name:</th>
                   <th>Announcements:</th>
+                  <th>Subject:</th>
                 </tr>
                 <tr>
                     <td><%= maintenance_template.name %></td>
                     <td><%= maintenance_template.announcement_links %></td>
+                    <td><%= maintenance_template.subject %></td>
                 </tr>
                 <tr>
                     <th>Template:</th>
                 </tr>
                 <tr>
-                    <td colspan=2><pre><%= maintenance_template.template %></pre></td>
+                    <td colspan=2><pre><%= maintenance_template.body %></pre></td>
                 </tr>
             </table>
         </div>
