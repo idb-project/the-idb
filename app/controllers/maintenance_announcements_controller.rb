@@ -70,9 +70,7 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # try to send each ticket
         tickets.each do |ticket|
-            puts "Send ticket for #{ticket.machines.pluck(:id)}"
             TicketService.send(ticket)
-            puts "Ticket send as: #{ticket.ticket_id}"
         end
 
         redirect_to maintenance_announcements_path
