@@ -1,7 +1,7 @@
 class MaintenanceAnnouncementPresenter < Keynote::Presenter
     presents :maintenance_announcement
 
-    delegate :id, :date, :reason, :impact, to: :maintenance_announcement
+    delegate :id, :begin_date, :end_date, :reason, :impact, to: :maintenance_announcement
 
     def ticket_links
         links = Array.new

@@ -1,7 +1,7 @@
 <%# it's a bit hacky to wrap everything as form, but is an easy solution to
 have a wizard style dialog done on the client side #%>
 
-<%= stylesheet_link_tag    "pikaday", media: "all" %>
+<%#= stylesheet_link_tag    "pikaday", media: "all" %>
 
 <%= form_tag(controller: "maintenance_announcements", action: "create", method: "post") do %>
 
@@ -43,18 +43,24 @@ have a wizard style dialog done on the client side #%>
         <%= label_tag(:impact, "Impact") %>
         <%= text_area_tag(:impact, params[:impact], class: "span4", rows: "15") %>
 
-        <%= label_tag(:date, "Date") %>
-        <%= text_field_tag(:date, params[:date]) %>
-        <input type="submit" value="Send Announcement" />
+        <%= label_tag(:begin_date, "Begin") %>
+        <%= datetime_select(:maintenance_announcement, :begin_date) %>
+
+        <%= label_tag(:begin_date, "End") %>
+        <%= datetime_select(:maintenance_announcement, :end_date) %>
+
+        <%= label_tag("","") %>
+        <%= submit_tag("Send Announcement") %>
       </div>
     </div>
   </div>
 
 <% end %>
 
+<!--
 <%= javascript_include_tag "pikaday" %>
 <%= javascript_include_tag "moment.min" %>
 
 <script>
   var date_picker = new Pikaday({ field: document.getElementById('date'), yearRange: [<%= Time.now.year %>, <%= Time.now.year + 1 %>], defaultDate: <%= Time.now.strftime("%F") %> });
-</script>
+</script>-->

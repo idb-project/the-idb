@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319134710) do
+ActiveRecord::Schema.define(version: 20180320100202) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -180,12 +180,13 @@ ActiveRecord::Schema.define(version: 20180319134710) do
   end
 
   create_table "maintenance_announcements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.datetime "date"
+    t.datetime "begin_date"
     t.text     "reason",                  limit: 65535
     t.text     "impact",                  limit: 65535
     t.integer  "maintenance_template_id"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.datetime "end_date"
     t.index ["maintenance_template_id"], name: "index_maintenance_announcements_on_maintenance_template_id", using: :btree
   end
 

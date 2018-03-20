@@ -2,7 +2,8 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>Date</th>
+      <th>Begin</th>
+      <th>End</th>
       <th>Template</th>
       <th>Reason</th>
       <th>Impact</th>
@@ -16,7 +17,8 @@
       <%- maintenance_announcement = k(:maintenance_announcement, maintenance_announcement) -%>
       <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
         <td><%= maintenance_announcement.id %></td>
-        <td><%= maintenance_announcement.date %></td>
+        <td><%= maintenance_announcement.begin_date %></td>
+        <td><%= maintenance_announcement.end_date %></td>
         <td><%= maintenance_announcement.template_link %></td>
         <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
         <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
