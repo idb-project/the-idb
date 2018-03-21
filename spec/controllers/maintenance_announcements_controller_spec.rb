@@ -4,7 +4,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
     before(:each) do
         # stub sending of tickets
         allow(TicketService).to receive(:send).and_return(true)
-        @begin_date = Time.new(2011,12,31,10,11,0)
+        @begin_date = Time.zone.local(2011,12,31,10,11,0)
         @end_date = @begin_date + 1.days
         @date_params = {
             "begin_date(1i)": @begin_date.year,
@@ -94,7 +94,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, deadline exceeded" do
         before(:each) do
-            @begin_date = Time.new(2011,12,31,10,11,0)
+            @begin_date = Time.zone.local(2011,12,31,10,11,0)
             @end_date = @begin_date + 1.days
             @date_params = {
                 "begin_date(1i)": @begin_date.year,
@@ -119,7 +119,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, deadline exceeded and ignoring" do
         before(:each) do
-            @begin_date = Time.new(2011,12,31,10,11,0)
+            @begin_date = Time.zone.local(2011,12,31,10,11,0)
             @end_date = @begin_date + 1.days
             @date_params = {
                 "begin_date(1i)": @begin_date.year,
@@ -149,7 +149,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
     describe "POST create, deadline not exceeded" do
         before(:each) do
             x = Time.now
-            @begin_date = Time.new(x.year,x.month,x.day,x.hour,x.min,0) + 14.days
+            @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0) + 14.days
             @end_date = @begin_date + 1.days
             @date_params = {
                 "begin_date(1i)": @begin_date.year,

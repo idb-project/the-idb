@@ -7,12 +7,14 @@
         <div class="span12">
             <table class="table table-condensed">
                 <tr>
+                    <th>User</th>
                     <th>Begin</th>
                     <th>End</th> 
                     <th>Owners</th>
                     <th>Machines</th>
                 </tr>
                 <tr>
+                    <td><%= maintenance_announcement.user.display_name %></td>
                     <td><%= maintenance_announcement.begin_date %></td>
                     <td><%= maintenance_announcement.end_date %></td>
                     <td><%= maintenance_announcement.owner_links %></td>
@@ -21,14 +23,16 @@
                 <tr>
                     <th>Reason</th>
                     <th>Impact</th>
-                    <th>Template:</th>
-                    <th>Tickets:</th>
+                    <th>Template</th>
+                    <th>Tickets</th>
+                    <th></th>
                 </tr>
                 <tr>
                     <td><%= maintenance_announcement.reason %></td>
                     <td><%= maintenance_announcement.impact %></td>
                     <td><%= maintenance_announcement.template_link %></td>
                     <td><%= maintenance_announcement.ticket_links %></td>
+                    <td></td>
                 </tr>
             </table>
         </div>

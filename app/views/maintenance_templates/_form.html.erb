@@ -11,6 +11,7 @@
         <div class="span6">
             The subject and body can contain the following placeholders:
             <ul>
+                <li><code>%{user}</code> - Display name of user sending announcement(e.g. <%= @current_user.display_name %>)</li>
                 <li><code>%{machines}</code> - FQDNs of affected machines</li>
                 <li><code>%{begin_date}</code> - Begin date and time of maintenance</li>
                 <li><code>%{end_date}</code> - End date and time of maintenance</li>

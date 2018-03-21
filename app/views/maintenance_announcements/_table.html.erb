@@ -4,6 +4,7 @@
       <th>ID</th>
       <th>Begin</th>
       <th>End</th>
+      <th>User</th>
       <th>Template</th>
       <th>Reason</th>
       <th>Impact</th>
@@ -19,6 +20,7 @@
         <td><%= maintenance_announcement.id %></td>
         <td><%= maintenance_announcement.begin_date %></td>
         <td><%= maintenance_announcement.end_date %></td>
+        <td><%= maintenance_announcement.user.display_name %></td>
         <td><%= maintenance_announcement.template_link %></td>
         <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
         <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
