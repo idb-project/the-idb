@@ -42,4 +42,9 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     def end_date
         maintenance_announcement.end_date.to_formatted_s(:db)
     end
+
+    def user_link
+        user = k(maintenance_announcement.user)
+        user.name_link
+    end
 end

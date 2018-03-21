@@ -20,7 +20,7 @@
         <td><%= link_to(maintenance_announcement.id, maintenance_announcement_path(maintenance_announcement.id)) %></td>
         <td><%= maintenance_announcement.begin_date %></td>
         <td><%= maintenance_announcement.end_date %></td>
-        <td><%= maintenance_announcement.user.display_name %></td>
+        <td><%= maintenance_announcement.user_link %></td>
         <td><%= maintenance_announcement.template_link %></td>
         <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
         <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
