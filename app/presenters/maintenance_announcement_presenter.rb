@@ -1,7 +1,7 @@
 class MaintenanceAnnouncementPresenter < Keynote::Presenter
     presents :maintenance_announcement
 
-    delegate :id, :user, :begin_date, :end_date, :reason, :impact, to: :maintenance_announcement
+    delegate :id, :user, :reason, :impact, to: :maintenance_announcement
 
     def ticket_links
         links = Array.new
@@ -33,5 +33,13 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
         if template
             return link_to(template.name, maintenance_template_path(template)).html_safe
         end
+    end
+
+    def begin_date
+        maintenance_announcement.begin_date.to_formatted_s(:db)
+    end
+
+    def end_date
+        maintenance_announcement.end_date.to_formatted_s(:db)
     end
 end

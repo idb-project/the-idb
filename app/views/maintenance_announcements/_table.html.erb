@@ -17,7 +17,7 @@
     <%- maintenance_announcements.each do |maintenance_announcement| -%>
       <%- maintenance_announcement = k(:maintenance_announcement, maintenance_announcement) -%>
       <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
-        <td><%= maintenance_announcement.id %></td>
+        <td><%= link_to(maintenance_announcement.id, maintenance_announcement_path(maintenance_announcement.id)) %></td>
         <td><%= maintenance_announcement.begin_date %></td>
         <td><%= maintenance_announcement.end_date %></td>
         <td><%= maintenance_announcement.user.display_name %></td>
