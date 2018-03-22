@@ -24,6 +24,11 @@ have a wizard style dialog done on the client side #%>
             If you are sure about your selection, you can choose to ignore exceeded deadlines at the bottom of the table.
           </div>
         <%- end %>
+        <%- if @date_error %>
+          <div class="alert">
+            <strong>Invalid dates:</strong> <%= @date_error %>
+          </div>
+        <%- end %>
         <%= render 'machines_table' %>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
@@ -34,23 +39,26 @@ have a wizard style dialog done on the client side #%>
       </div>
 
       <div class="tab-pane" id="info">
-        <%= label_tag(:maintenance_template_id, "Template") %>
-        <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
+        <div class="span6">
+          <%= label_tag(:maintenance_template_id, "Template") %>
+          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
 
-        <%= label_tag(:reason, "Reason") %>
-        <%= text_area_tag(:reason, params[:reason], class: "span4", rows: "15") %>
+          <%= label_tag(:reason, "Reason") %>
+          <%= text_area_tag(:reason, params[:reason], class: "span12", rows: "15") %>
 
-        <%= label_tag(:impact, "Impact") %>
-        <%= text_area_tag(:impact, params[:impact], class: "span4", rows: "15") %>
+          <%= label_tag(:impact, "Impact") %>
+          <%= text_area_tag(:impact, params[:impact], class: "span12", rows: "15") %>
+        </div>
+        <div class="span6">
+          <%= label_tag(:begin_date, "Begin") %>
+          <%= datetime_select(:maintenance_announcement, :begin_date, default: {minute: 0 } ) %>
 
-        <%= label_tag(:begin_date, "Begin") %>
-        <%= datetime_select(:maintenance_announcement, :begin_date) %>
+          <%= label_tag(:begin_date, "End") %>
+          <%= datetime_select(:maintenance_announcement, :end_date, default: {minute: 0 } ) %>
 
-        <%= label_tag(:begin_date, "End") %>
-        <%= datetime_select(:maintenance_announcement, :end_date) %>
-
-        <%= label_tag("","") %>
-        <%= submit_tag("Send Announcement") %>
+          <%= label_tag("","") %>
+          <%= submit_tag("Send Announcement") %>
+        </div>
       </div>
     </div>
   </div>

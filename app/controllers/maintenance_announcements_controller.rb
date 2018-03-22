@@ -37,7 +37,8 @@ class MaintenanceAnnouncementsController < ApplicationController
                 raise "End date must be after begin date!"
             end
         rescue Exception => e
-            flash[:error] = "Invalid dates: #{e.message}"
+            @date_error = e.message
+            @exceeded_deadlines = []
             return render :new
         end
 
