@@ -19,6 +19,11 @@ class MaintenanceTicket < ApplicationRecord
     machines.pluck(:fqdn).join(", ")
   end
 
+  # we only have one owner
+  def owner
+    owners.group(:id).first
+  end
+
   private
 
   def format_params

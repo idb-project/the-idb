@@ -4,7 +4,7 @@ class TicketService
         subject = ticket.format_subject
         queue = IDB.config.rt.queue
         requestor = IDB.config.rt.requestor
-        cc = ["schuller@bytemine.net"]
+        cc = ticket.owner.announcement_contact
         ticket_id = TicketService.create_rt_ticket(queue, requestor, cc, subject, text)
         ticket.ticket_id = ticket_id
         ticket.save!

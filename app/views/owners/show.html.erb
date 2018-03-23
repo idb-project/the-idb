@@ -37,6 +37,7 @@
           <th>customer id:</th>
           <th>wiki url:</th>
           <th>repository url:</th>
+          <th>announcement contact:</th>
           <th>attachments:</th>
         </tr>
         <tr>
@@ -44,6 +45,7 @@
           <td><%= owner.customer_id %></td>
           <td><%= owner.wiki_link %></td>
           <td><%= owner.repo_link %></td>
+          <td><%= owner.announcement_contact %></td>
           <td><%= owner.attachment_list.html_safe %></td>
         </tr>
       </table>

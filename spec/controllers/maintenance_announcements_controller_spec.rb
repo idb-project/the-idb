@@ -4,6 +4,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
     before(:each) do
         # stub sending of tickets
         allow(TicketService).to receive(:send).and_return(true)
+
         @begin_date = Time.zone.local(2011,12,31,10,11,0)
         @end_date = @begin_date + 1.days
         @date_params = {
@@ -20,8 +21,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         }
         @template = FactoryGirl.create(:maintenance_template)
         @current_user = FactoryGirl.create :user
-        @owner0 = FactoryGirl.create(:owner, users: [@current_user])
-        @owner1 = FactoryGirl.create(:owner, users: [@current_user])
+        @owner0 = FactoryGirl.create(:owner, users: [@current_user], announcement_contact: "owner0@example.org")
+        @owner1 = FactoryGirl.create(:owner, users: [@current_user], announcement_contact: "owner1@example.org")
         allow(User).to receive(:current).and_return(@current_user)
         controller.session[:user_id] = @current_user.id
     end
@@ -63,7 +64,6 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, unselected VMs and not ignoring" do
         before(:each) do
-            @t = Time.now
             @m0 = FactoryGirl.create(:machine, owner: @owner0)
             @m1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
         end
@@ -173,6 +173,38 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(1)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
+        end
+    end
+
+    describe "POST create, one owner has no contact" do
+        before(:each) do
+            @owner_no_contact = FactoryGirl.create(:owner, users: [@current_user])
+            @m0 = FactoryGirl.create(:machine, owner: @owner0)
+            @m1 = FactoryGirl.create(:virtual_machine, owner: @owner_no_contact, vmhost: @m0.fqdn)
+        end
+    
+        it "renders new" do
+            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
+            expect(response).to render_template("maintenance_announcements/new")
+        end
+    end
+
+    describe "POST create, all owners have contact" do
+        before(:each) do
+            @m0 = FactoryGirl.create(:machine, owner: @owner0)
+            @m1 = FactoryGirl.create(:virtual_machine, owner: @owner1, vmhost: @m0.fqdn)
+        end
+    
+        it "creates a new maintenance announcement" do
+            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
+            expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
+            expect(MaintenanceAnnouncement.last.end_date <=> @end_date).to eq(0)
+            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
+            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
+            expect(MaintenanceTicket.first.machines.size).to eq(1)
+            expect(MaintenanceTicket.first.machines.first).to eq(@m0)
+            expect(MaintenanceTicket.last.machines.size).to eq(1)
+            expect(MaintenanceTicket.last.machines.first).to eq(@m1)
         end
     end
 end

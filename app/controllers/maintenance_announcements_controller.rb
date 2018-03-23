@@ -8,8 +8,15 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def new
+        # initialize variables for rendering new
         @machines = Machine.all
         @maintenance_templates = MaintenanceTemplate.all
+        @selected_machines = Array.new
+        @no_contacts = Array.new
+        @missing_vms = Array.new
+        @begin_date = Time.zone.now
+        @end_date = Time.zone.now
+        @exceeded_deadlines = Array.new
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
         @selected_machines = Machine.where(id: params[:machine_ids])
@@ -19,15 +26,37 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def create
+        # initialize variables for rendering new
         @machines = Machine.all
         @maintenance_templates = MaintenanceTemplate.all
+        @selected_machines = Array.new
+        @no_contacts = Array.new
+        @missing_vms = Array.new
+        @begin_date = Time.zone.now
+        @end_date = Time.zone.now
+        @exceeded_deadlines = Array.new
 
         # get selected machines
         @selected_machines = Machine.where(id: params[:machine_ids])
 
+        # select all different owners
+        owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
+        owners = Owner.where(id: owner_ids)
+
+        # check if there are owners without announcement contact set
+        @no_contacts = check_owner_contacts(owners)
+
+        if not @no_contacts.empty?
+            return render :new
+        end
+
         # get all vms that belong to a selected machine but arent selected themselves
         @missing_vms = unselected_vms(@selected_machines)
+        if not @missing_vms.empty? and not params[:ignore_vms] == "true"
+            return render :new
+        end
 
+        # handle the time parsing, as it is likely to raise an exception
         begin
             ma = params[:maintenance_announcement]
             # use Time.zone.local to be aware of timezones.
@@ -38,24 +67,14 @@ class MaintenanceAnnouncementsController < ApplicationController
             end
         rescue Exception => e
             @date_error = e.message
-            @exceeded_deadlines = []
             return render :new
         end
 
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
-
-        if not @missing_vms.empty? and not params[:ignore_vms] == "true"
-            return render :new
-        end
-
         if not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true"
             return render :new
         end
-
-        # select all different owners
-        owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
-        owners = Owner.where(id: owner_ids)
 
         announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id])
 
@@ -79,6 +98,18 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     private
+
+    # check if every owner has a contact set
+    def check_owner_contacts(owners)
+        no_contacts = []
+        owners.each do |owner|
+            if not owner.announcement_contact 
+                no_contacts << owner
+            end
+        end
+        no_contacts
+    end
+        
 
     # check if deadlines of machines are held
     def check_deadlines(machines, date, now = Time.zone.now)

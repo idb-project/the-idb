@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180321081517) do
+ActiveRecord::Schema.define(version: 20180323105933) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -264,15 +264,16 @@ ActiveRecord::Schema.define(version: 20180321081517) do
 
   create_table "owners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
-    t.text     "description", limit: 4294967295
+    t.text     "description",          limit: 4294967295
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "nickname"
     t.string   "customer_id"
     t.datetime "deleted_at"
-    t.text     "data",        limit: 4294967295
+    t.text     "data",                 limit: 4294967295
     t.string   "wiki_url"
     t.string   "repo_url"
+    t.string   "announcement_contact"
     t.index ["customer_id"], name: "index_owners_on_customer_id", using: :btree
     t.index ["deleted_at"], name: "index_owners_on_deleted_at", using: :btree
     t.index ["nickname"], name: "index_owners_on_nickname", unique: true, using: :btree
