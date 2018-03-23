@@ -3,7 +3,7 @@
           <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1"><i class="fa fa-cog">&nbsp;</i>Columns</label>
           <div id="columnSelector" class="columnSelector"></div>
         </div>
-        <table id="machine-table" class="table tablesorter custom-popup">
+        <table id="announcement-machine-table" class="table tablesorter custom-popup">
           <thead>
             <tr>
               <th></th>
@@ -129,3 +129,8 @@
             </tr>
           </tbody>
         </table>
+        <script>
+          $(function() {
+            $("#machine-table").tablesorter();
+          });
+        </script>

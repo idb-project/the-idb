@@ -110,6 +110,85 @@ $(function () {
       cssInfoBlock : 'tablesorter-no-sort'
   });
 
+  $("#announcement-machine-table").tablesorter({
+    theme: 'bootstrap',
+    widgets: ['uitheme', 'zebra', 'filter', 'output', 'columnSelector', 'cssStickyHeaders'],
+    headerTemplate: '{content} {icon}',
+    widgetOptions: {
+      filter_reset: null,
+      filter_searchDelay: 100,
+      filter_filteredRow  : 'filtered',
+      output_separator     : ';',         // ',' 'json', 'array' or separator (e.g. ',')
+      output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+      output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
+      output_headerRows    : true,        // output all header rows (multiple rows)
+      output_delivery      : 'd',         // (p)opup, (d)ownload
+      output_saveRows      : 'f',         // (a)ll, (f)iltered or (v)isible
+      output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
+      output_replaceQuote  : '\u201c;',   // change quote to left double quote
+      output_includeHTML   : false,        // output includes all cell HTML (except the header cells)
+      output_trimSpaces    : false,       // remove extra white-space characters from beginning & end
+      output_wrapQuotes    : true,       // wrap every cell output in quotes
+      output_popupStyle    : 'width=880,height=610',
+      output_saveFileName  : 'machine-overview.csv',
+      // callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
+      output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
+      // callback executed when processing completes
+      // return true to continue download/output
+      // return false to stop delivery & do something else with the data
+      output_callback      : function(config, data) { return true; },
+      // the need to modify this for Excel no longer exists
+      output_encoding      : 'data:application/octet-stream;charset=utf8,',
+      // target the column selector markup
+      columnSelector_container : $('#columnSelector'),
+      // column status, true = display, false = hide
+      // disable = do not display on list
+      columnSelector_columns : {
+        1: false, // ID
+        5: false, // ID
+        7: false, // ID
+        8: false, // ID
+        9: false, // ID
+        12: false, // ID
+        14: false, // ID
+        15: false, // ID
+        16: false, // ID
+        19: false // ID 
+      },
+      // remember selected columns (requires $.tablesorter.storage)
+      columnSelector_saveColumns: true,
+      // container layout
+      columnSelector_layout : '<label><input type="checkbox">{name}</label>',
+      // data attribute containing column name to use in the selector container
+      columnSelector_name  : 'data-selector-name',
+      /* Responsive Media Query settings */
+      // enable/disable mediaquery breakpoints
+      columnSelector_mediaquery: false,
+      // toggle checkbox name
+      columnSelector_mediaqueryName: 'Auto: ',
+      // breakpoints checkbox initial setting
+      columnSelector_mediaqueryState: true,
+      // responsive table hides columns with priority 1-6 at these breakpoints
+      // see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
+      // *** set to false to disable ***
+      columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+      // data attribute containing column priority
+      // duplicates how jQuery mobile uses priorities:
+      // http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
+      columnSelector_priority : 'data-priority',
+      // class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
+      // applied icons; use this class name (input.checked) instead of input:checked
+      columnSelector_cssChecked : 'checked',
+      cssStickyHeaders_offset        : 40,
+      cssStickyHeaders_addCaption    : true,
+      // jQuery selector or object to attach sticky header to
+      cssStickyHeaders_attachTo      : null,
+      cssStickyHeaders_filteredToTop : false,
+      cssStickyHeaders_zIndex        : 10
+    },
+    cssInfoBlock : 'tablesorter-no-sort'
+});
+
   $(".table").tablesorter({
       theme: 'bootstrap',
       widgets: ['uitheme', 'zebra', 'filter', 'output', 'columnSelector', 'cssStickyHeaders'],
