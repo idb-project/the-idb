@@ -29,6 +29,17 @@ have a wizard style dialog done on the client side #%>
             <strong>Invalid dates:</strong> <%= @date_error %>
           </div>
         <%- end %>
+        <%- if not @no_contacts.empty? %>
+          <div class="alert">
+            <strong>Owners with missing contact:</strong>
+            <ul>
+            <%- @no_contacts.each do |owner| %>
+              <%- owner = k(:owner, owner) %>
+              <li><%= owner.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
         <%= render 'machines_table' %>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
