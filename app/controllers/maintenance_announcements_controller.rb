@@ -103,7 +103,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     def check_owner_contacts(owners)
         no_contacts = []
         owners.each do |owner|
-            if not owner.announcement_contact 
+            if owner.announcement_contact.blank?
                 no_contacts << owner
             end
         end

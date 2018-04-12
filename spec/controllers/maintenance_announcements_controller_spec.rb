@@ -207,4 +207,18 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             expect(MaintenanceTicket.last.machines.first).to eq(@m1)
         end
     end
+
+    describe "check_owner_contacts" do
+        it "filters owners with contacts, returning every owner without contact" do
+            owner0 = FactoryGirl.create(:owner, announcement_contact: "test@example.com")
+            owner1 = FactoryGirl.create(:owner, announcement_contact: "")
+            owner2 = FactoryGirl.create(:owner)
+
+            c = MaintenanceAnnouncementsController.new
+            no_contacts = c.send(:check_owner_contacts, [owner0, owner1, owner2])
+            expect(no_contacts.size).to eq(2)
+            expect(no_contacts[0]).to eq(owner1)
+            expect(no_contacts[1]).to eq(owner2)
+        end
+    end
 end
