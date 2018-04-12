@@ -40,6 +40,17 @@ have a wizard style dialog done on the client side #%>
             </ul>
           </div>
         <%- end %>
+        <%- if not @no_deadline.empty? %>
+          <div class="alert">
+            <strong>Machines without deadline:</strong>
+            <ul>
+            <%- @no_deadline.each do |machine| %>
+              <%- machine = k(:machine, machine) %>
+              <li><%= machine.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
         <%= render 'machines_table' %>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs

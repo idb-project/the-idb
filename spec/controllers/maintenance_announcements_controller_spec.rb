@@ -4,8 +4,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
     before(:each) do
         # stub sending of tickets
         allow(TicketService).to receive(:send).and_return(true)
-
-        @begin_date = Time.zone.local(2011,12,31,10,11,0)
+        x = Time.now
+        @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0)
         @end_date = @begin_date + 1.days
         @date_params = {
             "begin_date(1i)": @begin_date.year,
@@ -30,10 +30,10 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
     describe "POST create, successful" do
         before(:each) do
             @t = Time.now
-            @m0 = FactoryGirl.create(:machine, owner: @owner0)
-            @m1 = FactoryGirl.create(:machine, owner: @owner0)
-            @m2 = FactoryGirl.create(:machine, owner: @owner1)
-            @m3 = FactoryGirl.create(:machine, owner: @owner1)
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+            @m1 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+            @m2 = FactoryGirl.create(:machine, owner: @owner1, announcement_deadline: 0)
+            @m3 = FactoryGirl.create(:machine, owner: @owner1, announcement_deadline: 0)
         end
     
         it "creates a new maintenance announcement affecting a single owner" do
@@ -76,9 +76,9 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, unselected VMs and ignoring" do
         before(:each) do
-            @m0 = FactoryGirl.create(:machine, owner: @owner0)
-            @vm0 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
-            @vm1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn)
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+            @vm0 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn, announcement_deadline: 0)
+            @vm1 = FactoryGirl.create(:virtual_machine, owner: @owner0, vmhost: @m0.fqdn, announcement_deadline: 0)
         end
     
         it "creates a new maintenance announcement" do
@@ -94,7 +94,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, deadline exceeded" do
         before(:each) do
-            @begin_date = Time.zone.local(2011,12,31,10,11,0)
+            x = Time.now
+            @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0)
             @end_date = @begin_date + 1.days
             @date_params = {
                 "begin_date(1i)": @begin_date.year,
@@ -119,7 +120,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, deadline exceeded and ignoring" do
         before(:each) do
-            @begin_date = Time.zone.local(2011,12,31,10,11,0)
+            x = Time.now
+            @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0)
             @end_date = @begin_date + 1.days
             @date_params = {
                 "begin_date(1i)": @begin_date.year,
@@ -191,8 +193,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
 
     describe "POST create, all owners have contact" do
         before(:each) do
-            @m0 = FactoryGirl.create(:machine, owner: @owner0)
-            @m1 = FactoryGirl.create(:virtual_machine, owner: @owner1, vmhost: @m0.fqdn)
+            @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+            @m1 = FactoryGirl.create(:virtual_machine, owner: @owner1, vmhost: @m0.fqdn, announcement_deadline: 0)
         end
     
         it "creates a new maintenance announcement" do
@@ -219,6 +221,18 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
             expect(no_contacts.size).to eq(2)
             expect(no_contacts[0]).to eq(owner1)
             expect(no_contacts[1]).to eq(owner2)
+        end
+    end
+
+    describe "deadline_exists" do
+        it "filters machines with deadlines, returning machines without deadlines" do
+            m0 = FactoryGirl.create(:machine, announcement_deadline: 14)
+            m1 = FactoryGirl.create(:machine, announcement_deadline: nil)
+
+            c = MaintenanceAnnouncementsController.new
+            no_deadline = c.send(:deadline_exists, [m0, m1])
+            expect(no_deadline.size).to eq(1)
+            expect(no_deadline[0]).to eq(m1)
         end
     end
 end

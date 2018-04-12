@@ -12,6 +12,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @machines = Machine.all
         @maintenance_templates = MaintenanceTemplate.all
         @selected_machines = Array.new
+        @no_deadline = Array.new
         @no_contacts = Array.new
         @missing_vms = Array.new
         @begin_date = Time.zone.now
@@ -39,6 +40,9 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get selected machines
         @selected_machines = Machine.where(id: params[:machine_ids])
 
+        # check if all selected machines have a deadline set
+        @no_deadline = deadline_exists(@selected_machines)
+
         # select all different owners
         owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
         owners = Owner.where(id: owner_ids)
@@ -46,15 +50,8 @@ class MaintenanceAnnouncementsController < ApplicationController
         # check if there are owners without announcement contact set
         @no_contacts = check_owner_contacts(owners)
 
-        if not @no_contacts.empty?
-            return render :new
-        end
-
         # get all vms that belong to a selected machine but arent selected themselves
         @missing_vms = unselected_vms(@selected_machines)
-        if not @missing_vms.empty? and not params[:ignore_vms] == "true"
-            return render :new
-        end
 
         # handle the time parsing, as it is likely to raise an exception
         begin
@@ -72,7 +69,8 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
-        if not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true"
+
+        if (not @no_deadline.empty?) or (not @no_contacts.empty?) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true")
             return render :new
         end
 
@@ -109,7 +107,16 @@ class MaintenanceAnnouncementsController < ApplicationController
         end
         no_contacts
     end
-        
+
+    def deadline_exists(machines)
+        no_deadline = []
+        machines.each do |machine|
+            next if machine.announcement_deadline
+
+            no_deadline << machine
+        end
+        no_deadline
+    end
 
     # check if deadlines of machines are held
     def check_deadlines(machines, date, now = Time.zone.now)
