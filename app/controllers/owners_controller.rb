@@ -66,7 +66,7 @@ class OwnersController < ApplicationController
   private
 
   def owner_params
-    params.require(:owner).permit(:name, :nickname, :customer_id, :description, :wiki_url, :repo_url, :attachments, {user_ids: []})
+    params.require(:owner).permit(:name, :nickname, :customer_id, :description, :wiki_url, :repo_url, :announcement_contact, :attachments, {user_ids: []})
   end
 
   def add_attachments(attachments)

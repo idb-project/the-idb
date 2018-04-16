@@ -1,0 +1,96 @@
+<%# it's a bit hacky to wrap everything as form, but is an easy solution to
+have a wizard style dialog done on the client side #%>
+
+<%#= stylesheet_link_tag    "pikaday", media: "all" %>
+
+<%= form_tag(controller: "maintenance_announcements", action: "create", method: "post") do %>
+
+  <div class="tabbable">
+    <%= render("nav_wizard") %>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="machines">
+        <%- if not @missing_vms.empty? %>
+          <div class="alert">
+            <strong>Unselected VMs</strong> There are unselected virtual machines which belong to a selected machine.
+            They are marked with <i class="fa fa-exclamation-triangle"/></i> and the VM host they belong to.
+            If you are sure about your selection, you can choose to ignore unselected VMs at the bottom of the table.
+          </div>
+        <%- end %>
+        <%- if not @exceeded_deadlines.empty? %>
+          <div class="alert">
+            <strong>Exceeded deadlines</strong> There are machines where the deadline for announcements is exceeded.
+            They are marked with <i class="fa fa-calendar"/></i> and the nearest possible date.
+            If you are sure about your selection, you can choose to ignore exceeded deadlines at the bottom of the table.
+          </div>
+        <%- end %>
+        <%- if @date_error %>
+          <div class="alert">
+            <strong>Invalid dates:</strong> <%= @date_error %>
+          </div>
+        <%- end %>
+        <%- if not @no_contacts.empty? %>
+          <div class="alert">
+            <strong>Owners with missing contact:</strong>
+            <ul>
+            <%- @no_contacts.each do |owner| %>
+              <%- owner = k(:owner, owner) %>
+              <li><%= owner.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
+        <%- if not @no_deadline.empty? %>
+          <div class="alert">
+            <strong>Machines without deadline:</strong>
+            <ul>
+            <%- @no_deadline.each do |machine| %>
+              <%- machine = k(:machine, machine) %>
+              <li><%= machine.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
+        <%= render 'machines_table' %>
+        <label for="ignore_vms">
+        <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
+        </label>
+        <label for="ignore_deadlines">
+        <%= check_box_tag("ignore_deadlines") %> Ignore exceeded deadlines
+        </label>
+      </div>
+
+      <div class="tab-pane" id="info">
+        <div class="span6">
+          <%= label_tag(:maintenance_template_id, "Template") %>
+          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
+
+          <%= label_tag(:reason, "Reason") %>
+          <%= text_area_tag(:reason, params[:reason], class: "span12", rows: "15") %>
+
+          <%= label_tag(:impact, "Impact") %>
+          <%= text_area_tag(:impact, params[:impact], class: "span12", rows: "15") %>
+        </div>
+        <div class="span6">
+          <%= label_tag(:begin_date, "Begin") %>
+          <%= datetime_select(:maintenance_announcement, :begin_date, default: {minute: 0 } ) %>
+
+          <%= label_tag(:begin_date, "End") %>
+          <%= datetime_select(:maintenance_announcement, :end_date, default: {minute: 0 } ) %>
+
+          <%= label_tag("","") %>
+          <%= submit_tag("Send Announcement") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+<!--
+<%= javascript_include_tag "pikaday" %>
+<%= javascript_include_tag "moment.min" %>
+
+<script>
+  var date_picker = new Pikaday({ field: document.getElementById('date'), yearRange: [<%= Time.now.year %>, <%= Time.now.year + 1 %>], defaultDate: <%= Time.now.strftime("%F") %> });
+</script>-->

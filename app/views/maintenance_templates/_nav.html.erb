@@ -1,0 +1,13 @@
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <ul class="nav">
+                <a class="brand" href="<%= maintenance_templates_path %>">Announcement Templates</a>
+                <li><%= link_to '<i class="fa fa-plus"></i> New Template'.html_safe, new_maintenance_template_path %></li>
+            </ul>
+            <ul class="nav pull-right">
+                <li><%= link_to '<i class="fa fa-bullhorn"></i> Announcements'.html_safe, maintenance_announcements_path %></li>
+            </ul>
+        </div>
+    </div>
+</div>

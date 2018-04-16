@@ -142,7 +142,7 @@ class MachinesController < ApplicationController
   private
 
   def machine_params
-    params.require(:machine).permit(:fqdn, :description, :owner_id, :backup_type, :auto_update, :switch_url, :mrtg_url, :config_instructions, :sw_characteristics, :business_purpose, :business_criticality, :business_notification, :attachments, :needs_reboot)
+    params.require(:machine).permit(:fqdn, :description, :owner_id, :backup_type, :auto_update, :switch_url, :mrtg_url, :config_instructions, :sw_characteristics, :business_purpose, :business_criticality, :business_notification, :attachments, :needs_reboot, :announcement_deadline)
   end
 
   def add_attachments(attachments)

@@ -1,0 +1,136 @@
+        <div class="columnSelectorWrapper">
+          <input id="colSelect1" type="checkbox" class="hidden">
+          <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1"><i class="fa fa-cog">&nbsp;</i>Columns</label>
+          <div id="columnSelector" class="columnSelector"></div>
+        </div>
+        <table id="announcement-machine-table" class="table tablesorter custom-popup">
+          <thead>
+            <tr>
+              <th></th>
+              <th>ID</th>
+              <th>FQDN</th>
+              <th>Aliases</th>
+              <th style="min-width: 160px">IP</th>
+              <th>IPv6</th>
+              <th>OS</th>
+              <th>Architecture</th>
+              <th>CPU</th>
+              <th>RAM</th>
+              <th>Type</th>
+              <th>VM Host</th>
+              <th>Uptime</th>
+              <th>Serviced</th>
+              <th>Needs Reboot</th>
+              <th>Latest data</th>
+              <%- if IDB.config.modules.unattended_upgrades -%>
+              <th>Unattended</th>
+              <th>Security updates</th>
+              <th>Pending updates</th>
+              <%- end -%>
+              <th>Backup</th>
+              <th>Owner</th>
+              <%- if IDB.config.modules.advanced_fields -%>
+              <th><%= Machine.advanced_field_name(1) %></th>
+              <th><%= Machine.advanced_field_name(2) %></th>
+              <th><%= Machine.advanced_field_name(3) %></th>
+              <th><%= Machine.advanced_field_name(4) %></th>
+              <th><%= Machine.advanced_field_name(5) %></th>
+              <%- end -%>
+            </tr>
+          </thead>
+          <tbody>
+            <%- @machines.each do |machine| -%>
+              <%- machine = k(:machine, machine) -%>
+              <%- selected = @selected_machines.pluck(:id).include?(machine.id) %>
+              <%- missing = @missing_vms.pluck(:id).include?(machine.id) %>
+              <%- exceeded = @exceeded_deadlines.pluck(:id).include?(machine.id) %>
+                <tr id="#machine-<%= machine.id %>">
+                <td>
+                    <%= check_box_tag("machine_ids[]", value = machine.id, checked = selected ? "yes" : false ) %>
+                    <%- if missing %><i class="fa fa-exclamation-triangle"/> (<%= machine.vmhost %>)</i><%- end %>
+                    <%- if exceeded %><i class="fa fa-calendar"/> (<%= machine.announcement_deadline_target %>)</i><%- end %>
+                </td>
+                <td><%= machine.id %></td>
+                <td style="font-weight:normal <%=";font-style:italic" if machine.outdated && machine.auto_update %>" data-name="<%=machine.fqdn%>"><%= machine.name_link %>
+                  <span class="auto-update"><%="*" if machine.auto_update%></span>
+                </td>
+                <td><%= machine.alias_names %></td>
+                <td data-text="<%= machine.first_ip %>"><%= machine.first_ip %></td>
+                <td data-text="<%=machine.first_v6_ip%>" title="<%=machine.first_v6_ip%>"><%= machine.first_v6_ip.truncate(10) if machine.first_v6_ip %></td>
+                <td><%= machine.os %></td>
+                <td><%= machine.arch %></td>
+                <td class="machine_cores"><%= machine.cores %></td>
+                <td class="machine_memory"><%= machine.ram %></td>
+                <td><%= machine.device_type_name %></td>
+                <td><%= machine.vmhost %></td>
+                <td><%= machine.uptime %></td>
+                <td><%= machine.serviced_at %></td>
+                <td><%= machine.needs_reboot_string %></td>
+                <td><%= machine.updated_at %></td>
+                <%- if IDB.config.modules.unattended_upgrades -%>
+                <td><%= machine.unattended_upgrades_column %></td>
+                <%- end -%>
+                <td><%= machine.pending_security_updates %></td>
+                <td nowrap="nowrap" title="<%= machine.pending_updates_package_names_list.join("\r\n") %>" data-text="<%= machine.pending_updates_package_names_list %>"><%= machine.pending_updates_package_names_list.join(" ").truncate(20) %></td>
+                <td><%= machine.backup_type %></td>
+                <td><%= machine.owner_link %></td>
+                <%- if IDB.config.modules.advanced_fields -%>
+                <td nowrap="nowrap" data-text="<%= machine.config_instructions %>" title="<%= machine.config_instructions %>">
+                  <%= machine.config_instructions.truncate(20) %>
+                </td>
+                <td nowrap="nowrap" data-text="<%= machine.sw_characteristics %>" title="<%= machine.sw_characteristics %>">
+                  <%= machine.sw_characteristics.truncate(20) %>
+                </td>
+                <td nowrap="nowrap" data-text="<%= machine.business_purpose %>" title="<%= machine.business_purpose %>">
+                  <%= machine.business_purpose.truncate(20) %>
+                </td>
+                <td nowrap="nowrap" data-text="<%= machine.business_criticality %>" title="<%= machine.business_criticality %>">
+                  <%= machine.business_criticality.truncate(20) %>
+                </td>
+                <td nowrap="nowrap" data-text="<%= machine.business_notification %>" title="<%= machine.business_notification %>">
+                  <%= machine.business_notification.truncate(20) %>
+                </td>
+                <%- end -%>
+              </tr>
+            <%- end -%>
+          </tbody>
+          
+          <tbody class="tablesorter-no-sort to-hide summary" style="font-weight: bold">
+            <tr class="">
+              <td></td>
+              <td class="summary-td">Summary</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span class="total-cores"></span></td>
+              <td><span class="total-memory"></span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <%- if IDB.config.modules.unattended_upgrades -%>
+              <td></td>
+              <%- end -%>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <%- if IDB.config.modules.advanced_fields -%>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <%- end -%>
+            </tr>
+          </tbody>
+        </table>
+        <script>
+          $(function() {
+            $("#machine-table").tablesorter();
+          });
+        </script>

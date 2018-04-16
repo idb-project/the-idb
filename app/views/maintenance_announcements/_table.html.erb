@@ -1,0 +1,33 @@
+<table class="table tablesorter maintenance_announcement-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Begin</th>
+      <th>End</th>
+      <th>User</th>
+      <th>Template</th>
+      <th>Reason</th>
+      <th>Impact</th>
+      <th>Machines</th>
+      <th>Owners</th>
+      <th>Tickets</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- maintenance_announcements.each do |maintenance_announcement| -%>
+      <%- maintenance_announcement = k(:maintenance_announcement, maintenance_announcement) -%>
+      <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
+        <td><%= link_to(maintenance_announcement.id, maintenance_announcement_path(maintenance_announcement.id)) %></td>
+        <td><%= maintenance_announcement.begin_date %></td>
+        <td><%= maintenance_announcement.end_date %></td>
+        <td><%= maintenance_announcement.user_link %></td>
+        <td><%= maintenance_announcement.template_link %></td>
+        <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
+        <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
+        <td><%= maintenance_announcement.machine_links %></td>
+        <td><%= maintenance_announcement.owner_links %></td>
+        <td><%= maintenance_announcement.ticket_links %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>

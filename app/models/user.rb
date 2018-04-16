@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
   has_and_belongs_to_many :owners
+  has_many :maintenance_announcements
   
   has_secure_password validations: false
 

@@ -69,6 +69,11 @@ defaults: &defaults
     ticket_url: 'http://redmine.example.com/issues/%s'
   rt:
     ticket_url: 'https://rt.example.com/Ticket/Display.html?id=%s'
+    create_ticket_url: 'https://rt.example.com/REST/1.0/ticket/new'
+    user: 'rt-api-user'
+    password: 'rt-api-user-password'
+    requestor: 'rt-requestor-mail'
+    queue: 'RT-Queue-Name'
   mrtg:
     base_url: 'https://mrtg.example.com/'
   device_types:
