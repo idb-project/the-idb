@@ -58,7 +58,8 @@ userPassword: {SSHA} somehash
 * configure the LDAP access in /opt/the-idb/config/application.yml
 * for further infos on the user handling see ldap-and-usermanagement.md
 
-Be aware that without configuring 
+Be aware that without configuring ldap for user authentication you will not be able
+to use the idb.
 
 ## create an user and group
 
