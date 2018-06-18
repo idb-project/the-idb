@@ -58,7 +58,8 @@ userPassword: {SSHA} somehash
 * configure the LDAP access in /opt/the-idb/config/application.yml
 * for further infos on the user handling see ldap-and-usermanagement.md
 
-Be aware that without configuring 
+Be aware that without configuring ldap for user authentication you will not be able
+to use the idb.
 
 ## create an user and group
 
@@ -166,3 +167,14 @@ WantedBy=multi-user.target
 
 * reload systemd: `systemctl daemon-reload`
 * enable and start sidekiq: `systemctl enable sidekiq && systemctl start sidekiq`
+
+## configure config/secrets.yml
+
+You need to configure the secretes file. Open `config/secrets.yml` in your editor and
+put the following (with a unique secret) there:
+
+```
+production:
+        secret_key_base: Piah8pohjiheegeu9Sha
+```
+
