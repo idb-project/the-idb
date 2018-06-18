@@ -83,6 +83,19 @@ rvm install ruby-2.4.1
 rvm use --default ruby-2.4.1
 ```
 
+## adjust the Gemfile
+
+The Gemfile needs to be adjusted, since for all other platforms the idb currently still uses ruby 2.2.4.
+
+Edit `Gemfile` and replace the 'ruby-2.2.4` line so it looks like in this extract:
+
+```
+ source 'https://rubygems.org'
+
+ ruby '2.4.1'
+ gem 'rails'
+```
+
 ## install bundler and gems
 
 * enter a shell for user idb `sudo -u idb -H /bin/bash`
