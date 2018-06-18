@@ -8,7 +8,7 @@
 * copy config-example/ to somewhere else and symlink it to config/
 ```
 $ cd /opt/the-idb/
-$ sudo cp config-example /etc/the-idb
+$ sudo cp -r config-example /etc/the-idb
 $ ln -s /etc/the-idb config
 ```
 
