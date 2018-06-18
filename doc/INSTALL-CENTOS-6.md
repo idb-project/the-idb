@@ -237,3 +237,14 @@ exit 0
 ```
 * enable sidekiq: `chkconfig --add sidekiq`
 * start sidekiq: `service sidekiq start`
+
+## configure config/secrets.yml
+
+You need to configure the secretes file. Open `config/secrets.yml` in your editor and
+put the following (with a unique secret) there:
+
+```
+production:
+        secret_key_base: Piah8pohjiheegeu9Sha
+```
+
