@@ -1,7 +1,25 @@
 # Install instructions for The IDB on CentOS 7
 
+## package / repo prerequisites
+
+* install epel-release and enable the epel repo
+```
+$ sudo yum install -y epel-release yum-utils
+$ sudo yum-config-manager --enable epel
+$ sudo yum clean all && sudo yum update -y
+```
+
+* install the following packages
+	* git
+	* ruby-devel
+```
+$ sudo yum install git ruby-devel
+```
 
 * clone the repo into /opt/the-idb
+```
+$ cd /opt && git clone https://github.com/idb-project/the-idb.git
+```
 
 ## create the config directory
 
@@ -12,32 +30,54 @@ $ sudo cp -r config-example /etc/the-idb
 $ ln -s /etc/the-idb config
 ```
 
-## package / repo prerequisites
+## install redis
 
-* install epel-release and enable the epel repo
-* install the following packages
-	* git
-	* ruby-devel
-	* redis
+* install redis
+```
+$ sudo yum install redis
+```
 
-* enable and start redis `systemctl enable redis  && systemctl start redis`
+* enable and start redis 
+```
+$ sudo systemctl enable redis 
+$ sudo systemctl start redis
+```
 
- 
+## install webserver and phusion
+
+* install webserver
+```
+$ sudo yum install httpd httpd-devel
+```
+
  * install [Phusion Passenger](https://www.phusionpassenger.com/library/install/apache/install/oss/el7/) from the official repo
+ 
+Once passneger is installed update the ruby default path from `/usr/bin/ruby` to `/usr/local/rvm/gems/ruby-2.2.4/wrappers/ruby` in file below /etc/httpd/conf.d/passenger.conf.
+The complete block should look like:
+
 ```
- Once passneger is installed update the ruby default path from /usr/bin/ruby to /usr/local/rvm/rubies/ruby-2.2.4/bin/ruby in file below
- /etc/httpd/conf.d/passenger.conf
+<IfModule mod_passenger.c>
+   PassengerRoot /usr/share/ruby/vendor_ruby/phusion_passenger/locations.ini
+   PassengerRuby /usr/local/rvm/gems/ruby-2.2.4/wrappers/ruby
+   PassengerInstanceRegistryDir /var/run/passenger-instreg
+</IfModule>
 ```
+
+This [page from passenger](https://www.phusionpassenger.com/library/config/apache/reference/#passengerruby) explains how and why.
 
 ## install and setup mysql
 * install the mysql 5.7 repo 
 ```
-yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+sudo yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 ```
 * and the following packages from there
 	* mysql-community-server
   	* mysql-community-devel
-* enable and start the mysql-server `systemctl enable mysqld  && systemctl start mysqld`
+* enable and start the mysql-server 
+```
+$ sudo systemctl enable mysqld 
+$ sudo systemctl start mysqld
+```
 * set a new mysql root password, you can find the temporary one in /var/log/mysqld.log
 ```
 grep password /var/log/mysqld.log 
@@ -50,8 +90,12 @@ FLUSH PRIVILEGES;
 
 ## Install a LDAP server
 
-* if you are not using an foreign LDAP server, you have to install one: `yum install -y 389-ds-base 389-admin`
-* run `setup-ds-admin.pl`to set it up
+* if you are not using an foreign LDAP server, you have to install one
+```
+$ sudo yum install -y 389-ds-base 389-admin
+```
+
+* run `sudo setup-ds-admin.pl`to set it up
 
 ## configuration
 
@@ -62,42 +106,50 @@ FLUSH PRIVILEGES;
 
 ## create an user and group
 
-`useradd --user-group idb --home /opt/the-idb --no-create-home`
+`$ sudo useradd --user-group idb --home /opt/the-idb --no-create-home`
 
 ## change owner and group
 
-`chown -R idb.idb /opt/the-idb`
+`$ sudo chown -R idb.idb /opt/the-idb`
 
 ## install  RVM
 
 * go to the [RVM](https://rvm.io/) website and install RVM
-* run the following commands for installing ruby 2.2.4:
+* run the following commands for installing ruby 2.2.4 as the `idb` user:
 ```
-source /etc/profile.d/rvm.sh
-rvm install ruby-2.2.4
-rvm use --default ruby-2.2.4
+$ source /etc/profile.d/rvm.sh
+$ rvm install ruby-2.2.4
+$ rvm use --default ruby-2.2.4
 
 ```
 
 ## install bundler and gems
 
 ```
-cd /opt/the-idb
-gem install bundler
-RAILS_ENV=production bundle install
+$ cd /opt/the-idb
+$ gem install bundler
+$ RAILS_ENV=production bundle install
 ```
 
-* setup rvm wrapper for sidekiq `rvm wrapper current bootup sidekiq`
+* setup rvm wrapper for sidekiq `$ sudo rvm wrapper current bootup sidekiq`
 
 ## fill the database, precompile the assets and create the secret key and update the same in yml file
 ```
-export RAILS_ENV=production
-bundle exec rake db:migrate
-bundle exec rake assets:precompile
+$ export RAILS_ENV=production
+$ bundle exec rake db:migrate
+$ bundle exec rake assets:precompile
 
-rake secret
-And create a secret key with rake as above and update the same in file below
-/opt/the-idb/config/secrets.yml 
+```
+
+Setup secret key
+
+```
+$ rake secret
+```
+
+And create a secret key with rake as above and update the same in file below `/opt/the-idb/config/secrets.yml`
+
+```
 --
 production:
   secret_key_base: <%%= ENV["your_key"] %>
@@ -129,22 +181,28 @@ production:
         DocumentRoot /opt/the-idb/public
 
         <Directory /opt/the-idb/public>
-            Options FollowSymLinks
-        AllowOverride All
-            Require all granted
-    </Directory>
+          Options FollowSymLinks
+          AllowOverride All
+          Require all granted
+        </Directory>
 
         SSLEngine on
         #SSLProtocol all -SSLv2 -SSLv3 
-   SSLProtocol           all -SSLv3 -TLSv1.1
-   SSLHonorCipherOrder   On
-   SSLCipherSuite        DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA
-   SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
-   SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
-   PassengerUser idb 
-   PassengerGroup idb
-# and all the other regular ssl options like certificate etc. pp.
+        SSLProtocol           all -SSLv3 -TLSv1.1
+        SSLHonorCipherOrder   On
+        SSLCipherSuite        DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA
+        SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+        SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+        PassengerUser idb 
+        PassengerGroup idb
+        # and all the other regular ssl options like certificate etc. pp.
 </VirtualHost>
+```
+
+* enable httpd
+```
+$ sudo systemctl enable httpd
+$ sudo systemctl start httpd
 ```
 
 
