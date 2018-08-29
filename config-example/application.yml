@@ -70,9 +70,10 @@ defaults: &defaults
   rt:
     ticket_url: 'https://rt.example.com/Ticket/Display.html?id=%s'
     create_ticket_url: 'https://rt.example.com/REST/1.0/ticket/new'
+    reply_ticket_url: 'https://rt.example.com/REST/1.0/ticket/%s/comment'
     user: 'rt-api-user'
     password: 'rt-api-user-password'
-    requestor: 'rt-requestor-mail'
+    requestor: 'requestor mail address OR empty string if no create mail should be send'
     queue: 'RT-Queue-Name'
   mrtg:
     base_url: 'https://mrtg.example.com/'
