@@ -36,6 +36,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @begin_date = Time.zone.now
         @end_date = Time.zone.now
         @exceeded_deadlines = Array.new
+        @email = params[:email]
 
         # get selected machines
         @selected_machines = Machine.where(id: params[:machine_ids])
@@ -74,7 +75,7 @@ class MaintenanceAnnouncementsController < ApplicationController
             return render :new
         end
 
-        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id])
+        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id], email: @email)
 
         # create a ticket per owner
         tickets = new_tickets(announcement, owners, @selected_machines)
@@ -148,6 +149,13 @@ class MaintenanceAnnouncementsController < ApplicationController
 
     def new_tickets(announcement, owners, machines)
         tickets = []
+
+        # if a email override is used, only create one ticket
+        if announcement.email
+            tickets << MaintenanceTicket.new(maintenance_announcement: announcement, machines: machines)
+            return tickets
+        end
+
         owners.each do |owner|
             # select all machines of this owner which are selected as affected
             owner_machines = Machine.where(owner: owner.id, id: machines.pluck(:id))

@@ -72,6 +72,9 @@ have a wizard style dialog done on the client side #%>
           <%= text_area_tag(:impact, params[:impact], class: "span12", rows: "15") %>
         </div>
         <div class="span6">
+          <%= label_tag(:email, "E-Mail Address") %>
+          <%= email_field_tag(:email) %>
+
           <%= label_tag(:begin_date, "Begin") %>
           <%= datetime_select(:maintenance_announcement, :begin_date, default: {minute: 0 } ) %>
 

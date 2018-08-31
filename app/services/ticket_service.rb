@@ -10,7 +10,7 @@ class TicketService
         ticket.ticket_id = ticket_id
 
         # comment ticket to send announcement to real contact in cc
-        cc = [ ticket.owner.announcement_contact ]
+        cc = [ ticket.email ]
         TicketService.reply_rt_ticket(ticket_id, cc, subject, text)
 
         ticket.save!
