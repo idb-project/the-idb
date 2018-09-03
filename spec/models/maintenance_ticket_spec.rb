@@ -1,5 +1,121 @@
 require 'spec_helper'
 
 RSpec.describe MaintenanceTicket, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before(:each) do
+    @current_user = FactoryGirl.create :user
+    allow(User).to receive(:current).and_return(@current_user)
+
+    @owner0 = FactoryGirl.create(:owner, users: [@current_user], announcement_contact: "owner0@example.org")
+
+    @m0 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+    @m1 = FactoryGirl.create(:machine, owner: @owner0, announcement_deadline: 0)
+
+    x = Time.now
+    @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0)
+    @end_date = @begin_date + 1.days
+    @template = FactoryGirl.create(:maintenance_template)
+    @template.body = %q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}#
+    @template.subject = @template.body
+    @announcement = FactoryGirl.create(:maintenance_announcement, maintenance_template: @template, user: @current_user, begin_date: @begin_date, end_date: @end_date, email: nil)
+    @announcement_with_mail = FactoryGirl.create(:maintenance_announcement, maintenance_template: @template, user: @current_user, begin_date: @begin_date, end_date: @end_date, email: "mail@example.com")
+  end
+
+  describe "format_body" do
+    describe "without announcement email" do
+      it "formats the contents of a ticket, including machines" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
+        p = { 
+          begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
+          end_date: @announcement.end_date.to_formatted_s(:announcement_date),
+          begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
+          end_time: @announcement.end_date.to_formatted_s(:announcement_time),
+          begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
+          end_full: @announcement.end_date.to_formatted_s(:announcement_full),
+          reason: @announcement.reason,
+          impact: @announcement.impact,
+          machines: x.format_machines_fqdns,
+          user: @announcement.user.display_name 
+        }
+
+        expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+      end
+    end
+
+    describe "with announcement email" do
+      it "formats the contents of a ticket, without machines" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
+        p = { 
+          begin_date: @announcement_with_mail.begin_date.to_formatted_s(:announcement_date),
+          end_date: @announcement_with_mail.end_date.to_formatted_s(:announcement_date),
+          begin_time: @announcement_with_mail.begin_date.to_formatted_s(:announcement_time),
+          end_time: @announcement_with_mail.end_date.to_formatted_s(:announcement_time),
+          begin_full: @announcement_with_mail.begin_date.to_formatted_s(:announcement_full),
+          end_full: @announcement_with_mail.end_date.to_formatted_s(:announcement_full),
+          reason: @announcement_with_mail.reason,
+          impact: @announcement_with_mail.impact,
+          machines: "",
+          user: @announcement_with_mail.user.display_name 
+        }
+
+        expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+      end
+    end
+  end
+
+  describe "format_subject" do
+    describe "without announcement email" do
+      it "formats the subject of a ticket, with machines" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
+        p = { 
+          begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
+          end_date: @announcement.end_date.to_formatted_s(:announcement_date),
+          begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
+          end_time: @announcement.end_date.to_formatted_s(:announcement_time),
+          begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
+          end_full: @announcement.end_date.to_formatted_s(:announcement_full),
+          reason: @announcement.reason,
+          impact: @announcement.impact,
+          machines: x.format_machines_fqdns,
+          user: @announcement.user.display_name 
+        }
+        expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+      end
+    end
+
+    describe "with announcement email" do
+      it "formats the subject of a ticket, without machines" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
+        p = { 
+          begin_date: @announcement_with_mail.begin_date.to_formatted_s(:announcement_date),
+          end_date: @announcement_with_mail.end_date.to_formatted_s(:announcement_date),
+          begin_time: @announcement_with_mail.begin_date.to_formatted_s(:announcement_time),
+          end_time: @announcement_with_mail.end_date.to_formatted_s(:announcement_time),
+          begin_full: @announcement_with_mail.begin_date.to_formatted_s(:announcement_full),
+          end_full: @announcement_with_mail.end_date.to_formatted_s(:announcement_full),
+          reason: @announcement_with_mail.reason,
+          impact: @announcement_with_mail.impact,
+          machines: "",
+          user: @announcement_with_mail.user.display_name 
+        }
+        expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+        end
+      end
+    end
+
+  describe "email" do
+    describe "without announcement email" do
+      it "returns the email address for the owner" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
+
+        expect(x.email).to eq(@owner0.announcement_contact)
+      end
+    end
+
+    describe "with announcement email" do
+      it "returns the email address of the announcement" do
+        x = FactoryGirl.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
+        expect(x.email).to eq(@announcement_with_mail.email)
+      end
+    end
+  end
 end

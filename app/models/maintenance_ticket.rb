@@ -30,7 +30,7 @@ class MaintenanceTicket < ApplicationRecord
       return maintenance_announcement.email
     end
 
-    return ticket.owner.announcement_contact
+    return owner.announcement_contact
   end
 
   private
@@ -51,8 +51,8 @@ class MaintenanceTicket < ApplicationRecord
       user: a.user.display_name 
     }
 
-    # don't show machines in formatted ticket
-    if email
+    # don't show machines in formatted ticket if we send to one address
+    if maintenance_announcement.email
       p[:machines] = ""
     end
     
