@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180323105933) do
+ActiveRecord::Schema.define(version: 20180831154056) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "token"
@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(version: 20180323105933) do
     t.datetime "updated_at",                            null: false
     t.datetime "end_date"
     t.integer  "user_id"
+    t.string   "email"
     t.index ["maintenance_template_id"], name: "index_maintenance_announcements_on_maintenance_template_id", using: :btree
     t.index ["user_id"], name: "index_maintenance_announcements_on_user_id", using: :btree
   end
