@@ -164,7 +164,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         tickets = []
 
         # if a email override is used, only create one ticket
-        if announcement.email != ""
+        if announcement.email
             tickets << MaintenanceTicket.new(maintenance_announcement: announcement, machines: machines)
             return tickets
         end
