@@ -9,7 +9,7 @@
       <th>Reason</th>
       <th>Impact</th>
       <th>Machines</th>
-      <th>Owners</th>
+      <th>Recipients</th>
       <th>Tickets</th>
     </tr>
   </thead>
@@ -25,7 +25,13 @@
         <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
         <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
         <td><%= maintenance_announcement.machine_links %></td>
-        <td><%= maintenance_announcement.owner_links %></td>
+        <td>
+        <%- if maintenance_announcement.email -%>
+        <%= maintenance_announcement.email %>
+        <%- else -%>
+        <%= maintenance_announcement.owner_links %>
+        <%- end -%>
+        </td>
         <td><%= maintenance_announcement.ticket_links %></td>
       </tr>
     <%- end -%>

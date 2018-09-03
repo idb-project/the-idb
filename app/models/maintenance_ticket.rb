@@ -24,12 +24,21 @@ class MaintenanceTicket < ApplicationRecord
     owners.group(:id).first
   end
 
+  # get the email address, either the owners or the one set in the announcement
+  def email
+    if maintenance_announcement.email
+      return maintenance_announcement.email
+    end
+
+    return owner.announcement_contact
+  end
+
   private
 
   def format_params
     a = maintenance_announcement
     t = a.maintenance_template
-    { 
+    p = { 
       begin_date: a.begin_date.to_formatted_s(:announcement_date),
       end_date: a.end_date.to_formatted_s(:announcement_date),
       begin_time: a.begin_date.to_formatted_s(:announcement_time),
@@ -41,5 +50,12 @@ class MaintenanceTicket < ApplicationRecord
       machines: format_machines_fqdns,
       user: a.user.display_name 
     }
+
+    # don't show machines in formatted ticket if we send to one address
+    if maintenance_announcement.email
+      p[:machines] = ""
+    end
+    
+    p
   end
 end
