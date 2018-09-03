@@ -51,6 +51,16 @@ have a wizard style dialog done on the client side #%>
             </ul>
           </div>
         <%- end %>
+        <%- if @maintenance_templates.empty? -%>
+          <div class="alert">
+            <strong>No announcement templates defined, please create one!</strong>
+          </div>
+        <%- end -%>
+        <%- if @no_maintenance_template -%>
+          <div class="alert">
+            <strong>Announcement template not found!</strong>
+          </div>
+        <%- end -%>
         <%= render 'machines_table' %>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
@@ -73,7 +83,8 @@ have a wizard style dialog done on the client side #%>
         </div>
         <div class="span6">
           <%= label_tag(:email, "E-Mail Address") %>
-          <%= email_field_tag(:email) %>
+          <%= autocomplete_field_tag(:email, '', autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
+          <%#= email_field_tag(:email, :url => "foobar", :as => :autocomplete) #%>
 
           <%= label_tag(:begin_date, "Begin") %>
           <%= datetime_select(:maintenance_announcement, :begin_date, default: {minute: 0 } ) %>

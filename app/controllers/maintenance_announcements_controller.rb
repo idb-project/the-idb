@@ -1,4 +1,6 @@
 class MaintenanceAnnouncementsController < ApplicationController
+    autocomplete :maintenance_announcement, :email
+
     def index
         @maintenance_announcements = MaintenanceAnnouncement.all
     end
@@ -36,7 +38,9 @@ class MaintenanceAnnouncementsController < ApplicationController
         @begin_date = Time.zone.now
         @end_date = Time.zone.now
         @exceeded_deadlines = Array.new
-        @email = params[:email]
+
+        @no_maintenance_template = !MaintenanceTemplate.exists?(params[:maintenance_template_id])
+        @email = params[:email] == "" ? nil : params[:email]
 
         # get selected machines
         @selected_machines = Machine.where(id: params[:machine_ids])
@@ -71,7 +75,12 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
 
-        if (not @no_deadline.empty?) or (not @no_contacts.empty?) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true")
+        if (not @no_deadline.empty?) or (not @no_contacts.empty?) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true") or (@no_maintenance_template)
+            return render :new
+        end
+
+        if !MaintenanceTemplate.exists?(params[:maintenance_template_id])
+            flash.alert = "No templates found, please create one."
             return render :new
         end
 
@@ -94,6 +103,10 @@ class MaintenanceAnnouncementsController < ApplicationController
         end
 
         redirect_to maintenance_announcements_path
+    end
+
+    def autocomplete_ma_email
+        render json: MaintenanceAnnouncement.where("email LIKE ?", params[:term]).pluck("DISTINCT email")
     end
 
     private
@@ -151,7 +164,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         tickets = []
 
         # if a email override is used, only create one ticket
-        if announcement.email
+        if announcement.email != ""
             tickets << MaintenanceTicket.new(maintenance_announcement: announcement, machines: machines)
             return tickets
         end
