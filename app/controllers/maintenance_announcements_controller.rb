@@ -75,7 +75,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
 
-        if (not @no_deadline.empty?) or (not @no_contacts.empty?) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true") or (@no_maintenance_template)
+        if (not @no_deadline.empty? and not params[:ignore_deadlines] == "true") or (not @no_contacts.empty? and not @email) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true") or (@no_maintenance_template)
             return render :new
         end
 
