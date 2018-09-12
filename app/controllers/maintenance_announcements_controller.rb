@@ -109,8 +109,8 @@ class MaintenanceAnnouncementsController < ApplicationController
         redirect_to maintenance_announcements_path
     end
 
-    def autocomplete_ma_email
-        render json: MaintenanceAnnouncement.where("email LIKE ?", params[:term]).pluck("DISTINCT email")
+    def autocomplete_maintenance_announcement_email
+        render json: MaintenanceAnnouncement.where("email LIKE ?", "#{params[:term]}%").distinct.pluck(:email)
     end
 
     private
