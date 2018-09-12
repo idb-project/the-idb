@@ -18,7 +18,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @no_contacts = Array.new
         @missing_vms = Array.new
         @begin_date = Time.zone.now
-        @end_date = Time.zone.now
+        @end_date = Time.zone.now + 1.hours
         @exceeded_deadlines = Array.new
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.

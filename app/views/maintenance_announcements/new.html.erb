@@ -84,13 +84,12 @@ have a wizard style dialog done on the client side #%>
         <div class="span6">
           <%= label_tag(:email, "E-Mail Address") %>
           <%= autocomplete_field_tag(:email, '', autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
-          <%#= email_field_tag(:email, :url => "foobar", :as => :autocomplete) #%>
 
           <%= label_tag(:begin_date, "Begin") %>
-          <%= datetime_select(:maintenance_announcement, :begin_date, default: {minute: 0 } ) %>
+          <%= datetime_select(:maintenance_announcement, :begin_date, default: { year: @begin_date.year, month: @begin_date.month, day: @begin_date.day, hour: @begin_date.hour, minute: 0} ) %>
 
           <%= label_tag(:begin_date, "End") %>
-          <%= datetime_select(:maintenance_announcement, :end_date, default: {minute: 0 } ) %>
+          <%= datetime_select(:maintenance_announcement, :end_date, default: { year: @end_date.year, month: @end_date.month, day: @end_date.day, hour: @end_date.hour, minute: 0} ) %>
 
           <%= label_tag("","") %>
           <%= submit_tag("Send Announcement") %>
