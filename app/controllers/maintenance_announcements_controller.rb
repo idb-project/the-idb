@@ -18,7 +18,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @no_contacts = Array.new
         @missing_vms = Array.new
         @begin_date = Time.zone.now
-        @end_date = Time.zone.now
+        @end_date = Time.zone.now + 1.hours
         @exceeded_deadlines = Array.new
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
@@ -75,7 +75,11 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
 
-        if (not @no_deadline.empty?) or (not @no_contacts.empty?) or (not @missing_vms.empty? and not params[:ignore_vms] == "true") or (not @exceeded_deadlines.empty? and not params[:ignore_deadlines] == "true") or (@no_maintenance_template)
+        if  (not (@no_deadline.empty? or params[:ignore_deadlines] == "1")) or
+            (not (@no_contacts.empty? or @email)) or
+            (not (@missing_vms.empty? or params[:ignore_vms] == "1")) or
+            (not (@exceeded_deadlines.empty? or params[:ignore_deadlines] == "1")) or
+            (@no_maintenance_template)
             return render :new
         end
 
