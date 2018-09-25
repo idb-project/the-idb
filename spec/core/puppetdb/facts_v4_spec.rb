@@ -31,7 +31,8 @@ describe Puppetdb::FactsV4 do
       drac_name: 'idrac-vmhost24',
       drac_netmask: '255.255.255.0',
       idb_unattended_upgrades_reboot: true,
-      idb_pending_updates: 8
+      idb_pending_updates: 8,
+      monitoring_vm_children: {"vm0.example.org"=>"vmhost.example.org", "vm1.example.org"=>"vmhost.example.org"}
     }
   end
 
@@ -244,6 +245,17 @@ describe Puppetdb::FactsV4 do
       it 'sets the version to 7 / Server 2008 R2' do
         expect(facts.lsbdistrelease).to eq('7 / Server 2008 R2')
       end
+    end
+  end
+
+  describe 'monitoring_vm_children' do
+    it 'has two keys' do
+      expect(hash[:monitoring_vm_children].size).to eq(2)
+    end
+
+    it 'has an entry for vm0 and vm1' do
+      expect(hash[:monitoring_vm_children]["vm0.example.org"]).to eq("vmhost.example.org")
+      expect(hash[:monitoring_vm_children]["vm1.example.org"]).to eq("vmhost.example.org")
     end
   end
 end
