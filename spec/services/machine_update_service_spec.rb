@@ -259,6 +259,22 @@ describe MachineUpdateService do
         end
       end
     end
+
+    describe "monitoring_vm_children" do
+      it "updates the children" do
+        vm0 = FactoryGirl.create(:virtual_machine, fqdn: 'vm0.example.com', owner: machine.owner)
+        vm1 = FactoryGirl.create(:virtual_machine, fqdn: 'vm1.example.com', owner: machine.owner)
+        vmhost = FactoryGirl.create(:machine, fqdn: 'vmhost.example.com', owner: machine.owner)
+        facts[:monitoring_vm_children] = {vm0.fqdn => vmhost.fqdn, vm1.fqdn => vmhost.fqdn }
+        allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
+        described_class.update_from_facts(vmhost, @url)
+        # reload the changed objects
+        vm0.reload
+        vm1.reload
+        expect(vm0.vmhost).to eq(vmhost.fqdn)
+        expect(vm1.vmhost).to eq(vmhost.fqdn)
+      end
+    end
   end
 
   describe '.parse_installed_packages' do

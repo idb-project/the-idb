@@ -72,6 +72,16 @@ class MachineUpdateService
       end
     end
 
+    # update vm children
+    facts.monitoring_vm_children.each do |k,v|
+      child = Machine.find_by(fqdn: k)
+      # skip if child specified in puppet doesn't exist or isn't a vm here
+      next unless child
+      next unless child.virtual?
+      child.vmhost = machine.fqdn
+      child.save!
+    end
+    
     machine.save!
   end
 
@@ -90,5 +100,9 @@ class MachineUpdateService
       end
     end
     software.empty? ? nil : software
+  end
+
+  def self.update_vm_children
+
   end
 end

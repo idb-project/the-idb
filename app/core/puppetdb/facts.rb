@@ -39,6 +39,7 @@ module Puppetdb
     attribute :idb_pending_updates_package_names, Array
     attribute :idb_reboot_required, Boolean
     attribute :idb_installed_packages, JSON
+    attribute :monitoring_vm_children, Hash[String => String]
 
     attr_reader :interfaces
 
