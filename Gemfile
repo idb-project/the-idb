@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.4'
+ruby '2.2.7'
 gem 'rails'
 
 gem 'rake'
@@ -38,9 +38,9 @@ gem 'high_voltage'
 gem 'paranoia'
 gem 'paper_trail'
 gem 'diffy'
+gem 'exception_notification'
 
 gem 'ipaddress'
-gem 'sentry-raven'
 
 gem 'rubius', :git => 'https://github.com/bytemine/rubius.git'
 
