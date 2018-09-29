@@ -38,9 +38,9 @@ gem 'high_voltage'
 gem 'paranoia'
 gem 'paper_trail'
 gem 'diffy'
+gem 'exception_notification'
 
 gem 'ipaddress'
-gem 'sentry-raven'
 
 gem 'rubius', :git => 'https://github.com/bytemine/rubius.git'
 

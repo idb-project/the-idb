@@ -51,11 +51,9 @@ module V2
             m = Machine.includes(:aliases, :nics).find_by_fqdn(p["fqdn"]).as_json(include: [:aliases, :nics])
             m
           rescue ActiveRecord::RecordInvalid => e
-            Raven.capture_exception(e)
             status 409
             return {}
           rescue ActiveRecord::RecordNotUnique => e
-            Raven.capture_exception(e)
             status 409
             return {}
           end
@@ -70,11 +68,9 @@ module V2
                 machine_array << m
               end
             rescue ActiveRecord::RecordInvalid => e
-              Raven.capture_exception(e)
               status 409
               return {}
             rescue ActiveRecord::RecordNotUnique => e
-              Raven.capture_exception(e)
               status 409
               return {}
             end
