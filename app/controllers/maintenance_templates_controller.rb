@@ -12,9 +12,9 @@ class MaintenanceTemplatesController < ApplicationController
     end
 
     def create
-        maintenance_template = MaintenanceTemplate.new(maintenance_template_params)
-        if maintenance_template.save
-            return redirect_to maintenance_template_path(maintenance_template)
+        @maintenance_template = MaintenanceTemplate.new(maintenance_template_params)
+        if @maintenance_template.save
+            return redirect_to maintenance_template_path(@maintenance_template)
         end
 
         return render :new
