@@ -33,7 +33,7 @@ RSpec.describe MaintenanceTicket, type: :model do
           end_full: @announcement.end_date.to_formatted_s(:announcement_full),
           reason: @announcement.reason,
           impact: @announcement.impact,
-          machines: x.format_machines_fqdns,
+          machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join(" "),
           user: @announcement.user.display_name 
         }
 
@@ -75,7 +75,7 @@ RSpec.describe MaintenanceTicket, type: :model do
           end_full: @announcement.end_date.to_formatted_s(:announcement_full),
           reason: @announcement.reason,
           impact: @announcement.impact,
-          machines: x.format_machines_fqdns,
+          machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join(" "),
           user: @announcement.user.display_name 
         }
         expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
