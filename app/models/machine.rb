@@ -37,9 +37,10 @@ class Machine < ActiveRecord::Base
 
   has_and_belongs_to_many :maintenance_tickets
   
-  validate :validate_fqdn_present_and_unique
+  validates :fqdn, presence: true
+  validates_uniqueness_of :fqdn, scope: :with_deleted
   validates :fqdn, format: {with: FQDN_REGEX}
-  
+
   after_commit :flapping_detection
 
   def self.owned_by(o)
@@ -220,17 +221,6 @@ class Machine < ActiveRecord::Base
 
   def announcement_deadline_seconds
     announcement_deadline * 24 * 60 * 60
-  end
-
-  def validate_fqdn_present_and_unique
-    if fqdn.blank?
-      errors.add(:fqdn, "FQDN can't be empty.")
-      return
-    end
-
-    if Machine.with_deleted.find_by_fqdn(fqdn)
-      errors.add(:fqdn, "FQDN already in use (also check deleted machines).")
-    end
   end
 
   class SoftwareEntity < Grape::Entity
