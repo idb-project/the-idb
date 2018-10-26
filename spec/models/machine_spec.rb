@@ -43,6 +43,13 @@ describe Machine do
       expect(machine).to be_invalid
     end
 
+    it 'is invalid with a duplicate fqdn of a deleted machine' do
+      m = FactoryGirl.create(:machine, fqdn: "deleted.example.com")
+      m.delete
+      x = FactoryGirl.build(:machine, fqdn: "deleted.example.com")
+      expect(x).to be_invalid
+    end
+
     describe 'fqdn format' do
       context 'fqdn = example.com' do
         before { machine.fqdn = 'example.com' }

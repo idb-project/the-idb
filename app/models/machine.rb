@@ -37,6 +37,7 @@ class Machine < ActiveRecord::Base
 
   has_and_belongs_to_many :maintenance_tickets
   
+  validate :validate_fqdn_not_in_deleted
   validates :fqdn, presence: true, uniqueness: true
   validates :fqdn, format: {with: FQDN_REGEX}
 
@@ -220,6 +221,12 @@ class Machine < ActiveRecord::Base
 
   def announcement_deadline_seconds
     announcement_deadline * 24 * 60 * 60
+  end
+
+  def validate_fqdn_not_in_deleted
+    if Machine.only_deleted.find_by_fqdn(fqdn)
+      errors.add(:fqdn, "FQDN in use by deleted machine.")
+    end
   end
 
   class SoftwareEntity < Grape::Entity
