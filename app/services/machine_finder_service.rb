@@ -21,22 +21,7 @@ class MachineFinderService
     oxidized_untracked = oxidized_nodes - machines - machine_aliases
 
     if IDB.config.puppetdb.auto_create
-      puppet_untracked.each do |fqdn|
-        unless Machine.unscoped.find_by_fqdn(fqdn)
-          begin
-            m = Machine.new(fqdn: fqdn)
-            m.owner = Owner.first
-            m.save!
-            VersionChangeWorker.perform_async(m.versions.last.id, "PuppetDB")
-            MachineUpdateWorker.perform_async(m.fqdn)
-          rescue ActiveRecord::RecordInvalid => e
-            # just carry on, nothing happened but a deleted machine conflicted with the new FQDN
-            Rails.logger.info "Machine with #{fqdn} could not be created"
-          rescue Exception => e
-            Rails.logger.error e
-          end
-        end
-      end
+      update_untracked(puppet_untracked, "PuppetDB")
     else
       # Add all nodes that are not in the database to the untracked machines
       # list.
@@ -44,26 +29,32 @@ class MachineFinderService
     end
 
     if IDB.config.oxidized.auto_create
-      oxidized_untracked.each do |fqdn|
-        unless Machine.unscoped.find_by_fqdn(fqdn)
-          begin
-            m = Machine.new(fqdn: fqdn)
-            m.owner = Owner.first
-            m.save!
-            VersionChangeWorker.perform_async(m.versions.last.id, "Oxidized")
-            MachineUpdateWorker.perform_async(m.fqdn)
-          rescue ActiveRecord::RecordInvalid => e
-            # just carry on, nothing happened but a deleted machine conflicted with the new FQDN
-            Rails.logger.info "Machine with #{fqdn} could not be created"
-          rescue Exception => e
-            Rails.logger.error e
-          end
-        end
-      end
+      update_untracked(oxidized_untracked, "Oxidized")
     else
       # Add all nodes that are not in the database to the untracked machines
       # list.
       @list.set(oxidized_untracked)
+    end
+  end
+
+  private
+
+  def update_untracked(list, source = "PuppetDB")
+    list.each do |fqdn|
+      unless Machine.unscoped.find_by_fqdn(fqdn)
+        begin
+          m = Machine.new(fqdn: fqdn)
+          m.owner = Owner.first
+          m.save!
+          VersionChangeWorker.perform_async(m.versions.last.id, source)
+          MachineUpdateWorker.perform_async(m.fqdn)
+        rescue ActiveRecord::RecordInvalid => e
+          # just carry on, nothing happened but a deleted machine conflicted with the new FQDN
+          Rails.logger.info "Machine with #{fqdn} could not be created"
+        rescue Exception => e
+          Rails.logger.error e
+        end
+      end
     end
   end
 end
