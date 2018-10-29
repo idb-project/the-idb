@@ -1,5 +1,6 @@
 ---
 defaults: &defaults
+  default_owner: 1
   design:
     title: 'IDB local'
     logo_path: 'idb-logo.png'
