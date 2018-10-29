@@ -65,6 +65,11 @@ defaults: &defaults
     api_timeout: 5
     auto_create: false
     filter:
+  oxidized:
+    api_urls:
+      - url: 'http://localhost:8888/'
+    api_timeout: 5
+    auto_create: false
   redmine:
     ticket_url: 'http://redmine.example.com/issues/%s'
   rt:

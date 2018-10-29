@@ -19,12 +19,24 @@ class MachineUpdateWorker
       version = "v4" if url
     end
 
+    unless url
+      # query all configured oxidized APIs
+      oxidized_urls = IDB.config.oxidized.api_urls.map { |u| [u["url"]] }.flatten.compact
+      nodes = Oxidized::Nodes.new(oxidized_urls)
+      url = nodes.find_node(name)
+      version = "oxidized" if url
+    end
+
     return unless url # machine was not found in any configured puppetDB
 
     machine = Machine.find_by_fqdn(name)
     if machine
       logger.info { "Update machine ##{machine.id}<#{machine.name}>" }
-      MachineUpdateService.update_from_facts(machine, url, version)
+      if version == "oxidized"
+        MachineUpdateService.update_from_oxidized_facts(machine, url)
+      else
+        MachineUpdateService.update_from_facts(machine, url, version)
+      end
     end
   rescue Puppetdb::Api::ConnectionError => e
     logger.error(e)

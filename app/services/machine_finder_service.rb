@@ -7,16 +7,21 @@ class MachineFinderService
 
     v4_urls = IDB.config.puppetdb.api_urls.map { |u| [u["url"]] if u["version"] == "v4" }.flatten.compact
     @nodes += Puppetdb::NodesV4.new(v4_urls).all
+
+    oxidized_urls = IDB.config.oxidized.api_urls.map { |u| [u["url"]] }.flatten.compact
+    @oxidized_nodes = Oxidized::Nodes.new(oxidized_urls).all
   end
 
   def find_untracked_machines
-    nodes = @nodes
+    puppet_nodes = @nodes
+    oxidized_nodes = @oxidized_nodes
     machines = Machine.pluck(:fqdn)
     machine_aliases = MachineAlias.pluck(:name)
-    untracked = nodes - machines - machine_aliases
+    puppet_untracked = puppet_nodes - machines - machine_aliases
+    oxidized_untracked = oxidized_nodes - machines - machine_aliases
 
     if IDB.config.puppetdb.auto_create
-      untracked.each do |fqdn|
+      puppet_untracked.each do |fqdn|
         unless Machine.unscoped.find_by_fqdn(fqdn)
           begin
             m = Machine.new(fqdn: fqdn)
@@ -35,7 +40,30 @@ class MachineFinderService
     else
       # Add all nodes that are not in the database to the untracked machines
       # list.
-      @list.set(untracked)
+      @list.set(puppet_untracked)
+    end
+
+    if IDB.config.oxidized.auto_create
+      oxidized_untracked.each do |fqdn|
+        unless Machine.unscoped.find_by_fqdn(fqdn)
+          begin
+            m = Machine.new(fqdn: fqdn)
+            m.owner = Owner.first
+            m.save!
+            VersionChangeWorker.perform_async(m.versions.last.id, "Oxidized")
+            MachineUpdateWorker.perform_async(m.fqdn)
+          rescue ActiveRecord::RecordInvalid => e
+            # just carry on, nothing happened but a deleted machine conflicted with the new FQDN
+            Rails.logger.info "Machine with #{fqdn} could not be created"
+          rescue Exception => e
+            Rails.logger.error e
+          end
+        end
+      end
+    else
+      # Add all nodes that are not in the database to the untracked machines
+      # list.
+      @list.set(oxidized_untracked)
     end
   end
 end
