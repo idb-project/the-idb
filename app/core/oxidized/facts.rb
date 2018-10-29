@@ -25,7 +25,7 @@ module Oxidized
       api = Oxidized::Api.new(url)
       data = api.get("/node/show/#{node}?format=json").data
 
-      facts = { "operatingsystem": data["ip"]}
+      facts = { "operatingsystem": data["model"]}
       new(facts)
     end
 
