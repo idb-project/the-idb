@@ -71,6 +71,8 @@ defaults: &defaults
       - url: 'http://localhost:8888/'
     api_timeout: 5
     auto_create: false
+    default_netmask: "255.255.255.0"
+    default_interface_name: "interface"
   redmine:
     ticket_url: 'http://redmine.example.com/issues/%s'
   rt:

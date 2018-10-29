@@ -16,7 +16,7 @@ module Oxidized
 
       @interfaces = {}
 
-      nic = build_nic("interface", attributes)
+      nic = build_nic(attributes)
       if nic
         @interfaces[nic.name] = nic
       end
@@ -45,11 +45,12 @@ module Oxidized
 
     private
 
-    def build_nic(name, attributes)
+    def build_nic(attributes)
+      name = IDB.config.oxidized.default_interface_name ||= "interface"
       Nic.new(name: name).tap do |nic|
         nic.ip_address = IpAddress.new
         nic.ip_address.addr = attributes[:ip]
-        nic.ip_address.netmask = "255.255.255.0"
+        nic.ip_address.netmask = IDB.config.oxidized.default_netmask ||= "255.255.255.0"
         nic.ip_address.family = 'inet'
       end
     end
