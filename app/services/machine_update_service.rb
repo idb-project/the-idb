@@ -112,7 +112,6 @@ class MachineUpdateService
     machine.becomes!(Machine)
     machine.auto_update = true
     machine.os = facts.operatingsystem
-
     facts.interfaces.each do |name, new_nic|
       next if new_nic.ipv4addr.nil?
 

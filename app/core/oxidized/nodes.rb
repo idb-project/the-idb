@@ -16,9 +16,13 @@ module Oxidized
       nodes
     end
 
+    def facts(node)
+      Oxidized::Facts.for_node(node, urls)
+    end
+
     # returns either the oxidized url or nil
     def find_node(fqdn)
-      # Try to find machine in all puppetdb servers.
+      # Try to find machine in all oxidized systems.
       urls.each do |url|
         api = Oxidized::Api.new(url)
         data = api.get("/node/show/#{fqdn}?format=json").data

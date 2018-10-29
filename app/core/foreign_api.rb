@@ -2,6 +2,7 @@ class ForeignApi
   GenericError = Class.new(StandardError)
   ConnectionError = Class.new(GenericError)
   TimeoutError = Class.new(GenericError)
+  TIMEOUT = 5
 
   def initialize(url)
     @url = url
@@ -21,7 +22,7 @@ class ForeignApi
   private
 
   def request(method, options)
-    Response.new(@http.request({method: method}.merge(options)))
+    ForeignResponse.new(@http.request({method: method}.merge(options)))
   rescue Excon::Errors::SocketError => e
     raise ConnectionError, "Unable to connect to API at #{@http.params[:hostname]}: #{e.message}"
   rescue Excon::Errors::Timeout => e

@@ -4,6 +4,7 @@ module Oxidized
 
     attr_reader :interfaces
     attribute :operatingsystem, String
+    attribute :ip, String
 
     def initialize(attributes = {})
       # Call super to initialize all attributes.
@@ -25,7 +26,7 @@ module Oxidized
       api = Oxidized::Api.new(url)
       data = api.get("/node/show/#{node}?format=json").data
 
-      facts = { "operatingsystem": data["model"]}
+      facts = { "operatingsystem": data["model"], "ip": data["ip"]}
       new(facts)
     end
 
@@ -47,7 +48,8 @@ module Oxidized
     def build_nic(name, attributes)
       Nic.new(name: name).tap do |nic|
         nic.ip_address = IpAddress.new
-        nic.ip_address.addr = attributes["ip"]
+        nic.ip_address.addr = attributes[:ip]
+        nic.ip_address.netmask = "255.255.255.0"
         nic.ip_address.family = 'inet'
       end
     end
