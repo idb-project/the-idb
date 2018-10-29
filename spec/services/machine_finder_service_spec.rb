@@ -7,8 +7,11 @@ describe MachineFinderService do
       @machine = Machine.create!(fqdn: 'test.example.com')
       IDB.config.puppetdb.auto_create = true
       IDB.config.puppetdb.api_urls = {}
+      IDB.config.oxidized.auto_create = true
+      IDB.config.oxidized.api_urls = {}
       allow(Puppetdb::Nodes.new).to receive(:all).and_return([])
       allow(Puppetdb::NodesV4.new).to receive(:all).and_return([])
+      allow(Oxidized::Nodes.new).to receive(:all).and_return([])
       @mfs = MachineFinderService.new(nil)
     end
 
