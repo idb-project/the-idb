@@ -44,16 +44,7 @@ class MachineFinderService
       unless Machine.unscoped.find_by_fqdn(fqdn)
         begin
           m = Machine.new(fqdn: fqdn)
-          if IDB.config.default_owner
-            begin
-              m.owner = Owner.find(IDB.config.default_owner)
-            rescue ActiveRecord::RecordNotFound => e
-              if Owner.all.size == 0
-                m.owner = Owner.create(name: "default", nickname: "default")
-              end
-              m.owner = Owner.first
-            end
-          end
+          m.owner = Owner.default_owner
           m.save!
           VersionChangeWorker.perform_async(m.versions.last.id, source)
           MachineUpdateWorker.perform_async(m.fqdn)

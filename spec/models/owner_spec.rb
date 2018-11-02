@@ -96,4 +96,24 @@ describe Owner do
       expect(owner.data).to eq({})
     end
   end
+
+  describe '#default_owner' do
+    it 'returns the configured default owner if exists' do
+      owner.save!
+      IDB.config.default_owner = owner.id
+      expect(Owner.default_owner.id).to eq(IDB.config.default_owner)
+    end
+
+    it 'returns the first owner if the configured does not exist' do
+      owner.save!
+      IDB.config.default_owner = -3
+      expect(Owner.default_owner.id).to eq(Owner.first.id)
+    end
+
+    it 'creates a default owner if none exists' do
+      owner.delete
+      expect(Owner.all.size).to eq(0)
+      expect(Owner.default_owner.name).to eq("default")
+    end
+  end
 end

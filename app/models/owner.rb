@@ -37,4 +37,24 @@ class Owner < ActiveRecord::Base
       -> { joins(:users).where(users: { id: User.current }) }
     end
   end
+
+  def self.default_owner
+    owner = nil
+
+    if IDB.config.default_owner
+      begin
+        owner = Owner.find(IDB.config.default_owner)
+      rescue ActiveRecord::RecordNotFound => e
+      end
+    end
+
+    unless owner
+      if Owner.all.size == 0
+        owner = Owner.create(name: "default", nickname: "default")
+      end
+      owner = Owner.first unless owner
+    end
+
+    owner
+  end
 end
