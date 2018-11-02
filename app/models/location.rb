@@ -49,6 +49,7 @@ class Location < ActiveRecord::Base
       ls = Array.new()
 
       Location.roots.each do |r|
+        ls.append(r)
         ls.concat(r.sorted_children)
       end
 
