@@ -26,7 +26,7 @@ class MachinesController < ApplicationController
 
   def new
     @machine = params[:machine] ? Machine.new(params.require(:machine).permit(:fqdn)) : Machine.new
-    @machine.owner = Owner.first # preset of the owner list
+    @machine.owner = Owner.default_owner # preset of the owner list
     @form_locations = Location.depth_traverse
   end
 
