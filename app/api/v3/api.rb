@@ -6,7 +6,6 @@ module V3
     mount V3::CloudProviders
     mount V3::Inventories
     mount V3::Softwares
-    mount V3::Switches
     mount V3::Nics
     mount V3::Locations
     mount V3::Deleted

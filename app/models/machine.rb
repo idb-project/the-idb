@@ -55,18 +55,6 @@ class Machine < ActiveRecord::Base
     end
   end
 
-  def self.create_switch!(attributes = {})
-    Switch.create(attributes)
-  end
-
-  def self.is_switch?(fqdn)
-    Switch.exists?(fqdn: fqdn)
-  end
-
-  def self.switches
-    Switch.all
-  end
-
   def self.advanced_field_name(index, type="short")
     name = nil
     if IDB.config.modules.advanced_fields && IDB.config.modules.advanced_field_names
@@ -88,10 +76,6 @@ class Machine < ActiveRecord::Base
       end
     end
     name || ""
-  end
-
-  def switch?
-    instance_of? Switch
   end
 
   def virtual?

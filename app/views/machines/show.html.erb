@@ -22,9 +22,6 @@
           <li><a href="#unattended" data-toggle="tab">Unattended</a></li>
           <%- end -%>
           <li><a href="#pending" data-toggle="tab">Pending updates</a></li>
-          <%- if machine.switch? -%>
-            <li><a href="#portsettings" data-toggle="tab">Ports</a></li>
-          <%- end -%>
           <%- if machine.software -%>
             <li><a href="#software" data-toggle="tab">Software</a></li>
           <%- end -%>
@@ -202,8 +199,6 @@
           <th>ip address</th>
           <th>netmask</th>
           <th>ip v6 address</th>
-          <th>switch</th>
-          <th>port</th>
         </tr>
         <%- machine.nics.each do |nic| -%>
           <tr>
@@ -212,13 +207,6 @@
             <td><%= nic.ipv4addr %></td>
             <td><%= nic.ipv4mask %></td>
             <td><%= nic.ipv6addr %></td>
-            <%- if nic.switch_port -%>
-              <td><%= nic.switch_port.switch.name %></td>
-              <td><%= nic.switch_port.number %></td>
-            <%- else -%>
-              <td></td>
-              <td></td>
-            <%- end -%>
           </tr>
         <%- end -%>
       </table>
@@ -417,11 +405,6 @@
         <%= machine.pending_updates_package_names.to_s.html_safe %>
       </p>
     </div>
-    <%- if machine.switch? -%>
-      <div class="tab-pane" id="portsettings">
-        <%= render partial: 'switches/ports_table', locals: {switch: machine.machine} %>
-      </div>
-    <%- end -%>
     <div class="tab-pane" id="maintenance">
       <div class="row-fluid">
         <div class="span6">

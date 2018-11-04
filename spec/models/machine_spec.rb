@@ -126,51 +126,6 @@ describe Machine do
     end
   end
 
-  describe '.create_switch!' do
-    it 'creates a Switch' do
-      described_class.create_switch!(fqdn: 'foo.example.com', owner: @owner)
-
-      expect(Switch.first.fqdn).to eq('foo.example.com')
-    end
-  end
-
-  describe '.is_switch?' do
-    let(:fqdn) { 'switch.example.com' }
-
-    context 'which an existing switch for the fqdn' do
-      before { Switch.create!(fqdn:fqdn, owner: @owner) }
-
-      it 'returns true' do
-        expect(described_class.is_switch?(fqdn)).to eq(true)
-      end
-    end
-
-    context 'with a machine for the fqdn but no switch' do
-      before { Machine.create!(fqdn:fqdn, owner: @owner) }
-
-      it 'returns false' do
-        expect(described_class.is_switch?(fqdn)).to eq(false)
-      end
-    end
-
-    context 'without machine for the fqdn' do
-      it 'returns false' do
-        expect(described_class.is_switch?(fqdn)).to eq(false)
-      end
-    end
-  end
-
-  describe '.switches' do
-    before do
-      Machine.create_switch!(fqdn: 'switch.example.com', owner: @owner)
-      Machine.create!(fqdn: 'machine.example.com', owner: @owner)
-    end
-
-    it 'returns only machines of type switch' do
-      expect(Machine.switches.map(&:name)).to eq(['switch.example.com'])
-    end
-  end
-
   describe '#backup_type' do
     it 'defaults to 0' do
       expect(machine.backup_type).to eq(0)

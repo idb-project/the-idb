@@ -20,7 +20,6 @@ InfrastructureDb::Application.routes.draw do
 
     patch 'details', to: 'machines#update_details'
   end
-  resources :switches
   resources :networks
   resources :owners
   get 'owners_summary/:owner', to: 'owners#summary', as: 'owners_summary'

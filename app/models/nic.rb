@@ -3,7 +3,6 @@ class Nic < ActiveRecord::Base
 
   belongs_to :machine
   has_one :ip_address, dependent: :destroy, autosave: true
-  has_one :switch_port, dependent: :destroy, autosave: true
 
   def self.owned_by(o)
     joins(:machine).where(machine: { owner: o })

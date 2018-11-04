@@ -2,7 +2,7 @@ class MachinePresenter < Keynote::Presenter
   presents :machine
 
   delegate :arch, :nics, :os, :os_release, :serialnumber,
-           :owner, :switch?,
+           :owner,
            :unattended_upgrades, :unattended_upgrades_reboot,
            :pending_updates, :pending_security_updates,
            :pending_updates_sum, :virtual?,
