@@ -32,9 +32,9 @@ class Owner < ActiveRecord::Base
 
   def self.default_scope
     if User.current.nil? || User.current.is_admin?
-      nil
+      -> { where(deleted_at: nil) }
     else
-      -> { joins(:users).where(users: { id: User.current }) }
+      -> { where(deleted_at: nil).joins(:users).where(users: { id: User.current }) }
     end
   end
 
