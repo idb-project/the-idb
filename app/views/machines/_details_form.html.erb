@@ -34,13 +34,6 @@
 
       <%= f.input :vmhost, disabled: @machine_details.field_disabled?("vmhost"),
         collection: @machine_details.vmhost_list %>
-
-      <%- if IDB.config.mrtg.base_url && @machine.switch? -%>
-        <h4>MRTG</h4>
-
-        <%= f.input :mrtg_url, input_html: {value: @machine_details.mrtg_url} %>
-        <%= f.input :switch_url %>
-      <%- end-%>
     </div>
 
     <div class="span6">
