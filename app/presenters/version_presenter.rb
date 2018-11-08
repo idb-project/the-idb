@@ -102,8 +102,8 @@ class VersionPresenter < Keynote::Presenter
 
   def diff_text_owner(changeset)
     if (changeset)
-      old = changeset[0] ? Owner.find_by_id(*changeset[0]).display_name : " ---"
-      new = changeset[1] ? Owner.find_by_id(*changeset[1]).display_name : " ---"
+      old = changeset[0] ? Owner.find_by_id(*changeset[0]) ? Owner.find_by_id(*changeset[0]).display_name: " ---" : " ---"
+      new = changeset[1] ? Owner.find_by_id(*changeset[1]) ? Owner.find_by_id(*changeset[1]).display_name : " ---" : " ---"
       "-#{old}\r\n+#{new}"
     else
       ""
@@ -112,8 +112,8 @@ class VersionPresenter < Keynote::Presenter
 
   def diff_text_location(changeset)
     if (changeset)
-      old = changeset[0] ? Location.find_by_id(*changeset[0]).name : " ---"
-      new = changeset[1] ? Location.find_by_id(*changeset[1]).name : " ---"
+      old = changeset[0] ? Location.find_by_id(*changeset[0]) ? Location.find_by_id(*changeset[0]).name : " ---" : " ---"
+      new = changeset[1] ? Location.find_by_id(*changeset[1]) ? Location.find_by_id(*changeset[1]).name : " ---" : " ---"
       "-#{old}\r\n+#{new}"
     else
       ""
@@ -122,8 +122,8 @@ class VersionPresenter < Keynote::Presenter
 
   def diff_text_user(changeset)
     if (changeset)
-      old = changeset[0] ? User.find_by_id(*changeset[0]).display_name : " ---"
-      new = changeset[1] ? User.find_by_id(*changeset[1]).display_name : " ---"
+      old = changeset[0] ? User.find_by_id(*changeset[0]) ? User.find_by_id(*changeset[0]).display_name : " ---" : " ---"
+      new = changeset[1] ? User.find_by_id(*changeset[1]) ? User.find_by_id(*changeset[1]).display_name : " ---" : " ---"
       "-#{old}\r\n+#{new}"
     else
       ""
@@ -132,8 +132,8 @@ class VersionPresenter < Keynote::Presenter
 
   def diff_text_machine(changeset)
     if (changeset)
-      old = changeset[0] ? Machine.find_by_id(*changeset[0]).fqdn : " ---"
-      new = changeset[1] ? Machine.find_by_id(*changeset[1]).fqdn : " ---"
+      old = changeset[0] ? Machine.find_by_id(*changeset[0]) ? Machine.find_by_id(*changeset[0]).fqdn : " ---" : " ---"
+      new = changeset[1] ? Machine.find_by_id(*changeset[1]) ? Machine.find_by_id(*changeset[1]).fqdn : " ---" : " ---"
       "-#{old}\r\n+#{new}"
     else
       ""
@@ -142,8 +142,8 @@ class VersionPresenter < Keynote::Presenter
 
   def diff_inventory_status(changeset)
     if (changeset)
-      old = changeset[0] ? InventoryStatus.find_by_id(*changeset[0]).name : " ---"
-      new = changeset[1] ? InventoryStatus.find_by_id(*changeset[1]).name : " ---"
+      old = changeset[0] ? InventoryStatus.find_by_id(*changeset[0]) ? InventoryStatus.find_by_id(*changeset[0]).name : " ---" : " ---"
+      new = changeset[1] ? InventoryStatus.find_by_id(*changeset[1]) ? InventoryStatus.find_by_id(*changeset[1]).name : " ---" : " ---"
       "-#{old}\r\n+#{new}"
     else
       ""
