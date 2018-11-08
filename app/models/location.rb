@@ -15,6 +15,10 @@ class Location < ActiveRecord::Base
     end
   end
 
+  def to_i
+    id
+  end
+
   def self.owned_by(o)
     where(owner: o)
   end
