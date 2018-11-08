@@ -23,7 +23,7 @@
       <h4><%= attribute %></h4>
       <%- if attribute == "Machine" %>
       <%= version.diff_html_machine(changeset) %>
-      <%- elsif attribute == "Location" %>
+      <%- elsif attribute == "Location" || attribute == "Power feed a" || attribute == "Power feed b" %>
       <%= version.diff_html_location(changeset) %>
       <%- elsif attribute == "Owner" %>
       <%= version.diff_html_owner(changeset) %>
