@@ -65,16 +65,6 @@ $(function () {
         // disable = do not display on list
         columnSelector_columns : {
           0: false, // ID
-          4: false, // IPv6
-          6: false, // Architecture
-          9: false, // Type
-          13: false, // Unattended
-          16: false, // Backup
-          18: false, // CI
-          19: false, // SC
-          20: false, // BP
-          21: false, // BC
-          22: false // BN
         },
         // remember selected columns (requires $.tablesorter.storage)
         columnSelector_saveColumns: true,
@@ -144,16 +134,7 @@ $(function () {
       // column status, true = display, false = hide
       // disable = do not display on list
       columnSelector_columns : {
-        1: false, // ID
-        5: false, // ID
-        7: false, // ID
-        8: false, // ID
-        9: false, // ID
-        12: false, // ID
-        14: false, // ID
-        15: false, // ID
-        16: false, // ID
-        19: false // ID 
+        0: false, // ID
       },
       // remember selected columns (requires $.tablesorter.storage)
       columnSelector_saveColumns: true,

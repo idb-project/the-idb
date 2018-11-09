@@ -9,8 +9,8 @@
         <div class="container-fluid">
           <a class="brand" href="<%= owner_path(@owner) %>"><%= owner.name %></a>
           <ul class="nav">
-            <li class="active"><a href="#data" data-toggle="tab">Owner Data</a></li>
-            <li><a href="#machines" data-toggle="tab">Machines</a></li>
+            <li><a href="#data" data-toggle="tab">Owner Data</a></li>
+            <li class="active"><a href="#machines" data-toggle="tab" id="machine-table-tab">Machines</a></li>
             <li><a href="#users" data-toggle="tab">Users</a></li>
             <%- if @owner.cloud_providers.count > 0 -%>
             <li><a href="#cloud-providers" data-toggle="tab">Cloud Providers</a></li>
@@ -30,7 +30,7 @@
 
 <div class="row-fluid">
   <div class="span12 tab-content">
-    <div class="tab-pane active" id="data">
+    <div class="tab-pane" id="data">
       <table class="table table-condensed">
         <tr>
           <th>nickname:</th>
@@ -60,7 +60,7 @@
       <%= owner.description %>
     </div>
 
-    <div class="tab-pane" id="machines">
+    <div class="tab-pane active" id="machines">
       <%= render partial: 'machines/table', locals: {machines: @owner.machines} %>
     </div>
 
