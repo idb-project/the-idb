@@ -1,0 +1,91 @@
+<div class="row-fluid markdown-help">
+  <div class="span4">
+    <h4>Format Text</h4>
+    <p>Headers</p>
+    <pre>
+# This is a <%= h('<h1>') %> tag
+## This is a <%= h('<h2>') %> tag
+##### This is a <%= h('<h5>') %> tag
+    </pre>
+
+    <p>Style</p>
+    <pre>
+*Italic text*
+_Italic text_
+
+**Bold text**
+__Bold text__
+
+*Italic **and** bold*
+    </pre>
+
+    <p>Blockquotes</p>
+    <pre>
+As I said:
+
+> We're living the future so
+> the present is our past.
+    </pre>
+  </div>
+
+  <div class="span4">
+    <h4>Lists</h4>
+    <p>Unordered</p>
+    <pre>
+* Item 1
+* Item 2
+  * Item 2a
+  * Item 2b
+    </pre>
+
+    <p>Ordered</p>
+    <pre>
+1. Item 1
+1. Item 2
+  1. Item 2.1
+  1. Item 2.1
+    </pre>
+
+    <h4>Misc</h4>
+    <p>Links</p>
+    <pre>
+http://bytemine.net/ - auto-link!
+[bytemine](http://bytemine.net/)
+    </pre>
+
+    <p>Images</p>
+    <pre>
+![bytemine Logo](/img/logo.png)
+Format: [Alt Text](url)
+    </pre>
+  </div>
+
+  <div class="span4">
+    <h4>Custom</h4>
+    <p>code fence</p>
+    <pre>
+RT#123 - link to RT ticket
+Redmine#123 - link to Redmine ticket
+    </pre>
+
+    <h4>Code</h4>
+    <p>code fence</p>
+    <pre>
+```ruby
+def method(arg)
+end
+```
+    </pre>
+
+    <p>4 space indent</p>
+    <pre>
+    def method(arg)
+    end
+    </pre>
+
+    <p>Inline</p>
+    <pre>
+I think you should use an `<%= h('<addr>') %>` element here.
+    </pre>
+  </div>
+</div>

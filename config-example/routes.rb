@@ -55,6 +55,7 @@ InfrastructureDb::Application.routes.draw do
   end
   resources :maintenance_templates
 
+  get 'markdown/help', to: 'markdown#help'
   post 'markup/render', to: 'markup#do_render'
 
   root 'machines#index'
