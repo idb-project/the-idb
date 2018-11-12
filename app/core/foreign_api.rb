@@ -4,8 +4,9 @@ class ForeignApi
   TimeoutError = Class.new(GenericError)
   TIMEOUT = 5
 
-  def initialize(url)
+  def initialize(url, verify_ssl = true)
     @url = url
+    Excon.defaults[:ssl_verify_peer] = verify_ssl
     @http = Excon.new(url, tcp_nodelay: true, connect_timeout: TIMEOUT)
   end
 

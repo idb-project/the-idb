@@ -69,6 +69,7 @@ defaults: &defaults
   oxidized:
     api_urls:
       - url: 'http://localhost:8888/'
+    ssl_verify: true
     api_timeout: 5
     auto_create: false
     default_netmask: "255.255.255.0"

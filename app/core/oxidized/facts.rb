@@ -23,7 +23,7 @@ module Oxidized
     end
 
     def self.for_node(node, url)
-      api = Oxidized::Api.new(url)
+      api = Oxidized::Api.new(url, IDB.config.oxidized.ssl_verify)
       data = api.get("/node/show/#{node}?format=json").data
 
       facts = { "operatingsystem": data["model"], "ip": data["ip"]}
