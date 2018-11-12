@@ -14,6 +14,14 @@ class UntrackedMachinesList
     end
   end
 
+  def add(list)
+    @redis.connection do |r|
+      Array(list).each do |name|
+        r.sadd(@key, name)
+      end
+    end
+  end
+
   def get
     @redis.connection do |r|
       r.smembers(@key) || []

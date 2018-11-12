@@ -23,7 +23,7 @@ class MachineFinderService
     if IDB.config.puppetdb.auto_create
       update_untracked(puppet_untracked, "PuppetDB")
     else
-      # Add all nodes that are not in the database to the untracked machines
+      # Set all nodes that are not in the database to the untracked machines
       # list.
       @list.set(puppet_untracked)
     end
@@ -33,7 +33,7 @@ class MachineFinderService
     else
       # Add all nodes that are not in the database to the untracked machines
       # list.
-      @list.set(oxidized_untracked)
+      @list.add(oxidized_untracked)
     end
   end
 
