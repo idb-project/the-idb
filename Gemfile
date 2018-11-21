@@ -8,7 +8,7 @@ gem 'mysql2'
 gem 'net-ldap'
 gem 'stomp', '1.3.4'
 gem 'bcrypt'
-gem 'grape'
+gem 'grape', ">= 1.1.0"
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-entity'
