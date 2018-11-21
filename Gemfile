@@ -8,7 +8,7 @@ gem 'mysql2'
 gem 'net-ldap'
 gem 'stomp', '1.3.4'
 gem 'bcrypt'
-gem 'grape'
+gem 'grape', ">= 1.1.0"
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-entity'
@@ -45,6 +45,9 @@ gem 'ipaddress'
 gem 'rubius', :git => 'https://github.com/bytemine/rubius.git'
 
 gem 'closure_tree'
+
+gem 'sprockets', '>= 3.7.2'
+gem 'rack', '>= 2.0.6'
 
 group :development do
   gem 'puma'
