@@ -56,7 +56,7 @@ class MachinePresenter < Keynote::Presenter
   end
 
   def all_ips(title=false)
-    return if machine.nics.empty?
+    return "" if machine.nics.empty?
 
     ips = ""
     machine.nics.each do |nic|
