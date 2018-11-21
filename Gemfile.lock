@@ -197,7 +197,7 @@ GEM
     paranoia (2.2.1)
       activerecord (>= 4.0, < 5.1)
     puma (3.7.1)
-    rack (2.0.4)
+    rack (2.0.6)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-protection (2.0.1)
@@ -349,6 +349,7 @@ DEPENDENCIES
   paperclip
   paranoia
   puma
+  rack (>= 2.0.6)
   rails
   rails-controller-testing
   rails-jquery-autocomplete
