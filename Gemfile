@@ -46,6 +46,8 @@ gem 'rubius', :git => 'https://github.com/bytemine/rubius.git'
 
 gem 'closure_tree'
 
+gem 'sprockets', '>= 3.7.2'
+
 group :development do
   gem 'puma'
   gem 'capistrano', '~> 2.15', require: false
