@@ -55,6 +55,16 @@ class MachinePresenter < Keynote::Presenter
     eth0 ? eth0.ipv4addr : machine.nics.first.ipv4addr
   end
 
+  def all_ips(title=false)
+    return if machine.nics.empty?
+
+    ips = ""
+    machine.nics.each do |nic|
+      ips += nic.ipv4addr + (title ? "\r\n" : "<br/>")
+    end
+    ips
+  end
+
   def first_v6_ip
     return if machine.nics.empty?
 

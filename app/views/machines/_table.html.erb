@@ -41,7 +41,7 @@
           <span class="auto-update"><%="*" if machine.auto_update%></span>
         </td>
         <td><%= machine.alias_names %></td>
-        <td data-text="<%= machine.first_ip %>"><%= machine.first_ip %></td>
+        <td data-text="<%= machine.all_ips %>" title="<%= machine.all_ips(true).html_safe %>"><%= machine.all_ips.html_safe %></td>
         <td data-text="<%=machine.first_v6_ip%>" title="<%=machine.first_v6_ip%>"><%= machine.first_v6_ip.truncate(10) if machine.first_v6_ip %></td>
         <td><%= machine.os %></td>
         <td><%= machine.arch %></td>
