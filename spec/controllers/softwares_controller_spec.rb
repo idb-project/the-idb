@@ -6,8 +6,8 @@ describe SoftwaresController do
     owner = FactoryGirl.create(:owner, users: [@current_user])
     allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
-    create(:machine, owner: owner, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}])
-    create(:machine, owner: owner, software: [{name: "nginx", version: "1.10.1-0ubuntu1.2"}])
+    create(:machine, owner: owner, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}, {name: "python", version: "2.7"}])
+    create(:machine, owner: owner, software: [{name: "nginx", version: "1.10.1-0ubuntu1.2"},{name: "python", version: "3.6"}])
   end
 
   describe "GET index" do
@@ -47,6 +47,11 @@ describe SoftwaresController do
     it "returns all machines matching the search parameters, partial version" do
       get :index, params: {"q": "nginx=1.10"}
       expect(assigns(:machines).size).to eq(2)
+    end
+
+    it "returns all machines matching the search parameters, not equal version" do
+      get :index, params: {"q": "python!=2.7"}
+      expect(assigns(:machines).size).to eq(1)
     end
   end
 end
