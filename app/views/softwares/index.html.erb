@@ -1,6 +1,6 @@
 <%= render partial: 'form' %>
 
-<%- if @software && @machines -%>
+<%- if @machines -%>
 <%= render partial: 'machines/table', locals: {machines: @machines} %>
 <%- end -%>
 
