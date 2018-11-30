@@ -24,12 +24,12 @@ module V3
           status 200
           []
         else
-          software, versions = SoftwareHelper.parse_query(params['q'])
-          if software.empty?
+          parsed = SoftwareHelper.parse_query(params['q'])
+          if parsed.empty?
             status 200
             []
           end
-          machines = SoftwareHelper.software_machines(Machine.owned_by(@owners), software, versions)
+          machines = SoftwareHelper.software_machines(Machine.owned_by(@owners), parsed)
           status 200
           machines.map(&:fqdn)
         end
