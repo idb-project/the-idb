@@ -86,7 +86,7 @@ InfrastructureDb::Application.configure do
   config.middleware.use ExceptionNotification::Rack,
     :email => {
       :email_prefix => '[IDB exception] ',
-      :sender_address => 'idb-code@bytemine.net',
-      :exception_recipients => 'idb-code@bytemine.net'
+      :sender_address => 'info@example.com',
+      :exception_recipients => 'info@example.com'
     }
 end
