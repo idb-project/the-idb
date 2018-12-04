@@ -6,7 +6,7 @@ module Puppetdb
 
       # Try to find machines in all puppetdb servers.
       urls.each do |url|
-        api = Puppetdb::Api.new(url)
+        api = Puppetdb::Api.new(url, IDB.config.puppetdb.ssl_verify)
         data = api.get('/pdb/query/v4/nodes').data || []
 
         data.each do |node|
@@ -27,7 +27,7 @@ module Puppetdb
     def find_node(fqdn)
       # Try to find machine in all puppetdb servers.
       urls.each do |url|
-        api = Puppetdb::Api.new(url)
+        api = Puppetdb::Api.new(url, IDB.config.puppetdb.ssl_verify)
         data = api.get("/pdb/query/v4/nodes/#{fqdn}/facts").data
         return url if data && data.class == Array
       end

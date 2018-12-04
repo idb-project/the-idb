@@ -66,6 +66,7 @@ defaults: &defaults
     api_timeout: 5
     auto_create: false
     filter:
+    ssl_verify: false
   oxidized:
     api_urls:
       - url: 'http://localhost:8888/'

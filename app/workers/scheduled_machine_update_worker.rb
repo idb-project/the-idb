@@ -6,7 +6,7 @@ class ScheduledMachineUpdateWorker
 
   def perform
     IDB.config.puppetdb.api_urls.each do |url|
-      api = Puppetdb::Api.new(url["url"])
+      api = Puppetdb::Api.new(url["url"], IDB.config.puppetdb.ssl_verify)
       namefield = "name"
 
       if url["version"] == "v3"
