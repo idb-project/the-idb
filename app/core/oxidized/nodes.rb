@@ -9,7 +9,7 @@ module Oxidized
         data = api.get('/nodes?format=json').data || []
 
         data.each do |node|
-          nodes << node['full_name']
+          nodes << node['name']
         end
       end
 
