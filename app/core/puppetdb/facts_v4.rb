@@ -1,7 +1,7 @@
 module Puppetdb
   class FactsV4 < Facts
     def self.for_node(node, url)
-      api = Puppetdb::Api.new(url)
+      api = Puppetdb::Api.new(url, IDB.config.puppetdb.ssl_verify)
       data = api.get("/pdb/query/v4/nodes/#{node}/facts").data
 
       facts = Array(data).each_with_object({}) do |fact, hash|
@@ -24,7 +24,7 @@ module Puppetdb
     end
 
     def self.raw_data(node, url)
-      api = Puppetdb::Api.new(url)
+      api = Puppetdb::Api.new(url, IDB.config.puppetdb.ssl_verify)
       api.get("/pdb/query/v4/nodes/#{node}/facts").data
     end
 
