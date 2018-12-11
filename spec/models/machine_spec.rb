@@ -123,6 +123,28 @@ describe Machine do
           expect(machine).to be_invalid
         end
       end
+
+      context 'fqdn is an IP address' do
+        it 'is valid' do
+          machine.fqdn = "192.168.0.1"
+          expect(machine).to be_valid
+        end
+
+        it 'is valid' do
+          machine.fqdn = "3.3.3.3"
+          expect(machine).to be_valid
+        end
+
+        it 'is valid' do
+          machine.fqdn = "10.48.0.200"
+          expect(machine).to be_valid
+        end
+
+        it 'is invalid' do
+          machine.fqdn = "410.48.0.200"
+          expect(machine).to be_invalid
+        end
+      end
     end
   end
 
