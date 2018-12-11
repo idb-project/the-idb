@@ -153,7 +153,7 @@ bundle exec rake assets:precompile
    SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
    SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
    PassengerUser idb 
-   PassengeGroup idb
+   PassengerGroup idb
 # and all the other regular ssl options like certificate etc. pp.
 </VirtualHost>
 ```
