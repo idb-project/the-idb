@@ -60,7 +60,7 @@
         <%= simple_form_for(@machine, html: {class: 'form-horizontal', multipart: true },
               defaults: {input_html: {class: 'span12'}}) do |f| %>
           <%= f.input :fqdn %>
-          <%= f.input :description, input_html: {rows: 15},
+          <%= f.input :description, input_html: {rows: 15, id: 'markup-source'},
               hint: %(<small>Content can be written in #{link_to 'Markdown', markdown_help_path, target: '_blank'}</small>).html_safe %>
           <%= f.input :backup_type, collection: Machine::BackupType.invert  %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
