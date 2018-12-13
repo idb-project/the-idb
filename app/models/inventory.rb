@@ -21,6 +21,10 @@ class Inventory < ActiveRecord::Base
     where(owner: o)
   end
 
+  def user
+    u = User.unscope(where: :deleted_at).find_by_id(user_id)
+  end
+
   def status_string
     inventory_status.nil? ? "" : inventory_status.name
   end

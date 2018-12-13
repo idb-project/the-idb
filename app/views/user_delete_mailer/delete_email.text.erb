@@ -1,0 +1,9 @@
+The user has been deleted.
+
+<%- if @softdelete -%>
+As the soft-delete module is turned on the user is fully restorable.
+
+Link to restore: <%= deleted_users_url %>
+<%- else -%>
+As the soft-delete module is turned off the user is not restorable.
+<%- end -%>

@@ -18,7 +18,7 @@ class MachineMaintenancePresenter < Keynote::Presenter
   end
 
   def username
-    record.user.name
+    record.user ? record.user.name : "?"
   end
 
   def logfile

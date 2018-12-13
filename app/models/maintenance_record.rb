@@ -13,6 +13,10 @@ class MaintenanceRecord < ActiveRecord::Base
     end
   end
 
+  def user
+    u = User.unscope(where: :deleted_at).find_by_id(user_id)
+  end
+
   class Entity < Grape::Entity
     expose :machine, documentation: { type: "String", desc: "FQDN of maintained machine", param_type: "body" }
     expose :logfile, documentation: { type: "String", desc: "Logfile data" }
@@ -28,7 +32,7 @@ class MaintenanceRecord < ActiveRecord::Base
     end
 
     def user
-      u = User.find_by_id(object.user_id)
+      u = User.unscope(where: :deleted_at).find_by_id(object.user_id)
       if u
         return u.login
       end

@@ -6,7 +6,7 @@ class UserPresenter < Keynote::Presenter
   delegate :email, :login, to: :user
 
   def name_link
-    link_to(user.name ? user.name : "-no name-", edit_user_path(user)) if user
+    link_to(user.name ? user.name : "-no name-", user_path(user)) if user
   end
 
   def admin

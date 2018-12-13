@@ -20,7 +20,7 @@ class VersionPresenter < Keynote::Presenter
     return '?' unless version.whodunnit
 
     if version.whodunnit.to_i > 0 
-      u = User.find_by_id(version.whodunnit.to_i)
+      u = User.unscope(where: :deleted_at).find_by_id(version.whodunnit.to_i)
       return u.display_name if u
     else
       t = ApiToken.find_by_token(version.whodunnit)

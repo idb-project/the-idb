@@ -4,6 +4,9 @@
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="brand" href="<%= users_path %>">Users</a>
+          <ul class="nav">
+            <li><%= link_to '<i class="fa fa-times"></i> Deleted'.html_safe, deleted_users_path %></li>
+          </ul>
         </div>
       </div>
     </div>

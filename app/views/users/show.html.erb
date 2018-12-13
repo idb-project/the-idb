@@ -1,13 +1,15 @@
-<div id="users-form">
+<div id="users-show">
 
 <div class="row-fluid">
   <div class="span12">
     <div class="navbar">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="brand" href="<%= edit_user_path(@user) %>"><%= @user.name %></a>
+          <a class="brand" href="<%= user_path(@user) %>"><%= @user.name %></a>
           <ul class="nav pull-right">
             <li><%= link_to '<i class="fa fa-level-up"></i> Cancel'.html_safe, users_path %></li>
+            <li><%= link_to '<i class="fa fa-times"></i> Delete'.html_safe, user_path(@user), class: 'user-delete' %></li>
+          </ul>
           </ul>
         </div>
       </div>

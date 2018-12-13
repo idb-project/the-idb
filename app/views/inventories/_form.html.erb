@@ -44,6 +44,11 @@
           <%= f.input :comment %>
           <%= f.association :inventory_status, collection: @form_status, include_blank: true, label: "Status"  %>
           <%= f.association :user, collection: User.order(:name), include_blank: true %>
+          <% if @inventory.user.deleted? %>
+            <div class="control-group">
+              <label class="select optional control-label"></label><div class="controls">Attention: was belonging to deleted user <%= @inventory.user.name %></div>
+            </div>
+          <% end %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: true %>
           <%= f.association :machine, collection: Machine.order(:fqdn), include_blank: true %>
           <%= f.association :location, collection: @form_locations, include_blank: true, label_method: lambda { |location| k(location).location_name }, wrapper: false %>

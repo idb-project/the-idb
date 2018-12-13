@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  def edit
+  def show
     @user = User.find(params[:id])
   end
 
@@ -13,8 +13,17 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       redirect_to users_path, notice: 'User updated'
     else
-      render :edit
+      render :show
     end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    username = @user.name
+    @user.destroy
+    UserDeleteWorker.perform_async(username, current_user.display_name)
+    @users = User.all
+    render json: {success: true, redirectTo: users_path}, notice: 'DELETED'
   end
 
   private
