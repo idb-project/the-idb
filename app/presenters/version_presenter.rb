@@ -70,7 +70,7 @@ class VersionPresenter < Keynote::Presenter
   end
 
   def diff_text(changeset)
-    Diffy::Diff.new(*changeset).to_s(:text).gsub("\n\\ No newline at end of file", "")
+    Diffy::Diff.new(*changeset).to_s(:text).gsub("\n\\ No newline at end of file", "").gsub("\n\\ Kein Zeilenumbruch am Dateiende.", "")
   end
 
   def diff_text_backup_type(changeset)
