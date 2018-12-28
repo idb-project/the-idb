@@ -1,8 +1,5 @@
 class ScheduledMachineUpdateWorker
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
-
-  recurrence { hourly.minute_of_hour(10) }
 
   def perform
     IDB.config.puppetdb.api_urls.each do |url|

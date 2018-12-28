@@ -1,0 +1,14 @@
+scheduled_machine_update_worker:
+  cron: "10 * * * *"
+  class: "ScheduledMachineUpdateWorker"
+  queue: default
+
+scheduled_machine_finder_worker:
+  cron: "0 * * * *"
+  class: "ScheduledMachineFinderWorker"
+  queue: default
+
+scheduled_warranty_reminder_worker:
+  cron: "0 8 * * *"
+  class: "ScheduledWarrantyReminderWorker"
+  queue: default
