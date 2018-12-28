@@ -4,6 +4,7 @@ InfrastructureDb::Application.routes.draw do
   delete 'logout', to: 'sessions#destroy', as: 'logout'
 
   require 'sidekiq/web'
+  require 'sidekiq/cron/web'
   mount Sidekiq::Web => '/sidekiq'
 
   get 'background_jobs/sidekiq', to: 'background_jobs#sidekiq'
