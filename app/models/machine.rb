@@ -173,7 +173,7 @@ class Machine < ActiveRecord::Base
           end
         elsif (lastkey == "vmhost")
           # vmhost change is the same as two versions earlier -> flapping
-          v.destroy if m.versions.size > 2 and (v.changeset == m.versions[-3].changeset)
+          v.destroy if versions.size > 2 and (v.changeset == versions[-3].changeset)
         end
       end
     rescue => e
