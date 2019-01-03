@@ -15,6 +15,8 @@ InfrastructureDb::Application.routes.draw do
     get :autocomplete_business_purpose, :on => :collection
     get :autocomplete_business_criticality, :on => :collection
     get :autocomplete_business_notification, :on => :collection
+    get :autocomplete_os, :on => :collection
+    get :autocomplete_os_release, :on => :collection
     member do
       get 'maintenance_record/new', to: 'maintenance_records#new'
     end
@@ -32,7 +34,6 @@ InfrastructureDb::Application.routes.draw do
   resources :untracked_machines, only: [:index, :destroy], :constraints => { :id => /[^\/]+/ }
   resources :deleted_machines, only: [:index, :edit, :destroy]
   resources :deleted_owners, only: [:index, :edit, :destroy]
-  resources :deleted_users, only: [:index, :edit, :destroy]
   resources :outdated_machines, only: [:index]
   resources :lexware_imports, only: [:new, :create]
   resources :inventory_imports, only: [:new, :create]
@@ -51,7 +52,8 @@ InfrastructureDb::Application.routes.draw do
   resources :api_tokens
   resources :softwares, only: [:index]
   resources :cloud_providers
-  resources :users, only: [:index, :show, :update, :destroy]
+  resources :users, only: [:index, :edit, :update]
+
   resources :maintenance_announcements do
     get :autocomplete_maintenance_announcement_email, :on => :collection
   end
