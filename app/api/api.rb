@@ -12,7 +12,7 @@ module MachineHelpers
 
     p["raw_data_api"] = {token_name => payload}.to_json
 
-    PaperTrail.whodunnit = token_name
+    PaperTrail.request.whodunnit = token_name
 
     # strip all params that are not attributes of a machine
     # and prepare some params

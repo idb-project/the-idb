@@ -9,7 +9,7 @@ module V2
       before do
         api_enabled!
         authenticate!
-        PaperTrail.whodunnit = params["idb_api_token"] ? params["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+	PaperTrail.request.whodunnit = params["idb_api_token"] ? params["idb_api_token"] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
       end
 
       get do
