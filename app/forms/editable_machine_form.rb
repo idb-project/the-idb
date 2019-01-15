@@ -153,13 +153,13 @@ class EditableMachineForm
 
   def os_list
     (
-      Machine.select(:os).distinct.map(&:os).compact + os_other
+      Machine.select(:os).distinct.map(&:os).compact
     ).uniq.sort
   end
 
   def os_release_list
     (
-      Machine.select(:os_release).distinct.map(&:os_release).compact + os_release_other
+      Machine.select(:os_release).distinct.map(&:os_release).compact
     ).uniq.sort
   end
 
@@ -176,14 +176,6 @@ class EditableMachineForm
   end
 
   private
-
-  def os_other
-    IDB.config.machine_details.os
-  end
-
-  def os_release_other
-    IDB.config.machine_details.os_release
-  end
 
   def recursive_symbolize_keys(my_hash)
     case my_hash

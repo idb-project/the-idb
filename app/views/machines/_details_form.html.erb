@@ -23,10 +23,13 @@
         collection: @machine_details.core_collection,
         default: @machine_details.core_collection.first %>
 
-      <%= f.input :os, disabled: @machine_details.field_disabled?("os"),
-        collection: @machine_details.os_list %>
-      <%= f.input :os_release, disabled: @machine_details.field_disabled?("os_release"),
-        collection: @machine_details.os_release_list %>
+      <%= f.input :os, :url => autocomplete_os_machines_path,
+        as: :autocomplete, input_html: {rows: 8}, label: "Operating System",
+        disabled: @machine_details.field_disabled?("os") %>
+      <%= f.input :os_release, :url => autocomplete_os_release_machines_path,
+        as: :autocomplete, input_html: {rows: 8}, label: "Operating System Release",
+        disabled: @machine_details.field_disabled?("os_release") %>
+      
       <%= f.input :serialnumber, disabled: @machine_details.field_disabled?("serialnumber") %>
 
       <%= f.input :device_type_name, disabled: @machine_details.field_disabled?("device_type_name"),
