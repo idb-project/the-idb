@@ -266,15 +266,20 @@ describe EditableMachineForm do
   describe '#os_list' do
     it 'returns a list of operating systems' do
       form.update(attributes)
-      m = FactoryGirl.create(:machine, os: "Windows") # create a duplicate Windows entry
-      expect(form.os_list).to eq(["RHEL", "SLES", "UCS", "Ubuntu", "Windows", "Windows Server", "pfSense"])
+      m = FactoryGirl.create(:machine, os: "Windows")
+      m = FactoryGirl.create(:machine, os: "FreeBSD")
+      expect(form.os_list).to eq(["FreeBSD","Ubuntu", "Windows"])
     end
   end
 
   describe '#os_release_list' do
     it 'returns a list of operating releases' do
       form.update(attributes)
-      m = FactoryGirl.create(:machine, os_release: "7") # create a duplicate "7" entry
+      m = FactoryGirl.create(:machine, os_release: "1")
+      m = FactoryGirl.create(:machine, os_release: "2")
+      m = FactoryGirl.create(:machine, os_release: "3")
+      m = FactoryGirl.create(:machine, os_release: "3")
+      expect(form.os_release_list).to eq(["1",attributes[:os_release],"2","3"])
       expect(form.os_release_list.length).to eq(form.os_release_list.uniq.length)
     end
   end

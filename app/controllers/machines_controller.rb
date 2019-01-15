@@ -139,6 +139,14 @@ class MachinesController < ApplicationController
     autocomplete_general("business_notification", params[:term])
   end
 
+  def autocomplete_os
+    autocomplete_general("os", params[:term])
+  end
+
+  def autocomplete_os_release
+    autocomplete_general("os_release", params[:term])
+  end
+
   private
 
   def machine_params
