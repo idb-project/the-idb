@@ -32,13 +32,6 @@ module Oxidized
         end
       end
       nil
-      # # Try to find machine in all oxidized systems.
-      # urls.each do |url|
-      #   api = Oxidized::Api.new(url, IDB.config.oxidized.ssl_verify)
-      #   data = api.get("/node/show/#{fqdn}?format=json").data
-      #   return url if data && data.class == Hash
-      # end
-      # nil
     end
   end
 end
