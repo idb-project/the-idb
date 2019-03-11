@@ -22,11 +22,14 @@ module Oxidized
 
     # returns either the oxidized url or nil
     def find_node(fqdn)
-      # Try to find machine in all oxidized systems.
-      urls.each do |url|
-        api = Oxidized::Api.new(url, IDB.config.oxidized.ssl_verify)
-        data = api.get("/node/show/#{fqdn}?format=json").data
-        return url if data && data.class == Hash
+      nodes = all()
+
+      nodes.each do |node|
+        if node == fqdn
+          api = Oxidized::Api.new(url, IDB.config.oxidized.ssl_verify)
+          data = api.get("/node/show/#{fqdn}?format=json").data
+          return url if data && data.class == Hash
+        end
       end
       nil
     end
