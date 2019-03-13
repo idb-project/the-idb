@@ -7,35 +7,35 @@
     <div class="span6">
       <h4>Machine Details</h4>
 
-      <%= f.input :arch, disabled: @machine_details.field_disabled?("arch"), collection: @machine_details.arch_list %>
+      <%= f.input :arch, label: ("Architecture" + " *" if @machine_details.field_auto_updated?("arch")), collection: @machine_details.arch_list %>
 
       <div class="control-group">
         <div class="input-append">
           <%= f.label :ram %>
           <div class="controls">
-            <%= f.input_field :ram, disabled: @machine_details.field_disabled?("ram"), class: 'input-xl' %>
+            <%= f.input_field :ram, label: ("Memory" + " *" if @machine_details.field_auto_updated?("ram")), class: 'input-xl' %>
             <span class="add-on">MB</span>
           </div>
         </div>
       </div>
 
-      <%= f.input :cores, disabled: @machine_details.field_disabled?("cores"),
+      <%= f.input :cores,
+        label: ("Cores" + " *" if @machine_details.field_auto_updated?("cores")),
         collection: @machine_details.core_collection,
         default: @machine_details.core_collection.first %>
 
       <%= f.input :os, :url => autocomplete_os_machines_path,
-        as: :autocomplete, input_html: {rows: 8}, label: "Operating System",
-        disabled: @machine_details.field_disabled?("os") %>
-      <%= f.input :os_release, :url => autocomplete_os_release_machines_path,
-        as: :autocomplete, input_html: {rows: 8}, label: "Operating System Release",
-        disabled: @machine_details.field_disabled?("os_release") %>
-      
-      <%= f.input :serialnumber, disabled: @machine_details.field_disabled?("serialnumber") %>
+        as: :autocomplete, input_html: {rows: 8}, label: "Operating System" + " *" if @machine_details.field_auto_updated?("os") %>
 
-      <%= f.input :device_type_name, disabled: @machine_details.field_disabled?("device_type_name"),
+      <%= f.input :os_release, label: ("Operating System Release" + " *" if @machine_details.field_auto_updated?("os_release")), :url => autocomplete_os_release_machines_path,
+        as: :autocomplete, input_html: {rows: 8} %>
+      
+      <%= f.input :serialnumber, label: ("Serial" + " *" if @machine_details.field_auto_updated?("serialnumber")) %>
+
+      <%= f.input :device_type_name, label: ("Device type" + " *" if @machine_details.field_auto_updated?("device_type_name")),
         collection: Machine.device_type_names %>
 
-      <%= f.input :vmhost, disabled: @machine_details.field_disabled?("vmhost"),
+      <%= f.input :vmhost, label: ("VMHost" + " *" if @machine_details.field_auto_updated?("vmhost")),
         collection: @machine_details.vmhost_list %>
     </div>
 
