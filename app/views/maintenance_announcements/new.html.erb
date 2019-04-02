@@ -62,6 +62,24 @@ have a wizard style dialog done on the client side #%>
           </div>
         <%- end -%>
         <%= render 'machines_table' %>
+        <script>
+          function selectAllVisible() {
+            var cs = document.getElementsByName("machine_ids[]")
+            for (var i=0; i<cs.length; i++) {
+              if (cs[i].offsetParent !== null) {
+                cs[i].checked = true;
+              }
+            }
+          }
+          function unselectAll() {
+            var cs = document.getElementsByName("machine_ids[]")
+            for (var i=0; i<cs.length; i++) {
+                cs[i].checked = false;
+            }
+          }
+        </script>
+        <button type="button" onclick="selectAllVisible()">Select all visible</button>
+        <button type="button" onclick="unselectAll()">Unselect all</button>
         <label for="ignore_vms">
         <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
         </label>
