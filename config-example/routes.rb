@@ -34,6 +34,7 @@ InfrastructureDb::Application.routes.draw do
   resources :untracked_machines, only: [:index, :destroy], :constraints => { :id => /[^\/]+/ }
   resources :deleted_machines, only: [:index, :edit, :destroy]
   resources :deleted_owners, only: [:index, :edit, :destroy]
+  resources :deleted_users, only: [:index, :edit, :destroy]
   resources :outdated_machines, only: [:index]
   resources :lexware_imports, only: [:new, :create]
   resources :inventory_imports, only: [:new, :create]
