@@ -53,7 +53,7 @@ InfrastructureDb::Application.routes.draw do
   resources :api_tokens
   resources :softwares, only: [:index]
   resources :cloud_providers
-  resources :users, only: [:index, :edit, :update]
+  resources :users, only: [:index, :show, :update, :destroy]
 
   resources :maintenance_announcements do
     get :autocomplete_maintenance_announcement_email, :on => :collection
