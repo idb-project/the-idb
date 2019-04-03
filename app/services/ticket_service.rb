@@ -88,7 +88,7 @@ Text: %{text}
 
         x = %q(id: %{ticket_id}
 Action: correspond
-Cc: %{cc}
+Bcc: %{cc}
 Subject: %{subject}
 Text: %{text}
 )
