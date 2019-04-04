@@ -29,7 +29,7 @@ Text: #{want_text}
   describe 'encode_reply_ticket' do
     it 'encodes data to be usable as content in a RT API reply request' do
       ticket_id = 1234
-      cc = [ "cc" ]
+      bcc = [ "bcc" ]
       subject = "Subject"
       text = %q(multi
 line
@@ -39,10 +39,10 @@ string)
  line
  string)
 
-      x = TicketService.encode_reply_ticket(ticket_id, cc, subject, text)
+      x = TicketService.encode_reply_ticket(ticket_id, bcc, subject, text)
       want = %Q(id: #{ticket_id}
 Action: correspond
-Cc: #{cc.join(",")}
+Bcc: #{bcc.join(",")}
 Subject: #{subject}
 Text: #{want_text}
 )
@@ -144,7 +144,7 @@ Text: #{want_text})
       IDB.config.rt.password = "password"
 
       ticket_id = 1234
-      cc = [ "cc" ]
+      bcc = [ "bcc" ]
       subject = "Subject"
       text = %q(multi
 line
@@ -158,11 +158,11 @@ string
 
       want = %Q(id: #{ticket_id}
 Action: correspond
-Cc: #{cc.join(",")}
+Bcc: #{bcc.join(",")}
 Subject: #{subject}
 Text: #{want_text})
       
-      req = TicketService.build_reply_request(TicketService.build_reply_uri(ticket_id), ticket_id, cc, subject, text)
+      req = TicketService.build_reply_request(TicketService.build_reply_uri(ticket_id), ticket_id, bcc, subject, text)
 
       dec = URI.decode_www_form(req.body)
 

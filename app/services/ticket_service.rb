@@ -9,9 +9,9 @@ class TicketService
         ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text)
         ticket.ticket_id = ticket_id
 
-        # comment ticket to send announcement to real contact in cc
-        cc = [ ticket.email ]
-        TicketService.reply_rt_ticket(ticket_id, cc, subject, text)
+        # comment ticket to send announcement to real contact in bcc
+        bcc = [ ticket.email ]
+        TicketService.reply_rt_ticket(ticket_id, bcc, subject, text)
 
         ticket.save!
     end
@@ -66,7 +66,7 @@ Text: %{text}
         req
     end
 
-    def self.reply_rt_ticket(ticket_id, cc, subject, text)
+    def self.reply_rt_ticket(ticket_id, bcc, subject, text)
         uri = self.build_reply_uri(ticket_id)
         
         http = Net::HTTP.new(uri.host, uri.port)
@@ -74,7 +74,7 @@ Text: %{text}
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         http.read_timeout = 5
 
-        req = self.build_reply_request(uri, ticket_id, cc, subject, text)
+        req = self.build_reply_request(uri, ticket_id, bcc, subject, text)
 
         res = http.request(req)
         
@@ -83,16 +83,16 @@ Text: %{text}
         end
     end
 
-    def self.encode_reply_ticket(ticket_id, cc, subject, text)
+    def self.encode_reply_ticket(ticket_id, bcc, subject, text)
         text = self.indent(text)
 
         x = %q(id: %{ticket_id}
 Action: correspond
-Cc: %{cc}
+Bcc: %{bcc}
 Subject: %{subject}
 Text: %{text}
 )
-        x % {ticket_id: ticket_id, cc: cc.join(","), subject: subject, text: text }
+        x % {ticket_id: ticket_id, bcc: bcc.join(","), subject: subject, text: text }
     end
 
     def self.build_reply_uri(ticket_id)
@@ -101,9 +101,9 @@ Text: %{text}
         uri
     end
 
-    def self.build_reply_request(uri, ticket_id, cc, subject, text)
+    def self.build_reply_request(uri, ticket_id, bcc, subject, text)
         req = Net::HTTP::Post.new(uri.request_uri)
-        req.body = URI.encode_www_form({content: TicketService.encode_reply_ticket(ticket_id, cc, subject, text)})
+        req.body = URI.encode_www_form({content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text)})
         req
     end
 
