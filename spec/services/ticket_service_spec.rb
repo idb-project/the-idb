@@ -42,7 +42,7 @@ string)
       x = TicketService.encode_reply_ticket(ticket_id, cc, subject, text)
       want = %Q(id: #{ticket_id}
 Action: correspond
-Cc: #{cc.join(",")}
+Bcc: #{cc.join(",")}
 Subject: #{subject}
 Text: #{want_text}
 )
@@ -158,7 +158,7 @@ string
 
       want = %Q(id: #{ticket_id}
 Action: correspond
-Cc: #{cc.join(",")}
+Bcc: #{cc.join(",")}
 Subject: #{subject}
 Text: #{want_text})
       
