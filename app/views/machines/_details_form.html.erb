@@ -24,8 +24,8 @@
         collection: @machine_details.core_collection,
         default: @machine_details.core_collection.first %>
 
-      <%= f.input :os, :url => autocomplete_os_machines_path,
-        as: :autocomplete, input_html: {rows: 8}, label: "Operating System" + " *" if @machine_details.field_auto_updated?("os") %>
+      <%= f.input :os, label: ("Operating System" + " *" if @machine_details.field_auto_updated?("os")), :url => autocomplete_os_machines_path,
+        as: :autocomplete, input_html: {rows: 8} %>
 
       <%= f.input :os_release, label: ("Operating System Release" + " *" if @machine_details.field_auto_updated?("os_release")), :url => autocomplete_os_release_machines_path,
         as: :autocomplete, input_html: {rows: 8} %>
