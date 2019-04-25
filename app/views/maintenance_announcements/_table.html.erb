@@ -10,6 +10,7 @@
       <th>Impact</th>
       <th>Machines</th>
       <th>Recipients</th>
+      <th>Comment</th>
       <th>Tickets</th>
     </tr>
   </thead>
@@ -32,6 +33,7 @@
         <%= maintenance_announcement.owner_links %>
         <%- end -%>
         </td>
+        <td><%= maintenance_announcement.short_comment %></td>
         <td><%= maintenance_announcement.ticket_links %></td>
       </tr>
     <%- end -%>
