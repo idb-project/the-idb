@@ -113,6 +113,19 @@ class MaintenanceAnnouncementsController < ApplicationController
         render json: MaintenanceAnnouncement.where("email LIKE ?", "#{params[:term]}%").distinct.pluck(:email)
     end
 
+    def edit
+        @maintenance_announcement = MaintenanceAnnouncement.find(params[:id])
+    end
+
+    def update
+        @maintenance_announcement = MaintenanceAnnouncement.find(params[:id])
+        if @maintenance_announcement.update(params.require(:maintenance_announcement).permit(:comment))
+            redirect_to maintenance_announcement_path(@maintenance_announcement)
+        else 
+            render :edit
+        end
+    end
+
     private
 
     # check if every owner has a contact set

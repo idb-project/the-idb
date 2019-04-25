@@ -47,4 +47,8 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
         user = k(maintenance_announcement.user)
         user.name_link
     end
+
+    def comment
+        TextileRenderer.render(maintenance_announcement.comment) if maintenance_announcement.comment
+    end
 end
