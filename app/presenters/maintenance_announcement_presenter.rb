@@ -51,4 +51,8 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     def comment
         TextileRenderer.render(maintenance_announcement.comment) if maintenance_announcement.comment
     end
+
+    def short_comment
+        TextileRenderer.render(maintenance_announcement.comment.lines[0..9].append("...").join) if maintenance_announcement.comment
+    end
 end
