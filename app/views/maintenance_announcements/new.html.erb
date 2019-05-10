@@ -6,7 +6,7 @@ have a wizard style dialog done on the client side #%>
 <%= form_tag(controller: "maintenance_announcements", action: "create", method: "post") do %>
 
   <div class="tabbable">
-    <%= render("nav_wizard") %>
+    <%= render("nav_wizard", locals: {old_announcement: @old_announcement}) %>
 
     <div class="tab-content">
       <div class="tab-pane active" id="machines">
@@ -91,17 +91,33 @@ have a wizard style dialog done on the client side #%>
       <div class="tab-pane" id="info">
         <div class="span6">
           <%= label_tag(:maintenance_template_id, "Template") %>
+          <% if @old_announcement %>
+          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @old_announcement.maintenance_template_id)) %>
+          <% else %>
           <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
+          <% end %>
 
           <%= label_tag(:reason, "Reason") %>
+          <% if @old_announcement %>
+          <%= text_area_tag(:reason, @old_announcement.reason, class: "span12", rows: "15") %>
+          <% else %>
           <%= text_area_tag(:reason, params[:reason], class: "span12", rows: "15") %>
+          <% end %>
 
           <%= label_tag(:impact, "Impact") %>
+          <% if @old_announcement %>
+          <%= text_area_tag(:impact, @old_announcement.impact, class: "span12", rows: "15") %>
+          <% else %>
           <%= text_area_tag(:impact, params[:impact], class: "span12", rows: "15") %>
+          <% end %>
         </div>
         <div class="span6">
           <%= label_tag(:email, "E-Mail Address") %>
+          <% if @old_announcement %>
+          <%= autocomplete_field_tag(:email, @old_announcement.email, autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
+          <% else %>
           <%= autocomplete_field_tag(:email, '', autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
+          <% end %>
 
           <%= label_tag(:begin_date, "Begin") %>
           <%= datetime_select(:maintenance_announcement, :begin_date, default: { year: @begin_date.year, month: @begin_date.month, day: @begin_date.day, hour: @begin_date.hour, minute: 0} ) %>

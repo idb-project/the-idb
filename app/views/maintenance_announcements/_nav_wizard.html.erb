@@ -2,7 +2,7 @@
     <div class="navbar-inner">
     <div class="container-fluid">
         <ul class="nav">
-            <span class="brand">New Announcement</span>
+            <span class="brand">New Announcement<% if @old_announcement %> (copy of <%= @old_announcement.id %>)<% end %></span>
             <li class="active"><a href="#machines" data-toggle="tab"><i class="fa fa-plane"></i> Machines</a></li>
             <li><a href="#info" data-toggle="tab"><i class="fa fa-info-circle"></i> Announcement Data</a></li>
         </ul>
