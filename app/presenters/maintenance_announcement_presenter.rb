@@ -53,6 +53,15 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     end
 
     def short_comment
-        TextileRenderer.render(maintenance_announcement.comment.lines[0..9].append("...").join) if maintenance_announcement.comment
+        unless maintenance_announcement.comment
+            return ""
+        end
+
+        short = maintenance_announcement.comment
+        if short.lines.size > 10
+            short = short.lines[0..9].append("[…]").join
+        end
+        
+        TextileRenderer.render(short)
     end
 end
