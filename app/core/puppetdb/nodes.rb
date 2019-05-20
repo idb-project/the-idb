@@ -1,7 +1,7 @@
 module Puppetdb
   class Nodes < Struct.new(:urls)
     def all
-      filter = IDB.config.puppetdb.filter.blank? ? nil : Regexp.new(IDB.config.puppetdb.filter)
+      filter = IDB.config.puppetdb[:filter].blank? ? nil : Regexp.new(IDB.config.puppetdb[:filter])
       nodes = []
 
       # Try to find machines in all puppetdb servers.

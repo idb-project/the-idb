@@ -1,11 +1,12 @@
 language: ruby
 sudo: required
 rvm:
-  - 2.2.4
+  - 2.6.0
 services:
   - mysql
 before_install:
-  - gem install bundler -v '< 2'
+  - gem update --system
+  - gem install bundler
   -  chmod +x ./scripts/* #thanks https://medium.com/@psaunders
   - ./scripts/travis-mysql-5.7.sh
   - ./scripts/travis-reset-mysql-root-password.sh

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.4'
+ruby '2.6.0'
 gem 'rails', "~> 5.0.7"
 
 gem 'rake'
@@ -12,7 +12,7 @@ gem 'grape', ">= 1.1.0"
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-entity'
-gem 'grape-swagger-entity', git: 'https://github.com/bytemine/grape-swagger-entity.git'
+gem 'grape-swagger-entity' #, git: 'https://github.com/bytemine/grape-swagger-entity.git'
 
 gem 'sass-rails'
 gem 'uglifier'
