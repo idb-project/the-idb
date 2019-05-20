@@ -51,10 +51,11 @@ describe Nic do
   end
 
   it 'allows a duplicate mac address' do
-    described_class.create!(name: 'eth0', machine_id: 1, mac: mac)
-    described_class.create!(name: 'eth0', machine_id: 2, mac: mac)
+    mac2 = '02:15:e0:ec:02:04'
+    described_class.create!(name: 'eth0', machine_id: 1, mac: mac2)
+    described_class.create!(name: 'eth0', machine_id: 2, mac: mac2)
 
-    expect(Nic.count).to be(2)
+    expect(Nic.where(mac: mac2).size).to eq(2)
   end
 
   it 'does not allow the same name and machine twice' do
