@@ -20,8 +20,8 @@ describe CloudProvider do
     end
 
     it "requires that names are unique" do
-      cp = FactoryGirl.create :cloud_provider
-      cp2 = FactoryGirl.build :cloud_provider, name: cp.name
+      cp = FactoryBot.create :cloud_provider
+      cp2 = FactoryBot.build :cloud_provider, name: cp.name
       expect(cp2).to be_invalid
     end
 

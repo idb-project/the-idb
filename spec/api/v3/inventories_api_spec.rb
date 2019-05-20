@@ -10,14 +10,14 @@ describe 'Inventories API V3' do
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
 
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
 
-    FactoryGirl.create :inventory, owner: @owner
-    FactoryGirl.create :api_token, owner: @owner
-    @api_token = FactoryGirl.build :api_token, owner: @owner
-    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
-    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
+    FactoryBot.create :inventory, owner: @owner
+    FactoryBot.create :api_token, owner: @owner
+    @api_token = FactoryBot.build :api_token, owner: @owner
+    @api_token_r = FactoryBot.create :api_token_r, owner: @owner
+    @api_token_w = FactoryBot.create :api_token_w, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -55,16 +55,16 @@ describe 'Inventories API V3' do
     end
 
     it "returns inventories for all owners for multiple tokens" do
-      user = FactoryGirl.create(:user)
-      owner_1 = FactoryGirl.create(:owner, users: [user])
-      owner_2 = FactoryGirl.create(:owner, users: [user])
-      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
-      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      user = FactoryBot.create(:user)
+      owner_1 = FactoryBot.create(:owner, users: [user])
+      owner_2 = FactoryBot.create(:owner, users: [user])
+      token_1 = FactoryBot.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryBot.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
       allow(User).to receive(:current).and_return(owner_1.users.first)
       allow(User).to receive(:current).and_return(owner_2.users.first)
 
-      i1 = FactoryGirl.create(:inventory, inventory_number: "abcdef", owner: owner_1)
-      i2 = FactoryGirl.create(:inventory, inventory_number: "ghijkl", owner: owner_2)
+      i1 = FactoryBot.create(:inventory, inventory_number: "abcdef", owner: owner_1)
+      i2 = FactoryBot.create(:inventory, inventory_number: "ghijkl", owner: owner_2)
 
       get "/api/v3/inventories", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)
@@ -78,15 +78,15 @@ describe 'Inventories API V3' do
 
   describe "GET /inventories/{inventory_number}" do
     it "should return an inventory item and set X-Idb-Api-Token header to token usable for updating" do
-      user = FactoryGirl.create(:user)
-      owner_1 = FactoryGirl.create(:owner, users: [user])
-      owner_2 = FactoryGirl.create(:owner, users: [user])
-      token_1 = FactoryGirl.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
-      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      user = FactoryBot.create(:user)
+      owner_1 = FactoryBot.create(:owner, users: [user])
+      owner_2 = FactoryBot.create(:owner, users: [user])
+      token_1 = FactoryBot.create :api_token_rw, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryBot.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
       allow(User).to receive(:current).and_return(owner_1.users.first)
       allow(User).to receive(:current).and_return(owner_2.users.first)
 
-      inv = FactoryGirl.create(:inventory, owner: owner_1)   
+      inv = FactoryBot.create(:inventory, owner: owner_1)
 
       get "/api/v3/inventories/#{inv.inventory_number}", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)
@@ -151,7 +151,7 @@ describe 'Inventories API V3' do
 
   describe "PUT /inventories/{inventory_number}" do
     it 'updates an inventory item' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
+      FactoryBot.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -168,7 +168,7 @@ describe 'Inventories API V3' do
     end
 
     it 'updates multiple attributes of in inventory item if existing' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
+      FactoryBot.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -187,7 +187,7 @@ describe 'Inventories API V3' do
     end
 
     it 'returns 409 Bad Request for not defined attributes' do
-      FactoryGirl.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
+      FactoryBot.create(:inventory, inventory_number: "existing_inventory", owner: @owner)
 
       api_get(action: "inventories/existing_inventory", token: @api_token_r, version: "3")
       inventory = JSON.parse(response.body)
@@ -204,9 +204,9 @@ describe 'Inventories API V3' do
 
   describe "GET /inventories/{inventory_number}/attachments" do
     it "shows all attachments" do
-      i = FactoryGirl.create(:inventory, owner: @owner)
-      FactoryGirl.create(:attachment, inventory: i, owner: @owner)
-      FactoryGirl.create(:attachment, inventory: i, owner: @owner)
+      i = FactoryBot.create(:inventory, owner: @owner)
+      FactoryBot.create(:attachment, inventory: i, owner: @owner)
+      FactoryBot.create(:attachment, inventory: i, owner: @owner)
 
       api_get(action: "inventories/#{Inventory.last.inventory_number}/attachments", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -218,7 +218,7 @@ describe 'Inventories API V3' do
 
   describe "POST /inventories/{inventory_number}/attachments" do
     it "create a new attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
+      i = FactoryBot.create(:inventory, inventory_number: "123abc", owner: @owner)
 
       post "/api/v3/inventories/123abc/attachments", headers: {'X-IDB-API-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
       expect(response.status).to eq(201)
@@ -231,8 +231,8 @@ describe 'Inventories API V3' do
 
   describe "GET /inventories/{inventory_number}/attachments/{fingerprint}" do
     it "shows a single attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
-      FactoryGirl.create(:attachment, inventory: i, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")), owner: @owner)
+      i = FactoryBot.create(:inventory, inventory_number: "123abc", owner: @owner)
+      FactoryBot.create(:attachment, inventory: i, attachment: File.new(Rails.root.join("app","assets","images","idb-logo.png")), owner: @owner)
 
       api_get(action: "inventories/123abc/attachments/85d0dfbc64bfb401df3d98f246a12be41d318a91de452c844e0d3b5c3f884ca4", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)
@@ -244,8 +244,8 @@ describe 'Inventories API V3' do
 
   describe "DELETE /inventories/{inventory_number}/attachments/{fingerprint}" do
     it "deletes a single attachment" do
-      i = FactoryGirl.create(:inventory, inventory_number: "123abc", owner: @owner)
-      a = FactoryGirl.create(:attachment, inventory: i, owner: @owner)
+      i = FactoryBot.create(:inventory, inventory_number: "123abc", owner: @owner)
+      a = FactoryBot.create(:attachment, inventory: i, owner: @owner)
 
       api_delete(action: "inventories/123abc/attachments/#{Attachment.last.attachment_fingerprint}", token: @api_token_w, version: "3")
       expect(response.status).to eq(204)

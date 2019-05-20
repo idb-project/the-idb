@@ -10,14 +10,14 @@ describe 'Location API V3' do
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
 
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
 
-    FactoryGirl.create :location, owner: @owner
-    FactoryGirl.create :api_token, owner: @owner
-    @api_token = FactoryGirl.build :api_token, owner: @owner
-    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
-    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
+    FactoryBot.create :location, owner: @owner
+    FactoryBot.create :api_token, owner: @owner
+    @api_token = FactoryBot.build :api_token, owner: @owner
+    @api_token_r = FactoryBot.create :api_token_r, owner: @owner
+    @api_token_w = FactoryBot.create :api_token_w, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -55,16 +55,16 @@ describe 'Location API V3' do
     end
 
     it 'should return all locations for multiple owners' do
-      user = FactoryGirl.create(:user)
-      owner_1 = FactoryGirl.create(:owner, users: [user])
-      owner_2 = FactoryGirl.create(:owner, users: [user])
-      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
-      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      user = FactoryBot.create(:user)
+      owner_1 = FactoryBot.create(:owner, users: [user])
+      owner_2 = FactoryBot.create(:owner, users: [user])
+      token_1 = FactoryBot.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryBot.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
       allow(User).to receive(:current).and_return(owner_1.users.first)
       allow(User).to receive(:current).and_return(owner_2.users.first)
 
-      FactoryGirl.create :location, owner: owner_1
-      FactoryGirl.create :location, owner: owner_2
+      FactoryBot.create :location, owner: owner_1
+      FactoryBot.create :location, owner: owner_2
 
       get "/api/v3/locations", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe EditableMachineForm do
   let(:machine) do
-    owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(owner.users.first)
     Machine.new(fqdn: 'box.example.com', owner: owner)
   end
@@ -266,8 +266,8 @@ describe EditableMachineForm do
   describe '#os_list' do
     it 'returns a list of operating systems' do
       form.update(attributes)
-      m = FactoryGirl.create(:machine, os: "Windows")
-      m = FactoryGirl.create(:machine, os: "FreeBSD")
+      m = FactoryBot.create(:machine, os: "Windows")
+      m = FactoryBot.create(:machine, os: "FreeBSD")
       expect(form.os_list).to eq(["FreeBSD","Ubuntu", "Windows"])
     end
   end
@@ -275,10 +275,10 @@ describe EditableMachineForm do
   describe '#os_release_list' do
     it 'returns a list of operating releases' do
       form.update(attributes)
-      m = FactoryGirl.create(:machine, os_release: "1")
-      m = FactoryGirl.create(:machine, os_release: "2")
-      m = FactoryGirl.create(:machine, os_release: "3")
-      m = FactoryGirl.create(:machine, os_release: "3")
+      m = FactoryBot.create(:machine, os_release: "1")
+      m = FactoryBot.create(:machine, os_release: "2")
+      m = FactoryBot.create(:machine, os_release: "3")
+      m = FactoryBot.create(:machine, os_release: "3")
       expect(form.os_release_list).to eq(["1",attributes[:os_release],"2","3"])
       expect(form.os_release_list.length).to eq(form.os_release_list.uniq.length)
     end

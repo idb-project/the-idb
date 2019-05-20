@@ -7,10 +7,10 @@ describe 'Software API' do
 
   before :each do
     IDB.config.modules.api.v2_enabled = true
-    owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(owner.users.first)
-    @api_token = FactoryGirl.create :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
+    @api_token = FactoryBot.create :api_token
+    @api_token_r = FactoryBot.create :api_token_r
     create(:machine, owner: owner, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}])
     create(:machine, owner: owner, software: [{name: "nginx", version: "1.10.1-0ubuntu1.2"}])
   end

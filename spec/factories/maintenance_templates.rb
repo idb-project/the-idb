@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :maintenance_template do
-    body "MyBody"
-    subject "MySubject"
-    name "MyName"
+    body { "MyBody" }
+    subject { "MySubject" }
+    name { "MyName" }
   end
 end

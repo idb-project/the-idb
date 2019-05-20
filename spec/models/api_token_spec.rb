@@ -26,7 +26,7 @@ describe ApiToken do
     end
 
     it 'requires a unique token' do
-      FactoryGirl.create :api_token, token: "my_token"
+      FactoryBot.create :api_token, token: "my_token"
       token = ApiToken.new(token: "my_token", name: "any name")
       expect(token).to be_invalid
       expect(token.errors[:token]).to include("has already been taken")

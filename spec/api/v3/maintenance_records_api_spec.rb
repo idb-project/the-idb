@@ -10,15 +10,15 @@ describe 'Maintenance Records API V3' do
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
 
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
 
-    @machine = FactoryGirl.create :machine, fqdn: "test.example.com", owner: @owner
-    @mr = FactoryGirl.create :maintenance_record, machine: @machine, created_at: "2017-01-01 00:00:00"
-    FactoryGirl.create :api_token, owner: @owner
-    @api_token = FactoryGirl.build :api_token, owner: @owner
-    @api_token_r = FactoryGirl.create :api_token_r, owner: @owner
-    @api_token_w = FactoryGirl.create :api_token_w, owner: @owner
+    @machine = FactoryBot.create :machine, fqdn: "test.example.com", owner: @owner
+    @mr = FactoryBot.create :maintenance_record, machine: @machine, created_at: "2017-01-01 00:00:00"
+    FactoryBot.create :api_token, owner: @owner
+    @api_token = FactoryBot.build :api_token, owner: @owner
+    @api_token_r = FactoryBot.create :api_token_r, owner: @owner
+    @api_token_w = FactoryBot.create :api_token_w, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -37,18 +37,18 @@ describe 'Maintenance Records API V3' do
     end
 
     it 'should return all maintenance records for multiple tokens' do
-      user = FactoryGirl.create(:user)
-      owner_1 = FactoryGirl.create(:owner, users: [user])
-      owner_2 = FactoryGirl.create(:owner, users: [user])
-      token_1 = FactoryGirl.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
-      token_2 = FactoryGirl.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
+      user = FactoryBot.create(:user)
+      owner_1 = FactoryBot.create(:owner, users: [user])
+      owner_2 = FactoryBot.create(:owner, users: [user])
+      token_1 = FactoryBot.create :api_token_r, owner: owner_1, name: "FOOBARTOKEN1"
+      token_2 = FactoryBot.create :api_token_r, owner: owner_2, name: "FOOBARTOKEN2"
       allow(User).to receive(:current).and_return(owner_1.users.first)
       allow(User).to receive(:current).and_return(owner_2.users.first)
 
-      m1 = FactoryGirl.create :machine, owner: owner_1
-      mr1 = FactoryGirl.create :maintenance_record, machine: m1, created_at: "2017-01-01 00:00:00"
-      m2 = FactoryGirl.create :machine, owner: owner_2
-      mr2 = FactoryGirl.create :maintenance_record, machine: m2, created_at: "2017-01-01 00:00:00"
+      m1 = FactoryBot.create :machine, owner: owner_1
+      mr1 = FactoryBot.create :maintenance_record, machine: m1, created_at: "2017-01-01 00:00:00"
+      m2 = FactoryBot.create :machine, owner: owner_2
+      mr2 = FactoryBot.create :maintenance_record, machine: m2, created_at: "2017-01-01 00:00:00"
 
       get "/api/v3/maintenance_records", headers: {'X-IDB-API-Token': "#{token_1.token}, #{token_2.token}" }
       expect(response.status).to eq(200)
@@ -118,8 +118,8 @@ describe 'Maintenance Records API V3' do
 
   describe "GET /maintenance_records/{fqdn}/{timestamp}/attachments" do
     it "shows all attachments" do
-      FactoryGirl.create(:attachment, maintenance_record: @mr, owner: @owner)
-      FactoryGirl.create(:attachment, maintenance_record: @mr, owner: @owner)
+      FactoryBot.create(:attachment, maintenance_record: @mr, owner: @owner)
+      FactoryBot.create(:attachment, maintenance_record: @mr, owner: @owner)
 
       api_get(action: "/maintenance_records/#{@machine.fqdn}/#{@mr.created_at.iso8601.to_s}/attachments", token: @api_token_r, version: "3")
       expect(response.status).to eq(200)

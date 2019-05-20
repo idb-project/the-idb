@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe CloudProvidersController do
   before(:each) do
-    @current_user = FactoryGirl.create(:user, admin: true)
+    @current_user = FactoryBot.create(:user, admin: true)
     allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
   end
 
   describe "GET index" do
     it "redirects to root path if user is not an admin" do
-      current_user2 = FactoryGirl.create(:user, admin: false)
+      current_user2 = FactoryBot.create(:user, admin: false)
       controller.session[:user_id] = current_user2.id
       allow(User).to receive(:current).and_return(current_user2)
       get :index
@@ -27,7 +27,7 @@ describe CloudProvidersController do
     end
 
     it "returns all CloudProviders, two existing" do
-      2.times {FactoryGirl.create :cloud_provider}
+      2.times {FactoryBot.create :cloud_provider}
       get :index
       expect(assigns(:cloud_providers)).to eq(CloudProvider.all)
     end
@@ -45,13 +45,13 @@ describe CloudProvidersController do
     end
 
     it "assigns all CloudProviders, two existing" do
-      2.times {FactoryGirl.create :cloud_provider}
+      2.times {FactoryBot.create :cloud_provider}
       get :new
       expect(assigns(:all_cloud_providers)).to eq(CloudProvider.all)
     end
 
     it "assigns all owner, one existing" do
-      FactoryGirl.create :owner
+      FactoryBot.create :owner
       get :new
       expect(assigns(:owners)).to eq(Owner.all)
     end
@@ -122,7 +122,7 @@ describe CloudProvidersController do
 
   describe "GET show" do
     before(:each) do
-      @cp = FactoryGirl.create :cloud_provider
+      @cp = FactoryBot.create :cloud_provider
       get :show, params: {id: @cp.id}
     end
 
@@ -131,14 +131,14 @@ describe CloudProvidersController do
     end
 
     it "assigns all CloudProviders, two existing" do
-      2.times {FactoryGirl.create :cloud_provider}
+      2.times {FactoryBot.create :cloud_provider}
       expect(assigns(:all_cloud_providers)).to eq(CloudProvider.all)
     end
   end
 
   describe "GET edit" do
     before(:each) do
-      @cp = FactoryGirl.create :cloud_provider
+      @cp = FactoryBot.create :cloud_provider
       get :edit, params: {id: @cp.id}
     end
 
@@ -151,7 +151,7 @@ describe CloudProvidersController do
     end
 
     it "assigns all CloudProviders, two existing" do
-      2.times {FactoryGirl.create :cloud_provider}
+      2.times {FactoryBot.create :cloud_provider}
       expect(assigns(:all_cloud_providers)).to eq(CloudProvider.all)
     end
 
@@ -162,7 +162,7 @@ describe CloudProvidersController do
 
   describe "PUT update, successful" do
     before(:each) do
-      @cp = FactoryGirl.create :cloud_provider
+      @cp = FactoryBot.create :cloud_provider
       put :update, params: {cloud_provider: {name: "Name2", description: "Description2", config: "\"Text\""}, id: @cp.id}
     end
 
@@ -186,8 +186,8 @@ describe CloudProvidersController do
 
   describe "PUT update, unsuccessful" do
     before(:each) do
-      @cp = FactoryGirl.create :cloud_provider
-      cp2 = FactoryGirl.create :cloud_provider, name: "Name2"
+      @cp = FactoryBot.create :cloud_provider
+      cp2 = FactoryBot.create :cloud_provider, name: "Name2"
       put :update, params: {cloud_provider: {name: "Name2", description: "Description2", config: "\"Text\""}, id: @cp.id}
     end
 
@@ -207,7 +207,7 @@ describe CloudProvidersController do
 
   describe "DELETE destroy" do
     before(:each) do
-      @cp = FactoryGirl.create :cloud_provider
+      @cp = FactoryBot.create :cloud_provider
       delete :destroy, params: {id: @cp.id}
     end
 

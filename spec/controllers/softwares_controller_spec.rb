@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe SoftwaresController do
   before(:each) do
-    @current_user = FactoryGirl.create :user
-    owner = FactoryGirl.create(:owner, users: [@current_user])
+    @current_user = FactoryBot.create :user
+    owner = FactoryBot.create(:owner, users: [@current_user])
     allow(User).to receive(:current).and_return(@current_user)
     controller.session[:user_id] = @current_user.id
     create(:machine, owner: owner, software: [{name: "ruby", version: "2.2.5"}, {name: "nginx", version: "1.10.1"}, {name: "python", version: "2.7"}])

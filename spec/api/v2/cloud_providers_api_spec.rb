@@ -8,11 +8,11 @@ describe 'Cloud providers API' do
   before :each do
     IDB.config.modules.api.v2_enabled = true
     allow(User).to receive(:current).and_return(nil)
-    @user = FactoryGirl.create :owner
-    @cloud_provider = FactoryGirl.create :cloud_provider, owner: @user
-    @cloud_provider_no_owner = FactoryGirl.create :cloud_provider
-    @api_token = FactoryGirl.create :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
+    @user = FactoryBot.create :owner
+    @cloud_provider = FactoryBot.create :cloud_provider, owner: @user
+    @cloud_provider_no_owner = FactoryBot.create :cloud_provider
+    @api_token = FactoryBot.create :api_token
+    @api_token_r = FactoryBot.create :api_token_r
   end
 
   describe "API is switched off" do

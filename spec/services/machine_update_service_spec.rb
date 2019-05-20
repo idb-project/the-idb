@@ -55,10 +55,10 @@ describe MachineUpdateService do
     end
 
     let(:machine) do
-      current_user = FactoryGirl.create(:user, admin: true)
-      owner = FactoryGirl.create(:owner, users: [current_user])
+      current_user = FactoryBot.create(:user, admin: true)
+      owner = FactoryBot.create(:owner, users: [current_user])
       allow(User).to receive(:current).and_return(current_user)
-      machine = FactoryGirl.create(:machine, fqdn: 'test.example.com', owner: owner)
+      machine = FactoryBot.create(:machine, fqdn: 'test.example.com', owner: owner)
     end
 
     before do
@@ -262,9 +262,9 @@ describe MachineUpdateService do
 
     describe "monitoring_vm_children" do
       it "updates the children" do
-        vm0 = FactoryGirl.create(:virtual_machine, fqdn: 'vm0.example.com', owner: machine.owner)
-        vm1 = FactoryGirl.create(:virtual_machine, fqdn: 'vm1.example.com', owner: machine.owner)
-        vmhost = FactoryGirl.create(:machine, fqdn: 'vmhost.example.com', owner: machine.owner)
+        vm0 = FactoryBot.create(:virtual_machine, fqdn: 'vm0.example.com', owner: machine.owner)
+        vm1 = FactoryBot.create(:virtual_machine, fqdn: 'vm1.example.com', owner: machine.owner)
+        vmhost = FactoryBot.create(:machine, fqdn: 'vmhost.example.com', owner: machine.owner)
         facts[:monitoring_vm_children] = {vm0.fqdn => vmhost.fqdn, vm1.fqdn => vmhost.fqdn }
         allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
         described_class.update_from_facts(vmhost, @url)

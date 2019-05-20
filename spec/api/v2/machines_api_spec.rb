@@ -8,14 +8,14 @@ describe 'Machines API' do
   before :each do
     IDB.config.modules.api.v1_enabled = true
     IDB.config.modules.api.v2_enabled = true
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
-    FactoryGirl.create(:machine, owner: @owner)
-    FactoryGirl.create :api_token
-    @api_token = FactoryGirl.build :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
-    @api_token_w = FactoryGirl.create :api_token_w
-    @api_token_w2 = FactoryGirl.create :api_token_w
+    FactoryBot.create(:machine, owner: @owner)
+    FactoryBot.create :api_token
+    @api_token = FactoryBot.build :api_token
+    @api_token_r = FactoryBot.create :api_token_r
+    @api_token_w = FactoryBot.create :api_token_w
+    @api_token_w2 = FactoryBot.create :api_token_w
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -140,7 +140,7 @@ describe 'Machines API' do
     end
 
     it 'updates a machine if existing' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -155,7 +155,7 @@ describe 'Machines API' do
     end
 
     it 'sets the API raw data on machine update' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -170,7 +170,7 @@ describe 'Machines API' do
     end
 
     it 'keeps the API raw data from different API token on machine update' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -188,7 +188,7 @@ describe 'Machines API' do
     end
 
     it 'keeps the API raw data from different API token on machine update, but not the idb_api_token' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_put(action: "machines?fqdn=existing.example.com&backup_brand=3&idb_api_token=#{@api_token_w.token}", token: @api_token_w)
       m = Machine.find_by_fqdn("existing.example.com")
@@ -199,7 +199,7 @@ describe 'Machines API' do
     end
 
     it 'sets the backup_type if backup parameters are presented' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -231,7 +231,7 @@ describe 'Machines API' do
     end
 
     it 'updates a machine if existing, JSON payload' do
-      FactoryGirl.create(:machine, fqdn: "existing2.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing2.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing2.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -255,7 +255,7 @@ describe 'Machines API' do
     end
 
     it 'updates multiple attributes of a machine if existing' do
-      FactoryGirl.create(:machine, fqdn: "existing2.example.com", cores: 3, owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing2.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines?fqdn=existing2.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -271,7 +271,7 @@ describe 'Machines API' do
     end
 
     it 'updates multiple attributes of a machine if existing, JSON payload' do
-      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -296,7 +296,7 @@ describe 'Machines API' do
     end    
 
     it 'filters out not existing attributes' do
-      FactoryGirl.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing3.example.com", cores: 3, owner: @owner)
 
       api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -307,7 +307,7 @@ describe 'Machines API' do
     end
 
     it 'updates the software of a machine if existing, JSON payload' do
-      FactoryGirl.create(:machine, fqdn: "existing.example.com", owner: @owner)
+      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
       api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
@@ -398,8 +398,8 @@ describe 'Machines API' do
     end
 
     it 'updates the machines' do
-      FactoryGirl.create(:machine, fqdn: "x.example.com", cores: 3, owner: @owner)
-      FactoryGirl.create(:machine, fqdn: "y.example.com", cores: 6, owner: @owner)
+      FactoryBot.create(:machine, fqdn: "x.example.com", cores: 3, owner: @owner)
+      FactoryBot.create(:machine, fqdn: "y.example.com", cores: 6, owner: @owner)
 
       payload = {
         "machines":[{

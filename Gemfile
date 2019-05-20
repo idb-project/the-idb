@@ -55,7 +55,7 @@ group :development do
   gem 'foreman', require: false
   gem 'rspec-rails'
   gem 'rspec-its'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'fakeweb'
   gem 'timecop'
   gem 'spring', require: false

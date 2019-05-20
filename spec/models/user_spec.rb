@@ -125,13 +125,13 @@ describe User do
 
   describe "#associates" do
     before(:each) do
-      @ass1 = FactoryGirl.create(:user)
-      @ass2 = FactoryGirl.create(:user)
-      @ass3 = FactoryGirl.create(:user)
-      @ass_out = FactoryGirl.create(:user)
-      @owner = FactoryGirl.create(:owner)
-      @owner2 = FactoryGirl.create(:owner)
-      @owner_out = FactoryGirl.create(:owner)
+      @ass1 = FactoryBot.create(:user)
+      @ass2 = FactoryBot.create(:user)
+      @ass3 = FactoryBot.create(:user)
+      @ass_out = FactoryBot.create(:user)
+      @owner = FactoryBot.create(:owner)
+      @owner2 = FactoryBot.create(:owner)
+      @owner_out = FactoryBot.create(:owner)
     end
 
     context "without other users associated by owners" do

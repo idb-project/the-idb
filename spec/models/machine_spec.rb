@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Machine do
   before :each do
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
   end
 
@@ -17,7 +17,7 @@ describe Machine do
 
   describe 'soft-delete via paranoia' do
     it 'is restorable after delete' do
-      m = FactoryGirl.create(:machine, owner: @owner)
+      m = FactoryBot.create(:machine, owner: @owner)
       expect(m).to respond_to(:paranoia_destroyed?)
       m.delete
 
@@ -44,9 +44,9 @@ describe Machine do
     end
 
     it 'is invalid with a duplicate fqdn of a deleted machine' do
-      m = FactoryGirl.create(:machine, fqdn: "deleted.example.com")
+      m = FactoryBot.create(:machine, fqdn: "deleted.example.com")
       m.delete
-      x = FactoryGirl.build(:machine, fqdn: "deleted.example.com")
+      x = FactoryBot.build(:machine, fqdn: "deleted.example.com")
       expect(x).to be_invalid
     end
 

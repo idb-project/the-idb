@@ -7,13 +7,13 @@ describe 'Inventories API' do
 
   before :each do
     IDB.config.modules.api.v2_enabled = true
-    @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+    @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
-    @inventory_a = FactoryGirl.create :inventory, owner: @owner
-    @inventory_b = FactoryGirl.create :inventory, owner: @owner
-    @api_token = FactoryGirl.create :api_token
-    @api_token_r = FactoryGirl.create :api_token_r
-    @api_token_w = FactoryGirl.create :api_token_w
+    @inventory_a = FactoryBot.create :inventory, owner: @owner
+    @inventory_b = FactoryBot.create :inventory, owner: @owner
+    @api_token = FactoryBot.create :api_token
+    @api_token_r = FactoryBot.create :api_token_r
+    @api_token_w = FactoryBot.create :api_token_w
   end
 
   describe "API is switched off" do
@@ -111,7 +111,7 @@ describe 'Inventories API' do
     end
 
     it "does not update an existing inventory if user is not an owner" do
-      new_inventory = Inventory.create(owner: FactoryGirl.create(:owner), inventory_number: "old")
+      new_inventory = Inventory.create(owner: FactoryBot.create(:owner), inventory_number: "old")
 
       p = {
         "id": new_inventory.id,

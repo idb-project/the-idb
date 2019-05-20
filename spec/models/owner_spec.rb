@@ -99,7 +99,7 @@ describe Owner do
 
   describe '#default_owner' do
     before :each do
-      @owner = FactoryGirl.create(:owner, users: [FactoryGirl.create(:user)])
+      @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
       allow(User).to receive(:current).and_return(@owner.users.first)
     end
 

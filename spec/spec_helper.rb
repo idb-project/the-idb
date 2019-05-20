@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/its'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -54,7 +54,7 @@ RSpec.configure do |config|
 
   config.include Requests::JsonHelpers, type: :request
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 end
 
 def fixtures_path(path)
