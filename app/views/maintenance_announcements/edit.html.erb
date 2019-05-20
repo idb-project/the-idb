@@ -1,10 +1,9 @@
-<div id="maintenance_announcement-show">
-
-    <%= render partial: 'nav_show', locals: {maintenance_announcement: @maintenance_announcement} %>
-
+<div id="maintenance-announcements-edit">
+    <%= render partial: 'nav_edit', locals: {maintenance_announcement: @maintenance_announcement} %>
     <%- maintenance_announcement = k(:maintenance_announcement, @maintenance_announcement) %>
     <div class="row-fluid">
         <div class="span12">
+            <%= form_for @maintenance_announcement, url: {action: "update" } do |f| %>
             <table class="table table-condensed">
                 <tr>
                     <th>User</th>
@@ -36,12 +35,17 @@
                 </tr>
                 <tr>
                     <th colspan="5">Comment</th>
+                    <%# <th></th> %>
                 </tr>
                 <tr>
-                    <td colspan="5"><%= maintenance_announcement.comment %></td>
+                    <td colspan="5"><%= f.text_area(:comment, rows: 15, id: 'markup-source') %></td>
+                    <%# <td colspan="2"><div class="span12 markup-target box"></div></td> %>
                 </tr>
             </table>
+            <%= f.submit "Save" %>
+            <% end %>
         </div>
     </div>
+
 
 </div>

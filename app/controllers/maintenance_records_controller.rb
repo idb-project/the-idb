@@ -29,6 +29,15 @@ class MaintenanceRecordsController < ApplicationController
 
     if @record.update(ok_params)
       add_attachments(params[:attachments])
+
+      # update service-date from the machine
+      if params[:machine_id]
+        m = Machine.find(params[:machine_id])
+        if m
+          m.serviced_at = @record.created_at
+          m.save!
+        end
+      end
       redirect_to maintenance_record_path(@record), notice: 'Success!'
     else
       redirect_to maintenance_record_path(@record), error: 'Error!'

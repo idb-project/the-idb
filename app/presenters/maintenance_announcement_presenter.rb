@@ -47,4 +47,21 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
         user = k(maintenance_announcement.user)
         user.name_link
     end
+
+    def comment
+        TextileRenderer.render(maintenance_announcement.comment) if maintenance_announcement.comment
+    end
+
+    def short_comment
+        unless maintenance_announcement.comment
+            return ""
+        end
+
+        short = maintenance_announcement.comment
+        if short.lines.size > 10
+            short = short.lines[0..9].append("[…]").join
+        end
+        
+        TextileRenderer.render(short)
+    end
 end

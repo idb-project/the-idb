@@ -27,6 +27,7 @@ module InfrastructureDb
 
     # Avoid deprecation warning after rails 4.0.2 update.
     I18n.config.enforce_available_locales = true
+    config.i18n.fallbacks = [I18n.default_locale]
 
     #config.action_mailer.perform_deliveries = Rails.env.production?
     #config.action_mailer.raise_delivery_errors = true
