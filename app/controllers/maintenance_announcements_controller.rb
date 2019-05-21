@@ -20,12 +20,18 @@ class MaintenanceAnnouncementsController < ApplicationController
         @begin_date = Time.zone.now
         @end_date = Time.zone.now + 1.hours
         @exceeded_deadlines = Array.new
+        @missing_vms = Array.new
+        @exceeded_deadlines = Array.new
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
         @selected_machines = Machine.where(id: params[:machine_ids])
 
-        @missing_vms = Array.new
-        @exceeded_deadlines = Array.new
+        if params[:from]
+            @old_announcement = MaintenanceAnnouncement.find(params[:from])
+            @selected_machines = @old_announcement.machines
+            @begin_date = @old_announcement.begin_date
+            @end_date = @old_announcement.end_date
+        end
     end
 
     def create
