@@ -326,6 +326,25 @@ $(function () {
         return false;
     });
 
+    var $owner = $('#owners-show');
+    $owner.find('.download').click(function(){
+      var typ,
+        $table = $owner.find('#machine-table'),
+        wo = $table[0].config.widgetOptions,
+        saved = $owner.find('.output-filter-all :checked').attr('class');
+        wo.output_separator    = $owner.find('.output-separator-input').val();
+        wo.output_delivery     = $owner.find('.output-download-popup :checked').attr('class') === "output-download" ? 'd' : 'p';
+        wo.output_saveRows     = saved === "output-filter" ? 'f' : saved === 'output-visible' ? 'v' : 'a';
+        wo.output_replaceQuote = $owner.find('.output-replacequotes').val();
+        wo.output_trimSpaces   = $owner.find('.output-trim').is(':checked');
+        wo.output_includeHTML  = $owner.find('.output-html').is(':checked');
+        wo.output_wrapQuotes   = $owner.find('.output-wrap').is(':checked');
+        wo.output_headerRows   = $owner.find('.output-headers').is(':checked');
+        wo.output_saveFileName = $owner.find('.output-filename').val();
+        $table.trigger('outputTable');
+        return false;
+    });
+
     $('.tablesorter-headerRow').bind('contextmenu', function(e) {
         e.preventDefault();
     });
