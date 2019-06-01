@@ -116,33 +116,28 @@ test:
   <<: *defaults
   ldap:
     host: '127.0.0.1'
-    port: 10389
-    base: 'dc=example,dc=com'
+    port: 389
+    base: 'dc=nodomain'
     uid: 'uid'
-
-production:
-  <<: *defaults
-  ldap:
-    host: 'ldap.example.com'
-    port: 636
-    base: 'dc=example,dc=com'
+    auth_dn: 
+    auth_password:
     uid: 'uid'
     auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
     auth_password: 'secret'
     admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
     group_membership_attribute: 'uniqueMember'
-  stomp:
-    host: 'stomp.example.com'
-    port: 61614
-    user: 'idb-public-api'
-    password: 'stomp_password'
-    vhost: 'mcollective'
-    queue_maintenance: 'idb.maintenance'
-    ssl_cert: '/apps/infrastructure_db/shared/ssl/activemq-cert.pem'
-    ssl_key: '/apps/infrastructure_db/shared/ssl/activemq-key.pem'
-    ssl_ca: '/apps/infrastructure_db/shared/ssl/ca.pem'
-  puppetdb:
-    api_urls:
-      - 'https://puppetdb1.example.com/'
-      - 'https://puppetdb2.example.com/'
-    api_timeout: 120
+
+production:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 389
+    base: 'dc=nodomain'
+    uid: 'uid'
+    auth_dn: 
+    auth_password:
+    uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
