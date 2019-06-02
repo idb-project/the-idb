@@ -9,6 +9,6 @@ pages:
       name: 'Smokeping'
       description: 'Network latency grapher'
   category3:
-  	- url: 'http://another.url.example.com/'
-	  name: 'Add another page'
-	  description: 'And here goes the description'
+    - url: 'http://another.url.example.com/'
+      name: 'Add another page'
+      description: 'And here goes the description'
