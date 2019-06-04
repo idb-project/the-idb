@@ -42,7 +42,6 @@ module V1
             return {} unless m
             m
           rescue ActiveRecord::RecordInvalid => e
-            Raven.capture_exception(e)
             status 409
             return {}
           end
@@ -54,7 +53,6 @@ module V1
               m = process_machine_update(machine_params)
               machine_array << m if m
             rescue ActiveRecord::RecordInvalid => e
-              Raven.capture_exception(e)
               status 409
               return {}
             end
