@@ -43,7 +43,6 @@ class BasicUserAuth < Struct.new(:realm, :context)
         rescue RuntimeError => e
           # Rubius throws a RuntimeError if server does not respond
           puts e
-          Raven.capture_exception(e)
           # continue without OTP validation
         end
       else

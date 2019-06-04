@@ -16,7 +16,6 @@ class BackgroundJobs
   def retries?
     Sidekiq::Stats.new.retry_size > 0
   rescue => e
-    Raven.capture_exception(e)
     false
   end
 end

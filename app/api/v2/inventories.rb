@@ -44,11 +44,9 @@ module V2
           status 200
           i
         rescue ActiveRecord::RecordInvalid => e
-          Raven.capture_exception(e)
           status 409
           return {}
         rescue ActiveRecord::RecordNotUnique => e
-          Raven.capture_exception(e)
           status 409
           return {}
         end
@@ -66,11 +64,9 @@ module V2
             i
           end
         rescue ActiveRecord::RecordInvalid => e
-          Raven.capture_exception(e)
           status 409
           return {}
         rescue ActiveRecord::RecordNotUnique => e
-          Raven.capture_exception(e)
           status 409
           return {}
         end
