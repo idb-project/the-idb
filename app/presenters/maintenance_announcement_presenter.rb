@@ -44,6 +44,9 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
     end
 
     def user_link
+        unless maintenance_announcement.user
+            return "unknown user"
+        end
         user = k(maintenance_announcement.user)
         user.name_link
     end
