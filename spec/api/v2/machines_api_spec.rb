@@ -162,11 +162,10 @@ describe 'Machines API' do
       expect(machine['fqdn']).to eq("existing.example.com")
 
       # sets the raw api data
-      api_put(action: "machines?fqdn=existing.example.com&backup_brand=2", token: @api_token_w)
+      api_put(action: "machines?fqdn=existing.example.com", token: @api_token_w)
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
       expect(data.keys.first).to eq(@api_token_w.token)
-      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
     end
 
     it 'keeps the API raw data from different API token on machine update' do
@@ -177,57 +176,21 @@ describe 'Machines API' do
       expect(machine['fqdn']).to eq("existing.example.com")
 
       # sets the raw api data
-      api_put(action: "machines?fqdn=existing.example.com&backup_brand=2", token: @api_token_w)
-      api_put(action: "machines?fqdn=existing.example.com&backup_brand=12&custom_attribute=test", token: @api_token_w2)
+      api_put(action: "machines?fqdn=existing.example.com&custom_attribute=test", token: @api_token_w2)
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
-      expect(data.keys.size).to eq(2)
-      expect(data[@api_token_w.token]["backup_brand"]).to eq("2")
+      expect(data.keys.size).to eq(1)
       expect(data[@api_token_w2.token]["custom_attribute"]).to eq("test")
-      expect(data[@api_token_w2.token]["backup_brand"]).to eq("12")
     end
 
     it 'keeps the API raw data from different API token on machine update, but not the idb_api_token' do
       FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
 
-      api_put(action: "machines?fqdn=existing.example.com&backup_brand=3&idb_api_token=#{@api_token_w.token}", token: @api_token_w)
+      api_put(action: "machines?fqdn=existing.example.com&idb_api_token=#{@api_token_w.token}", token: @api_token_w)
       m = Machine.find_by_fqdn("existing.example.com")
       data = JSON.parse(m.raw_data_api)
       expect(data.keys.size).to eq(1)
-      expect(data[@api_token_w.token]["backup_brand"]).to eq("3")
       expect(data[@api_token_w.token]["idb_api_token"]).to be_nil
-    end
-
-    it 'sets the backup_type if backup parameters are presented' do
-      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
-
-      api_get(action: "machines?fqdn=existing.example.com", token: @api_token_r)
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-
-      # set by backup_brand > 0
-      api_put(action: "machines?fqdn=existing.example.com&backup_brand=2", token: @api_token_w)
-      expect(response.status).to eq(200)
-
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['backup_type']).to eq(1)
-
-      # reset
-      api_put(action: "machines?fqdn=existing.example.com&backup_type=0", token: @api_token_w)
-      expect(response.status).to eq(200)
-
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['backup_type']).to eq(0)
-
-      # set by backup_last_inc_run != ""
-      api_put(action: "machines?fqdn=existing.example.com&backup_last_inc_run=19012016", token: @api_token_w)
-      expect(response.status).to eq(200)
-
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['backup_type']).to eq(1)
     end
 
     it 'updates a machine if existing, JSON payload' do
@@ -278,9 +241,7 @@ describe 'Machines API' do
       expect(machine['fqdn']).to eq("existing3.example.com")
 
       payload = {
-        "fqdn":"existing3.example.com",
-        "backup_brand":"2",
-        "backup_last_full_run":"2015-10-07 12:00:00"
+        "fqdn":"existing3.example.com"
       }
       
       api_put_json(action: "machines", token: @api_token_w, payload: payload)
@@ -288,11 +249,9 @@ describe 'Machines API' do
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing3.example.com")
-      expect(machine['backup_brand']).to eq(2)
 
       api_get(action: "machines?fqdn=existing3.example.com", token: @api_token_r)
       machine = JSON.parse(response.body)
-      expect(machine['backup_brand']).to eq(2)
     end    
 
     it 'filters out not existing attributes' do

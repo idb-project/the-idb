@@ -23,8 +23,6 @@ class Machine < ActiveRecord::Base
   has_paper_trail :ignore => [:uptime, :updated_at, :unattended_upgrades, :unattended_upgrades_blacklisted_packages,
       :unattended_upgrades_reboot, :unattended_upgrades_time, :unattended_upgrades_repos,
       :pending_updates, :pending_security_updates, :pending_updates_sum, :pending_updates_package_names,
-      :backup_last_full_run, :backup_last_inc_run, :backup_last_diff_run, :backup_last_full_size,
-      :backup_last_inc_size, :backup_last_diff_size,
       :serviced_at, :raw_data_api, :raw_data_puppetdb, :needs_reboot]
 
   has_many :nics, dependent: :destroy, autosave: true
@@ -89,14 +87,6 @@ class Machine < ActiveRecord::Base
 
   def backup_type_string
     BackupType.fetch(backup_type, '')
-  end
-
-  def backup_brand_string
-    BackupBrand.fetch(backup_brand, '')
-  end
-
-  def is_backed_up?
-    backup_type == 1
   end
 
   def manual?
@@ -234,7 +224,6 @@ class Machine < ActiveRecord::Base
     expose :updated_at, documentation: { type: "String", desc: "Update date RFC3999 formatted" }
     expose :uptime, documentation: { type: "Integer", desc: "Uptime in seconds" }
     expose :serialnumber, documentation: { type: "String", desc: "Serial number" }
-    expose :backup_type, documentation: { type: "Integer", desc: "Backup type" }
     expose :auto_update, documentation: { type: "Boolean", desc: "true if the machine is updated automatically" }
     expose :switch_url, documentation: { type: "String" }
     expose :mrtg_url, documentation: { type: "String" }
@@ -255,15 +244,8 @@ class Machine < ActiveRecord::Base
     expose :pending_updates_package_names, documentation: { type: "String" }
     expose :severity_class, documentation: { type: "String" }
     expose :ucs_role, documentation: { type: "String" }
-    expose :backup_brand, documentation: { type: "Integer" }
-    expose :backup_last_full_run, documentation: { type: "String", desc: "Last full backup time" }
-    expose :backup_last_inc_run, documentation: { type: "String", desc: "Last incremental backup time" }
-    expose :backup_last_diff_run, documentation: { type: "String", desc: "Last differential backup time" }
     expose :raw_data_api, documentation: { type: "String" }
     expose :raw_data_puppetdb, documentation: { type: "String" }
-    expose :backup_last_full_size, documentation: { type: "Integer", format: "int64", desc: "Last full backup size" }
-    expose :backup_last_inc_size, documentation: { type: "Integer", format: "int64", desc: "Last incremental backup size" }
-    expose :backup_last_diff_size, documentation: { type: "Integer", format: "int64", desc: "Last differential backup size" }
     expose :needs_reboot, documentation: { type: "Boolean" }
     expose :software, documentation: {is_array: true, type: "Machine::SoftwareEntity", desc: "Known installed doftware packages" }
     expose :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }

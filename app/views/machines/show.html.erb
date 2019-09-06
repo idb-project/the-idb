@@ -11,9 +11,6 @@
           <li class="active"><a href="#host" data-toggle="tab">Host</a></li>
           <li><a href="#owner" data-toggle="tab">Owner</a></li>
           <li><a href="#network" data-toggle="tab">Network</a></li>
-          <%- if machine.is_backed_up? -%>
-          <li><a href="#backup" data-toggle="tab">Backup</a></li>
-          <%- end -%>
           <%- if IDB.config.modules.advanced_fields -%>
           <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
           <%- end -%>
@@ -211,53 +208,6 @@
         <%- end -%>
       </table>
     </div>
-    <%- if machine.is_backed_up? -%>
-    <div class="tab-pane" id="backup">
-      <div class="row-fluid">
-        <div class="span12">
-          <div class="row-fluid">
-            <div class="span6">
-              <div class="row-fluid">
-                <div class="span12">
-                  <h5>Backup type: <%= machine.backup_brand %></h5>
-                </div>
-              </div>
-              <div class="row-fluid">
-                <div class="span12">
-                  <table class="table table-condensed">
-                    <tr>
-                      <th class="span3">Last full run:</th>
-                      <th class="span3">Last incremental run:</th>
-                      <th class="span3">Last differential run:</th>
-                    </tr>
-                    <tr>
-                      <td class="span3"><%= machine.backup_last_full_run %></td>
-                      <td class="span3"><%= machine.backup_last_inc_run %></td>
-                      <td class="span3"><%= machine.backup_last_diff_run %></td>
-                    </tr>
-                    <%- if machine.backup_sizes_present? -%>
-                    <tr>
-                      <th class="span3">Last full size:</th>
-                      <th class="span3">Last incremental size:</th>
-                      <th class="span3">Last differential size:</th>
-                      <th class="span3">Total backup size:</th>
-                    </tr>
-                    <tr>
-                      <td class="span3"><%= machine.backup_last_full_size %></td>
-                      <td class="span3"><%= machine.backup_last_inc_size %></td>
-                      <td class="span3"><%= machine.backup_last_diff_size %></td>
-                      <td class="span3"><%= machine.backup_size_sum %></td>
-                    </tr>
-                    <%- end -%>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <%- end -%>
     <%- if IDB.config.modules.advanced_fields -%>
     <div class="tab-pane" id="advanced">
       <div class="row-fluid">

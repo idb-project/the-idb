@@ -154,58 +154,6 @@ describe Machine do
     end
   end
 
-  describe '#is_backed_up?' do
-    it 'defaults to false' do
-      expect(machine.is_backed_up?).to be false
-    end
-
-    it 'returns true if backup_type is 1' do
-      machine.backup_type = 1
-      expect(machine.is_backed_up?).to be true
-    end
-
-    it 'returns true if backup_type is not 1' do
-      [0,2-9].each do |n|
-        machine.backup_type = n
-        expect(machine.is_backed_up?).to be false
-      end
-    end
-  end
-
-  describe '#backup_type_string' do
-    context 'with a backup_type of nil' do
-      it 'returns an empty string' do
-        machine.backup_type = nil
-
-        expect(machine.backup_type_string).to eq('')
-      end
-    end
-  end
-
-  describe '#backup_brand' do
-    it 'defaults to 0' do
-      expect(machine.backup_brand).to eq(0)
-    end
-  end
-
-  describe '#backup_brand_string' do
-    context 'with a backup_brand of nil' do
-      it 'returns an empty string' do
-        machine.backup_brand = nil
-
-        expect(machine.backup_brand_string).to eq('')
-      end
-    end
-
-    context 'with a backup_brand of 1' do
-      it 'returns string representation of Bacula' do
-        machine.backup_brand = 1
-
-        expect(machine.backup_brand_string).to eq('Bacula')
-      end
-    end
-  end
-
   describe '#auto_update' do
     it 'defaults to false' do
       expect(machine.auto_update).to eq(false)

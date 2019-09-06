@@ -331,9 +331,7 @@ describe 'Machines API V3' do
       expect(machine['fqdn']).to eq("existing3.example.com")
 
       payload = {
-        "fqdn":"existing3.example.com",
-        "backup_brand":"2",
-        "backup_last_full_run":"2015-10-07 12:00:00"
+        "fqdn":"existing3.example.com"
       }
       
       api_put_json(action: "machines/existing3.example.com", token: @api_token_w, version: "3", payload: payload)
@@ -341,11 +339,9 @@ describe 'Machines API V3' do
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing3.example.com")
-      expect(machine['backup_brand']).to eq(2)
 
       api_get(action: "machines/existing3.example.com", token: @api_token_r, version: "3")
       machine = JSON.parse(response.body)
-      expect(machine['backup_brand']).to eq(2)
     end    
 
     it 'returns 409 Bad Request for not defined attributes' do

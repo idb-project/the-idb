@@ -84,26 +84,4 @@ class OwnerPresenter < Keynote::Presenter
     end
     list += "</ul>"
   end
-
-  def backup_size_sum
-    sum = 0
-    owner.machines.each do |machine|
-      sum+= machine.backup_last_full_size unless machine.backup_last_full_size.blank?
-      sum+= machine.backup_last_inc_size unless machine.backup_last_inc_size.blank?
-      sum+= machine.backup_last_diff_size unless machine.backup_last_diff_size.blank?
-    end
-    if sum > 0
-      if sum >= 1099511627776
-        # more than 1 TB, convert to GB
-        (sum/1024/1024/1024).to_s + " GB"
-      elsif sum >= 1073741824
-        number_to_human_size(sum, precision: 0)
-      else
-        # less than 1 GB, we do not really care in the owner overview
-        "0..1 GB"
-      end
-    else
-      ""
-    end
-  end
 end

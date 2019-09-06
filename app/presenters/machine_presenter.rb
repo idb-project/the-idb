@@ -6,8 +6,7 @@ class MachinePresenter < Keynote::Presenter
            :unattended_upgrades, :unattended_upgrades_reboot,
            :pending_updates, :pending_security_updates,
            :pending_updates_sum, :virtual?,
-           :backup_last_full_run, :backup_last_inc_run,
-           :backup_last_diff_run, :is_backed_up?, :connected_to_power_feed?, :software,
+           :connected_to_power_feed?, :software,
            :device_type_name, :announcement_deadline,
            to: :machine
 
@@ -144,38 +143,6 @@ class MachinePresenter < Keynote::Presenter
 
   def backup_type
     machine.backup_type_string
-  end
-
-  def backup_brand
-    machine.backup_brand_string
-  end
-
-  def backup_last_full_size
-    number_to_human_size(machine.backup_last_full_size)
-  end
-
-  def backup_last_inc_size
-    number_to_human_size(machine.backup_last_inc_size)
-  end
-
-  def backup_last_diff_size
-    number_to_human_size(machine.backup_last_diff_size)
-  end
-
-  def backup_size_sum
-    sum = 0
-    sum+= machine.backup_last_full_size unless machine.backup_last_full_size.blank?
-    sum+= machine.backup_last_inc_size unless machine.backup_last_inc_size.blank?
-    sum+= machine.backup_last_diff_size unless machine.backup_last_diff_size.blank?
-    sum > 0 ? number_to_human_size(sum) : ""
-  end
-
-  def backup_sizes_present?
-    if machine.backup_last_full_size.blank? && machine.backup_last_inc_size.blank? && machine.backup_last_diff_size.blank?
-      false
-    else
-      true
-    end
   end
 
   def serviced_at

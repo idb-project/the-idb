@@ -82,16 +82,6 @@ class VersionPresenter < Keynote::Presenter
     out.gsub("\n\\ No newline at end of file", "")
   end
 
-  def diff_text_backup_brand(changeset)
-    out = Diffy::Diff.new(*changeset).to_s(:text)
-    out.gsub!("0", Machine::BackupBrand[0])
-    out.gsub!("1", Machine::BackupBrand[1])
-    out.gsub!("2", Machine::BackupBrand[2])
-    out.gsub!("3", Machine::BackupBrand[3])
-    out.gsub!("4", Machine::BackupBrand[4])
-    out.gsub("\n\\ No newline at end of file", "")
-  end
-
   def diff_text_device_type(changeset)
     out = Diffy::Diff.new(*changeset).to_s(:text)
     out.gsub!("1", DeviceType.find(1).name)

@@ -259,21 +259,6 @@ module V3
             error!('Invalid Machine', 409)
           end
 
-          is_backed_up = false
-          if
-            (params['backup_brand'] && params['backup_brand'].to_i > 0) ||
-            !params['backup_last_full_run'].blank? ||
-            !params['backup_last_inc_run'].blank? ||
-            !params['backup_last_diff_run'].blank? ||
-            !params['backup_last_full_size'].blank? ||
-            !params['backup_last_inc_size'].blank? ||
-            !params['backup_last_diff_size'].blank?
-
-            is_backed_up = true
-          end
-
-          m.backup_type = 1 if is_backed_up
-
           m.power_feed_a = params[:power_feed_a_id] ? Location.find_by_id(params[:power_feed_a_id]) : m.power_feed_a
           m.power_feed_b = params[:power_feed_b_id] ? Location.find_by_id(params[:power_feed_b_id]) : m.power_feed_b
 
@@ -331,15 +316,8 @@ module V3
         optional :pending_updates_package_names, type: String, documentation: { type: "String" }
         optional :severity_class, type: String, documentation: { type: "String" }
         optional :ucs_role, type: String, documentation: { type: "String" }
-        optional :backup_brand, type: Integer, documentation: { type: "Integer" }
-        optional :backup_last_full_run, type: String, documentation: { type: "String", desc: "Last full backup time" }
-        optional :backup_last_inc_run, type: String, documentation: { type: "String", desc: "Last incremental backup time" }
-        optional :backup_last_diff_run, type: String, documentation: { type: "String", desc: "Last differential backup time" }
         optional :raw_data_api, type: String, documentation: { type: "String" }
         optional :raw_data_puppetdb, type: String, documentation: { type: "String" }
-        optional :backup_last_full_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last full backup size" }
-        optional :backup_last_inc_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last incremental backup size" }
-        optional :backup_last_diff_size, type: Integer, documentation: { type: "Numeric", format: "int64", desc: "Last differential backup size" }
         optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }
         optional :software, type: Array, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
         optional :power_feed_a, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed a" }
