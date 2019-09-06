@@ -38,6 +38,7 @@
           <th>wiki url:</th>
           <th>repository url:</th>
           <th>announcement contact:</th>
+          <th>RT queue:</th>
           <th>attachments:</th>
         </tr>
         <tr>
@@ -46,6 +47,7 @@
           <td><%= owner.wiki_link %></td>
           <td><%= owner.repo_link %></td>
           <td><%= owner.announcement_contact %></td>
+          <td><%= owner.rt_queue %></td>
           <td><%= owner.attachment_list.html_safe %></td>
         </tr>
       </table>

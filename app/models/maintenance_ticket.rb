@@ -24,6 +24,14 @@ class MaintenanceTicket < ApplicationRecord
     owners.group(:id).first
   end
 
+  def rt_queue
+    if owner && owner.rt_queue
+        owner.rt_queue
+    else
+      IDB.config.rt.queue
+    end
+  end
+
   # get the email address, either the owners or the one set in the announcement
   def email
     if maintenance_announcement.email

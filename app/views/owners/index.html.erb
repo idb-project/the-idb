@@ -26,6 +26,7 @@
           <th>Customer ID</th>
           <th>Wiki</th>
           <th>Announcement Contact</th>
+          <th>RT queue</th>
           <th>Machines</th>
         </tr>
       </thead>
@@ -39,6 +40,7 @@
             <td><%= owner.customer_id %></td>
             <td><%= owner.wiki_link %></td>
             <td><%= owner.announcement_contact %></td>
+            <td><%= owner.rt_queue %></td>
             <td><%= owner.machines_count %></td>
           </tr>
         <%- end -%>

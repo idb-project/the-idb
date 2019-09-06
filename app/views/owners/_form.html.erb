@@ -33,6 +33,7 @@
       <%= f.input :wiki_url, label: 'Wiki URL' %>
       <%= f.input :repo_url, label: 'Repository URL' %>
       <%= f.input :announcement_contact, label: 'Announcement contact E-Mail' %>
+      <%= f.input :rt_queue, label: 'RT queue' %>
       <%= f.input :description, input_html: {rows: 15, id: 'markup-source'},
               hint: %(<small>Content can be written in #{link_to 'Markdown', markdown_help_path, target: '_blank'}</small>).html_safe %>
       <%= f.button :submit %>

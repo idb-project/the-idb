@@ -2,7 +2,7 @@ class TicketService
     def self.send(ticket)
         text = ticket.format_body
         subject = ticket.format_subject
-        queue = IDB.config.rt.queue
+        queue = ticket.rt_queue
         requestor = IDB.config.rt.requestor
 
         # create ticket

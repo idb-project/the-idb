@@ -6,7 +6,8 @@ describe Owner do
       name: 'Example Inc.',
       nickname: 'example',
       customer_id: '22022',
-      description: 'Nice customer!'
+      description: 'Nice customer!',
+      rt_queue: 'general'
     }
   end
 

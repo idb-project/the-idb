@@ -20,6 +20,11 @@ RSpec.describe MaintenanceTicket, type: :model do
     @announcement_with_mail = FactoryBot.create(:maintenance_announcement, maintenance_template: @template, user: @current_user, begin_date: @begin_date, end_date: @end_date, email: "mail@example.com")
   end
 
+  after(:all) do
+    # otherwise interferes with maintenance announcement controller specs
+    MaintenanceTicket.destroy_all
+  end
+
   describe "format_body" do
     describe "without announcement email" do
       it "formats the contents of a ticket, including machines" do
@@ -115,6 +120,24 @@ RSpec.describe MaintenanceTicket, type: :model do
       it "returns the email address of the announcement" do
         x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
         expect(x.email).to eq(@announcement_with_mail.email)
+      end
+    end
+  end
+
+  describe "rt_queue" do
+    describe "without owner's RT queue" do
+      it "returns the queue name from configuration file" do
+        x = FactoryBot.create(:maintenance_ticket)
+        expect(x.rt_queue).to eq(IDB.config.rt.queue)
+      end
+    end
+
+    describe "with owner's RT queue" do
+      it "returns the queue name from configuration file" do
+        owner1 = FactoryBot.create(:owner, users: [@current_user], announcement_contact: "owner1@example.org")
+        m2 = FactoryBot.create(:machine, owner: owner1, announcement_deadline: 0)
+        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [m2])
+        expect(x.rt_queue).to eq(owner1.rt_queue)
       end
     end
   end

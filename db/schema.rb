@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190905142150) do
+ActiveRecord::Schema.define(version: 20190906115103) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "token"
@@ -269,6 +269,7 @@ ActiveRecord::Schema.define(version: 20190905142150) do
     t.string   "wiki_url"
     t.string   "repo_url"
     t.string   "announcement_contact"
+    t.string   "rt_queue"
     t.index ["customer_id"], name: "index_owners_on_customer_id", using: :btree
     t.index ["deleted_at"], name: "index_owners_on_deleted_at", using: :btree
     t.index ["nickname"], name: "index_owners_on_nickname", unique: true, using: :btree

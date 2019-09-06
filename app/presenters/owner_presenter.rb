@@ -3,7 +3,7 @@ class OwnerPresenter < Keynote::Presenter
 
   presents :owner
 
-  delegate :id, :announcement_contact, to: :owner
+  delegate :id, :announcement_contact, :rt_queue, to: :owner
 
   def name_link
     link_to(owner.name, owner) if owner
