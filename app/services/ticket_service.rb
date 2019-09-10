@@ -4,9 +4,11 @@ class TicketService
         subject = ticket.format_subject
         queue = ticket.rt_queue
         requestor = IDB.config.rt.requestor
+        owner = "nobody"
+        owner = ticket.maintenance_announcement.user.rtname if ticket.maintenance_announcement.user.rtname
 
         # create ticket
-        ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text)
+        ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text, owner)
         ticket.ticket_id = ticket_id
 
         # comment ticket to send announcement to real contact in bcc
@@ -18,18 +20,11 @@ class TicketService
 
     private
 
-    def self.create_rt_ticket(queue, requestor, subject, text)
+    def self.create_rt_ticket(queue, requestor, subject, text, owner)
         uri = self.build_create_uri
-        
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = uri.scheme == 'https'
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        http.read_timeout = 5
 
-        req = self.build_create_request(uri, queue, requestor, subject, text)
-       
-        res = http.request(req)
-        
+        res = Net::HTTP.post_form(uri, content: TicketService.encode_create_ticket(queue, requestor, subject, text, owner))
+
         if res.code != "200" 
             return nil
         end
@@ -38,20 +33,22 @@ class TicketService
         if not ticket_id
             return nil
         end
+        # end
         
-        return ticket_id
+            return ticket_id
     end
 
-    def self.encode_create_ticket(queue, requestor, subject, text)
+    def self.encode_create_ticket(queue, requestor, subject, text, owner)
         text = self.indent(text)
 
         x = %q(id: new
+Owner: %{owner}
 Queue: %{queue}
 Requestor: %{requestor}
 Subject: %{subject}
 Text: %{text}
 )
-        x % {queue: queue, requestor: requestor, subject: subject, text: text }
+        x % {queue: queue, requestor: requestor, subject: subject, text: text, owner: "rsc" }
     end
 
     def self.build_create_uri
@@ -60,24 +57,11 @@ Text: %{text}
         uri
     end
 
-    def self.build_create_request(uri, queue, requestor, subject, text)
-        req = Net::HTTP::Post.new(uri.request_uri)
-        req.body = URI.encode_www_form({content: TicketService.encode_create_ticket(queue, requestor, subject, text)})
-        req
-    end
-
     def self.reply_rt_ticket(ticket_id, bcc, subject, text)
         uri = self.build_reply_uri(ticket_id)
-        
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = uri.scheme == 'https'
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        http.read_timeout = 5
 
-        req = self.build_reply_request(uri, ticket_id, bcc, subject, text)
-
-        res = http.request(req)
-        
+        res = Net::HTTP.post_form(uri, content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text))
+       
         if res.code != "200" 
             return nil
         end
@@ -99,12 +83,6 @@ Text: %{text}
         uri = URI(IDB.config.rt.reply_ticket_url % ticket_id)
         uri.query = URI.encode_www_form({user: IDB.config.rt.user, pass: IDB.config.rt.password })
         uri
-    end
-
-    def self.build_reply_request(uri, ticket_id, bcc, subject, text)
-        req = Net::HTTP::Post.new(uri.request_uri)
-        req.body = URI.encode_www_form({content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text)})
-        req
     end
 
     def self.ticket_id(body)
