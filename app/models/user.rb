@@ -44,4 +44,8 @@ class User < ActiveRecord::Base
     end
     users
   end
+
+  def rtname
+    login
+  end
 end

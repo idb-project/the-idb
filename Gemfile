@@ -56,7 +56,7 @@ group :development do
   gem 'rspec-rails'
   gem 'rspec-its'
   gem 'factory_bot_rails'
-  gem 'fakeweb'
+  gem 'fakeweb', :git => 'https://github.com/chrisk/fakeweb.git'
   gem 'timecop'
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
