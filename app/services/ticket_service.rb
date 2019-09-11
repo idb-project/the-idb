@@ -48,7 +48,7 @@ Requestor: %{requestor}
 Subject: %{subject}
 Text: %{text}
 )
-        x % {queue: queue, requestor: requestor, subject: subject, text: text, owner: "rsc" }
+        x % {queue: queue, requestor: requestor, subject: subject, text: text, owner: owner }
     end
 
     def self.build_create_uri
