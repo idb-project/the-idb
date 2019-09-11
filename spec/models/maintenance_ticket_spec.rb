@@ -134,7 +134,7 @@ RSpec.describe MaintenanceTicket, type: :model do
 
     describe "with owner's RT queue" do
       it "returns the queue name from configuration file" do
-        owner1 = FactoryBot.create(:owner, users: [@current_user], announcement_contact: "owner1@example.org")
+        owner1 = FactoryBot.create(:owner, users: [@current_user], announcement_contact: "owner1@example.org", rt_queue: "Test-Queue")
         m2 = FactoryBot.create(:machine, owner: owner1, announcement_deadline: 0)
         x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [m2])
         expect(x.rt_queue).to eq(owner1.rt_queue)
