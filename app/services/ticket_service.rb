@@ -87,8 +87,10 @@ Text: %{text}
 
     def self.ticket_id(body)
         m = /# Ticket ([0-9]+) created\./.match(body)
-        
-        if m.size < 2
+
+        if m.nil?
+            return nil
+        elsif m.size < 2
             return nil
         end
 
