@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190906115103) do
+ActiveRecord::Schema.define(version: 20191010132307) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "token"
@@ -208,6 +208,8 @@ ActiveRecord::Schema.define(version: 20190906115103) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "subject"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_maintenance_templates_on_deleted_at", using: :btree
   end
 
   create_table "maintenance_tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

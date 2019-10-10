@@ -1,4 +1,6 @@
 class MaintenanceTemplate < ApplicationRecord
+    acts_as_paranoid if IDB.config.modules.softdelete
+
     has_many :maintenance_announcements
 
     validate :validate_placeholders
