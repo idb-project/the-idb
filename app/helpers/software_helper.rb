@@ -34,6 +34,6 @@ module SoftwareHelper
       }
     }
 
-    return machines
+    return machines.uniq
   end
 end
