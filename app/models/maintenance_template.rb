@@ -15,7 +15,7 @@ class MaintenanceTemplate < ApplicationRecord
         end_full: proc {|x| x.maintenance_announcement.end_date.to_formatted_s(:announcement_full)},
         reason: proc {|x| x.maintenance_announcement.reason },
         impact: proc {|x| x.maintenance_announcement.impact },
-        machines: proc {|x| x.machines.pluck(:fqdn).join(" ") },
+        machines: proc {|x| x.machines.pluck(:fqdn).join("\n") },
         user: proc {|x| x.maintenance_announcement.user.display_name }
     }
 
