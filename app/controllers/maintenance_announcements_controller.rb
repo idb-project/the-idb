@@ -46,7 +46,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @exceeded_deadlines = Array.new
 
         @no_maintenance_template = !MaintenanceTemplate.exists?(params[:maintenance_template_id])
-        @email = params[:email] == "" ? nil : params[:email]
+        @email = params[:email] == "" ? nil : params[:email].delete(" ").gsub(";", ",")
 
         # get selected machines
         @selected_machines = Machine.where(id: params[:machine_ids])

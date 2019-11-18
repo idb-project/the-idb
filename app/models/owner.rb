@@ -26,6 +26,14 @@ class Owner < ActiveRecord::Base
     nickname || name
   end
 
+  def announcement_contact
+    self[:announcement_contact].delete(" ").gsub(";", ",")
+  end
+
+  def announcement_contact=(contact)
+    self[:announcement_contact] = contact.delete(" ").gsub(";", ",")
+  end
+
   def ordered_versions
     PaperTrail::Version.with_item_keys(self.class.name, id).order(created_at: :desc)
   end
