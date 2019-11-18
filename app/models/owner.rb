@@ -27,11 +27,11 @@ class Owner < ActiveRecord::Base
   end
 
   def announcement_contact
-    self[:announcement_contact].delete(" ").gsub(";", ",")
+    self[:announcement_contact].blank? ? "" : self[:announcement_contact].delete(" ").gsub(";", ",")
   end
 
   def announcement_contact=(contact)
-    self[:announcement_contact] = contact.delete(" ").gsub(";", ",")
+    self[:announcement_contact] = contact.blank? ? "" : contact.delete(" ").gsub(";", ",")
   end
 
   def ordered_versions
