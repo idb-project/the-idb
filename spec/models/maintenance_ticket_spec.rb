@@ -26,86 +26,43 @@ RSpec.describe MaintenanceTicket, type: :model do
   end
 
   describe "format_body" do
-    describe "without announcement email" do
-      it "formats the contents of a ticket, including machines" do
-        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
-        p = { 
-          begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
-          end_date: @announcement.end_date.to_formatted_s(:announcement_date),
-          begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
-          end_time: @announcement.end_date.to_formatted_s(:announcement_time),
-          begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
-          end_full: @announcement.end_date.to_formatted_s(:announcement_full),
-          reason: @announcement.reason,
-          impact: @announcement.impact,
-          machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join(" "),
-          user: @announcement.user.display_name 
-        }
+    it "formats the contents of a ticket, including machines" do
+      x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
+      p = { 
+        begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
+        end_date: @announcement.end_date.to_formatted_s(:announcement_date),
+        begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
+        end_time: @announcement.end_date.to_formatted_s(:announcement_time),
+        begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
+        end_full: @announcement.end_date.to_formatted_s(:announcement_full),
+        reason: @announcement.reason,
+        impact: @announcement.impact,
+        machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join("\n"),
+        user: @announcement.user.display_name 
+      }
 
-        expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
-      end
-    end
-
-    describe "with announcement email" do
-      it "formats the contents of a ticket, without machines" do
-        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
-        p = { 
-          begin_date: @announcement_with_mail.begin_date.to_formatted_s(:announcement_date),
-          end_date: @announcement_with_mail.end_date.to_formatted_s(:announcement_date),
-          begin_time: @announcement_with_mail.begin_date.to_formatted_s(:announcement_time),
-          end_time: @announcement_with_mail.end_date.to_formatted_s(:announcement_time),
-          begin_full: @announcement_with_mail.begin_date.to_formatted_s(:announcement_full),
-          end_full: @announcement_with_mail.end_date.to_formatted_s(:announcement_full),
-          reason: @announcement_with_mail.reason,
-          impact: @announcement_with_mail.impact,
-          machines: "",
-          user: @announcement_with_mail.user.display_name 
-        }
-
-        expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
-      end
+      expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
     end
   end
 
   describe "format_subject" do
-    describe "without announcement email" do
-      it "formats the subject of a ticket, with machines" do
-        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
-        p = { 
-          begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
-          end_date: @announcement.end_date.to_formatted_s(:announcement_date),
-          begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
-          end_time: @announcement.end_date.to_formatted_s(:announcement_time),
-          begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
-          end_full: @announcement.end_date.to_formatted_s(:announcement_full),
-          reason: @announcement.reason,
-          impact: @announcement.impact,
-          machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join(" "),
-          user: @announcement.user.display_name 
-        }
-        expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
-      end
+    it "formats the subject of a ticket, with machines" do
+      x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [@m0, @m1])
+      p = { 
+        begin_date: @announcement.begin_date.to_formatted_s(:announcement_date),
+        end_date: @announcement.end_date.to_formatted_s(:announcement_date),
+        begin_time: @announcement.begin_date.to_formatted_s(:announcement_time),
+        end_time: @announcement.end_date.to_formatted_s(:announcement_time),
+        begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
+        end_full: @announcement.end_date.to_formatted_s(:announcement_full),
+        reason: @announcement.reason,
+        impact: @announcement.impact,
+        machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join("\n"),
+        user: @announcement.user.display_name 
+      }
+      expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
     end
-
-    describe "with announcement email" do
-      it "formats the subject of a ticket, without machines" do
-        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [@m0, @m1])
-        p = { 
-          begin_date: @announcement_with_mail.begin_date.to_formatted_s(:announcement_date),
-          end_date: @announcement_with_mail.end_date.to_formatted_s(:announcement_date),
-          begin_time: @announcement_with_mail.begin_date.to_formatted_s(:announcement_time),
-          end_time: @announcement_with_mail.end_date.to_formatted_s(:announcement_time),
-          begin_full: @announcement_with_mail.begin_date.to_formatted_s(:announcement_full),
-          end_full: @announcement_with_mail.end_date.to_formatted_s(:announcement_full),
-          reason: @announcement_with_mail.reason,
-          impact: @announcement_with_mail.impact,
-          machines: "",
-          user: @announcement_with_mail.user.display_name 
-        }
-        expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
-        end
-      end
-    end
+  end
 
   describe "email" do
     describe "without announcement email" do
