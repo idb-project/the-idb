@@ -44,8 +44,11 @@ class MaintenanceAnnouncementsController < ApplicationController
         @begin_date = Time.zone.now
         @end_date = Time.zone.now
         @exceeded_deadlines = Array.new
+        @ignore_deadlines = params[:ignore_deadlines]
+        @ignore_vms = params[:ignore_vms]
+        @maintenance_template_id = params[:maintenance_template_id]
 
-        @no_maintenance_template = !MaintenanceTemplate.exists?(params[:maintenance_template_id])
+        @no_maintenance_template = !MaintenanceTemplate.exists?(@maintenance_template_id)
         @email = params[:email].blank? ? nil : params[:email].delete(" ").gsub(";", ",")
 
         # get selected machines
@@ -81,10 +84,10 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all machines where the deadline is exceeded
         @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
 
-        if  (not (@no_deadline.empty? or params[:ignore_deadlines] == "1")) or
+        if  (not (@no_deadline.empty? or @ignore_deadlines == "1")) or
             (not (@no_contacts.empty? or @email)) or
-            (not (@missing_vms.empty? or params[:ignore_vms] == "1")) or
-            (not (@exceeded_deadlines.empty? or params[:ignore_deadlines] == "1")) or
+            (not (@missing_vms.empty? or @ignore_vms == "1")) or
+            (not (@exceeded_deadlines.empty? or @ignore_deadlines == "1")) or
             (@no_maintenance_template)
             return render :new
         end

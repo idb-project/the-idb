@@ -81,10 +81,10 @@ have a wizard style dialog done on the client side #%>
         <button type="button" onclick="selectAllVisible()">Select all visible</button>
         <button type="button" onclick="unselectAll()">Unselect all</button>
         <label for="ignore_vms">
-        <%= check_box_tag("ignore_vms") %> Ignore unselected VMs
+        <%= check_box_tag("ignore_vms", 1, @ignore_vms) %> Ignore unselected VMs
         </label>
         <label for="ignore_deadlines">
-        <%= check_box_tag("ignore_deadlines") %> Ignore exceeded deadlines
+        <%= check_box_tag("ignore_deadlines", 1, @ignore_deadlines) %> Ignore exceeded deadlines
         </label>
       </div>
 
@@ -94,7 +94,7 @@ have a wizard style dialog done on the client side #%>
           <% if @old_announcement %>
           <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @old_announcement.maintenance_template_id)) %>
           <% else %>
-          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name")) %>
+          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @maintenance_template_id)) %>
           <% end %>
 
           <%= label_tag(:reason, "Reason") %>
@@ -116,7 +116,7 @@ have a wizard style dialog done on the client side #%>
           <% if @old_announcement %>
           <%= autocomplete_field_tag(:email, @old_announcement.email, autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
           <% else %>
-          <%= autocomplete_field_tag(:email, '', autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
+          <%= autocomplete_field_tag(:email, @email, autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
           <% end %>
 
           <%= label_tag(:begin_date, "Begin") %>
