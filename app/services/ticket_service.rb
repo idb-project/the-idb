@@ -24,8 +24,10 @@ class TicketService
         uri = self.build_create_uri
 
         res = Net::HTTP.post_form(uri, content: TicketService.encode_create_ticket(queue, requestor, subject, text, owner))
-
-        if res.code != "200" 
+        if res.code != "200"
+            Rails.logger.fatal "FATAL: RT ticket creation failed"
+            Rails.logger.fatal res.code
+            Rails.logger.fatal res.body
             return nil
         end
 
@@ -61,8 +63,10 @@ Text: %{text}
         uri = self.build_reply_uri(ticket_id)
 
         res = Net::HTTP.post_form(uri, content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text))
-       
         if res.code != "200" 
+            Rails.logger.fatal "FATAL: RT reply could not be created"
+            Rails.logger.fatal res.code
+            Rails.logger.fatal res.body
             return nil
         end
     end
