@@ -31,6 +31,8 @@ class MaintenanceAnnouncementsController < ApplicationController
             @selected_machines = @old_announcement.machines
             @begin_date = @old_announcement.begin_date
             @end_date = @old_announcement.end_date
+            @ignore_vms = @old_announcement.ignore_vms?
+            @ignore_deadlines = @old_announcement.ignore_deadlines?
         end
     end
 
@@ -97,7 +99,7 @@ class MaintenanceAnnouncementsController < ApplicationController
             return render :new
         end
 
-        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email)
+        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email, ignore_vms: @ignore_vms, ignore_deadlines: @ignore_deadlines)
 
         # create a ticket per owner
         tickets = new_tickets(announcement, owners, @selected_machines)
