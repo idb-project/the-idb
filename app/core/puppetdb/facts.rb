@@ -15,6 +15,8 @@ module Puppetdb
     attribute :operatingsystemrelease, String
     attribute :lsbdistrelease, String
     attribute :architecture, String
+    attribute :manufacturer, String
+    attribute :productname, String
     attribute :memorysize_mb, Float
     attribute :memorysize, Float
     attribute :diskspace, Integer
@@ -72,7 +74,13 @@ module Puppetdb
     end
 
     def virtual_machine?
-      is_virtual
+      if manufacturer && !manufacturer.blank? && (manufacturer.downcase == "seabios" || manufacturer.downcase == "bochs")
+        return true
+      elsif productname && !productname.blank? && productname.downcase == "virtual machine"
+        return true
+      else
+        is_virtual
+      end
     end
 
     def unattended_upgrades?

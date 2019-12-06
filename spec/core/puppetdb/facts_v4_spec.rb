@@ -7,6 +7,8 @@ describe Puppetdb::FactsV4 do
       lsbdistrelease: '12.04',
       architecture: 'amd64',
       memorysize_mb: 2000,
+      manufacturer: 'abc',
+      productname: 'abc',
       blockdevices: 'hda,sda,sdb',
       blockdevice_sda_size: 2000000,
       processorcount: 4,
@@ -78,6 +80,28 @@ describe Puppetdb::FactsV4 do
 
       it 'returns false' do
         expect(facts.virtual_machine?).to eq(false)
+      end
+    end
+
+    context 'with is_virtual=false but certain manufacturer set' do
+      before {
+        hash[:is_virtual] = false
+        hash[:manufacturer] = "Bochs"
+      }
+
+      it 'returns true' do
+        expect(facts.virtual_machine?).to eq(true)
+      end
+    end
+
+    context 'with is_virtual=false but certain productname set' do
+      before {
+        hash[:is_virtual] = false
+        hash[:productname] = "Virtual Machine"
+      }
+
+      it 'returns true' do
+        expect(facts.virtual_machine?).to eq(true)
       end
     end
   end
