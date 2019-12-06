@@ -3,6 +3,7 @@
   <thead>
     <tr>
       <th>ID</th>
+      <th>Created</th>
       <th>Begin</th>
       <th>End</th>
       <th>User</th>
@@ -20,6 +21,7 @@
       <%- maintenance_announcement = k(:maintenance_announcement, maintenance_announcement) -%>
       <tr id="#maintenance-announcement-<%= maintenance_announcement.id %>">
         <td><%= link_to(maintenance_announcement.id, maintenance_announcement_path(maintenance_announcement.id)) %><%= link_to '<i class="fa fa-retweet" style="float: right;"></i>'.html_safe, new_maintenance_announcement_path(from: maintenance_announcement.id) %></td>
+        <td><%= maintenance_announcement.create_date %></td>
         <td><%= maintenance_announcement.begin_date %></td>
         <td><%= maintenance_announcement.end_date %></td>
         <td><%= maintenance_announcement.user_link %></td>

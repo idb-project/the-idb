@@ -43,6 +43,10 @@ class MaintenanceAnnouncementPresenter < Keynote::Presenter
         maintenance_announcement.end_date.to_formatted_s(:db)
     end
 
+    def create_date
+        maintenance_announcement.created_at.to_formatted_s(:db)
+    end
+
     def user_link
         unless maintenance_announcement.user
             return "unknown user"
