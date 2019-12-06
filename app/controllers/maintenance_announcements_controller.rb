@@ -2,7 +2,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     autocomplete :maintenance_announcement, :email
 
     def index
-        @maintenance_announcements = MaintenanceAnnouncement.all
+        @maintenance_announcements = MaintenanceAnnouncement.all.reverse
     end
 
     def show
