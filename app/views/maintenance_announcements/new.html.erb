@@ -96,20 +96,6 @@ have a wizard style dialog done on the client side #%>
           <% else %>
           <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @maintenance_template_id)) %>
           <% end %>
-
-          <%= label_tag(:reason, "Reason") %>
-          <% if @old_announcement %>
-          <%= text_area_tag(:reason, @old_announcement.reason, class: "span12", rows: "15") %>
-          <% else %>
-          <%= text_area_tag(:reason, params[:reason], class: "span12", rows: "15") %>
-          <% end %>
-
-          <%= label_tag(:impact, "Impact") %>
-          <% if @old_announcement %>
-          <%= text_area_tag(:impact, @old_announcement.impact, class: "span12", rows: "15") %>
-          <% else %>
-          <%= text_area_tag(:impact, params[:impact], class: "span12", rows: "15") %>
-          <% end %>
         </div>
         <div class="span6">
           <%= label_tag(:email, "E-Mail Address") %>

@@ -8,8 +8,6 @@
       <th>End</th>
       <th>User</th>
       <th>Template</th>
-      <th>Reason</th>
-      <th>Impact</th>
       <th>Machines</th>
       <th>Recipients</th>
       <th>Comment</th>
@@ -26,8 +24,6 @@
         <td><%= maintenance_announcement.end_date %></td>
         <td><%= maintenance_announcement.user_link %></td>
         <td><%= maintenance_announcement.template_link %></td>
-        <td><%= truncate maintenance_announcement.reason, length: 20 %></td>
-        <td><%= truncate maintenance_announcement.impact, length: 20 %></td>
         <td><%= maintenance_announcement.machine_links %></td>
         <td>
         <%- if maintenance_announcement.email -%>

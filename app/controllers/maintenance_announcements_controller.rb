@@ -97,7 +97,7 @@ class MaintenanceAnnouncementsController < ApplicationController
             return render :new
         end
 
-        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, reason: params[:reason], impact: params[:impact], maintenance_template_id: params[:maintenance_template_id], email: @email)
+        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email)
 
         # create a ticket per owner
         tickets = new_tickets(announcement, owners, @selected_machines)

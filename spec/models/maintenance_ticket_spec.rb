@@ -14,7 +14,7 @@ RSpec.describe MaintenanceTicket, type: :model do
     @begin_date = Time.zone.local(x.year,x.month,x.day,x.hour,x.min,0)
     @end_date = @begin_date + 1.days
     @template = FactoryBot.create(:maintenance_template)
-    @template.body = %q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}#
+    @template.body = %q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{machines} %{user}#
     @template.subject = @template.body
     @announcement = FactoryBot.create(:maintenance_announcement, maintenance_template: @template, user: @current_user, begin_date: @begin_date, end_date: @end_date, email: nil)
     @announcement_with_mail = FactoryBot.create(:maintenance_announcement, maintenance_template: @template, user: @current_user, begin_date: @begin_date, end_date: @end_date, email: "mail@example.com")
@@ -35,13 +35,11 @@ RSpec.describe MaintenanceTicket, type: :model do
         end_time: @announcement.end_date.to_formatted_s(:announcement_time),
         begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
         end_full: @announcement.end_date.to_formatted_s(:announcement_full),
-        reason: @announcement.reason,
-        impact: @announcement.impact,
         machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join("\n"),
         user: @announcement.user.display_name 
       }
 
-      expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+      expect(x.format_body).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{machines} %{user}# % p)
     end
   end
 
@@ -55,12 +53,10 @@ RSpec.describe MaintenanceTicket, type: :model do
         end_time: @announcement.end_date.to_formatted_s(:announcement_time),
         begin_full: @announcement.begin_date.to_formatted_s(:announcement_full),
         end_full: @announcement.end_date.to_formatted_s(:announcement_full),
-        reason: @announcement.reason,
-        impact: @announcement.impact,
         machines: @announcement.email ? "" : x.machines.pluck(:fqdn).join("\n"),
         user: @announcement.user.display_name 
       }
-      expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{reason} %{impact} %{machines} %{user}# % p)
+      expect(x.format_subject).to eq(%q#%{begin_date} %{end_date} %{begin_time} %{end_time} %{begin_full} %{end_full} %{machines} %{user}# % p)
     end
   end
 

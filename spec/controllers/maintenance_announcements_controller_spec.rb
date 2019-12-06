@@ -37,22 +37,18 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement affecting a single owner" do
-            post :create, params: { maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
+            post :create, params: { maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
             expect(MaintenanceAnnouncement.last.end_date <=> @end_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(2)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
             expect(MaintenanceTicket.last.machines.second).to eq(@m1)
         end
 
         it "creates a new maintenance announcement affecting multiple owners" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id, @m2.id, @m3.id ] }
+            post :create, params: {maintenance_announcement: @date_params, impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id, @m2.id, @m3.id ] }
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
             expect(MaintenanceAnnouncement.last.end_date <=> @end_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.first.machines.size).to eq(2)
             expect(MaintenanceTicket.first.machines.first).to eq(@m0)
             expect(MaintenanceTicket.first.machines.second).to eq(@m1)
@@ -69,7 +65,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "renders new" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
             expect(response).to render_template("maintenance_announcements/new")
         end
     end
@@ -82,11 +78,9 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @vm0.id ], ignore_vms: "1"}
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id, @vm0.id ], ignore_vms: "1"}
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
             expect(MaintenanceAnnouncement.last.end_date <=> @end_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(2)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
         end
@@ -113,7 +107,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "renders new" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
             expect(response).to render_template("maintenance_announcements/new")
         end
     end
@@ -139,10 +133,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id ], ignore_deadlines: "1" }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id ], ignore_deadlines: "1" }
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(1)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
         end
@@ -169,10 +161,8 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id ] }
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.last.machines.size).to eq(1)
             expect(MaintenanceTicket.last.machines.first).to eq(@m0)
         end
@@ -186,7 +176,7 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "renders new" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
             expect(response).to render_template("maintenance_announcements/new")
         end
     end
@@ -198,11 +188,9 @@ RSpec.describe MaintenanceAnnouncementsController, type: :controller do
         end
     
         it "creates a new maintenance announcement" do
-            post :create, params: {maintenance_announcement: @date_params, reason: "reason", impact: "impact", maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
+            post :create, params: {maintenance_announcement: @date_params, maintenance_template_id: @template.id, machine_ids: [ @m0.id, @m1.id ] }
             expect(MaintenanceAnnouncement.last.begin_date <=> @begin_date).to eq(0)
             expect(MaintenanceAnnouncement.last.end_date <=> @end_date).to eq(0)
-            expect(MaintenanceAnnouncement.last.reason).to eq("reason")
-            expect(MaintenanceAnnouncement.last.impact).to eq("impact")
             expect(MaintenanceTicket.first.machines.size).to eq(1)
             expect(MaintenanceTicket.first.machines.first).to eq(@m0)
             expect(MaintenanceTicket.last.machines.size).to eq(1)
