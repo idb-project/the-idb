@@ -25,7 +25,7 @@ class MaintenanceTicket < ApplicationRecord
   end
 
   def rt_queue
-    if owner && owner.rt_queue
+    if owner && !owner.rt_queue.blank?
         owner.rt_queue
     else
       IDB.config.rt.queue
