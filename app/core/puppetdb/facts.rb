@@ -14,6 +14,7 @@ module Puppetdb
     attribute :operatingsystem, String
     attribute :operatingsystemrelease, String
     attribute :lsbdistrelease, String
+    attribute :lsbdistdescription, String
     attribute :architecture, String
     attribute :manufacturer, String
     attribute :productname, String
@@ -92,6 +93,24 @@ module Puppetdb
 
     def serialnumber
       super =~ /not specified|system serial number/i ? nil : super
+    end
+
+    def operating_system
+      unless lsbdistdescription.blank?
+        if lsbdistdescription.starts_with?("Univention Corporate Server")
+          self.operatingsystem = "UCS"
+        end
+      end
+      self.operatingsystem
+    end
+
+    def os_release
+      unless lsbdistdescription.blank?
+        if lsbdistdescription.starts_with?("Univention Corporate Server")
+          self.operatingsystemrelease = lsbdistdescription.split[3] || "?"
+        end
+      end
+      self.operatingsystemrelease || self.lsbdistrelease
     end
 
     def memorysize_mb
