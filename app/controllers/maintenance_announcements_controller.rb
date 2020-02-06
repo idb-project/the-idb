@@ -2,7 +2,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     autocomplete :maintenance_announcement, :email
 
     def index
-        @maintenance_announcements = MaintenanceAnnouncement.all.reverse
+        @maintenance_announcements = MaintenanceAnnouncement.where(preview: false).reverse
     end
 
     def show
@@ -33,6 +33,11 @@ class MaintenanceAnnouncementsController < ApplicationController
             @end_date = @old_announcement.end_date
             @ignore_vms = @old_announcement.ignore_vms?
             @ignore_deadlines = @old_announcement.ignore_deadlines?
+
+            # remove preview announcement
+            if @old_announcement.preview
+                @old_announcement.destroy
+            end
         end
     end
 
@@ -99,25 +104,47 @@ class MaintenanceAnnouncementsController < ApplicationController
             return render :new
         end
 
-        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email, ignore_vms: @ignore_vms, ignore_deadlines: @ignore_deadlines)
+        @announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email, ignore_vms: @ignore_vms, ignore_deadlines: @ignore_deadlines, preview: true)
 
         # create a ticket per owner
-        tickets = new_tickets(announcement, owners, @selected_machines)
+        @tickets = new_tickets(@announcement, owners, @selected_machines)
 
         # save announcement and tickets in one transaction
         MaintenanceAnnouncement.transaction do
-            announcement.save!
-            tickets.each do |ticket|
+            @announcement.save!
+            @tickets.each do |ticket|
                 ticket.save!
             end
         end
 
-        # try to send each ticket
+        # # try to send each ticket, if not in preview mode
+        # unless announcement.preview
+        #     tickets.each do |ticket|
+        #         TicketService.send(ticket)
+        #     end
+        # end
+
+        render :preview
+
+        #redirect_to maintenance_announcements_path
+    end
+
+    def submit
+        announcement = MaintenanceAnnouncement.find(params[:id])
+        tickets = announcement.maintenance_tickets
         tickets.each do |ticket|
             TicketService.send(ticket)
         end
-
+        announcement.preview = false
+        announcement.save!
         redirect_to maintenance_announcements_path
+    end
+
+    def cancel
+        announcement = MaintenanceAnnouncement.find(params[:id])
+        # delete old preview tickets
+        announcement.maintenance_tickets.destroy_all
+        redirect_to new_maintenance_announcement_path(from: announcement.id)
     end
 
     def autocomplete_maintenance_announcement_email

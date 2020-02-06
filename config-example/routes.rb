@@ -57,6 +57,8 @@ InfrastructureDb::Application.routes.draw do
 
   resources :maintenance_announcements do
     get :autocomplete_maintenance_announcement_email, :on => :collection
+    post :submit, :on => :collection
+    post :cancel, :on => :collection
   end
   resources :maintenance_templates
 
