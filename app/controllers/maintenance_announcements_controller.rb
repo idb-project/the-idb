@@ -2,7 +2,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     autocomplete :maintenance_announcement, :email
 
     def index
-        @maintenance_announcements = MaintenanceAnnouncement.all.reverse
+        @maintenance_announcements = MaintenanceAnnouncement.where(preview: false).reverse
     end
 
     def show
@@ -33,6 +33,11 @@ class MaintenanceAnnouncementsController < ApplicationController
             @end_date = @old_announcement.end_date
             @ignore_vms = @old_announcement.ignore_vms?
             @ignore_deadlines = @old_announcement.ignore_deadlines?
+
+            # remove preview announcement
+            if @old_announcement.preview
+                @old_announcement.destroy
+            end
         end
     end
 
@@ -61,10 +66,10 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # select all different owners
         owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
-        owners = Owner.where(id: owner_ids)
+        @owners = Owner.where(id: owner_ids)
 
         # check if there are owners without announcement contact set
-        @no_contacts = check_owner_contacts(owners)
+        @no_contacts = check_owner_contacts(@owners)
 
         # get all vms that belong to a selected machine but arent selected themselves
         @missing_vms = unselected_vms(@selected_machines)
@@ -99,42 +104,171 @@ class MaintenanceAnnouncementsController < ApplicationController
             return render :new
         end
 
-        announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email, ignore_vms: @ignore_vms, ignore_deadlines: @ignore_deadlines)
+        @announcement = MaintenanceAnnouncement.new(user: @current_user, begin_date: @begin_date, end_date: @end_date, maintenance_template_id: params[:maintenance_template_id], email: @email, ignore_vms: @ignore_vms, ignore_deadlines: @ignore_deadlines, preview: true)
 
         # create a ticket per owner
-        tickets = new_tickets(announcement, owners, @selected_machines)
+        @tickets = new_tickets(@announcement, @owners, @selected_machines)
 
         # save announcement and tickets in one transaction
         MaintenanceAnnouncement.transaction do
-            announcement.save!
-            tickets.each do |ticket|
+            @announcement.save!
+            @tickets.each do |ticket|
                 ticket.save!
             end
         end
 
-        # try to send each ticket
+        redirect_to preview_maintenance_announcement_path(@announcement)
+    end
+
+    def preview
+        @announcement = MaintenanceAnnouncement.find(params[:id])
+        @tickets = @announcement.maintenance_tickets
+    
+        render :preview
+    end
+
+    def submit
+        announcement = MaintenanceAnnouncement.find(params[:id])
+        tickets = announcement.maintenance_tickets
         tickets.each do |ticket|
             TicketService.send(ticket)
         end
-
+        announcement.preview = false
+        announcement.save!
         redirect_to maintenance_announcements_path
+    end
+
+    def cancel
+        announcement = MaintenanceAnnouncement.find(params[:id])
+        redirect_to edit_maintenance_announcement_path(announcement)
+    end
+
+    def edit
+        @announcement = MaintenanceAnnouncement.find(params[:id])
+        unless @announcement.preview
+            flash.alert = "Can only edit unsend announcements"
+            redirect_to maintenance_announcements_path
+        end
+
+        # initialize variables for rendering the form
+        @machines = Machine.all
+        @maintenance_templates = MaintenanceTemplate.all
+        @selected_machines = Machine.joins(maintenance_tickets: :maintenance_announcement).where(maintenance_announcements: {id: @announcement.id})
+        @begin_date = @announcement.begin_date
+        @end_date = @announcement.end_date
+        @ignore_deadlines = @announcement.ignore_deadlines
+        @ignore_vms = @announcement.ignore_vms
+        @maintenance_template_id = @announcement.maintenance_template
+        @email = @announcement.email
+
+        # initialize error arrays
+        @no_deadline = Array.new
+        @no_contacts = Array.new
+        @missing_vms = Array.new
+        @exceeded_deadlines = Array.new
+        @missing_vms = Array.new
+
+        render :edit
+    end
+
+    def update
+        @announcement = MaintenanceAnnouncement.find(params[:id])
+        unless @announcement.preview
+            flash.alert = "Can only edit unsend announcements"
+            redirect_to maintenance_announcements_path
+        end
+
+        # initialize variables for rendering new
+        @machines = Machine.all
+        @maintenance_templates = MaintenanceTemplate.all
+        @selected_machines = Array.new
+        @no_contacts = Array.new
+        @missing_vms = Array.new
+        @begin_date = Time.zone.now
+        @end_date = Time.zone.now
+        @exceeded_deadlines = Array.new
+        @ignore_deadlines = params[:ignore_deadlines]
+        @ignore_vms = params[:ignore_vms]
+        @maintenance_template_id = params[:maintenance_template_id]
+
+        @no_maintenance_template = !MaintenanceTemplate.exists?(@maintenance_template_id)
+        @email = params[:email].blank? ? nil : params[:email].delete(" ").gsub(";", ",")
+
+        # get selected machines
+        @selected_machines = Machine.where(id: params[:machine_ids])
+
+        # check if all selected machines have a deadline set
+        @no_deadline = deadline_exists(@selected_machines)
+
+        # select all different owners
+        owner_ids = Machine.select(:owner_id).where(id: params[:machine_ids]).group(:owner_id).pluck(:owner_id)
+        @owners = Owner.where(id: owner_ids)
+
+        # check if there are owners without announcement contact set
+        @no_contacts = check_owner_contacts(@owners)
+
+        # get all vms that belong to a selected machine but arent selected themselves
+        @missing_vms = unselected_vms(@selected_machines)
+
+        # handle the time parsing, as it is likely to raise an exception
+        begin
+            ma = params[:maintenance_announcement]
+            # use Time.zone.local to be aware of timezones.
+            @begin_date = Time.zone.local(ma["begin_date(1i)"],ma["begin_date(2i)"],ma["begin_date(3i)"],ma["begin_date(4i)"],ma["begin_date(5i)"],0)
+            @end_date = Time.zone.local(ma["end_date(1i)"],ma["end_date(2i)"],ma["end_date(3i)"],ma["end_date(4i)"],ma["end_date(5i)"],0)
+            if not (@begin_date <=> @end_date) == -1
+                raise "End date must be after begin date!"
+            end
+        rescue Exception => e
+            @date_error = e.message
+            return render :edit
+        end
+
+        # get all machines where the deadline is exceeded
+        @exceeded_deadlines = check_deadlines(@selected_machines, @begin_date)
+
+        if  (not (@no_deadline.empty? or @ignore_deadlines == "1")) or
+            (not (@no_contacts.empty? or @email)) or
+            (not (@missing_vms.empty? or @ignore_vms == "1")) or
+            (not (@exceeded_deadlines.empty? or @ignore_deadlines == "1")) or
+            (@no_maintenance_template)
+            return render :edit
+        end
+
+        if !MaintenanceTemplate.exists?(params[:maintenance_template_id])
+            flash.alert = "No templates found, please create one."
+            return render :edit
+        end
+
+        # update the announcement
+        @announcement.user = @current_user
+        @announcement.begin_date = @begin_date
+        @announcement.end_date = @end_date
+        @announcement.maintenance_template_id = params[:maintenance_template_id]
+        @announcement.email = @email
+        @announcement.ignore_vms = @ignore_vms
+        @announcement.ignore_deadlines = @ignore_deadlines
+        @announcement.preview = true
+        
+        # delete all old tickets for this announcement
+        @announcement.maintenance_tickets.destroy_all
+
+        # create a ticket per owner
+        @tickets = new_tickets(@announcement, @owners, @selected_machines)
+
+        # save announcement and tickets in one transaction
+        MaintenanceAnnouncement.transaction do
+            @announcement.save!
+            @tickets.each do |ticket|
+                ticket.save!
+            end
+        end
+
+        render :preview
     end
 
     def autocomplete_maintenance_announcement_email
         render json: MaintenanceAnnouncement.where("email LIKE ?", "#{params[:term]}%").distinct.pluck(:email)
-    end
-
-    def edit
-        @maintenance_announcement = MaintenanceAnnouncement.find(params[:id])
-    end
-
-    def update
-        @maintenance_announcement = MaintenanceAnnouncement.find(params[:id])
-        if @maintenance_announcement.update(params.require(:maintenance_announcement).permit(:comment))
-            redirect_to maintenance_announcement_path(@maintenance_announcement)
-        else 
-            render :edit
-        end
     end
 
     private

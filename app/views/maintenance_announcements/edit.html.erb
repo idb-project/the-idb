@@ -1,47 +1,121 @@
-<div id="maintenance-announcements-edit">
-    <%= render partial: 'nav_edit', locals: {maintenance_announcement: @maintenance_announcement} %>
-    <%- maintenance_announcement = k(:maintenance_announcement, @maintenance_announcement) %>
-    <div class="row-fluid">
-        <div class="span12">
-            <%= form_for @maintenance_announcement, url: {action: "update" } do |f| %>
-            <table class="table table-condensed">
-                <tr>
-                    <th>User</th>
-                    <th>Begin</th>
-                    <th>End</th> 
-                    <th>Owners</th>
-                    <th>Machines</th>
-                </tr>
-                <tr>
-                    <td><%= maintenance_announcement.user_link %></td>
-                    <td><%= maintenance_announcement.begin_date %></td>
-                    <td><%= maintenance_announcement.end_date %></td>
-                    <td><%= maintenance_announcement.owner_links %></td>
-                    <td><%= maintenance_announcement.machine_links %></td>
-                </tr>
-                <tr>
-                    <th>Template</th>
-                    <th>Tickets</th>
-                    <th></th>
-                </tr>
-                <tr>
-                    <td><%= maintenance_announcement.template_link %></td>
-                    <td><%= maintenance_announcement.ticket_links %></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th colspan="5">Comment</th>
-                    <%# <th></th> %>
-                </tr>
-                <tr>
-                    <td colspan="5"><%= f.text_area(:comment, rows: 15, id: 'markup-source') %></td>
-                    <%# <td colspan="2"><div class="span12 markup-target box"></div></td> %>
-                </tr>
-            </table>
-            <%= f.submit "Save" %>
-            <% end %>
+<%# it's a bit hacky to wrap everything as form, but is an easy solution to
+have a wizard style dialog done on the client side #%>
+
+<%#= stylesheet_link_tag    "pikaday", media: "all" %>
+
+<%= form_tag(controller: "maintenance_announcements", action: "update", method: "post") do %>
+
+  <div class="tabbable">
+    <%= render("nav_wizard", locals: {announcement: @announcement}) %>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="machines">
+        <%- if not @missing_vms.empty? %>
+          <div class="alert">
+            <strong>Unselected VMs</strong> There are unselected virtual machines which belong to a selected machine.
+            They are marked with <i class="fa fa-exclamation-triangle"/></i> and the VM host they belong to.
+            If you are sure about your selection, you can choose to ignore unselected VMs at the bottom of the table.
+          </div>
+        <%- end %>
+        <%- if not @exceeded_deadlines.empty? %>
+          <div class="alert">
+            <strong>Exceeded deadlines</strong> There are machines where the deadline for announcements is exceeded.
+            They are marked with <i class="fa fa-calendar"/></i> and the nearest possible date.
+            If you are sure about your selection, you can choose to ignore exceeded deadlines at the bottom of the table.
+          </div>
+        <%- end %>
+        <%- if @date_error %>
+          <div class="alert">
+            <strong>Invalid dates:</strong> <%= @date_error %>
+          </div>
+        <%- end %>
+        <%- if not @no_contacts.empty? %>
+          <div class="alert">
+            <strong>Owners with missing contact:</strong>
+            <ul>
+            <%- @no_contacts.each do |owner| %>
+              <%- owner = k(:owner, owner) %>
+              <li><%= owner.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
+        <%- if not @no_deadline.empty? %>
+          <div class="alert">
+            <strong>Machines without deadline:</strong>
+            <ul>
+            <%- @no_deadline.each do |machine| %>
+              <%- machine = k(:machine, machine) %>
+              <li><%= machine.name_link %></li>
+            <%- end %>
+            </ul>
+          </div>
+        <%- end %>
+        <%- if @maintenance_templates.empty? -%>
+          <div class="alert">
+            <strong>No announcement templates defined, please create one!</strong>
+          </div>
+        <%- end -%>
+        <%- if @no_maintenance_template -%>
+          <div class="alert">
+            <strong>Announcement template not found!</strong>
+          </div>
+        <%- end -%>
+        <%= render 'machines_table' %>
+        <script>
+          function selectAllVisible() {
+            var cs = document.getElementsByName("machine_ids[]")
+            for (var i=0; i<cs.length; i++) {
+              if (cs[i].offsetParent !== null) {
+                cs[i].checked = true;
+              }
+            }
+          }
+          function unselectAll() {
+            var cs = document.getElementsByName("machine_ids[]")
+            for (var i=0; i<cs.length; i++) {
+                cs[i].checked = false;
+            }
+          }
+        </script>
+        <button type="button" onclick="selectAllVisible()">Select all visible</button>
+        <button type="button" onclick="unselectAll()">Unselect all</button>
+        <label for="ignore_vms">
+        <%= check_box_tag("ignore_vms", 1, @ignore_vms) %> Ignore unselected VMs
+        </label>
+        <label for="ignore_deadlines">
+        <%= check_box_tag("ignore_deadlines", 1, @ignore_deadlines) %> Ignore exceeded deadlines
+        </label>
+      </div>
+
+      <div class="tab-pane" id="info">
+        <div class="span6">
+          <%= label_tag(:maintenance_template_id, "Template") %>
+          <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @announcement.maintenance_template_id)) %>
         </div>
+        <div class="span6">
+          <%= label_tag(:email, "E-Mail Address") %>
+          <%= autocomplete_field_tag(:email, @announcement.email, autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
+
+          <%= label_tag(:begin_date, "Begin") %>
+          <%= datetime_select(:maintenance_announcement, :begin_date, default: { year: @begin_date.year, month: @begin_date.month, day: @begin_date.day, hour: @begin_date.hour, minute: 0} ) %>
+
+          <%= label_tag(:begin_date, "End") %>
+          <%= datetime_select(:maintenance_announcement, :end_date, default: { year: @end_date.year, month: @end_date.month, day: @end_date.day, hour: @end_date.hour, minute: 0} ) %>
+
+          <%= label_tag("","") %>
+          <%= submit_tag("Save") %>
+        </div>
+      </div>
     </div>
+  </div>
 
+<% end %>
 
-</div>
+<!--
+<%= javascript_include_tag "pikaday" %>
+<%= javascript_include_tag "moment.min" %>
+
+<script>
+  var date_picker = new Pikaday({ field: document.getElementById('date'), yearRange: [<%= Time.now.year %>, <%= Time.now.year + 1 %>], defaultDate: <%= Time.now.strftime("%F") %> });
+</script>-->

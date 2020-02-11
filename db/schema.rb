@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191206202840) do
+ActiveRecord::Schema.define(version: 20200206145100) do
 
   create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "token"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 20191206202840) do
     t.text     "comment",                 limit: 65535
     t.boolean  "ignore_deadlines"
     t.boolean  "ignore_vms"
+    t.boolean  "preview"
     t.index ["maintenance_template_id"], name: "index_maintenance_announcements_on_maintenance_template_id", using: :btree
     t.index ["user_id"], name: "index_maintenance_announcements_on_user_id", using: :btree
   end
