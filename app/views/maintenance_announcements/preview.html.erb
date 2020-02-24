@@ -31,11 +31,11 @@
 
     <%= form_tag(controller: "maintenance_announcements", action: "submit", method: :post) do %>
         <%= hidden_field_tag :id, @announcement.id %>
-        <%= submit_tag("Send") %>
+        <%= submit_tag("Send Announcement") %>
     <% end %>
 
     <%= form_tag(controller: "maintenance_announcements", action: "cancel", method: :post) do %>
         <%= hidden_field_tag :id, @announcement.id %>
-        <%= submit_tag("Cancel") %>
+        <%= submit_tag("Edit Announcement") %>
     <% end %>
 </div>
