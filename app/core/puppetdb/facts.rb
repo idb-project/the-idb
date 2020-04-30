@@ -68,6 +68,7 @@ module Puppetdb
 
       build_drac(@interfaces)
       windows_fixes
+      proxmox_detection
     end
 
     def missing?
@@ -163,6 +164,17 @@ module Puppetdb
 
       if WINDOWS_VERSIONS.has_key?(operatingsystemrelease)
         self.operatingsystemrelease = WINDOWS_VERSIONS[operatingsystemrelease]
+      end
+    end
+
+    def proxmox_detection
+      if operatingsystem == "Debian" && idb_installed_packages && idb_installed_packages.include?("proxmox-ve")
+        self.operatingsystem = "Proxmox"
+        begin
+          self.operatingsystemrelease = idb_installed_packages.scan(/proxmox-ve\=\S*/).last.split("=")[1] || "-"
+        rescue
+          self.operatingsystemrelease = ""
+        end
       end
     end
   end

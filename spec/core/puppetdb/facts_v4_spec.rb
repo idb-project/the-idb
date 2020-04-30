@@ -34,6 +34,7 @@ describe Puppetdb::FactsV4 do
       drac_netmask: '255.255.255.0',
       idb_unattended_upgrades_reboot: true,
       idb_pending_updates: 8,
+      idb_installed_packages: 'nginx=1.2.3',
       monitoring_vm_children: {"vm0.example.org"=>"vmhost.example.org", "vm1.example.org"=>"vmhost.example.org"}
     }
   end
@@ -280,6 +281,43 @@ describe Puppetdb::FactsV4 do
     it 'has an entry for vm0 and vm1' do
       expect(hash[:monitoring_vm_children]["vm0.example.org"]).to eq("vmhost.example.org")
       expect(hash[:monitoring_vm_children]["vm1.example.org"]).to eq("vmhost.example.org")
+    end
+  end
+
+  describe 'proxmox detection' do
+    context 'Debian 8' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '8'
+      end
+
+      it 'sets the version to 8' do
+        expect(facts.operatingsystemrelease).to eq('8')
+      end
+    end
+
+    context 'Ubuntu 20.04' do
+      before do
+        hash[:operatingsystem] = 'Ubuntu'
+        hash[:operatingsystemrelease] = '20.04'
+      end
+
+      it 'sets the version to 20.04' do
+        expect(facts.operatingsystemrelease).to eq('20.04')
+      end
+    end
+
+    context 'Proxmox 6.1-2' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '8'
+        hash[:idb_installed_packages] =  'nginx=1.2.3 proxmox-ve=6.1-2'
+      end
+
+      it 'sets the version to 6.1-2' do
+        expect(facts.operatingsystem).to eq('Proxmox')
+        expect(facts.operatingsystemrelease).to eq('6.1-2')
+      end
     end
   end
 end
