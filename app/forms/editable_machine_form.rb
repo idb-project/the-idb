@@ -144,7 +144,7 @@ class EditableMachineForm
   end
 
   def core_collection
-    [1] + 2.step(48, 2).to_a # Show even number of cores.
+    [1] + 2.step(512, 2).to_a # Show even number of cores.
   end
 
   def vmhost_list
