@@ -76,10 +76,6 @@ class MachinePresenter < Keynote::Presenter
     first_v6_ip.blank? ? "v6_off.png" : "v6.png"
   end
 
-  def os
-    "#{machine.os} #{machine.os_release}"
-  end
-
   def ram
     if machine.ram
       if machine.ram < 1000
