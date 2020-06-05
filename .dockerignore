@@ -4,7 +4,6 @@ bin
 Capfile
 Changelog.txt
 config-example
-config.ru
 CONTRIBUTING
 COPYING
 db
