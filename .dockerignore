@@ -3,11 +3,13 @@ bin
 .bundle
 Capfile
 Changelog.txt
+config
 config-example
 CONTRIBUTING
 COPYING
 db
 doc
+docker/mysql
 .git
 .gitattributes
 .gitignore

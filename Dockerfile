@@ -1,5 +1,7 @@
 FROM debian:buster-slim
 
+ARG ruby_version=ruby-2.6.3
+
 # we use rvm so much, just use a login shell
 SHELL [ "/bin/bash", "-l", "-c" ]
 
@@ -7,9 +9,9 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 RUN apt-get update && apt-get install -y curl procps gnupg
 RUN gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
-# install ruby 2.6.3
-RUN rvm install ruby-2.6.3
-RUN rvm use --default ruby-2.6.3
+# install ruby
+RUN rvm install ${ruby_version}
+RUN rvm use --default ${ruby_version}
 
 # install apache2 and passenger
 RUN apt-get update && apt-get install -y apache2 apt-transport-https ca-certificates
@@ -27,14 +29,15 @@ RUN mkdir /opt/idb && chown idb:idb /opt/idb
 WORKDIR /opt/idb
 
 USER idb
-RUN rvm use --default ruby-2.6.3
-RUN rvm ruby-2.6.3 exec gem install bundler -v 2.0.2
+RUN rvm use --default ${ruby_version}
+RUN rvm ${ruby_version} exec gem install bundler -v 2.0.2
 COPY --chown=idb:idb Gemfile Gemfile.lock /opt/idb/
-RUN rvm ruby-2.6.3 exec bundle install
+RUN rvm ${ruby_version} exec bundle install
 COPY --chown=idb:idb . .
+RUN mv docker/config config
 
 USER root
-ADD apache.conf /etc/apache2/sites-available/idb.conf
+ADD docker/apache.conf /etc/apache2/sites-available/idb.conf
 RUN a2dissite 000-default && a2ensite idb
 EXPOSE 80
 ENTRYPOINT apachectl -D FOREGROUND
