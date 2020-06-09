@@ -1,0 +1,152 @@
+---
+defaults: &defaults
+  default_owner: 1
+  design:
+    title: 'IDB local'
+    logo_path: 'idb-logo.png'
+    favicon_path: 'idb-favicon.ico'
+  api:
+    url: 'https://idb-public-api.example.com'
+    script_name: 'idb-service'
+    curl_command: 'curl'
+  mail:
+    host: 'examplehost.example.com'
+    protocol: 'https'
+    from: 'donotreply@example.com'
+    to: 'idb-admin@example.com'
+  modules:
+    app_pages: false
+    advanced_fields: true
+    advanced_field_names:
+      advanced_field_1:
+        short: 'CI'
+        long: 'Config instructions'
+      advanced_field_2:
+        short: 'SC'
+        long: 'Software characteristics'
+      advanced_field_3:
+        short: 'BP'
+        long: 'Business purpose'
+      advanced_field_4:
+        short: 'BC'
+        long: 'Business criticality'
+      advanced_field_5:
+        short: 'BN'
+        long: 'Business notification'
+    otp_login: false
+    unattended_upgrades: true
+    inventory: true
+    api:
+      v1_enabled: true
+      v2_enabled: true
+      v2_api_token: 'randomtoken'
+      v3_enabled: true
+    softdelete: true
+    location: true
+    software_packages: false
+  redis:
+    url: <%= ENV['REDIS_URL'] %>
+    namespace: <%= ENV['REDIS_NAMESPACE'] %>
+    pool_size: 5
+    pool_timeout: 1
+  stomp:
+    host: <%= ENV['STOMP_HOST'] %>
+    port: <%= ENV['STOMP_PORT'] %>
+    user: <%= ENV['STOMP_USER'] %>
+    password: <%= ENV['STOMP_PASSWORD'] %>
+    vhost: <%= ENV['STOMP_VHOST'] %>
+    queue_maintenance: <%= ENV['STOMP_QUEUE'] %>
+    ssl_cert: 'tmp/ssl/idb-client.pem'
+    ssl_key: 'tmp/ssl/idb-client.key'
+    ssl_ca: 'tmp/ssl/ca_crt.pem'
+  puppetdb:
+    api_urls:
+      - url: 'https://puppet.example.com/'
+        version: 'v4'
+    api_timeout: 5
+    auto_create: false
+    filter:
+    ssl_verify: false
+  oxidized:
+    api_urls:
+      - url: 'http://localhost:8888/'
+    ssl_verify: true
+    api_timeout: 5
+    auto_create: false
+    default_netmask: "255.255.255.0"
+    default_interface_name: "interface"
+  redmine:
+    ticket_url: 'http://redmine.example.com/issues/%s'
+  rt:
+    ticket_url: 'https://rt.example.com/Ticket/Display.html?id=%s'
+    create_ticket_url: 'https://rt.example.com/REST/1.0/ticket/new'
+    reply_ticket_url: 'https://rt.example.com/REST/1.0/ticket/%s/comment'
+    user: 'rt-api-user'
+    password: 'rt-api-user-password'
+    requestor: 'requestor mail address OR empty string if no create mail should be send'
+    queue: 'RT-Queue-Name'
+  mrtg:
+    base_url: 'https://mrtg.example.com/'
+  device_types:
+    - id: 1
+      name: 'physical'
+      is_virtual: false
+    - id: 2
+      name: 'virtual'
+      is_virtual: true
+    - id: 3
+      name: 'switch'
+  ldap:
+    host: <%= ENV['LDAP_HOST'] %>
+    port: <%= ENV['LDAP_PORT'] %>
+    base: <%= ENV['LDAP_BASE'] %>
+    uid: <%= ENV['LDAP_UID'] %>
+    auth_dn: <%= ENV['LDAP_AUTH_DN'] %>
+    auth_password: <%= ENV['LDAP_AUTH_PASSWORD'] %>
+    admin_group: <%= ENV['LDAP_ADMIN_GROUP'] %>
+    group_membership_attribute: <%= ENV['LDAP_GROUP_MEMBERSHIP_ATTRIBUTE'] %>
+      
+development:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 389
+    base: 'dc=nodomain'
+    uid: 'uid'
+    auth_dn: 
+    auth_password:
+    uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
+
+test:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 389
+    base: 'dc=nodomain'
+    uid: 'uid'
+    auth_dn: 
+    auth_password:
+    uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
+
+production:
+  <<: *defaults
+  ldap:
+    host: '127.0.0.1'
+    port: 389
+    base: 'dc=nodomain'
+    uid: 'uid'
+    auth_dn: 
+    auth_password:
+    uid: 'uid'
+    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
+    auth_password: 'secret'
+    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
+    group_membership_attribute: 'uniqueMember'
