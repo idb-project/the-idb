@@ -13,7 +13,7 @@ services:
       RAILS_ENV: production
 
   database:
-    image: mysql:8.0.20
+    image: mysql:5.7
     volumes:
       - ./docker/mysql:/var/lib/mysql
     env_file: docker/mysql.env
