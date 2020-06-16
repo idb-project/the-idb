@@ -106,47 +106,5 @@ defaults: &defaults
     admin_group: <%= ENV['LDAP_ADMIN_GROUP'] %>
     group_membership_attribute: <%= ENV['LDAP_GROUP_MEMBERSHIP_ATTRIBUTE'] %>
       
-development:
-  <<: *defaults
-  ldap:
-    host: '127.0.0.1'
-    port: 389
-    base: 'dc=nodomain'
-    uid: 'uid'
-    auth_dn: 
-    auth_password:
-    uid: 'uid'
-    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
-    auth_password: 'secret'
-    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
-    group_membership_attribute: 'uniqueMember'
-
-test:
-  <<: *defaults
-  ldap:
-    host: '127.0.0.1'
-    port: 389
-    base: 'dc=nodomain'
-    uid: 'uid'
-    auth_dn: 
-    auth_password:
-    uid: 'uid'
-    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
-    auth_password: 'secret'
-    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
-    group_membership_attribute: 'uniqueMember'
-
 production:
   <<: *defaults
-  ldap:
-    host: '127.0.0.1'
-    port: 389
-    base: 'dc=nodomain'
-    uid: 'uid'
-    auth_dn: 
-    auth_password:
-    uid: 'uid'
-    auth_dn: 'uid=read-access,cn=users,dc=example,dc=com'
-    auth_password: 'secret'
-    admin_group: 'cn=admins,cn=groups,dc=example,dc=com'
-    group_membership_attribute: 'uniqueMember'
