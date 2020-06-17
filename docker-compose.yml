@@ -6,11 +6,11 @@ services:
     depends_on:
       - database
       - redis
+      - sidekiq
     ports: 
       - "8080:80"
     env_file: docker/idb.env
-    environment:
-      RAILS_ENV: production
+    command: apachectl -D FOREGROUND
 
   database:
     image: mysql:5.7
@@ -20,3 +20,11 @@ services:
 
   redis:
     image: redis:6.0.4
+
+  sidekiq:
+    image: idb:latest
+    depends_on:
+      - redis
+      - database
+    env_file: docker/idb.env
+    command: /usr/local/rvm/bin/bootup_sidekiq

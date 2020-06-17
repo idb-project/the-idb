@@ -35,11 +35,11 @@ COPY --chown=idb:idb Gemfile Gemfile.lock /opt/idb/
 RUN rvm ${ruby_version} exec bundle install
 COPY --chown=idb:idb . .
 RUN mv docker/config config
+RUN rvm wrapper ${ruby_version} bootup_sidekiq
 
 USER root
 ADD docker/apache.conf /etc/apache2/sites-available/idb.conf
 RUN a2dissite 000-default && a2ensite idb
 EXPOSE 80
-ENTRYPOINT apachectl -D FOREGROUND
 
 
