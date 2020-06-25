@@ -9,14 +9,14 @@ services:
       - sidekiq
     ports: 
       - "8080:80"
-    env_file: docker/idb.env
+    env_file: idb.env
     command: apachectl -D FOREGROUND
 
   database:
     image: mysql:5.7
     volumes:
-      - ./docker/mysql:/var/lib/mysql
-    env_file: docker/mysql.env
+      - ./mysql-data:/var/lib/mysql
+    env_file: mysql.env
 
   redis:
     image: redis:6.0.4
@@ -26,5 +26,5 @@ services:
     depends_on:
       - redis
       - database
-    env_file: docker/idb.env
+    env_file: idb.env
     command: /usr/local/rvm/bin/bootup_sidekiq

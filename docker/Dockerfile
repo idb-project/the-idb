@@ -32,10 +32,10 @@ USER idb
 RUN rvm use --default ${ruby_version}
 RUN rvm ${ruby_version} exec gem install bundler -v 2.0.2
 COPY --chown=idb:idb Gemfile Gemfile.lock /opt/idb/
-RUN rvm ${ruby_version} exec bundle install
-COPY --chown=idb:idb . .
+RUN RAILS_ENV=production rvm ${ruby_version} exec bundle install
+COPY --chown=idb:idb . /opt/idb
 RUN mv docker/config config
-RUN rvm wrapper ${ruby_version} bootup_sidekiq
+# wrappers are created automagickally: (rvm|gem) wrapper show
 
 USER root
 ADD docker/apache.conf /etc/apache2/sites-available/idb.conf

@@ -1,7 +1,7 @@
 # dockerized idb
 
-this, together with `../Dockerfile` and `../docker-compose.yml`, facilitates
-running the idb as container. the following containers are used:
+`Dockerfile` and `docker-compose.yml`, facilitate running the
+idb as container. the following containers are used:
 
 - app: running the idb with apache & passenger
 - sidekiq: same image as idb, different command run
@@ -11,9 +11,9 @@ running the idb as container. the following containers are used:
 
 ## building the container
 
-in the parent directory (which contains `Dockerfile`) run:
-
-	docker build -t idb .
+in this directory run:
+	
+	docker build -t idb -f Dockerfile ..
 
 to build with another ruby version, change 
 
@@ -40,15 +40,14 @@ you can use
 
 	docker-compose up -d 
 
-in the parent directory. this will start containers for mysql, redis,
-sidekiq and the idb. you'll have to initialize the database on first run,
-do so by running
+this will start containers for mysql, redis, sidekiq and the idb.
+you'll have to initialize the database on first run, do so by running
 
 	docker-compose exec app bash -lc 'bundle exec rake db:schema:load'
 
-after starting the containers.
+after starting the containers with `docker-compose`.
 
 any of the redis or mysql containers should be replaceable by
-modifying `idb.env` to use other systems. the only requirements
+modifying `idb.env` to use other systems. the only requirement
 are the sidekiq and app containers.
 
