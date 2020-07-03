@@ -8,7 +8,7 @@ config-example
 CONTRIBUTING
 COPYING
 doc
-docker/mysql
+docker/mysql-data
 .git
 .gitattributes
 .gitignore

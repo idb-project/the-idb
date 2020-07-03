@@ -27,4 +27,4 @@ services:
       - redis
       - database
     env_file: idb.env
-    command: /usr/local/rvm/bin/bootup_sidekiq
+    command: /bin/bash -l -c "bundle exec sidekiq"
