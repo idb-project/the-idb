@@ -7,6 +7,7 @@ services:
       - database
       - redis
       - sidekiq
+      - ldap
     ports: 
       - "8080:80"
     env_file: idb.env
@@ -28,3 +29,10 @@ services:
       - database
     env_file: idb.env
     command: /bin/bash -l -c "bundle exec sidekiq"
+
+  ldap:
+    image: osixia/openldap:1.4.0
+    env_file: ldap.env
+    volumes:
+      - ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+    command: --copy-service
