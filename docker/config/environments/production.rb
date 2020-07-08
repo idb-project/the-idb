@@ -68,7 +68,7 @@ InfrastructureDb::Application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  Rails.application.routes.default_url_options[:host] = 'idb.example.com'
+  Rails.application.routes.default_url_options[:host] = ENV["IDB_HOSTNAME"]
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).
@@ -82,12 +82,5 @@ InfrastructureDb::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
-
-  config.middleware.use ExceptionNotification::Rack,
-    :email => {
-      :email_prefix => '[IDB exception] ',
-      :sender_address => 'info@example.com',
-      :exception_recipients => 'info@example.com'
-    }
 
 end
