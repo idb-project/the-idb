@@ -11,7 +11,7 @@ services:
     ports: 
       - "8080:80"
     env_file: idb.env
-    command: apachectl -D FOREGROUND
+    command: bash -l -c docker/idb.sh
 
   database:
     image: mysql:5.7
@@ -28,7 +28,7 @@ services:
       - redis
       - database
     env_file: idb.env
-    command: /bin/bash -l -c "bundle exec sidekiq"
+    command: /bin/bash -l -c docker/sidekiq.sh
 
   ldap:
     image: osixia/openldap:1.4.0
