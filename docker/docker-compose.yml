@@ -10,14 +10,14 @@ services:
       - ldap
     ports: 
       - "8080:80"
-    env_file: idb.env
-    command: bash -l -c docker/idb.sh
+    env_file: runtime/environments/idb.env
+    command: bash -l -c docker/build/scripts/idb.sh
 
   database:
     image: mysql:5.7
     volumes:
-      - ./mysql-data:/var/lib/mysql
-    env_file: mysql.env
+      - ./runtime/data/mysql:/var/lib/mysql
+    env_file: runtime/environments/mysql.env
 
   redis:
     image: redis:6.0.4
@@ -27,12 +27,12 @@ services:
     depends_on:
       - redis
       - database
-    env_file: idb.env
-    command: /bin/bash -l -c docker/sidekiq.sh
+    env_file: runtime/environments/idb.env
+    command: /bin/bash -l -c docker/build/scripts/sidekiq.sh
 
   ldap:
     image: osixia/openldap:1.4.0
-    env_file: ldap.env
+    env_file: runtime/environments/ldap.env
     volumes:
-      - ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+      - ./runtime/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
     command: --copy-service
