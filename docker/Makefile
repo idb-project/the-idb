@@ -7,6 +7,6 @@ image:
 dist/idb-image.tar.gz: image
 	docker save idb:latest | gzip > dist/idb-image.tar.gz
 
-dist/idb-docker.tar.gz: dist/idb-image.tar.gz docker-compose.yml environments/idb.env.example environments/mysql.env.example environments/ldap.env.example
+dist/idb-docker.tar.gz: dist/idb-image.tar.gz docker-compose.yml runtime/environments/idb.env.example runtime/environments/mysql.env.example runtime/environments/ldap.env.example
 	tar cvzf $@ $^
 
