@@ -39,7 +39,7 @@ USER idb
 COPY --chown=idb:idb Gemfile Gemfile.lock /opt/idb/
 RUN env RAILS_ENV=production bundle install --path=vendor/bundle
 COPY --chown=idb:idb . /opt/idb
-RUN mv docker/build/config config
+#RUN mv docker/build/config config
 
 USER root
 ADD docker/build/apache.conf /etc/apache2/sites-available/idb.conf

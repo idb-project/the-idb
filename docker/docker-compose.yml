@@ -10,6 +10,8 @@ services:
       - ldap
     ports: 
       - "8080:80"
+    volumes:
+      - ./runtime/config:/opt/idb/config
     env_file: runtime/environments/idb.env
     command: bash -l -c docker/build/scripts/idb.sh
 
@@ -27,6 +29,8 @@ services:
     depends_on:
       - redis
       - database
+    volumes:
+      - ./runtime/config:/opt/idb/config
     env_file: runtime/environments/idb.env
     command: /bin/bash -l -c docker/build/scripts/sidekiq.sh
 
@@ -36,3 +40,10 @@ services:
     volumes:
       - ./runtime/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
     command: --copy-service
+
+  stomp:
+    image: vromero/activemq-artemis:2.13.0
+    env_file: runtime/environments/stomp.env
+    ports:
+      - "61613:61613"
+
