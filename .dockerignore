@@ -9,6 +9,7 @@ CONTRIBUTING
 COPYING
 doc
 docker/runtime/data
+docker/dist
 .git
 .gitattributes
 .gitignore
