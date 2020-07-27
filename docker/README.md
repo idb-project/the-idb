@@ -80,3 +80,11 @@ any of the redis, mysql, ldap or stomp containers are replaceable by
 modifying `idb.env` to use other systems. the only requirement
 are the sidekiq and app containers.
 
+## importing a database dump
+
+importing a database dump is done with
+
+	docker exec -i idb_database_1 sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < idb.sql
+
+it may be the case that you have to initialize the database first like described above.
+

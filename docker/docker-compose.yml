@@ -12,11 +12,14 @@ services:
       - "8080:80"
     volumes:
       - ./runtime/config:/opt/idb/config
+      - ./runtime/attachments:/opt/idb/public/attachments
     env_file: runtime/environments/idb.env
     command: bash -l -c docker/build/scripts/idb.sh
 
   database:
     image: mysql:5.7
+    # allow large packets for importing database dumps
+    command: --max_allowed_packet=32505856
     volumes:
       - ./runtime/data/mysql:/var/lib/mysql
     env_file: runtime/environments/mysql.env
@@ -31,6 +34,7 @@ services:
       - database
     volumes:
       - ./runtime/config:/opt/idb/config
+      - ./runtime/attachments:/opt/idb/public/attachments
     env_file: runtime/environments/idb.env
     command: /bin/bash -l -c docker/build/scripts/sidekiq.sh
 
