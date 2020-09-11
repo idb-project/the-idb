@@ -82,12 +82,14 @@ class NetworkPresenter < Keynote::Presenter
     allowed = allowed_ip?(ip)
     content = machine_link(ip, allowed, render_link)
     aliases = machine_aliases(ip)
+    ip_v6 = machine_v6_by_v4(ip)
     css_class = allowed || 'muted'
     css_class = 'hide_ip' if content.blank?
 
     build_html do
       tr class: css_class do
         td ip
+        td ip_v6
         td content
         td aliases
       end
@@ -95,6 +97,18 @@ class NetworkPresenter < Keynote::Presenter
   end
 
   private
+
+  def machine_v6_by_v4(ip)
+    machine = machines[ip.address]
+    if machine && machine.nics
+      machine.nics.each do |nic|
+        if nic.ip_address.addr == ip.address
+          return nic.ip_address.addr_v6
+        end
+      end
+    end
+    ""
+  end
 
   def allowed_ip?(ip)
     network.allowed_ip_addresses.empty? || network.allowed_ip_addresses.include?(ip.to_s)
