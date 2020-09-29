@@ -1,0 +1,53 @@
+version: '3.4'
+
+services:
+  app: 
+    image: idb:latest
+    depends_on:
+      - database
+      - redis
+      - sidekiq
+      - ldap
+    ports: 
+      - "8080:80"
+    volumes:
+      - ./runtime/config:/opt/idb/config
+      - ./runtime/attachments:/opt/idb/public/attachments
+    env_file: runtime/environments/idb.env
+    command: bash -l -c docker/build/scripts/idb.sh
+
+  database:
+    image: mysql:5.7
+    # allow large packets for importing database dumps
+    command: --max_allowed_packet=32505856
+    volumes:
+      - ./runtime/data/mysql:/var/lib/mysql
+    env_file: runtime/environments/mysql.env
+
+  redis:
+    image: redis:6.0.4
+
+  sidekiq:
+    image: idb:latest
+    depends_on:
+      - redis
+      - database
+    volumes:
+      - ./runtime/config:/opt/idb/config
+      - ./runtime/attachments:/opt/idb/public/attachments
+    env_file: runtime/environments/idb.env
+    command: /bin/bash -l -c docker/build/scripts/sidekiq.sh
+
+  ldap:
+    image: osixia/openldap:1.4.0
+    env_file: runtime/environments/ldap.env
+    volumes:
+      - ./runtime/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+    command: --copy-service
+
+  stomp:
+    image: vromero/activemq-artemis:2.13.0
+    env_file: runtime/environments/stomp.env
+    ports:
+      - "61613:61613"
+
