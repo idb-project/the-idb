@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20200206145100) do
 
-  create_table "api_tokens", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "api_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "token"
     t.boolean "read"
     t.boolean "write"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer "owner_id"
   end
 
-  create_table "attachments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "attachments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "description"
     t.string   "attachment"
     t.integer  "inventory_id"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer  "maintenance_record_id"
   end
 
-  create_table "cloud_providers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "cloud_providers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "owner_id"
     t.string  "name"
     t.string  "description"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.string  "apidocs"
   end
 
-  create_table "inventories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "inventories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "inventory_number"
     t.string   "name"
     t.string   "serial"
@@ -67,12 +67,12 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer  "inventory_status_id"
   end
 
-  create_table "inventory_statuses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "inventory_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "name"
     t.boolean "inactive", default: false
   end
 
-  create_table "ip_addresses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "ip_addresses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "addr"
     t.string   "netmask"
     t.string   "family"
@@ -93,14 +93,14 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer "generations",   null: false
   end
 
-  create_table "location_levels", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "location_levels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "name"
     t.string  "description"
     t.integer "level"
     t.integer "owner_id"
   end
 
-  create_table "locations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string  "name"
     t.string  "description"
     t.integer "level"
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer "owner_id"
   end
 
-  create_table "machine_aliases", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "machine_aliases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.integer  "machine_id", null: false
     t.datetime "created_at"
@@ -118,7 +118,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["name"], name: "index_machine_aliases_on_name", unique: true, using: :btree
   end
 
-  create_table "machines", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "machines", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "fqdn",                                                                        null: false
     t.string   "os"
     t.string   "arch"
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.integer "machine_id",            null: false
   end
 
-  create_table "maintenance_announcements", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "maintenance_announcements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.datetime "begin_date"
     t.integer  "maintenance_template_id"
     t.datetime "created_at",                            null: false
@@ -188,7 +188,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["user_id"], name: "index_maintenance_announcements_on_user_id", using: :btree
   end
 
-  create_table "maintenance_records", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "maintenance_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "fqdn"
     t.integer  "machine_id"
     t.integer  "user_id"
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["user_id"], name: "index_maintenance_records_on_user_id", using: :btree
   end
 
-  create_table "maintenance_templates", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "maintenance_templates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.text     "body",       limit: 65535
     t.string   "name"
     t.datetime "created_at",               null: false
@@ -213,7 +213,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["deleted_at"], name: "index_maintenance_templates_on_deleted_at", using: :btree
   end
 
-  create_table "maintenance_tickets", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "maintenance_tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "ticket_id"
     t.datetime "date"
     t.integer  "maintenance_announcement_id"
@@ -222,7 +222,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["maintenance_announcement_id"], name: "index_maintenance_tickets_on_maintenance_announcement_id", using: :btree
   end
 
-  create_table "networks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "networks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                           null: false
     t.string   "address",                        null: false
     t.text     "description", limit: 4294967295
@@ -235,7 +235,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["owner_id"], name: "index_networks_on_owner_id", using: :btree
   end
 
-  create_table "nics", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "nics", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "mac"
     t.integer  "machine_id"
@@ -248,7 +248,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["name", "machine_id"], name: "index_nics_on_name_and_machine_id", unique: true, using: :btree
   end
 
-  create_table "operating_systems", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "operating_systems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.string   "family"
     t.string   "releaseversion"
@@ -260,7 +260,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.datetime "updated_at"
   end
 
-  create_table "owners", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "owners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.text     "description",          limit: 4294967295
     t.datetime "created_at"
@@ -285,7 +285,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["user_id"], name: "index_owners_users_on_user_id", using: :btree
   end
 
-  create_table "switch_ports", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "switch_ports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "number",     null: false
     t.string   "identifier"
     t.integer  "nic_id",     null: false
@@ -298,7 +298,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["switch_id"], name: "index_switch_ports_on_switch_id", using: :btree
   end
 
-  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "login"
     t.string   "name"
     t.string   "email"
@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(version: 20200206145100) do
     t.index ["login"], name: "index_users_on_login", unique: true, using: :btree
   end
 
-  create_table "versions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "versions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "item_type",                         null: false
     t.integer  "item_id",                           null: false
     t.string   "event",                             null: false
