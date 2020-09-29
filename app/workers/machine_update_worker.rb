@@ -21,10 +21,12 @@ class MachineUpdateWorker
 
     unless url
       # query all configured oxidized APIs
-      oxidized_urls = IDB.config.oxidized.api_urls.map { |u| [u["url"]] }.flatten.compact
-      nodes = Oxidized::Nodes.new(oxidized_urls)
-      url = nodes.find_node(name)
-      version = "oxidized" if url
+      if IDB.config.oxidized # test if oxidized is configured, otherwise this throws
+        oxidized_urls = IDB.config.oxidized.api_urls.map { |u| [u["url"]] }.flatten.compact
+        nodes = Oxidized::Nodes.new(oxidized_urls)
+        url = nodes.find_node(name)
+        version = "oxidized" if url
+      end
     end
 
     return unless url # machine was not found in any configured puppetDB
