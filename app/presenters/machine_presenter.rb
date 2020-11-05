@@ -121,20 +121,22 @@ class MachinePresenter < Keynote::Presenter
 
     return if machine.vmhost.blank?
 
+    name = ""
     parts = machine.vmhost.split('.')
 
     case parts.size
     when 6
-      parts[0, 4].join('.')
+      name = parts[0, 4].join('.')
     when 5
-      parts[0, 3].join('.')
+      name = parts[0, 3].join('.')
     when 4
-      parts[0, 2].join('.')
+      name = parts[0, 2].join('.')
     when 3
-      parts[0, 1].join('.')
+      name = parts[0, 1].join('.')
     else
-      parts.join('.')
+      name = parts.join('.')
     end
+    link_to(name, Machine.find_by_fqdn(machine.vmhost))
   end
 
   def backup_type
