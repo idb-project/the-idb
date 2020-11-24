@@ -7,11 +7,11 @@
       <th style="min-width: 160px">IP</th>
       <th>IPv6</th>
       <th>OS</th>
-      <th>Architecture</th>
       <th>CPU</th>
       <th>RAM</th>
       <th>Type</th>
       <th>VM Host</th>
+      <th>Location</th>
       <th>Uptime</th>
       <th>Serviced</th>
       <th>Needs Reboot</th>
@@ -44,11 +44,11 @@
         <td data-text="<%= machine.all_ips %>" title="<%= machine.all_ips(true).html_safe %>"><%= machine.all_ips.html_safe %></td>
         <td data-text="<%=machine.first_v6_ip%>" title="<%=machine.first_v6_ip%>"><%= machine.first_v6_ip.truncate(10) if machine.first_v6_ip %></td>
         <td><%= machine.os %> <%= machine.os_release %></td>
-        <td><%= machine.arch %></td>
         <td class="machine_cores"><%= machine.cores %></td>
         <td class="machine_memory"><%= machine.ram %></td>
         <td><%= machine.device_type_name %></td>
         <td><%= machine.vmhost %></td>
+        <td><%= machine.location %></td>
         <td><%= machine.uptime %></td>
         <td><%= machine.serviced_at %></td>
         <td><%= machine.needs_reboot_string %></td>

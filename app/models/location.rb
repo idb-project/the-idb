@@ -27,12 +27,20 @@ class Location < ActiveRecord::Base
     location_level.fetch(level, '')
   end
 
-  def location_name
+  def location_name(sep = " → ")
     names = Array.new()
     self_and_ancestors.to_a.reverse.each do |item|
       names.push(item.name)
     end
-    names.join(" → ")
+    names.join(sep)
+  end
+
+  def location_name_short
+    names = Array.new()
+    self_and_ancestors.to_a.reverse.each do |item|
+      names.push(item.name)
+    end
+    names.last(2).join(":")
   end
 
   def has_parent?

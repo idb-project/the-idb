@@ -282,6 +282,20 @@ class MachinePresenter < Keynote::Presenter
    machine.fqdn
   end
 
+  def location
+    m = machine
+    unless machine.vmhost.blank?
+      m = Machine.find_by_fqdn(machine.vmhost)
+      return "" unless m
+    end
+
+    if m.power_feed_a
+      m.power_feed_a.location_name_short
+    elsif m.power_feed_b
+      m.power_feed_b.location_name_short
+    end
+  end
+
   def attachment_list
     return "none" if (machine.attachments && machine.attachments.size == 0)
 
