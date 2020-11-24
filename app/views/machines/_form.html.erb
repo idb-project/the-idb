@@ -65,7 +65,6 @@
           <%= f.input :backup_type, collection: Machine::BackupType.invert  %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
           <%- if IDB.config.modules.location -%>
-          <%- unless @machine.virtual? -%>
           <%= f.association :power_feed_a, label: "Location A", collection: @form_locations, selected: @power_feed_a_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
           
           <%- unless Location.all.empty? -%>
@@ -86,7 +85,6 @@
           </div>
           <%- end -%>
 
-          <%- end -%>
           <%- end -%>
           <%- if @machine.auto_update? -%>
             <%= f.input :auto_update, label: 'Automatic update?', boolean_style: :inline, input_html: {class: 'span1', style: 'min-height: 23px'} %>
