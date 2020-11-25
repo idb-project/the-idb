@@ -8,9 +8,9 @@ $(function() {
       // ignore summary row
       $('#machine-table').find('tbody:not(".summary") tr:visible').each(function() {
         // cores in sixth column
-        totalCores += $(this).find('td:eq(7)').text() == ""?0:parseFloat($(this).find('td:eq(7)').text());
+        totalCores += $(this).find('td:eq(6)').text() == ""?0:parseFloat($(this).find('td:eq(6)').text());
         // memory in seventh column
-        totalMemory += $(this).find('td:eq(8)').text() == ""?0:parseFloat($(this).find('td:eq(8)').text());
+        totalMemory += $(this).find('td:eq(7)').text() == ""?0:parseFloat($(this).find('td:eq(7)').text());
       });
       // count selected rows
       totalRows = $('#machine-table').find('tbody:not(".summary") tr:visible').length;
@@ -21,12 +21,12 @@ $(function() {
 
       // find out if only one vmhost is filtered
       // the vmhost of the first filtered machine, use it as reference
-      var vmhost = $('#machine-table').find('tbody:not(".summary") tr:visible').find('td:eq(10)').first().text();
+      var vmhost = $('#machine-table').find('tbody:not(".summary") tr:visible').find('td:eq(9)').first().text();
       if (vmhost != "") {
         var vmhost_selected = true;
         $('#machine-table').find('tbody:not(".summary") tr:visible').each(function() {
-          var vmhost_td = $('#machine-table').find('td:eq(10)').text();
-          if(vmhost_td != vmhost || vmhost_td == "n/a" || vmhost_td == "") {
+          var vmhost_td = $('#machine-table').find('td:eq(9)').text();
+          if(!vmhost_td.startsWith(vmhost) || vmhost_td == "n/a" || vmhost_td == "") {
             // we found a row with a machine that has a different vmhost assigned
             vmhost_selected = false;
           }
@@ -36,9 +36,9 @@ $(function() {
           // all filtered machines have the same vmhost assigned
 
           // enhance the core summary by the vmhost data
-          $('.total-cores').html($('.total-cores').text() + " /<br/> " + $('#machine-table').find('tbody:not(".summary")').find(':hidden').find("td:eq(1):contains('"+vmhost+"')").parent().find('td:eq(7)').text() + " C");
+          $('.total-cores').html($('.total-cores').text() + " /<br/> " + $('#machine-table').find('tbody:not(".summary")').find(':hidden').find("td:eq(1):contains('"+vmhost+"')").parent().find('td:eq(6)').text() + " C");
           // enhance the memory summary by the vmhost data
-          $('.total-memory').html($('.total-memory').text() + " /<br/> " + $('#machine-table').find('tbody:not(".summary")').find(':hidden').find("td:eq(1):contains('"+vmhost+"')").parent().find('td:eq(8)').text());
+          $('.total-memory').html($('.total-memory').text() + " /<br/> " + $('#machine-table').find('tbody:not(".summary")').find(':hidden').find("td:eq(1):contains('"+vmhost+"')").parent().find('td:eq(7)').text());
           // list the vmhost name as additional indicator
           $('.summary-td').html("Summary of<br/>" + vmhost);
         }
