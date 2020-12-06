@@ -260,7 +260,6 @@ module V3
           end
 
           m.power_feed_a = params[:power_feed_a_id] ? Location.find_by_id(params[:power_feed_a_id]) : m.power_feed_a
-          m.power_feed_b = params[:power_feed_b_id] ? Location.find_by_id(params[:power_feed_b_id]) : m.power_feed_b
 
           m.save
 
@@ -321,7 +320,6 @@ module V3
         optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }
         optional :software, type: Array, documentation: {is_array: true, type: "String", desc: "Known installed doftware packages" }
         optional :power_feed_a, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed a" }
-        optional :power_feed_b, type: Integer, documentation: { type: "Integer", desc: "Location id of power feed b" }
       end
       get do
         can_read!

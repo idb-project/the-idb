@@ -110,15 +110,10 @@
               <%- if machine.connected_to_power_feed? -%>
               <div class="row-fluid">
                 <div class="span12">
-                  <h5>Locations:</h5>
+                  <h5>Location:</h5>
                   <table class="table table-condensed">
                     <tr>
-                      <th class="span6">A:</th>
-                      <th class="span6">B:</th>
-                    </tr>
-                    <tr>
                       <td class="span6"><%= machine.power_feed_a_location_name.html_safe %></td>
-                      <td class="span6"><%= machine.power_feed_b_location_name.html_safe %></td>
                     </tr>
                   </table>
                 </div>

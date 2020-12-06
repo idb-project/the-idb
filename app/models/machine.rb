@@ -32,7 +32,6 @@ class Machine < ActiveRecord::Base
   belongs_to :owner
   belongs_to :inventory
   belongs_to :power_feed_a, class_name: 'Location', foreign_key: 'power_feed_a'
-  belongs_to :power_feed_b, class_name: 'Location', foreign_key: 'power_feed_b'
 
   has_and_belongs_to_many :maintenance_tickets
   
@@ -102,14 +101,12 @@ class Machine < ActiveRecord::Base
   end
 
   def connected_to_power_feed?
-    !power_feed_a.nil? || !power_feed_b.nil?
+    !power_feed_a.nil?
   end
 
   def power_supply_name(location)
     if power_feed_a == location
       "A"
-    elsif power_feed_b == location
-      "B"
     end
   end
 
@@ -249,14 +246,9 @@ class Machine < ActiveRecord::Base
     expose :needs_reboot, documentation: { type: "Boolean" }
     expose :software, documentation: {is_array: true, type: "Machine::SoftwareEntity", desc: "Known installed doftware packages" }
     expose :power_feed_a, documentation: { type: "Integer", desc: "Location id of power feed a" }
-    expose :power_feed_b, documentation: { type: "Integer", desc: "Location id of power feed b" }
 
     def power_feed_a
       object.power_feed_a ? object.power_feed_a.id : nil
-    end
-
-    def power_feed_b
-      object.power_feed_b ? object.power_feed_b.id : nil
     end
 
   end

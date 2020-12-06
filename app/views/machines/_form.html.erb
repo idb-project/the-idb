@@ -65,22 +65,12 @@
           <%= f.input :backup_type, collection: Machine::BackupType.invert  %>
           <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
           <%- if IDB.config.modules.location -%>
-          <%= f.association :power_feed_a, label: "Location A", collection: @form_locations, selected: @power_feed_a_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
+          <%= f.association :power_feed_a, label: "Location", collection: @form_locations, selected: @power_feed_a_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
           
           <%- unless Location.all.empty? -%>
           <div id="tree-0" class="controls">
             <%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
               <%= k(l).location_tree("tree-0","set_location_for('machine_power_feed_a')",0) %>
-            <%- end -%>
-          </div>
-          <%- end -%>
-
-          <%= f.association :power_feed_b, label: "Location B", collection: @form_locations, selected: @power_feed_b_id, include_blank: true, label_method: lambda { |location| k(location).location_name } %>
-
-          <%- unless Location.all.empty? -%>
-          <div id="tree-1" class="controls">
-            <%- Location.roots.sort_by {|l| l.name }.each do |l| -%>
-              <%= k(l).location_tree("tree-1","set_location_for('machine_power_feed_b')",0) %>
             <%- end -%>
           </div>
           <%- end -%>

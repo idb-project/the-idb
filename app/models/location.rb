@@ -1,6 +1,5 @@
 class Location < ActiveRecord::Base
   has_many :machines_feed_a, class_name: 'Machine', foreign_key: :power_feed_a
-  has_many :machines_feed_b, class_name: 'Machine', foreign_key: :power_feed_b
   belongs_to :location_level
   belongs_to :owner
 

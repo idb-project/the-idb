@@ -33,11 +33,6 @@ class LocationMachinePresenter < Keynote::Presenter
     return link_to feed.name, edit_location_path(feed) if feed
   end
 
-  def power_feed_b_edit_link
-    feed = machine.power_feed_b
-    return link_to feed.name, edit_location_path(feed) if feed
-  end
-
   def country_link
     country = get_location_by_level(10)
     return link_to country.name, location_path(country) if country
@@ -63,24 +58,11 @@ class LocationMachinePresenter < Keynote::Presenter
     return link_to feed.name, location_path(feed) if feed
   end
 
-  def power_feed_b_link
-    feed = machine.power_feed_b
-    return link_to feed.name, location_path(feed) if feed
-  end
-
   private
 
   def get_location_by_level(level)
     if machine.power_feed_a
       location = machine.power_feed_a
-      while location do
-        if location.level == level
-          return location
-        end
-        location = location.parent
-      end
-    elsif machine.power_feed_b
-      location = machine.power_feed_b
       while location do
         if location.level == level
           return location

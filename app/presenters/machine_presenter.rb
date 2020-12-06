@@ -34,16 +34,8 @@ class MachinePresenter < Keynote::Presenter
     machine.power_feed_a.nil? ? "" : machine.power_feed_a.name
   end
 
-  def power_feed_b
-    machine.power_feed_b.nil? ? "" : machine.power_feed_b.name
-  end
-
   def power_feed_a_location_name
     machine.power_feed_a.nil? ? "" : k(machine.power_feed_a).location_name
-  end
-
-  def power_feed_b_location_name
-    machine.power_feed_b.nil? ? "" : k(machine.power_feed_b).location_name
   end
 
   def first_ip
@@ -291,8 +283,6 @@ class MachinePresenter < Keynote::Presenter
 
     if m.power_feed_a
       m.power_feed_a.location_name_short
-    elsif m.power_feed_b
-      m.power_feed_b.location_name_short
     end
   end
 

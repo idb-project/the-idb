@@ -365,11 +365,6 @@
                     "format": "int32",
                     "type": "integer"
                 },
-                "power_feed_b": {
-                    "description": "Location id of power feed b",
-                    "format": "int32",
-                    "type": "integer"
-                },
                 "ram": {
                     "description": "Amount of RAM in MB",
                     "format": "int32",
@@ -819,11 +814,6 @@
                     "format": "int32",
                     "type": "integer"
                 },
-                "power_feed_b": {
-                    "description": "Location id of power feed b",
-                    "format": "int32",
-                    "type": "integer"
-                },
                 "ram": {
                     "description": "Amount of RAM in MB",
                     "format": "int32",
@@ -1206,11 +1196,6 @@
                 },
                 "power_feed_a": {
                     "description": "Location id of power feed a",
-                    "format": "int32",
-                    "type": "integer"
-                },
-                "power_feed_b": {
-                    "description": "Location id of power feed b",
                     "format": "int32",
                     "type": "integer"
                 },
@@ -2356,14 +2341,6 @@
                         "format": "int32",
                         "in": "query",
                         "name": "power_feed_a",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "description": "Location id of power feed b",
-                        "format": "int32",
-                        "in": "query",
-                        "name": "power_feed_b",
                         "required": false,
                         "type": "integer"
                     }

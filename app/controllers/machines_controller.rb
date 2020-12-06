@@ -33,11 +33,9 @@ class MachinesController < ApplicationController
   def create
     @machine = Machine.new(params.require(:machine).permit(:fqdn, :description, :owner_id, :backup_type))
     @machine.power_feed_a = Location.find(params[:machine][:power_feed_a]) unless params[:machine][:power_feed_a].blank?
-    @machine.power_feed_b = Location.find(params[:machine][:power_feed_b]) unless params[:machine][:power_feed_b].blank?
     @form_locations = Location.depth_traverse
 
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
-    @power_feed_b_id = @machine.power_feed_b.nil? ? "" : @machine.power_feed_b.id
 
     if @machine.save
       add_attachments(params[:attachments])
@@ -52,7 +50,6 @@ class MachinesController < ApplicationController
   def edit
     @machine = Machine.find(params[:id])
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
-    @power_feed_b_id = @machine.power_feed_b.nil? ? "" : @machine.power_feed_b.id
     @power_supplies = Location.joins(:location_level).where("location_levels.level = ?", 50).order(:name).each{|l| l.name=l.name + " ("+l.location_name+")"}
     @machine_details = EditableMachineForm.new(@machine)
     @form_locations = Location.depth_traverse
@@ -68,14 +65,8 @@ class MachinesController < ApplicationController
     else
       @machine.power_feed_a = Location.find(params[:machine][:power_feed_a])
     end
-    if params[:machine][:power_feed_b].blank?
-      @machine.power_feed_b = nil
-    else
-      @machine.power_feed_b = Location.find(params[:machine][:power_feed_b])
-    end
 
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
-    @power_feed_b_id = @machine.power_feed_b.nil? ? "" : @machine.power_feed_b.id
 
     if @machine.update(machine_params.permit!)
       add_attachments(params[:attachments])
@@ -92,7 +83,6 @@ class MachinesController < ApplicationController
     @form_locations = Location.depth_traverse
 
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
-    @power_feed_b_id = @machine.power_feed_b.nil? ? "" : @machine.power_feed_b.id
 
     update_status = @machine.update_details(params, @machine_details)
     if update_status
