@@ -15,7 +15,11 @@ class MachinePresenter < Keynote::Presenter
   end
 
   def name_link
-    link_to(machine.name, machine)
+    link = link_to(machine.name, machine)
+    if auto_update
+      link += "<span class=\"auto-update\">*</span>".html_safe
+    end
+    link += "<br/>".html_safe + alias_names
   end
 
   def owner_link
@@ -46,19 +50,19 @@ class MachinePresenter < Keynote::Presenter
     eth0 ? eth0.ipv4addr : machine.nics.first.ipv4addr
   end
 
-  def all_ips(title=false)
+  def all_ips
     return "" if machine.nics.empty?
 
     ips = ""
     machine.nics.each do |nic|
-      ips += nic.ipv4addr + (title ? "\r\n" : "<br/>")
+      ips += nic.ipv4addr + (nic.ipv6addr.blank? ? "" : " - "+nic.ipv6addr) + "<br/>".html_safe
     end
     ips
   end
 
   def first_v6_ip
     return if machine.nics.empty?
-
+ 
     eth0 = machine.nics.find {|n| n.name == 'eth0' }
 
     eth0 ? eth0.ipv6addr : machine.nics.first.ipv6addr

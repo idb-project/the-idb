@@ -3,9 +3,7 @@
     <tr>
       <th>ID</th>
       <th>FQDN</th>
-      <th>Aliases</th>
-      <th style="min-width: 160px">IP</th>
-      <th>IPv6</th>
+      <th style="min-width: 160px">IP Adresses</th>
       <th>OS</th>
       <th>CPU</th>
       <th>RAM</th>
@@ -37,12 +35,8 @@
       <%- machine = k(:machine, machine) -%>
       <tr id="#machine-<%= machine.id %>">
         <td><%= machine.id %></td>
-        <td style="font-weight:normal <%=";font-style:italic" if machine.outdated && machine.auto_update %>" data-name="<%=machine.fqdn%>"><%= machine.name_link %>
-          <span class="auto-update"><%="*" if machine.auto_update%></span>
-        </td>
-        <td><%= machine.alias_names %></td>
-        <td data-text="<%= machine.all_ips %>" title="<%= machine.all_ips(true).html_safe %>"><%= machine.all_ips.html_safe %></td>
-        <td data-text="<%=machine.first_v6_ip%>" title="<%=machine.first_v6_ip%>"><%= machine.first_v6_ip.truncate(10) if machine.first_v6_ip %></td>
+        <td data-name="<%=machine.fqdn%>"><%= machine.name_link %></td>
+        <td style="white-space: nowrap;" data-text="<%= machine.all_ips %>"><%= machine.all_ips.html_safe %></td>
         <td><%= machine.os %> <%= machine.os_release %></td>
         <td class="machine_cores"><%= machine.cores %></td>
         <td class="machine_memory"><%= machine.ram %></td>
@@ -85,8 +79,6 @@
     <tr class="">
       <td></td>
       <td class="summary-td">Summary</td>
-      <td></td>
-      <td></td>
       <td></td>
       <td></td>
       <td><span class="total-cores"></span></td>
