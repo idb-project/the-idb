@@ -60,10 +60,12 @@ class MachinesController < ApplicationController
     @form_locations = Location.depth_traverse
     @machine_details = EditableMachineForm.new(@machine)
 
-    if params[:machine][:power_feed_a].blank?
-      @machine.power_feed_a = nil
-    else
-      @machine.power_feed_a = Location.find(params[:machine][:power_feed_a])
+    if params[:machine][:power_feed_a]
+      if params[:machine][:power_feed_a].empty?
+        @machine.power_feed_a = nil
+      else
+        @machine.power_feed_a = Location.find(params[:machine][:power_feed_a])
+      end
     end
 
     @power_feed_a_id = @machine.power_feed_a.nil? ? "" : @machine.power_feed_a.id
