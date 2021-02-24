@@ -14,48 +14,16 @@ targets:
       - libxslt
       - libxslt-devel
    dependencies:
-      - redis 
-      - mariadb-server 
-      - mod_ssl 
-      - httpd-devel 
-      - postfix 
-      - mod_passenger 
-      - passenger-devel 
-      - vim 
-      - libevent 
-      - postgresql-libs 
-  ubuntu-16.04:
-    build_dependencies:
-      - libgmp-dev 
-      - build-essential 
-      - bison 
-      - openssl 
-      - libreadline6
-      - libreadline6-dev 
-      - curl 
-      - git-core 
-      - zlib1g 
-      - zlib1g-dev 
-      - libssl-dev 
-      - libyaml-dev 
-      - libxml2-dev
-      - autoconf 
-      - libc6-dev 
-      - ncurses-dev 
-      - automake 
-      - libtool 
-      - libmysqlclient-dev 
-      - mysql-client
-      - libxslt1.1
-      - libxslt1-dev 
-    dependencies:
-      - apache2
-      - mysql-server
-      - redis-server
-      - vim
+      - redis
+      - mariadb-server
+      - mod_ssl
+      - httpd-devel
       - postfix
-      - libapache2-mod-passenger
-    after_install: "scripts/debian/postinst.sh"
+      - mod_passenger
+      - passenger-devel
+      - vim
+      - libevent
+      - postgresql-libs
   ubuntu-20.04:
     build_dependencies:
       - libgmp-dev
