@@ -50,7 +50,7 @@ targets:
       - libxslt1-dev
     dependencies:
       - apache2
-      - mysql-server
+      - mariadb-server
       - redis-server
       - vim
       - postfix
