@@ -28,7 +28,11 @@ https://github.com/idb-project
 The primary adapter for gathering informations has been PuppetDB.
 That's the reason why - unlike other adapters - the PuppetDB adapter is
 bundled directly within the idb. Don't fear: the idb can be used
-without puppet just fine. 
+without puppet just fine.
+
+## Install packages
+
+You might find several but probably untested packages for various operating systems at https://packager.io/gh/idb-project/the-idb/refs/develop
 
 ## Contact to the team
 
