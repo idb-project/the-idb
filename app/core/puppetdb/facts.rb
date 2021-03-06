@@ -171,7 +171,7 @@ module Puppetdb
       if operatingsystem == "Debian" && idb_installed_packages && idb_installed_packages.include?("proxmox-ve")
         self.operatingsystem = "Proxmox"
         begin
-          self.operatingsystemrelease = idb_installed_packages.scan(/proxmox-ve\=\S*/).last.split("=")[1] || "-"
+          self.operatingsystemrelease = idb_installed_packages.scan(/pve-manager\=\S*/).last.split("=")[1] || "-"
         rescue
           self.operatingsystemrelease = ""
         end
