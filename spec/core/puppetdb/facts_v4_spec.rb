@@ -277,7 +277,7 @@ describe Puppetdb::FactsV4 do
       before do
         hash[:operatingsystem] = 'Debian'
         hash[:operatingsystemrelease] = '8'
-        hash[:idb_installed_packages] =  'nginx=1.2.3 proxmox-ve=6.1-2'
+        hash[:idb_installed_packages] =  'nginx=1.2.3 pve-manager=6.1-2'
       end
 
       it 'sets the version to 6.1-2' do
