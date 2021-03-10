@@ -27,11 +27,6 @@ describe Puppetdb::FactsV4 do
       netmask_lo: '255.0.0.0',
       is_virtual: false,
       serialnumber: '42Q6F5J',
-      drac_domain: 'example.com',
-      drac_ipaddress: '10.1.1.1',
-      drac_macaddress: '8c:23:4e:41:06:be',
-      drac_name: 'idrac-vmhost24',
-      drac_netmask: '255.255.255.0',
       idb_unattended_upgrades_reboot: true,
       idb_pending_updates: 8,
       idb_installed_packages: 'nginx=1.2.3',
@@ -110,19 +105,10 @@ describe Puppetdb::FactsV4 do
   context 'if interfaces is nil' do
     before do
       hash[:interfaces] = nil
-      hash[:drac_name] = nil
     end
 
     it 'does not have any interfaces' do
       expect(facts.interfaces).to be_empty
-    end
-  end
-
-  context 'without iDrac' do
-    before { hash.delete(:drac_name) }
-
-    it 'does not have an idrac interface' do
-      expect(facts.interfaces).to_not have_key('idrac')
     end
   end
 
@@ -209,26 +195,6 @@ describe Puppetdb::FactsV4 do
   describe 'lo' do
     it 'does not have a lo interface' do
       expect(facts.interfaces['lo']).to be_nil
-    end
-  end
-
-  describe 'iDrac' do
-    let(:drac) { facts.interfaces['idrac'] }
-
-    it 'has an ip address' do
-      expect(drac.ip_address.addr).to eq(hash[:drac_ipaddress])
-    end
-
-    it 'has a netmask' do
-      expect(drac.ip_address.netmask).to eq(hash[:drac_netmask])
-    end
-
-    it 'has a mac address' do
-      expect(drac.mac).to eq(hash[:drac_macaddress])
-    end
-
-    it 'has an address family' do
-      expect(drac.ip_address.family).to eq('inet')
     end
   end
 

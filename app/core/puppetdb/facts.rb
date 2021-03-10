@@ -26,11 +26,6 @@ module Puppetdb
     attribute :uptime_seconds, Integer
     attribute :is_virtual, Boolean
     attribute :serialnumber, String
-    attribute :drac_name, String
-    attribute :drac_domain, String
-    attribute :drac_ipaddress, String
-    attribute :drac_netmask, String
-    attribute :drac_macaddress, String
     attribute :idb_unattended_upgrades, Boolean
     attribute :idb_unattended_upgrades_blacklisted_packages, Array
     attribute :idb_unattended_upgrades_reboot, Boolean
@@ -66,7 +61,6 @@ module Puppetdb
         end
       end
 
-      build_drac(@interfaces)
       windows_fixes
       proxmox_detection
     end
@@ -142,20 +136,6 @@ module Puppetdb
         nic.ip_address.netmask = attributes["netmask_#{name}"] || attributes["netmask_#{name}".downcase] || attributes["netmask_#{name_alt}"]
         # XXX Hardcoded for now! Not sure how facter displays ipv6 addresses.
         nic.ip_address.family = 'inet'
-      end
-    end
-
-    def build_drac(interfaces)
-      if drac_name && drac_ipaddress && drac_macaddress
-        Nic.new(name: 'idrac').tap do |nic|
-          nic.mac = drac_macaddress
-          nic.ip_address = IpAddress.new
-          nic.ip_address.addr = drac_ipaddress
-          nic.ip_address.netmask = drac_netmask
-          nic.ip_address.family = 'inet'
-
-          interfaces[nic.name] = nic
-        end
       end
     end
 
