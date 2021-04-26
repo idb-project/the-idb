@@ -107,31 +107,33 @@ class MachineUpdateService
   end
 
   def self.update_from_oxidized_facts(machine, url)
-    facts = Oxidized::Facts.for(machine, url)
+    if IDB.config.oxidized.nil?
+      facts = Oxidized::Facts.for(machine, url)
 
-    machine.becomes!(Machine)
-    machine.auto_update = true
-    machine.os = facts.operatingsystem
-    facts.interfaces.each do |name, new_nic|
-      next if new_nic.ipv4addr.nil?
+      machine.becomes!(Machine)
+      machine.auto_update = true
+      machine.os = facts.operatingsystem
+      facts.interfaces.each do |name, new_nic|
+        next if new_nic.ipv4addr.nil?
 
-      if machine.nics.map(&:name).include?(name)
-        # Update the existing nic data.
-        nic = machine.nics.find {|n| n.name == name }
+        if machine.nics.map(&:name).include?(name)
+          # Update the existing nic data.
+          nic = machine.nics.find {|n| n.name == name }
 
-        nic.mac = new_nic.mac
-        nic.ip_address.addr = new_nic.ip_address.addr
-        nic.ip_address.addr_v6 = new_nic.ip_address.addr_v6
-        nic.ip_address.netmask = new_nic.ip_address.netmask
-        nic.ip_address.family = new_nic.ip_address.family
+          nic.mac = new_nic.mac
+          nic.ip_address.addr = new_nic.ip_address.addr
+          nic.ip_address.addr_v6 = new_nic.ip_address.addr_v6
+          nic.ip_address.netmask = new_nic.ip_address.netmask
+          nic.ip_address.family = new_nic.ip_address.family
 
-        nic.save!
-      else
-        # Just add the new nic objects. They will be saved automatically.
-        machine.nics << new_nic
+          nic.save!
+        else
+          # Just add the new nic objects. They will be saved automatically.
+          machine.nics << new_nic
+        end
       end
+
+      machine.save!
     end
-    
-    machine.save!
   end
 end
