@@ -14,7 +14,7 @@ RUN tar xf v${ruby_build_version}
 RUN ruby-build-${ruby_build_version}/install.sh
 
 # install ruby dependencies
-RUN apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev bzip2
+RUN apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev bzip2 shared-mime-info
 
 # install ruby, skipping docs
 RUN env RUBY_CONFIGURE_OPTS=--disable-install-doc ruby-build ${ruby_version} /usr/local
