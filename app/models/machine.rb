@@ -196,8 +196,10 @@ class Machine < ActiveRecord::Base
   end
 
   def validate_fqdn_not_in_deleted
-    if Machine.only_deleted.find_by_fqdn(fqdn)
-      errors.add(:fqdn, "FQDN in use by deleted machine.")
+    if IDB.config.modules.softdelete
+      if Machine.only_deleted.find_by_fqdn(fqdn)
+        errors.add(:fqdn, "FQDN in use by deleted machine.")
+      end
     end
   end
 
