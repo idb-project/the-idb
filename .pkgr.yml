@@ -13,6 +13,7 @@ targets:
       - libxml2-devel
       - libxslt
       - libxslt-devel
+      - shared-mime-info
    dependencies:
       - redis
       - mariadb-server
