@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/idb-project/the-idb.svg?branch=develop)](https://travis-ci.org/idb-project/the-idb)
-
 # the idb
 
 Once upon a time we used spreadsheets and wiki pages to 
