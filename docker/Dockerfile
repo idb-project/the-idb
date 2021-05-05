@@ -16,6 +16,11 @@ RUN ruby-build-${ruby_build_version}/install.sh
 # install ruby dependencies
 RUN apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev bzip2 shared-mime-info
 
+# Add docker-compose-wait tool
+ENV WAIT_VERSION 2.8.0
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
+RUN chmod +x /wait
+
 # install ruby, skipping docs
 RUN env RUBY_CONFIGURE_OPTS=--disable-install-doc ruby-build ${ruby_version} /usr/local
 RUN gem install bundler -v ${bundler_version}
