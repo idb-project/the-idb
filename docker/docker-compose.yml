@@ -14,7 +14,7 @@ services:
       - ./runtime/config:/opt/idb/config
       - ./runtime/attachments:/opt/idb/public/attachments
     env_file: runtime/environments/idb.env
-    command: bash -l -c docker/build/scripts/idb.sh
+    command: bash -l -c '/wait && docker/build/scripts/idb.sh'
 
   database:
     image: mysql:5.7
