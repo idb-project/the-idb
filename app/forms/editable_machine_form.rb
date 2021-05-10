@@ -66,14 +66,6 @@ class EditableMachineForm
 
     nics_changed = false
 
-    # test if a nic name is duplicated
-    names = nics.pluck(:name)
-    if names.size > names.uniq.size
-      @show_errors = true
-      self.errors.add('Nic','duplicate name')
-      return false
-    end
-
     # if nic parameters are presented delete all nics and create them from scratch
     @machine.nics.destroy_all if nics.size > 0
 

@@ -138,8 +138,8 @@ describe EditableMachineForm do
       expect(machine.nics.first.name).to eq('eth3-new')
     end
 
-    describe 'invalid multiple nics' do
-      it 'errors on nics with same name' do
+    describe 'valid multiple nics' do
+      it 'proceeds on nics with same name' do
         attrs = attributes.clone
         attrs[:nics] << {
           name: 'invalid',
@@ -157,14 +157,14 @@ describe EditableMachineForm do
             netmask: '255.255.255.0'
           }
         }
-        expect(form.update(attrs)).to eq(false)
+        expect(form.update(attrs)).to be_kind_of(Hash)
       end
     end
 
     describe 'multiple nics' do
       before do
         attributes[:nics] << {
-          name: 'eth4',
+          name: 'eth3',
           mac: '3c:97:5e:40:16:a1',
           ip_address: {
             addr: '10.0.0.2',
@@ -186,7 +186,7 @@ describe EditableMachineForm do
         expect(machine.nics.first.ipv6mask).to eq('2001:0DB8:85a3:08D3:1319:8A2E:0370:7347/64')
         expect(machine.nics.first.ip_address.family).to eq('inet')
 
-        expect(machine.nics.last.name).to eq('eth4')
+        expect(machine.nics.last.name).to eq('eth3')
         expect(machine.nics.last.mac).to eq('3c:97:5e:40:16:a1')
         expect(machine.nics.last.ipv4addr).to eq('10.0.0.2')
         expect(machine.nics.last.ipv4mask).to eq('255.255.255.0')

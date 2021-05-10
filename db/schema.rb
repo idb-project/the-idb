@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_06_145100) do
+ActiveRecord::Schema.define(version: 2021_05_10_201014) do
 
   create_table "api_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "token"
@@ -245,7 +245,6 @@ ActiveRecord::Schema.define(version: 2020_02_06_145100) do
     t.index ["deleted_at"], name: "index_nics_on_deleted_at"
     t.index ["mac"], name: "index_nics_on_mac"
     t.index ["machine_id"], name: "index_nics_on_machine_id"
-    t.index ["name", "machine_id"], name: "index_nics_on_name_and_machine_id", unique: true
   end
 
   create_table "operating_systems", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
