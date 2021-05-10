@@ -42,6 +42,7 @@ COPY --chown=idb:idb . /opt/idb
 #RUN mv docker/build/config config
 
 USER root
+RUN adduser www-data idb
 ADD docker/build/apache.conf /etc/apache2/sites-available/idb.conf
 RUN a2dissite 000-default && a2ensite idb
 EXPOSE 80
