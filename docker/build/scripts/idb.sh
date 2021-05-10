@@ -2,8 +2,9 @@
 
 set -x
 
-# try to load the schema
-bundle exec rake db:schema:load >/dev/null 2>&1 || true
+export HOME=/opt/idb
+su -p idb -c 'bundle exec rake db:migrate --trace' || true
+su -p idb -c 'bundle exec rake assets:precompile --trace' || true
 
 apachectl -D FOREGROUND &
 
