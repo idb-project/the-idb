@@ -42,22 +42,17 @@ class MachineUpdateService
 
     # First check if a network interface has been removed.
     machine.nics.each do |nic|
-      if facts.interfaces.has_key?(nic.name)
-        # Delete the interface on the machine if the new address is empty.
-        if facts.interfaces[nic.name].ipv4addr.nil?
-          nic.destroy
-        end
-      else
+      unless facts.interfaces.has_key?(nic.ipv4addr)
         nic.destroy
       end
     end
 
-    facts.interfaces.each do |name, new_nic|
+    facts.interfaces.each do |v4, new_nic|
       next if new_nic.ipv4addr.nil?
 
-      if machine.nics.map(&:name).include?(name)
+      if machine.nics.map(&:ipv4addr).include?(v4)
         # Update the existing nic data.
-        nic = machine.nics.find {|n| n.name == name }
+        nic = machine.nics.find {|n| n.ipv4addr == v4 }
 
         nic.mac = new_nic.mac
         nic.ip_address.addr = new_nic.ip_address.addr

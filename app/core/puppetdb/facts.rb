@@ -52,12 +52,25 @@ module Puppetdb
       @interfaces = {}
 
       attributes = ActiveSupport::HashWithIndifferentAccess.new(attributes)
+      attributes[:networking][:interfaces].keys.each do |interface_name|
+        next if interface_name == 'lo'
 
-      attributes[:interfaces].to_s.split(',').each do |interface|
-        nic = build_nic(interface, attributes)
+        if attributes[:networking][:interfaces]["#{interface_name}"] &&
+          attributes[:networking][:interfaces]["#{interface_name}"]["bindings"]
+          # all interface information is located in the networking/interfaces section in newer puppetdbs
 
-        if nic
-          @interfaces[nic.name] = nic
+          attributes[:networking][:interfaces]["#{interface_name}"]["bindings"].each_with_index do |binding, index|
+            if attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size > 0 &&
+              (index+1) <= attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size
+
+              # v6 addresses are in a different section, and also in an array. So one needs to
+              # pick them from the according array index.
+              v6 = attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"][index][:address]
+            end
+
+            nic = build_nic(interface_name, binding["address"], v6, binding["netmask"], attributes[:networking][:interfaces]["#{interface_name}"][:mac])
+            @interfaces[binding["address"]] = nic
+          end
         end
       end
 
@@ -120,21 +133,13 @@ module Puppetdb
 
     private
 
-    def build_nic(name, attributes)
-      # We don't need local loopback interfaces.
-      return if name == 'lo'
-      name_alt = name.gsub("-", "_")
-
+    def build_nic(name, ipv4, ipv6, netmask, mac)
       Nic.new(name: name).tap do |nic|
-        # XXX Revisit: Windows seems to only set "macaddress".
-        nic.mac = attributes["macaddress_#{name}"] || attributes["macaddress_#{name}".downcase] || attributes["macaddress_#{name_alt}"] || attributes['macaddress']
-        nic.mac = nic.mac.downcase if nic.mac
+        nic.mac = mac
         nic.ip_address = IpAddress.new
-
-        nic.ip_address.addr = attributes["ipaddress_#{name}"] || attributes["ipaddress_#{name}".downcase] || attributes["ipaddress_#{name_alt}"]
-        nic.ip_address.addr_v6 = attributes["ipaddress6_#{name}"] || attributes["ipaddress6_#{name}".downcase] || attributes["ipaddress6_#{name_alt}"]
-        nic.ip_address.netmask = attributes["netmask_#{name}"] || attributes["netmask_#{name}".downcase] || attributes["netmask_#{name_alt}"]
-        # XXX Hardcoded for now! Not sure how facter displays ipv6 addresses.
+        nic.ip_address.addr = ipv4
+        nic.ip_address.addr_v6 = ipv6
+        nic.ip_address.netmask = netmask
         nic.ip_address.family = 'inet'
       end
     end
