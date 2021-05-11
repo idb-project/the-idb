@@ -62,7 +62,8 @@ module Puppetdb
             # all interface information is located in the networking/interfaces section in newer puppetdbs
 
             attributes[:networking][:interfaces]["#{interface_name}"]["bindings"].each_with_index do |binding, index|
-              if attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size > 0 &&
+              if attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"] &&
+                attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size > 0 &&
                 (index+1) <= attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size
 
                 # v6 addresses are in a different section, and also in an array. So one needs to
