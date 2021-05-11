@@ -52,24 +52,29 @@ module Puppetdb
       @interfaces = {}
 
       attributes = ActiveSupport::HashWithIndifferentAccess.new(attributes)
-      attributes[:networking][:interfaces].keys.each do |interface_name|
-        next if interface_name == 'lo'
 
-        if attributes[:networking][:interfaces]["#{interface_name}"] &&
-          attributes[:networking][:interfaces]["#{interface_name}"]["bindings"]
-          # all interface information is located in the networking/interfaces section in newer puppetdbs
+      if attributes[:networking] && attributes[:networking][:interfaces]
+        attributes[:networking][:interfaces].keys.each do |interface_name|
+          next if interface_name == 'lo'
 
-          attributes[:networking][:interfaces]["#{interface_name}"]["bindings"].each_with_index do |binding, index|
-            if attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size > 0 &&
-              (index+1) <= attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size
+          if attributes[:networking][:interfaces]["#{interface_name}"] &&
+            attributes[:networking][:interfaces]["#{interface_name}"]["bindings"]
+            # all interface information is located in the networking/interfaces section in newer puppetdbs
 
-              # v6 addresses are in a different section, and also in an array. So one needs to
-              # pick them from the according array index.
-              v6 = attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"][index][:address]
+            attributes[:networking][:interfaces]["#{interface_name}"]["bindings"].each_with_index do |binding, index|
+              if attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size > 0 &&
+                (index+1) <= attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"].size
+
+                # v6 addresses are in a different section, and also in an array. So one needs to
+                # pick them from the according array index.
+                v6 = attributes[:networking][:interfaces]["#{interface_name}"]["bindings6"][index][:address]
+              end
+
+              mac = attributes[:networking][:interfaces]["#{interface_name}"][:mac]
+              mac = mac.downcase if mac
+              nic = build_nic(interface_name, binding["address"], v6, binding["netmask"], mac)
+              @interfaces[binding["address"]] = nic
             end
-
-            nic = build_nic(interface_name, binding["address"], v6, binding["netmask"], attributes[:networking][:interfaces]["#{interface_name}"][:mac])
-            @interfaces[binding["address"]] = nic
           end
         end
       end

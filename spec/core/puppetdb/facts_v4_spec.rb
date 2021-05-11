@@ -13,18 +13,7 @@ describe Puppetdb::FactsV4 do
       blockdevice_sda_size: 2000000,
       processorcount: 4,
       uptime_seconds: 1234,
-      interfaces: 'eth0,eth1,lo,Local_Area_Connection_2',
-      ipaddress_eth0: '172.20.10.7',
-      ipaddress6_eth0: '2001:67c:18e8::a',
-      ipaddress_eth1: '10.0.0.1',
-      ipaddress_local_area_connection_2: '10.1.2.3',
-      ipaddress_lo: '127.0.0.1',
-      macaddress: '6a:a8:6d:e0:a2:a7',
-      macaddress_eth0: '6a:a8:6d:e0:a2:a6',
-      macaddress_eth1: '3c:97:0e:40:06:be',
-      netmask_eth0: '255.255.255.240',
-      netmask_eth1: '255.255.255.0',
-      netmask_lo: '255.0.0.0',
+      networking: {:interfaces=>{"lo"=>{"ip"=>"127.0.0.1", "bindings6"=>[{"address"=>"::1", "netmask"=>"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "network"=>"::1"}], "mtu"=>65536, "bindings"=>[{"address"=>"127.0.0.1", "netmask"=>"255.0.0.0", "network"=>"127.0.0.0"}], "network6"=>"::1", "netmask6"=>"ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "ip6"=>"::1", "netmask"=>"255.0.0.0", "network"=>"127.0.0.0", "scope6"=>"host"}, "eth0"=>{"ip"=>"172.20.10.7", "bindings6"=>[{"address"=>"172.20.10.7v6", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"2001:37f:19f8:2::"}, {"address"=>"fe80::cccc:c0ff:fe07:1d3", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"fe80::"}], "mtu"=>1500, "bindings"=>[{"address"=>"172.20.10.7", "netmask"=>"255.255.255.240", "network"=>"10.10.0.0"}], "network6"=>"2001:37f:19f8:2::", "dhcp"=>"10.10.0.66", "netmask6"=>"ffff:ffff:ffff:ffff::", "ip6"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"255.255.255.0", "network"=>"10.10.0.0", "scope6"=>"global", "mac"=>"6a:a8:6d:e0:a2:a6"}, "eth1"=>{"ip"=>"10.0.0.1", "bindings6"=>[{"address"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"2001:37f:19f8:2::"}, {"address"=>"fe80::cccc:c0ff:fe07:1d3", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"fe80::"}], "mtu"=>1500, "bindings"=>[{"address"=>"10.0.0.1", "netmask"=>"255.255.255.0", "network"=>"10.10.0.0"}], "network6"=>"2001:37f:19f8:2::", "dhcp"=>"10.10.0.66", "netmask6"=>"ffff:ffff:ffff:ffff::", "ip6"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"255.255.255.0", "network"=>"10.10.0.0", "scope6"=>"global", "mac"=>"3c:97:0e:40:06:be"}, "Ethernet 2"=>{"ip"=>"127.0.1.1", "bindings6"=>[{"address"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"2001:37f:19f8:2::"}, {"address"=>"fe80::cccc:c0ff:fe07:1d3", "netmask"=>"ffff:ffff:ffff:ffff::", "network"=>"fe80::"}], "mtu"=>1500, "bindings"=>[{"address"=>"127.0.1.1", "netmask"=>"255.255.0.0", "network"=>"10.10.0.0"}], "network6"=>"2001:37f:19f8:2::", "dhcp"=>"10.10.0.66", "netmask6"=>"ffff:ffff:ffff:ffff::", "ip6"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"255.255.255.0", "network"=>"10.10.0.0", "scope6"=>"global", "mac"=>"3c:97:0e:40:06:b2"}}, "ip"=>"10.10.0.9", "primary"=>"eth0", "mtu"=>1500, "network6"=>"2001:37f:19f8:2::", "hostname"=>"myfqdn", "dhcp"=>"10.10.0.66", "fqdn"=>"myfqdn.example.com", "netmask6"=>"ffff:ffff:ffff:ffff::", "ip6"=>"2001:37f:19f8:2:cccc:c0ff:fe07:1d3", "netmask"=>"255.255.255.0", "network"=>"10.10.0.0", "domain"=>"mydomain.local", "scope6"=>"global", "mac"=>"ce:cc:c0:07:01:d3"},
       is_virtual: false,
       serialnumber: '42Q6F5J',
       idb_unattended_upgrades_reboot: true,
@@ -104,7 +93,7 @@ describe Puppetdb::FactsV4 do
 
   context 'if interfaces is nil' do
     before do
-      hash[:interfaces] = nil
+      hash[:networking][:interfaces] = nil
     end
 
     it 'does not have any interfaces' do
@@ -129,22 +118,22 @@ describe Puppetdb::FactsV4 do
   end
 
   describe 'eth0' do
-    let(:eth0) { facts.interfaces['eth0'] }
+    let(:eth0) { facts.interfaces["172.20.10.7"] }
 
     it 'has an ip address' do
-      expect(eth0.ip_address.addr).to eq(hash[:ipaddress_eth0])
+      expect(eth0.ip_address.addr).to eq(hash[:networking][:interfaces]["eth0"]["bindings"].first["address"])
     end
 
     it 'has an ipv6 address' do
-      expect(eth0.ip_address.addr_v6).to eq(hash[:ipaddress6_eth0])
+      expect(eth0.ip_address.addr_v6).to eq(hash[:networking][:interfaces]["eth0"]["bindings6"].first["address"])
     end
 
     it 'has a netmask' do
-      expect(eth0.ip_address.netmask).to eq(hash[:netmask_eth0])
+      expect(eth0.ip_address.netmask).to eq(hash[:networking][:interfaces]["eth0"]["bindings"].first["netmask"])
     end
 
     it 'has a mac address' do
-      expect(eth0.mac).to eq(hash[:macaddress_eth0])
+      expect(eth0.mac).to eq(hash[:networking][:interfaces]["eth0"]["mac"])
     end
 
     it 'has an address family' do
@@ -153,63 +142,24 @@ describe Puppetdb::FactsV4 do
   end
 
   describe 'eth1' do
-    let(:eth1) { facts.interfaces['eth1'] }
+    let(:eth1) { facts.interfaces["10.0.0.1"] }
 
     it 'has an ip address' do
-      expect(eth1.ip_address.addr).to eq(hash[:ipaddress_eth1])
-    end
-
-    it 'has a netmask' do
-      expect(eth1.ip_address.netmask).to eq(hash[:netmask_eth1])
-    end
-
-    it 'has a mac address' do
-      expect(eth1.mac).to eq(hash[:macaddress_eth1])
-    end
-
-    it 'has an address family' do
-      expect(eth1.ip_address.family).to eq('inet')
-    end
-  end
-
-  describe 'local_area_connection_2' do
-    let(:lan) { facts.interfaces['Local_Area_Connection_2'] }
-
-    it 'has an ip address' do
-      expect(lan.ip_address.addr).to eq(hash[:ipaddress_local_area_connection_2])
-    end
-
-    it 'has a netmask' do
-      expect(lan.ip_address.netmask).to eq(hash[:netmask_local_area_connection_2])
-    end
-
-    it 'has a mac address' do
-      expect(lan.mac).to eq(hash[:macaddress])
-    end
-
-    it 'has an address family' do
-      expect(lan.ip_address.family).to eq('inet')
-    end
-  end
-
-  describe 'lo' do
-    it 'does not have a lo interface' do
-      expect(facts.interfaces['lo']).to be_nil
+      expect(eth1.ip_address.addr).to eq(hash[:networking][:interfaces]["eth1"]["bindings"].first["address"])
     end
   end
 
   describe 'normalizations' do
     it 'downcases the mac addresses' do
-      hash[:macaddress_eth0] = '6A:A8:6D:E0:A2:A6'
+      hash[:networking][:interfaces]["eth0"]["mac"] = '6A:A8:6D:E0:A2:A6'
 
-      expect(facts.interfaces['eth0'].mac).to eq('6a:a8:6d:e0:a2:a6')
+      expect(facts.interfaces['172.20.10.7'].mac).to eq('6a:a8:6d:e0:a2:a6')
     end
 
     it 'handles nil mac addresses' do
-      hash[:macaddress_eth0] = nil
-      hash[:macaddress] = nil
+      hash[:networking][:interfaces]["eth0"]["mac"] = nil
 
-      expect(facts.interfaces['eth0'].mac).to be_nil
+      expect(facts.interfaces['172.20.10.7'].mac).to be_nil
     end
   end
 

@@ -58,13 +58,6 @@ describe Nic do
     expect(Nic.where(mac: mac2).size).to eq(2)
   end
 
-  it 'does not allow the same name and machine twice' do
-    expect {
-      described_class.create!(name: 'eth0', machine_id: 1, mac: mac)
-      described_class.create!(name: 'eth0', machine_id: 1, mac: mac)
-    }.to raise_error(ActiveRecord::RecordNotUnique)
-  end
-
   describe '#ipv4addr' do
     it 'returns the ip address' do
       expect(nic.ipv4addr).to eq('10.0.0.1')
