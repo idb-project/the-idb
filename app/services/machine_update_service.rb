@@ -43,7 +43,8 @@ class MachineUpdateService
     # First check if a network interface has been removed.
     machine.nics.each do |nic|
       unless facts.interfaces.has_key?(nic.ipv4addr)
-        nic.destroy
+        # Do not remove if interface has been created manually
+        nic.destroy unless nic.manually_created?
       end
     end
 

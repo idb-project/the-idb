@@ -82,7 +82,7 @@ class EditableMachineForm
       nic = nic_for(data)
       return false unless nic
 
-      nic.update(mac: data[:mac])
+      nic.update(mac: data[:mac], manually_created: true)
       nics_changed = true
       nic.ip_address || nic.build_ip_address(family: 'inet')
       nic.ip_address.update(ip_address) if ip_address
