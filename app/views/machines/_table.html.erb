@@ -7,6 +7,7 @@
       <th>OS</th>
       <th>CPU</th>
       <th>RAM</th>
+      <th>Disk</th>
       <th>Type</th>
       <th>VM Host</th>
       <th>Location</th>
@@ -39,7 +40,8 @@
         <td style="white-space: nowrap;" data-text="<%= machine.all_ips %>"><%= machine.all_ips.html_safe %></td>
         <td><%= machine.os %> <%= machine.os_release %></td>
         <td class="machine_cores"><%= machine.cores %></td>
-        <td class="machine_memory"><%= machine.ram %></td>
+        <td class="machine_memory" style="white-space: nowrap;"><%= machine.ram %></td>
+        <td class="machine_diskspace" style="white-space: nowrap;"><%= machine.diskspace_in_tb %></td>
         <td><%= machine.device_type_name %></td>
         <td><%= machine.vmhost %></td>
         <td><%= machine.location %></td>
@@ -76,13 +78,14 @@
   </tbody>
   
   <tbody class="tablesorter-no-sort to-hide summary" style="font-weight: bold">
-    <tr class="">
+    <tr class="" style="white-space: nowrap;">
       <td></td>
       <td class="summary-td">Summary</td>
       <td></td>
       <td></td>
       <td><span class="total-cores"></span></td>
       <td><span class="total-memory"></span></td>
+      <td><span class="total-diskspace"></span></td>
       <td></td>
       <td></td>
       <td></td>
