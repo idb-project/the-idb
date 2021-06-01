@@ -275,7 +275,12 @@ class MachinePresenter < Keynote::Presenter
   end
 
   def diskspace_in_tb
-    machine.diskspace.nil? ? "" : (machine.diskspace / (1024.0 * 1024.0 * 1024.0 * 1024.0)).round(1).to_s + " TB"
+    if machine.diskspace.nil?
+      return ""
+    else
+      round_to_decimals = (machine.diskspace < 1024 * 1024 * 1024 * 1024) ? 2 : 1
+      (machine.diskspace / (1024.0 * 1024.0 * 1024.0 * 1024.0)).round(round_to_decimals).to_s + " TB"
+    end
   end
 
   def fqdn
