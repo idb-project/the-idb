@@ -74,6 +74,11 @@ class MaintenanceAnnouncementsController < ApplicationController
         # get all vms that belong to a selected machine but arent selected themselves
         @missing_vms = unselected_vms(@selected_machines)
 
+        if params[:machine_ids].nil? || params[:machine_ids].empty?
+          @machine_error = "No machines selected."
+          return render :new
+        end
+
         # handle the time parsing, as it is likely to raise an exception
         begin
             ma = params[:maintenance_announcement]

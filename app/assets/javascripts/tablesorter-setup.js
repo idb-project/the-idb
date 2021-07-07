@@ -134,7 +134,6 @@ $(function () {
       // column status, true = display, false = hide
       // disable = do not display on list
       columnSelector_columns : {
-        0: false, // ID
       },
       // remember selected columns (requires $.tablesorter.storage)
       columnSelector_saveColumns: true,
