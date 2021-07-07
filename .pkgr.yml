@@ -7,24 +7,6 @@ before:
     - ln -s config-example config
     - ./scripts/mark-version.sh
 targets:
-  centos-8:
-   build_dependencies:
-      - mysql-devel
-      - libxml2-devel
-      - libxslt
-      - libxslt-devel
-      - shared-mime-info
-   dependencies:
-      - redis
-      - mariadb-server
-      - mod_ssl
-      - httpd-devel
-      - postfix
-      - mod_passenger
-      - passenger-devel
-      - vim
-      - libevent
-      - postgresql-libs
   ubuntu-20.04:
     build_dependencies:
       - libgmp-dev
