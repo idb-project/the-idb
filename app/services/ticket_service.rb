@@ -7,15 +7,20 @@ class TicketService
         owner = "nobody"
         owner = ticket.maintenance_announcement.user.rtname if ticket.maintenance_announcement.user.rtname
 
-        # create ticket
-        ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text, owner)
-        ticket.ticket_id = ticket_id
+        begin
+          # create ticket
+          ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text, owner)
 
-        # comment ticket to send announcement to real contact in bcc
-        bcc = [ ticket.email ]
-        TicketService.reply_rt_ticket(ticket_id, bcc, subject, text)
+          ticket.ticket_id = ticket_id
 
-        ticket.save!
+          # comment ticket to send announcement to real contact in bcc
+          bcc = [ ticket.email ]
+          TicketService.reply_rt_ticket(ticket_id, bcc, subject, text)
+
+          ticket.save!
+        rescue Exception => e
+          raise e
+        end
     end
 
     private
@@ -28,16 +33,15 @@ class TicketService
             Rails.logger.fatal "FATAL: RT ticket creation failed"
             Rails.logger.fatal res.code
             Rails.logger.fatal res.body
-            return nil
+            raise Exception.new "RT ticket could not be created"
         end
 
         ticket_id = self.ticket_id(res.body)
         if not ticket_id
-            return nil
+            raise Exception.new "RT ticket could not be created, no ticket ID"
         end
-        # end
         
-            return ticket_id
+        return ticket_id
     end
 
     def self.encode_create_ticket(queue, requestor, subject, text, owner)
@@ -67,7 +71,7 @@ Text: %{text}
             Rails.logger.fatal "FATAL: RT reply could not be created"
             Rails.logger.fatal res.code
             Rails.logger.fatal res.body
-            return nil
+            raise Exception.new "RT ticket could not be replied"
         end
     end
 

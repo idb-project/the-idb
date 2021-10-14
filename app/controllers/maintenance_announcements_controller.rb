@@ -133,14 +133,21 @@ class MaintenanceAnnouncementsController < ApplicationController
     end
 
     def submit
-        announcement = MaintenanceAnnouncement.find(params[:id])
-        tickets = announcement.maintenance_tickets
-        tickets.each do |ticket|
-            TicketService.send(ticket)
+        @announcement = MaintenanceAnnouncement.find(params[:id])
+        @tickets = @announcement.maintenance_tickets
+
+        begin
+          @tickets.each do |ticket|
+              TicketService.send(ticket)
+          end
+          @announcement.preview = false
+          @announcement.save!
+
+          redirect_to maintenance_announcements_path
+        rescue Exception, RuntimeError => e
+          flash.alert = e.message
+          return render :preview
         end
-        announcement.preview = false
-        announcement.save!
-        redirect_to maintenance_announcements_path
     end
 
     def cancel
