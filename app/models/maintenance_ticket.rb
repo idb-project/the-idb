@@ -4,15 +4,15 @@ class MaintenanceTicket < ApplicationRecord
   has_many :owners, :through => :machines
 
   def format_body
-    a = maintenance_announcement
-    t = a.maintenance_template
-    t.format_body(t.format_params(self))
+    announcement = maintenance_announcement
+    template = announcement.maintenance_template
+    template.format_body(template.format_params(self))
   end
 
   def format_subject
-    a = maintenance_announcement
-    t = a.maintenance_template
-    t.format_subject(t.format_params(self))
+    announcement = maintenance_announcement
+    template = announcement.maintenance_template
+    template.format_subject(template.format_params(self))
   end
 
   # def format_machines_fqdns
