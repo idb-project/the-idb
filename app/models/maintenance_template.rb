@@ -17,12 +17,20 @@ class MaintenanceTemplate < ApplicationRecord
         user: proc {|x| x.maintenance_announcement.user.display_name }
     }
 
-    def format_subject(params)
+    def format_subject(params, maintenance_announcement)
+      unless maintenance_announcement.custom_subject.blank?
+        maintenance_announcement.custom_subject % params
+      else
         subject % params
+      end
     end
 
-    def format_body(params)
+    def format_body(params, maintenance_announcement)
+      unless maintenance_announcement.custom_body.blank?
+        maintenance_announcement.custom_body % params
+      else
         body % params
+      end
     end
 
     def format_params(ticket)

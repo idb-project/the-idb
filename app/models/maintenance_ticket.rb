@@ -6,13 +6,13 @@ class MaintenanceTicket < ApplicationRecord
   def format_body
     announcement = maintenance_announcement
     template = announcement.maintenance_template
-    template.format_body(template.format_params(self))
+    template.format_body(template.format_params(self), announcement)
   end
 
   def format_subject
     announcement = maintenance_announcement
     template = announcement.maintenance_template
-    template.format_subject(template.format_params(self))
+    template.format_subject(template.format_params(self), announcement)
   end
 
   # def format_machines_fqdns

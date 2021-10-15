@@ -1,37 +1,37 @@
 <div id="maintenance_ticket-show">
-    <%- @tickets.each do |ticket| -%>    
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-condensed">
-                <tr>
-                  <th>Owner:</th>
-                  <th>E-Mail:</th>
-                </tr>
-                <tr>
-                    <td><%= ticket.owner.nickname %></td>
-                    <td><%= ticket.email %></td>
-
-                </tr
-                <tr>
-                    <th>Subject:</th>
-                </tr>
-                <tr>
-                    <td colspan=3><pre><%= ticket.format_subject %></pre></td>
-                </tr>
-                <tr>
-                    <th>Body:</th>
-                </tr>
-                <tr>
-                    <td colspan=3><pre><%= ticket.format_body %></pre></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <%- end -%>
-
     <%= form_tag(controller: "maintenance_announcements", action: "submit", method: :post) do %>
-        <%= hidden_field_tag :id, @announcement.id %>
-        <%= submit_tag("Send Announcement") %>
+      <%- @tickets.each do |ticket| -%>
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-condensed">
+                    <tr>
+                      <th>Owner:</th>
+                      <th>E-Mail:</th>
+                    </tr>
+                    <tr>
+                        <td><%= ticket.owner.nickname %></td>
+                        <td><%= ticket.email %></td>
+
+                    </tr
+                    <tr>
+                        <th>Subject:</th>
+                    </tr>
+                    <tr>
+                        <td colspan=3><%= text_field_tag(:custom_subject, ticket.format_subject) %></td>
+                    </tr>
+                    <tr>
+                        <th>Body:</th>
+                    </tr>
+                    <tr>
+                        <td colspan=3><%= text_area_tag(:custom_body, ticket.format_body, size: "150x20", style: "width: 80%") %></pre></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+      <%- end -%>
+
+      <%= hidden_field_tag :id, @announcement.id %>
+      <%= submit_tag("Send Announcement") %>
     <% end %>
 
     <%= form_tag(controller: "maintenance_announcements", action: "cancel", method: :post) do %>
