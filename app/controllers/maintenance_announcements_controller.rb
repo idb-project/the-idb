@@ -12,7 +12,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     def new
         # initialize variables for rendering new
         @machines = Machine.all
-        @maintenance_templates = MaintenanceTemplate.all
+        @maintenance_templates = MaintenanceTemplate.all.order(:name)
         @selected_machines = Array.new
         @no_deadline = Array.new
         @no_contacts = Array.new
@@ -22,6 +22,7 @@ class MaintenanceAnnouncementsController < ApplicationController
         @exceeded_deadlines = Array.new
         @missing_vms = Array.new
         @exceeded_deadlines = Array.new
+        @ignore_vms = true
 
         # selected machines if we got back here from create. map them with to_i so we can use them as integers in the template.
         @selected_machines = Machine.where(id: params[:machine_ids])
@@ -31,7 +32,7 @@ class MaintenanceAnnouncementsController < ApplicationController
             @selected_machines = @old_announcement.machines
             @begin_date = @old_announcement.begin_date
             @end_date = @old_announcement.end_date
-            @ignore_vms = @old_announcement.ignore_vms?
+            @ignore_vms = @old_announcement.ignore_vms? || true
             @ignore_deadlines = @old_announcement.ignore_deadlines?
 
             # remove preview announcement
@@ -44,7 +45,7 @@ class MaintenanceAnnouncementsController < ApplicationController
     def create
         # initialize variables for rendering new
         @machines = Machine.all
-        @maintenance_templates = MaintenanceTemplate.all
+        @maintenance_templates = MaintenanceTemplate.all.order(:name)
         @selected_machines = Array.new
         @no_contacts = Array.new
         @missing_vms = Array.new
@@ -166,7 +167,7 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # initialize variables for rendering the form
         @machines = Machine.all
-        @maintenance_templates = MaintenanceTemplate.all
+        @maintenance_templates = MaintenanceTemplate.all.order(:name)
         @selected_machines = Machine.joins(maintenance_tickets: :maintenance_announcement).where(maintenance_announcements: {id: @announcement.id})
         @begin_date = @announcement.begin_date
         @end_date = @announcement.end_date
@@ -194,7 +195,7 @@ class MaintenanceAnnouncementsController < ApplicationController
 
         # initialize variables for rendering new
         @machines = Machine.all
-        @maintenance_templates = MaintenanceTemplate.all
+        @maintenance_templates = MaintenanceTemplate.all.order(:name)
         @selected_machines = Array.new
         @no_contacts = Array.new
         @missing_vms = Array.new

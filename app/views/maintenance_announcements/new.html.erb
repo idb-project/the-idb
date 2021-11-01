@@ -10,6 +10,15 @@ have a wizard style dialog done on the client side #%>
 
     <div class="tab-content">
       <div class="tab-pane active" id="machines">
+        <button type="button" onclick="selectAllVisible()">Select all visible</button>
+        <button type="button" onclick="unselectAll()">Unselect all</button>
+        <label for="ignore_vms">
+          <%= check_box_tag("ignore_vms", 1, @ignore_vms) %> Ignore unselected VMs
+        </label>
+        <label for="ignore_deadlines">
+          <%= check_box_tag("ignore_deadlines", 1, @ignore_deadlines) %> Ignore exceeded deadlines
+        </label>
+
         <%- if not @missing_vms.empty? %>
           <div class="alert">
             <strong>Unselected VMs</strong> There are unselected virtual machines which belong to a selected machine.
@@ -83,14 +92,6 @@ have a wizard style dialog done on the client side #%>
             }
           }
         </script>
-        <button type="button" onclick="selectAllVisible()">Select all visible</button>
-        <button type="button" onclick="unselectAll()">Unselect all</button>
-        <label for="ignore_vms">
-        <%= check_box_tag("ignore_vms", 1, @ignore_vms) %> Ignore unselected VMs
-        </label>
-        <label for="ignore_deadlines">
-        <%= check_box_tag("ignore_deadlines", 1, @ignore_deadlines) %> Ignore exceeded deadlines
-        </label>
       </div>
 
       <div class="tab-pane" id="info">
