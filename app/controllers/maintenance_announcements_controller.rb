@@ -2,7 +2,11 @@ class MaintenanceAnnouncementsController < ApplicationController
     autocomplete :maintenance_announcement, :email
 
     def index
-        @maintenance_announcements = MaintenanceAnnouncement.where(preview: false).reverse
+        if params[:unlimited].blank?
+          @maintenance_announcements = MaintenanceAnnouncement.where(preview: false).reverse_order.limit(20)
+        else
+          @maintenance_announcements = MaintenanceAnnouncement.where(preview: false).reverse_order
+        end
     end
 
     def show
