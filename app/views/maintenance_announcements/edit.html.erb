@@ -89,11 +89,9 @@ have a wizard style dialog done on the client side #%>
       </div>
 
       <div class="tab-pane" id="info">
-        <div class="span6">
+        <div class="span8">
           <%= label_tag(:maintenance_template_id, "Template") %>
           <%= select_tag(:maintenance_template_id, options_from_collection_for_select(@maintenance_templates, "id", "name", @announcement.maintenance_template_id)) %>
-        </div>
-        <div class="span6">
           <%= label_tag(:email, "E-Mail Address") %>
           <%= autocomplete_field_tag(:email, @announcement.email, autocomplete_maintenance_announcement_email_maintenance_announcements_path) %>
 
