@@ -39,6 +39,7 @@ class MachineUpdateService
     machine.diskspace = facts.diskspace
     machine.needs_reboot = facts.idb_reboot_required
     machine.software = parse_installed_packages(facts.idb_installed_packages)
+    machine.sw_characteristics = parse_mariadb_encrypted(machine, facts.mariadb_encrypted)
 
     # First check if a network interface has been removed.
     machine.nics.each do |nic|
@@ -98,8 +99,23 @@ class MachineUpdateService
     software.empty? ? nil : software
   end
 
-  def self.update_vm_children
-
+  def self.parse_mariadb_encrypted(machine, mariadb_encrypted)
+    if mariadb_encrypted
+      if machine.sw_characteristics.blank?
+        machine.sw_characteristics = "mariadb encrypted"
+      elsif !machine.sw_characteristics.include?("mariadb encrypted")
+        machine.sw_characteristics += " mariadb encrypted"
+      end
+    elsif !mariadb_encrypted
+      if machine.sw_characteristics.include?(" mariadb encrypted")
+        machine.sw_characteristics.slice!(" mariadb encrypted")
+      elsif machine.sw_characteristics.include?("mariadb encrypted ")
+        machine.sw_characteristics.slice!("mariadb encrypted ")
+      elsif machine.sw_characteristics.include?("mariadb encrypted")
+        machine.sw_characteristics.slice!("mariadb encrypted")
+      end
+    end
+    machine.sw_characteristics
   end
 
   def self.update_from_oxidized_facts(machine, url)
