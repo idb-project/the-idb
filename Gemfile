@@ -26,7 +26,7 @@ gem 'redcarpet'
 gem 'will_paginate'
 gem 'paperclip'
 
-gem 'therubyracer'
+gem 'duktape'
 
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 1.0.0'
