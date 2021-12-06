@@ -107,7 +107,9 @@ class MachineUpdateService
         machine.sw_characteristics += " mariadb encrypted"
       end
     elsif !mariadb_encrypted
-      if machine.sw_characteristics.include?(" mariadb encrypted")
+      if machine.sw_characteristics.blank?
+        return machine.sw_characteristics
+      elsif machine.sw_characteristics.include?(" mariadb encrypted")
         machine.sw_characteristics.slice!(" mariadb encrypted")
       elsif machine.sw_characteristics.include?("mariadb encrypted ")
         machine.sw_characteristics.slice!("mariadb encrypted ")
