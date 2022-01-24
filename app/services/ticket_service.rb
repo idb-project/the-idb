@@ -2,6 +2,7 @@ class TicketService
     def self.send(ticket)
         text = ticket.format_body
         subject = ticket.format_subject
+	ical = ticket.format_ical
         queue = ticket.rt_queue
         requestor = IDB.config.rt.requestor
         owner = "nobody"
@@ -15,7 +16,7 @@ class TicketService
 
           # comment ticket to send announcement to real contact in bcc
           bcc = [ ticket.email ]
-          TicketService.reply_rt_ticket(ticket_id, bcc, subject, text)
+          TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
 
           ticket.save!
         rescue Exception => e
@@ -63,15 +64,27 @@ Text: %{text}
         uri
     end
 
-    def self.reply_rt_ticket(ticket_id, bcc, subject, text)
+    def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
         uri = self.build_reply_uri(ticket_id)
 
-        res = Net::HTTP.post_form(uri, content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text))
-        if res.code != "200" 
-            Rails.logger.fatal "FATAL: RT reply could not be created"
-            Rails.logger.fatal res.code
-            Rails.logger.fatal res.body
-            raise Exception.new "RT ticket could not be replied"
+#        res = Net::HTTP.post_form(uri, content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text))
+#        if res.code != "200" 
+#            Rails.logger.fatal "FATAL: RT reply could not be created"
+#            Rails.logger.fatal res.code
+#            Rails.logger.fatal res.body
+#            raise Exception.new "RT ticket could not be replied"
+#        end
+        
+        ical_io = StringIO.new(ical)
+	req = Net::HTTP::Post::Multipart.new(uri, { :content => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), :attachment_1 => ical_io })
+        Net::HTTP.start(uri.host, uri.port) do |http|
+            res = http.request(req)
+            if res.code != "200" 
+                Rails.logger.fatal "FATAL: RT reply could not be created"
+                Rails.logger.fatal res.code
+                Rails.logger.fatal res.body
+                raise Exception.new "RT ticket could not be replied"
+            end
         end
     end
 
@@ -82,6 +95,7 @@ Text: %{text}
 Action: correspond
 Bcc: %{bcc}
 Subject: %{subject}
+Attachment: maintenance.ics
 Text: %{text}
 )
         x % {ticket_id: ticket_id, bcc: bcc.join(","), subject: subject, text: text }

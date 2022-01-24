@@ -152,6 +152,9 @@ GEM
     highline (2.0.3)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
+    icalendar (2.7.1)
+      ice_cube (~> 0.16)
+    ice_cube (0.16.4)
     ice_nine (0.11.2)
     ipaddress (0.8.3)
     jquery-rails (4.4.0)
@@ -181,6 +184,7 @@ GEM
     mini_portile2 (2.6.1)
     minitest (5.14.4)
     multi_json (1.15.0)
+    multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.0.1)
@@ -359,10 +363,12 @@ DEPENDENCIES
   grape-swagger
   grape-swagger-entity
   high_voltage
+  icalendar (~> 2.7)
   ipaddress
   jquery-rails
   jquery-ui-rails
   keynote
+  multipart-post (~> 2.1)
   mysql2
   net-ldap
   paper_trail

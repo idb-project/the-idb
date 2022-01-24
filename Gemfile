@@ -66,3 +66,7 @@ end
 group :test do
   gem 'rails-controller-testing'
 end
+
+gem "icalendar", "~> 2.7"
+
+gem "multipart-post", "~> 2.1"
