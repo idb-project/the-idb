@@ -1,3 +1,5 @@
+require 'net/http/post/multipart'
+
 class TicketService
     def self.send(ticket)
         text = ticket.format_body
@@ -67,25 +69,18 @@ Text: %{text}
     def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
         uri = self.build_reply_uri(ticket_id)
 
-#        res = Net::HTTP.post_form(uri, content: TicketService.encode_reply_ticket(ticket_id, bcc, subject, text))
-#        if res.code != "200" 
-#            Rails.logger.fatal "FATAL: RT reply could not be created"
-#            Rails.logger.fatal res.code
-#            Rails.logger.fatal res.body
-#            raise Exception.new "RT ticket could not be replied"
-#        end
-        
-        ical_io = StringIO.new(ical)
-	req = Net::HTTP::Post::Multipart.new(uri, { :content => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), :attachment_1 => ical_io })
-        Net::HTTP.start(uri.host, uri.port) do |http|
+	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "maintenance.ics")
+
+	Net::HTTP.start(uri.host, uri.port, { :use_ssl => true } ) do |http|
+            req = Net::HTTP::Post::Multipart.new(uri, { "content" => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), "attachment_1" => ical_io })
             res = http.request(req)
             if res.code != "200" 
                 Rails.logger.fatal "FATAL: RT reply could not be created"
                 Rails.logger.fatal res.code
                 Rails.logger.fatal res.body
                 raise Exception.new "RT ticket could not be replied"
-            end
-        end
+	    end
+	end
     end
 
     def self.encode_reply_ticket(ticket_id, bcc, subject, text)
