@@ -15,7 +15,7 @@ class MaintenanceTicket < ApplicationRecord
     template.format_subject(template.format_params(self), announcement)
   end
 
-  def format_ical
+  def format_ical(invitation=false)
 	announcement = maintenance_announcement
 	template = announcement.maintenance_template
 	cal = Icalendar::Calendar.new
@@ -24,8 +24,17 @@ class MaintenanceTicket < ApplicationRecord
 		e.dtend = announcement.end_date.to_formatted_s(:announcement_ical)
 		e.summary = format_subject
 		e.description = format_body
+		if invitation
+		    e.organizer = "mailto:noreply@example.com"
+		end
 	end
-	cal.publish # cal.ip_method = "REQUEST"
+
+	if invitation
+		cal.ip_method = "REQUEST"
+	else
+		cal.publish
+	end
+
 	cal.to_ical
   end
 
@@ -53,6 +62,12 @@ class MaintenanceTicket < ApplicationRecord
     end
 
     return owner.announcement_contact
+  end
+
+  def invitation_email
+    if maintenance_announcement.maintenance_template.invitation_contact
+      return maintenance_announcement.maintenance_template.invitation_contact
+    end
   end
 
   private

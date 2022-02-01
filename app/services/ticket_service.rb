@@ -20,6 +20,12 @@ class TicketService
           bcc = [ ticket.email ]
           TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
 
+	  # if we have an invitation_email, add another reply containing the ical-invitation
+	  if ticket.invitation_email
+              ical_invitation = ticket.format_ical true
+	      TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical_invitation)
+	  end
+
           ticket.save!
         rescue Exception => e
           raise e

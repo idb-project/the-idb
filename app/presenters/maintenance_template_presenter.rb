@@ -1,7 +1,7 @@
  class MaintenanceTemplatePresenter < Keynote::Presenter
     presents :maintenance_template
 
-    delegate :id, :name, :subject, :body, to: :maintenance_template
+    delegate :id, :name, :subject, :body, :invitation_contact,  to: :maintenance_template
 
     def announcement_links
         links = Array.new

@@ -41,6 +41,6 @@ class MaintenanceTemplatesController < ApplicationController
     private
 
     def maintenance_template_params
-        params.require(:maintenance_template).permit(:name, :subject, :body)
+        params.require(:maintenance_template).permit(:name, :subject, :body, :invitation_contact)
       end
 end
