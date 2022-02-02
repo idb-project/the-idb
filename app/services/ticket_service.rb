@@ -69,7 +69,7 @@ Text: %{text}
     def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
         uri = self.build_reply_uri(ticket_id)
 
-	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "maintenance.ics")
+	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "wartungsarbeiten.ics")
 
 	Net::HTTP.start(uri.host, uri.port, { :use_ssl => true } ) do |http|
             req = Net::HTTP::Post::Multipart.new(uri, { "content" => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), "attachment_1" => ical_io })
@@ -90,7 +90,7 @@ Text: %{text}
 Action: correspond
 Bcc: %{bcc}
 Subject: %{subject}
-Attachment: maintenance.ics
+Attachment: wartungsarbeiten.ics
 Text: %{text}
 )
         x % {ticket_id: ticket_id, bcc: bcc.join(","), subject: subject, text: text }
