@@ -1,3 +1,5 @@
+require "icalendar/tzinfo"
+
 class MaintenanceTicket < ApplicationRecord
   belongs_to :maintenance_announcement
   has_and_belongs_to_many :machines
@@ -18,10 +20,18 @@ class MaintenanceTicket < ApplicationRecord
   def format_ical
 	announcement = maintenance_announcement
 	template = announcement.maintenance_template
+
+	zone = IDB.config.rt.zone
+	dtstart = Icalendar::Values::DateOrDateTime.new(announcement.begin_date.change(zone: zone).to_formatted_s(:announcement_ical), 'tzid' => zone)
+	dtend = Icalendar::Values::DateOrDateTime.new(announcement.end_date.change(zone: zone).to_formatted_s(:announcement_ical), 'tzid' => zone)
+
 	cal = Icalendar::Calendar.new
+	tz = TZInfo::Timezone.get zone
+	cal.add_timezone(tz.ical_timezone DateTime.now) # use the current timezone. if we write 12:00 in the winter we still want it to be 12:00 in the summer, regardless of DST.
+
 	cal.event do |e|
-		e.dtstart = announcement.begin_date.to_formatted_s(:announcement_ical)
-		e.dtend = announcement.end_date.to_formatted_s(:announcement_ical)
+		e.dtstart = dtstart
+		e.dtend = dtend
 		e.summary = format_subject
 		e.description = format_body
 	end

@@ -85,6 +85,7 @@ defaults: &defaults
     password: 'rt-api-user-password'
     requestor: 'requestor mail address OR empty string if no create mail should be send'
     queue: 'RT-Queue-Name'
+    zone: 'Europe/Berlin'
   mrtg:
     base_url: 'https://mrtg.example.com/'
   device_types:
