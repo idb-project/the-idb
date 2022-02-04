@@ -21,9 +21,9 @@ class TicketService
           TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
 
 	  # if we have an invitation_email, add another reply containing the ical-invitation
-	  if ticket.invitation_email
+	  unless ticket.invitation_email.empty?
               ical_invitation = ticket.format_ical true
-	      TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical_invitation)
+	      TicketService.reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, text, ical_invitation)
 	  end
 
           ticket.save!
