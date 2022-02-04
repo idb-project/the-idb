@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_14_142955) do
+ActiveRecord::Schema.define(version: 2022_02_01_113822) do
 
   create_table "api_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "token"
@@ -212,6 +212,7 @@ ActiveRecord::Schema.define(version: 2021_10_14_142955) do
     t.datetime "updated_at", null: false
     t.string "subject"
     t.datetime "deleted_at"
+    t.string "invitation_contact"
     t.index ["deleted_at"], name: "index_maintenance_templates_on_deleted_at"
   end
 
