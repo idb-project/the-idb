@@ -35,7 +35,7 @@ class MaintenanceTicket < ApplicationRecord
 		e.summary = format_subject
 		e.description = format_body
 		if invitation
-		    e.organizer = "mailto:noreply@example.com"
+		    e.organizer = "mailto:#{IDB.config.rt.organizer}"
 		end
 	end
 
