@@ -23,7 +23,7 @@ class TicketService
 	  # if we have an invitation_email, add another reply containing the ical-invitation
 	  unless ticket.invitation_email.empty?
               ical_invitation = ticket.format_ical true
-	      TicketService.reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, text, ical_invitation)
+	      TicketService.reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, text, ical_invitation, true)
 	  end
 
           ticket.save!
@@ -72,10 +72,14 @@ Text: %{text}
         uri
     end
 
-    def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
+    def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical, invite=false)
         uri = self.build_reply_uri(ticket_id)
 
-	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "wartungsarbeiten.ics")
+	opts = {}
+	if invite
+	    opts["method"] = "REQUEST"
+	end
+	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "wartungsarbeiten.ics", opts)
 
 	Net::HTTP.start(uri.host, uri.port, { :use_ssl => true } ) do |http|
             req = Net::HTTP::Post::Multipart.new(uri, { "content" => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), "attachment_1" => ical_io })

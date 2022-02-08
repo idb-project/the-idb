@@ -35,7 +35,16 @@ class MaintenanceTicket < ApplicationRecord
 		e.summary = format_subject
 		e.description = format_body
 		if invitation
-		    e.organizer = "mailto:#{IDB.config.rt.organizer}"
+		    e.organizer = Icalendar::Values::CalAddress.new(IDB.config.rt.organizer)
+		    e.attendee = Icalendar::Values::CalAddress.new(template.invitation_contact, ROLE: "REQ-PARTICIPANT", PARTSTAT: "NEEDS-ACTION", RSVP: "TRUE")
+                    e.alarm do |a|
+                        a.action  = "DISPLAY" # This line isn't necessary, it's the default
+                        a.summary = "Wartungsarbeiten"
+                        a.trigger = "-PT15M" # 1 day before
+                    end
+		    e.status = "CONFIRMED"
+	            e.append_custom_property "X-MICROSOFT-CDO-INTENDEDSTATUS", "BUSY"
+		    e.priority = "5"
 		end
 	end
 
