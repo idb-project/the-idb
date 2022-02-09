@@ -23,7 +23,7 @@ class TicketService
 	  # if we have an invitation_email, add another reply containing the ical-invitation
 	  unless ticket.invitation_email.empty?
               ical_invitation = ticket.format_ical true
-	      TicketService.reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, text, ical_invitation, true)
+	      TicketService.invitation_reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, ical_invitation)
 	  end
 
           ticket.save!
@@ -72,14 +72,10 @@ Text: %{text}
         uri
     end
 
-    def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical, invite=false)
+    def self.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
         uri = self.build_reply_uri(ticket_id)
 
-	opts = {}
-	if invite
-	    opts["method"] = "REQUEST"
-	end
-	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "wartungsarbeiten.ics", opts)
+	ical_io = UploadIO.new(StringIO.new(ical), "text/calendar", "wartungsarbeiten.ics")
 
 	Net::HTTP.start(uri.host, uri.port, { :use_ssl => true } ) do |http|
             req = Net::HTTP::Post::Multipart.new(uri, { "content" => TicketService.encode_reply_ticket(ticket_id, bcc, subject, text), "attachment_1" => ical_io })
@@ -101,6 +97,30 @@ Action: correspond
 Bcc: %{bcc}
 Subject: %{subject}
 Attachment: wartungsarbeiten.ics
+Text: %{text}
+)
+        x % {ticket_id: ticket_id, bcc: bcc.join(","), subject: subject, text: text }
+    end
+
+    def self.invitation_reply_rt_ticket(ticket_id, bcc, subject, ical)
+        uri = self.build_reply_uri(ticket_id)
+	res = Net::HTTP.post_form(uri, content: TicketService.encode_invitation_reply_ticket(ticket_id, bcc, subject, ical))
+        if res.code != "200"
+            Rails.logger.fatal "FATAL: RT invitation reply could not be created"
+            Rails.logger.fatal res.code
+            Rails.logger.fatal res.body
+            raise Exception.new "RT ticket could not be replied"
+        end
+    end
+
+    def self.encode_invitation_reply_ticket(ticket_id, bcc, subject, ical)
+        text = self.indent(ical)
+
+        x = %q(id: %{ticket_id}
+Action: correspond
+Content-Type: text/calendar; method=REQUEST; charset="UTF-8"
+Bcc: %{bcc}
+Subject: %{subject}
 Text: %{text}
 )
         x % {ticket_id: ticket_id, bcc: bcc.join(","), subject: subject, text: text }
