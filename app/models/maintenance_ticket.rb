@@ -35,7 +35,8 @@ class MaintenanceTicket < ApplicationRecord
 		e.summary = format_subject
 		e.description = format_body
 		if invitation
-		    e.organizer = "mailto:#{IDB.config.rt.organizer}"
+		    e.organizer = Icalendar::Values::CalAddress.new(IDB.config.rt.organizer)
+		    e.attendee = Icalendar::Values::CalAddress.new(template.invitation_contact, ROLE: "REQ-PARTICIPANT", PARTSTAT: "NEEDS-ACTION", RSVP: "TRUE")
 		end
 	end
 
