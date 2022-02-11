@@ -36,7 +36,9 @@ class MaintenanceTicket < ApplicationRecord
 		e.description = format_body
 		if invitation
 		    e.organizer = Icalendar::Values::CalAddress.new(IDB.config.rt.organizer)
-		    e.attendee = Icalendar::Values::CalAddress.new(template.invitation_contact, ROLE: "REQ-PARTICIPANT", PARTSTAT: "NEEDS-ACTION", RSVP: "TRUE")
+		    unless self.invitation_email.empty? # just be sure nothing throws here
+                        e.attendee = Icalendar::Values::CalAddress.new(self.invitation_email, ROLE: "REQ-PARTICIPANT", PARTSTAT: "NEEDS-ACTION", RSVP: "TRUE")
+                    end
 		end
 	end
 

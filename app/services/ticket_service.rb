@@ -12,19 +12,28 @@ class TicketService
 
         begin
           # create ticket
+          Rails.logger.info "Creating ticket"
           ticket_id = TicketService.create_rt_ticket(queue, requestor, subject, text, owner)
+          Rails.logger.info "Ticket #{ticket_id} created"
 
           ticket.ticket_id = ticket_id
+          ticket.save # save after each step
 
           # comment ticket to send announcement to real contact in bcc
           bcc = [ ticket.email ]
+          Rails.logger.info "Replying ticket #{ticket_id}"
           TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
+          Rails.logger.info "Ticket replied"
+          ticket.save
 
-	  # if we have an invitation_email, add another reply containing the ical-invitation
-	  unless ticket.invitation_email.empty?
+          # if we have an invitation_email, add another reply containing the ical-invitation
+          unless ticket.invitation_email.empty?
+              Rails.logger.info "Replying ticket #{ticket_id} with invitation"
+              Rails.logger.info "Replying invitation to #{ticket.invitation_email}"
               ical_invitation = ticket.format_ical true
-	      TicketService.invitation_reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, ical_invitation)
-	  end
+              TicketService.invitation_reply_rt_ticket(ticket_id, [ ticket.invitation_email ], subject, ical_invitation)
+              Rails.logger.info "Invitation reply send"
+          end
 
           ticket.save!
         rescue Exception => e
@@ -47,6 +56,10 @@ class TicketService
 
         ticket_id = self.ticket_id(res.body)
         if not ticket_id
+            Rails.logger.fatal "RT ticket could not be created, no ticket ID"
+	    Rails.logger.fatal res.code
+	    Rails.logger.fatal res.body
+	    Rails.logger.fatal self.ticket_id(res_body)
             raise Exception.new "RT ticket could not be created, no ticket ID"
         end
         
