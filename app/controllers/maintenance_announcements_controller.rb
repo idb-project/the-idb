@@ -152,6 +152,8 @@ class MaintenanceAnnouncementsController < ApplicationController
 
           redirect_to maintenance_announcements_path
         rescue Exception, RuntimeError => e
+          Rails.logger.fatal "exception while sending tickets"
+          Rails.logger.fatal e.message
           flash.alert = e.message
           return render :preview
         end
