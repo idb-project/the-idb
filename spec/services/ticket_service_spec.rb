@@ -46,6 +46,7 @@ string)
 Action: correspond
 Bcc: #{bcc.join(",")}
 Subject: #{subject}
+Attachment: wartungsarbeiten.ics
 Text: #{want_text}
 )
 
