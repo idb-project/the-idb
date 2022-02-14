@@ -61,10 +61,13 @@ class MaintenanceTicket < ApplicationRecord
   end
 
   def rt_queue
+    unless maintenance_announcement.email
+	return IDB.config.rt.queue
+    end
     if owner && !owner.rt_queue.blank?
-        owner.rt_queue
+        return owner.rt_queue
     else
-      IDB.config.rt.queue
+        return IDB.config.rt.queue
     end
   end
 

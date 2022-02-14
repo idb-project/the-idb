@@ -80,7 +80,7 @@ RSpec.describe MaintenanceTicket, type: :model do
   describe "rt_queue" do
     describe "without owner's RT queue" do
       it "returns the queue name from configuration file" do
-        x = FactoryBot.create(:maintenance_ticket)
+        x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement)
         expect(x.rt_queue).to eq(IDB.config.rt.queue)
       end
 
@@ -99,6 +99,17 @@ RSpec.describe MaintenanceTicket, type: :model do
         x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement, machines: [m2])
         expect(x.rt_queue).to eq(owner1.rt_queue)
       end
+    end
+
+    describe "with announcement email" do
+        it "returns the queue name from configuration file, even for multiple owners" do
+            owner1 = FactoryBot.create(:owner, users: [@current_user], announcement_contact: "owner1@example.org", rt_queue: "owner1queue")
+            owner2 = FactoryBot.create(:owner, users: [@current_user], announcement_contact: "owner2@example.net", rt_queue: "owner2queue")
+            m2 = FactoryBot.create(:machine, owner: owner1, announcement_deadline: 0)
+            m3 = FactoryBot.create(:machine, owner: owner2, announcement_deadline: 0)
+            x = FactoryBot.create(:maintenance_ticket, maintenance_announcement: @announcement_with_mail, machines: [m2,m3])
+            expect(x.rt_queue).to eq(IDB.config.rt.queue)
+        end
     end
   end
 end
