@@ -84,6 +84,8 @@ class MaintenanceTicket < ApplicationRecord
     if maintenance_announcement.maintenance_template.invitation_contact
       return maintenance_announcement.maintenance_template.invitation_contact
     end
+    
+    return ""
   end
 
   private

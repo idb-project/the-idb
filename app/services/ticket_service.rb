@@ -27,7 +27,7 @@ class TicketService
           ticket.save
 
           # if we have an invitation_email, add another reply containing the ical-invitation
-          unless ticket.invitation_email.empty?
+          unless ticket.invitation_email.blank?
               Rails.logger.info "Replying ticket #{ticket_id} with invitation"
               Rails.logger.info "Replying invitation to #{ticket.invitation_email}"
               ical_invitation = ticket.format_ical true
