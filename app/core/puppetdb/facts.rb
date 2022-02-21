@@ -160,13 +160,25 @@ module Puppetdb
     end
 
     def proxmox_detection
-      if operatingsystem == "Debian" && idb_installed_packages && (idb_installed_packages.include?("pve-manager") || idb_installed_packages.include?("proxmox-ve"))
-        self.operatingsystem = "Proxmox"
-        begin
-          self.operatingsystemrelease = idb_installed_packages.scan(/pve-manager\=\S*/).last.split("=")[1] || "-"
-        rescue
-          self.operatingsystemrelease = ""
+      if operatingsystem == "Debian" && idb_installed_packages
+        if idb_installed_packages.include?("pve-manager")
+          self.operatingsystem = "PVE"
+          self.operatingsystemrelease = proxmox_scan(idb_installed_packages, "pve-manager")
+        elsif idb_installed_packages.include?("proxmox-backup-server")
+          self.operatingsystem = "PBS"
+          self.operatingsystemrelease = proxmox_scan(idb_installed_packages, "proxmox-backup")
+        elsif idb_installed_packages.include?("proxmox-mailgateway")
+          self.operatingsystem = "PMG"
+          self.operatingsystemrelease = proxmox_scan(idb_installed_packages, "proxmox-mailgateway")
         end
+      end
+    end
+
+    def proxmox_scan(packages, search)
+      begin
+        return packages.scan(/#{search}\=\S*/).last.split("=")[1] || "-"
+      rescue
+        return ""
       end
     end
   end

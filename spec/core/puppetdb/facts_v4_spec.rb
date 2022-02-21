@@ -223,7 +223,7 @@ describe Puppetdb::FactsV4 do
       end
     end
 
-    context 'Proxmox 6.1-2' do
+    context 'PVE 6.1-2' do
       before do
         hash[:operatingsystem] = 'Debian'
         hash[:operatingsystemrelease] = '8'
@@ -231,8 +231,34 @@ describe Puppetdb::FactsV4 do
       end
 
       it 'sets the version to 6.1-2' do
-        expect(facts.operatingsystem).to eq('Proxmox')
+        expect(facts.operatingsystem).to eq('PVE')
         expect(facts.operatingsystemrelease).to eq('6.1-2')
+      end
+    end
+
+    context 'PBS 2.1-1' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '11'
+        hash[:idb_installed_packages] =  'nginx=1.2.3 proxmox-backup-server=99.1-1 proxmox-backup=2.1-1'
+      end
+
+      it 'sets the version to 2.1-1' do
+        expect(facts.operatingsystem).to eq('PBS')
+        expect(facts.operatingsystemrelease).to eq('2.1-1')
+      end
+    end
+
+    context 'PMG 7.1-1' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '11'
+        hash[:idb_installed_packages] =  'nginx=1.2.3 proxmox-mailgateway=7.1-1'
+      end
+
+      it 'sets the version to 7.1-1' do
+        expect(facts.operatingsystem).to eq('PMG')
+        expect(facts.operatingsystemrelease).to eq('7.1-1')
       end
     end
   end
