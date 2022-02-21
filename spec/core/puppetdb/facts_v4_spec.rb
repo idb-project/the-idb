@@ -200,6 +200,32 @@ describe Puppetdb::FactsV4 do
     end
   end
 
+  describe 'UCS detection' do
+    context 'Debian 8' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '8'
+      end
+
+      it 'sets the version to 8' do
+        expect(facts.operatingsystemrelease).to eq('8')
+      end
+    end
+
+    context 'UCS 4.4.8' do
+      before do
+        hash[:operatingsystem] = 'Debian'
+        hash[:operatingsystemrelease] = '8'
+        hash[:lsbdistdescription] =  'Univention Corporate Server 4.4-8 errata1173 (Blumenthal)'
+      end
+
+      it 'sets the version to 4.4-8' do
+        expect(facts.operatingsystem).to eq('UCS')
+        expect(facts.operatingsystemrelease).to eq('4.4-8')
+      end
+    end
+  end
+
   describe 'proxmox detection' do
     context 'Debian 8' do
       before do

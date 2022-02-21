@@ -82,6 +82,7 @@ module Puppetdb
       end
 
       windows_fixes
+      ucs_detection
       proxmox_detection
     end
 
@@ -111,20 +112,10 @@ module Puppetdb
     end
 
     def operating_system
-      unless lsbdistdescription.blank?
-        if lsbdistdescription.starts_with?("Univention Corporate Server")
-          self.operatingsystem = "UCS"
-        end
-      end
       self.operatingsystem
     end
 
     def os_release
-      unless lsbdistdescription.blank?
-        if lsbdistdescription.starts_with?("Univention Corporate Server")
-          self.operatingsystemrelease = lsbdistdescription.split[3] || "?"
-        end
-      end
       self.operatingsystemrelease || self.lsbdistrelease
     end
 
@@ -179,6 +170,19 @@ module Puppetdb
         return packages.scan(/#{search}\=\S*/).last.split("=")[1] || "-"
       rescue
         return ""
+      end
+    end
+
+    def ucs_detection
+      unless lsbdistdescription.blank?
+        if lsbdistdescription.starts_with?("Univention Corporate Server")
+          self.operatingsystem = "UCS"
+          begin
+            self.operatingsystemrelease = lsbdistdescription.split[3] || "?"
+          rescue
+            self.operatingsystemrelease = ""
+          end
+        end
       end
     end
   end
