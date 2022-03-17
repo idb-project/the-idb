@@ -352,6 +352,11 @@ class MaintenanceAnnouncementsController < ApplicationController
             return tickets
         end
 
+        if announcement.single_ticket
+            tickets << MaintenanceTicket.new(maintenance_announcement: announcement, machines: machines)
+            return tickets
+        end
+
         owners.each do |owner|
             # select all machines of this owner which are selected as affected
             owner_machines = Machine.where(owner: owner.id, id: machines.pluck(:id))

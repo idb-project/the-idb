@@ -41,6 +41,19 @@ class TicketService
         end
     end
 
+    # append a ticket as reply to an existing ticket id
+    def self.append(ticket_id, ticket)
+        text = ticket.format_body
+        subject = ticket.format_subject
+	ical = ticket.format_ical
+
+        bcc = [ ticket.email ]
+        Rails.logger.info "Replying ticket #{ticket_id}"
+        TicketService.reply_rt_ticket(ticket_id, bcc, subject, text, ical)
+        Rails.logger.info "Ticket replied"
+        ticket.save
+    end
+
     private
 
     def self.create_rt_ticket(queue, requestor, subject, text, owner)
