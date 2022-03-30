@@ -213,7 +213,7 @@ GEM
       terrapin (~> 0.6.0)
     paranoia (2.4.3)
       activerecord (>= 4.0, < 6.2)
-    puma (5.5.2)
+    puma (5.6.4)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.0)
