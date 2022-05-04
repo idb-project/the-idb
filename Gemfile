@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.6.3'
-gem 'rails', "~> 5.2.4.6"
+gem 'rails', "~> 5.2.7.1"
 
 gem 'rake'
 gem 'mysql2'
