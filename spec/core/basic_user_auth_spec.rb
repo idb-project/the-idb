@@ -17,7 +17,7 @@ describe BasicUserAuth do
 
   describe '#authenticate' do
     it 'calls the validate method with login and pass' do
-      expect(auth).to receive(:validate).with('login', 'pass', nil)
+      expect(auth).to receive(:validate).with('login', 'pass')
 
       auth.authenticate('login', 'pass')
     end

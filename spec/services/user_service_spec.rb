@@ -3,8 +3,8 @@ require 'spec_helper'
 describe UserService do
   describe '.update_from_virtual_user' do
     let(:vuser) do
-      double('VUser', login: 'john', name: 'John', email: 'e', carLicence: 'xyz',
-        attributes: {login: 'john', name: 'John', email: 'e', carLicence: 'xyz'})
+      double('VUser', login: 'john', name: 'John', email: 'e',
+        attributes: {login: 'john', name: 'John', email: 'e'})
     end
 
     let(:new_user) { double('NewUser').as_null_object }
