@@ -13,12 +13,5 @@
     <%= label_tag :password %>
     <%= password_field_tag :password %>
   </p>
-
-  <%- if IDB.config.modules.otp_login -%>
-  <p>
-    <%= label_tag :otp %>
-    <%= password_field_tag :otp %>
-  </p>
-  <%- end -%>
   <p class="button"><%= submit_tag "Login" %></p>
 <% end %>

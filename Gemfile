@@ -42,8 +42,6 @@ gem 'exception_notification'
 
 gem 'ipaddress'
 
-gem 'rubius', :git => 'https://github.com/bytemine/rubius.git'
-
 gem 'closure_tree'
 
 gem 'sprockets', '>= 3.7.2'

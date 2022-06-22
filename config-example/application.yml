@@ -33,7 +33,6 @@ defaults: &defaults
       advanced_field_5:
         short: 'BN'
         long: 'Business notification'
-    otp_login: false
     unattended_upgrades: true
     inventory: true
     api:

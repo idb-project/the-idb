@@ -3,7 +3,6 @@ class UserService
     user = User.find_or_initialize_by(login: vuser.login) do |user|
       user.name = vuser.name
       user.email = vuser.email
-      user.carLicence = vuser.carLicence
     end
 
     # Make sure the local password gets updated!

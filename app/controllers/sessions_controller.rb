@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    BasicUserAuth.new(IDB.config.design.title, self).authenticate(params[:name], params[:password], params[:otp])
+    BasicUserAuth.new(IDB.config.design.title, self).authenticate(params[:name], params[:password])
     if current_user
       session[:user_id] = current_user.id
       User.current = current_user
