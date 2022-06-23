@@ -22,6 +22,8 @@ class MachinesController < ApplicationController
     @history_machine = Machine.find(params[:id]).becomes(Machine)
 
     @inventories = Inventory.where(machine_id: @machine.id)
+    
+    @software = SoftwareHelper.software_to_a(@machine)
   end
 
   def new

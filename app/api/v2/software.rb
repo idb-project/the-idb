@@ -13,19 +13,9 @@ module V2
 
       get do
         can_read!
-        if params["q"].empty?
-            status 200
-            {}
-        else
-          parsed = SoftwareHelper.parse_query(params["q"])
-          if parsed.empty?
-            status 200
-            []
-          end
-          machines = SoftwareHelper.software_machines(Machine.all, parsed)
-          status 200
-          machines
-        end        
+        machines = SoftwareHelper.software_machines(Machine.all, params["package"], params["version"])
+        status 200
+        machines
       end
     end
   end

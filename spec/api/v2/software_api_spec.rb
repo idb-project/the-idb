@@ -38,7 +38,7 @@ describe 'Software API' do
     end
 
     it "returns an empty array for a empty query" do
-      api_get(action: "software?q=", token: @api_token_r)
+      api_get(action: "software?package=", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)
@@ -46,13 +46,13 @@ describe 'Software API' do
     end
 
     it "returns all machines matching the search parameters, name only" do
-      api_get(action: "software?q=nginx", token: @api_token_r)
+      api_get(action: "software?package=nginx", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)
       expect(machines.size).to eq(2)
 
-      api_get(action: "software?q=ruby", token: @api_token_r)
+      api_get(action: "software?package=ruby", token: @api_token_r)
 
       machines = JSON.parse(response.body)
       expect(response.status).to eq(200)

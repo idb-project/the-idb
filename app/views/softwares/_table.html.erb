@@ -6,11 +6,11 @@
           <th>Name:</th>
           <th>Version:</th>
         </tr>
-        <%- if @machine.software %>
-        <%- @machine.software.each do |software| -%>
+        <%- if @software %>
+        <%- @software.each do |s| -%>
         <tr>
-          <td><%= software["name"] %></td>
-          <td><%= software["version"] %></td>
+          <td><%= s[0] %></td>
+          <td><%= s[1] %></td>
         </tr>
         <%- end -%>
         <%- end -%>

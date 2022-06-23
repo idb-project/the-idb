@@ -18,40 +18,35 @@ describe SoftwaresController do
 
     it "returns nil machines if no search parameters were provided" do
       get :index
-      expect(assigns(:machines)).to be_nil
+      expect(assigns(:machines).size).to eq(0)
     end
 
     it "returns nil machines if empty search parameters were provided" do
-      get :index, params: {"q": ""}
-      expect(assigns(:machines)).to be_nil
+      get :index, params: {"package": ""}
+      expect(assigns(:machines).size).to eq(0)
     end
 
     it "returns all machines matching the search parameters, name only" do
-      get :index, params: {"q": "ruby"}
+      get :index, params: {"package": "ruby"}
       expect(assigns(:machines).size).to eq(1)
 
-      get :index, params: {"q": "nginx"}
+      get :index, params: {"package": "nginx"}
       expect(assigns(:machines).size).to eq(2)
     end
 
     it "returns all machines matching the search parameters, name and version" do
-      get :index, params: {"q": "nginx=1.10.1-0ubuntu1.2"}
+      get :index, params: {"package": "nginx", "version": "1.10.1-0ubuntu1.2"}
       expect(assigns(:machines).size).to eq(1)
     end
 
     it "returns all machines matching the search parameters, no match" do
-      get :index, params: {"q": "apache2"}
+      get :index, params: {"package": "apache2"}
       expect(assigns(:machines).size).to eq(0)
     end
 
-    it "returns all machines matching the search parameters, partial version" do
-      get :index, params: {"q": "nginx=1.10"}
+    it "returns all machines matching the search parameters with a partial version" do
+      get :index, params: {"package": "nginx", "version": "1.10"}
       expect(assigns(:machines).size).to eq(2)
-    end
-
-    it "returns all machines matching the search parameters, not equal version" do
-      get :index, params: {"q": "python!=2.7"}
-      expect(assigns(:machines).size).to eq(1)
     end
   end
 end

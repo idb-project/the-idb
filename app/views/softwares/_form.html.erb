@@ -1,7 +1,8 @@
 <p>
 <%= simple_form_for(:software, url: "softwares", method: "get", html: {class: 'form-horizontal' },
               defaults: {input_html: {class: 'span6'}}) do |f| %>
-  <%= text_field_tag :q %>
+  Package name: <%= text_field_tag :package %>
+  Package version: <%= text_field_tag :version %>
   <%= f.button :submit, "Search" %>
 <%- end -%>
 </p>

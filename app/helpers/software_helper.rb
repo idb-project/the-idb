@@ -1,39 +1,29 @@
 module SoftwareHelper
-  def self.parse_query(query)
-    parsed = Hash.new
+  def self.software_machines(all_machines, package, version = "")
+    machines = Array.new
 
-    if query.blank?
-      return parsed
+    if !package.blank?
+      query = ":name=>\""+package+"\""
+      if !version.blank?
+        query = ":name=>\""+package+"\", :version=>\""+version
+      end
+      machines = all_machines.includes(:owner, nics: [:ip_address]).order(:fqdn).where("software LIKE ?", "%"+query+"%")
     end
 
-    query.split.each { |s|
-      if s.index("!=")
-        name, version = s.split("!=")
-        parsed[name] = -> (x) { return x != version }
-      elsif s.index("=")
-        name, version = s.split("=")
-        parsed[name] = -> (x) { return x.start_with?(version) }
-      else
-        parsed[s] = -> (x) { return true }
-      end
-    }
-
-    return parsed
+    machines.uniq
   end
 
-  def self.software_machines(all_machines, parsed_query)
-    machines = Array.new
-    
-    # get all machines which have all software installed
-    ms = all_machines.includes(:owner, nics: [:ip_address]).order(:fqdn).where('JSON_CONTAINS(software, ?)', ActiveSupport::JSON.encode(parsed_query.keys.map { |n| {"name" => n}}))
-    ms.each { |m| 
-      m.software.each { |s| 
-        next if not parsed_query[s["name"]]
-        next if not parsed_query[s["name"]].call(s["version"])
-        machines << m
-      }
-    }
+  def self.software_to_a(machine)
+    array = Array.new
+    return nil unless machine.software
 
-    return machines.uniq
+    first_pass = machine.software.tr("\"", "").tr("[", "").tr("]", "")[1...-1].split("}, {")
+    first_pass.each do |e| 
+      e.gsub!(":name", "")
+      e.gsub!(":version", "")
+      e.gsub!("=>", "")
+      array << e.split(", ")
+    end
+    array
   end
 end

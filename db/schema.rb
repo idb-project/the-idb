@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_01_113822) do
+ActiveRecord::Schema.define(version: 2022_06_22_152814) do
 
   create_table "api_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "token"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 2022_02_01_113822) do
     t.text "raw_data_api", limit: 4294967295
     t.text "raw_data_puppetdb", limit: 4294967295
     t.integer "needs_reboot"
-    t.json "software"
+    t.text "software"
     t.string "type"
     t.integer "announcement_deadline"
     t.index ["deleted_at"], name: "index_machines_on_deleted_at"

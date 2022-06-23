@@ -257,27 +257,6 @@ describe 'Machines API V3' do
       machine = JSON.parse(response.body)
       expect(Machine.last.versions.last.whodunnit).to eq(@api_token_w.token)
     end
-
-    it 'creates a machine with a software configuration if not existing' do
-      api_get(action: "machines?fqdn=new-machine.example.com", token: @api_token_r, version: "3")
-      machine = JSON.parse(response.body)
-      expect(response.status).to eq(404)
-
-      payload = {
-        "fqdn":"new-machine.example.com",
-        "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}],
-      }
-      api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
-      expect(response.status).to eq(201)
-
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("new-machine.example.com")
-      expect(machine['software'].size).to eq(2)
-      expect(machine['software'][0]["name"]).to eq("test1")
-      expect(machine['software'][0]["version"]).to eq("1234")
-      expect(machine['software'][1]["name"]).to eq("test2")
-      expect(machine['software'][1]["version"]).to eq("5678")
-    end
   end
 
   describe "PUT /machines/fqdn" do
@@ -359,28 +338,6 @@ describe 'Machines API V3' do
 
       api_put_json(action: "machines/existing3.example.com", token: @api_token_w, payload: payload, version: "3")
       expect(response.status).to eq(409)
-    end
-
-    it 'updates the software of a machine if existing, JSON payload' do
-      FactoryBot.create(:machine, fqdn: "existing.example.com", owner: @owner)
-
-      api_get(action: "machines/existing.example.com", token: @api_token_r, version: "3")
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-
-      payload = {
-        "software": [{"name":"test1", "version":"1234"}, {"name":"test2", "version":"5678"}]
-      }
-      api_put_json(action: "machines/existing.example.com", token: @api_token_w, payload: payload, version: "3")
-      expect(response.status).to eq(200)
-
-      machine = JSON.parse(response.body)
-      expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['software'].size).to eq(2)
-      expect(machine['software'][0]["name"]).to eq("test1")
-      expect(machine['software'][0]["version"]).to eq("1234")
-      expect(machine['software'][1]["name"]).to eq("test2")
-      expect(machine['software'][1]["version"]).to eq("5678")
     end
   end
 

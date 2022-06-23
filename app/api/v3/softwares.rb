@@ -16,23 +16,13 @@ module V3
       desc 'Searches machines with specific software configurations', is_array: true,
         success: Machine::Entity
         params do
-          requires :q, type: String, documentation: { desc: "search query, for example 'nmap=4'", param_type: "query" }
+          requires :package, type: String, documentation: { desc: "search query, for example 'nmap'", param_type: "query" }
         end
       get do
         can_read!
-        if params['q'].empty?
-          status 200
-          []
-        else
-          parsed = SoftwareHelper.parse_query(params['q'])
-          if parsed.empty?
-            status 200
-            []
-          end
-          machines = SoftwareHelper.software_machines(Machine.owned_by(@owners), parsed)
-          status 200
-          machines.map(&:fqdn)
-        end
+        machines = SoftwareHelper.software_machines(Machine.owned_by(@owners), params["package"], params["version"])
+        status 200
+        machines.map(&:fqdn)
       end
     end
   end
