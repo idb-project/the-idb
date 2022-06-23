@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 2022_06_22_152814) do
     t.text "raw_data_api", limit: 4294967295
     t.text "raw_data_puppetdb", limit: 4294967295
     t.integer "needs_reboot"
-    t.text "software"
+    t.text "software", limit: 4294967295
     t.string "type"
     t.integer "announcement_deadline"
     t.index ["deleted_at"], name: "index_machines_on_deleted_at"
