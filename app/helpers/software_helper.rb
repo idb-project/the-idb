@@ -8,6 +8,14 @@ module SoftwareHelper
         query = ":name=>\""+package+"\", :version=>\""+version
       end
       machines = all_machines.includes(:owner, nics: [:ip_address]).order(:fqdn).where("software LIKE ?", "%"+query+"%")
+
+      if machines.empty?
+        query = "\"name\": \""+package+"\""
+        if !version.blank?
+          query = "\"name: \""+package+"\", \"version\": \""+version
+        end
+        machines = all_machines.includes(:owner, nics: [:ip_address]).order(:fqdn).where("software LIKE ?", "%"+query+"%")
+      end
     end
 
     machines.uniq
@@ -22,6 +30,7 @@ module SoftwareHelper
       e.gsub!(":name", "")
       e.gsub!(":version", "")
       e.gsub!("=>", "")
+      e.gsub!(":", "")
       array << e.split(", ")
     end
     array
