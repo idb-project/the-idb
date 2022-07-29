@@ -15,6 +15,7 @@ module Puppetdb
     attribute :operatingsystemrelease, String
     attribute :lsbdistrelease, String
     attribute :lsbdistdescription, String
+    attribute :ucs_version, String
     attribute :architecture, String
     attribute :manufacturer, String
     attribute :productname, String
@@ -174,15 +175,9 @@ module Puppetdb
     end
 
     def ucs_detection
-      unless lsbdistdescription.blank?
-        if lsbdistdescription.starts_with?("Univention Corporate Server")
-          self.operatingsystem = "UCS"
-          begin
-            self.operatingsystemrelease = lsbdistdescription.split[3] || "?"
-          rescue
-            self.operatingsystemrelease = ""
-          end
-        end
+      if !ucs_version.blank?
+        self.operatingsystem = "UCS"
+        self.operatingsystemrelease = ucs_version
       end
     end
   end

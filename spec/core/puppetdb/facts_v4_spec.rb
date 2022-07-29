@@ -214,9 +214,7 @@ describe Puppetdb::FactsV4 do
 
     context 'UCS 4.4.8' do
       before do
-        hash[:operatingsystem] = 'Debian'
-        hash[:operatingsystemrelease] = '8'
-        hash[:lsbdistdescription] =  'Univention Corporate Server 4.4-8 errata1173 (Blumenthal)'
+        hash[:ucs_version] = '4.4-8'
       end
 
       it 'sets the version to 4.4-8' do

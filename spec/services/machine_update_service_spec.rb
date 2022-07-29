@@ -41,7 +41,7 @@ describe MachineUpdateService do
         blockdevice_sda_size: 1000000,
         operatingsystem: 'Windows',
         operatingsystemrelease: '2012 R2',
-        lsbdistdescription: 'Univention Corporate Server 4.4-2'
+        ucs_version: '5.0-2'
       )
     end
 
@@ -121,7 +121,7 @@ describe MachineUpdateService do
 
       described_class.update_from_facts(machine,  @url, "v4")
 
-      expect(machine.os_release).to eq('4.4-2')
+      expect(machine.os_release).to eq('5.0-2')
     end
 
     context 'retrieve the installed RAM' do
