@@ -8,6 +8,7 @@ describe Network do
 
   let(:attributes) do
     {
+      id: 1,
       name: 'data center',
       address: '10.0.0.1/26',
       description: 'nice network!',
@@ -76,6 +77,7 @@ describe Network do
       expect(described_class.find(network.id).allowed_ip_addresses).to eq([ip])
     end
 
+
     it 'removes empty and nil entries' do
       network.allowed_ip_addresses = ['', ip, nil]
 
@@ -85,9 +87,8 @@ describe Network do
     context 'when setting to a single address' do
       it 'stores it as list' do
         network.allowed_ip_addresses = ip
-        network.save
 
-        expect(described_class.find(network.id).allowed_ip_addresses).to eq([ip])
+        expect(network.allowed_ip_addresses).to eq([ip])
       end
     end
 

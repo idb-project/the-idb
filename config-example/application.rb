@@ -36,5 +36,7 @@ module InfrastructureDb
     config.action_mailer.delivery_method = :test
     config.action_mailer.delivery_method = :file
     config.action_mailer.file_settings = { :location => Rails.root.join('tmp/mail') }
+
+    config.active_record.yaml_column_permitted_classes = [Symbol]
   end
 end
