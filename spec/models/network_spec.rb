@@ -77,7 +77,6 @@ describe Network do
       expect(described_class.find(network.id).allowed_ip_addresses).to eq([ip])
     end
 
-
     it 'removes empty and nil entries' do
       network.allowed_ip_addresses = ['', ip, nil]
 
