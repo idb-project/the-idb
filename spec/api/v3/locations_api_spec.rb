@@ -6,7 +6,6 @@ require 'timecop'
 describe 'Location API V3' do
 
   before :each do
-    IDB.config.modules.api.v1_enabled = false
     IDB.config.modules.api.v2_enabled = false
     IDB.config.modules.api.v3_enabled = true
 

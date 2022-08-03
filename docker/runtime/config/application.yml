@@ -36,7 +36,6 @@ defaults: &defaults
     unattended_upgrades: true
     inventory: true
     api:
-      v1_enabled: true
       v2_enabled: true
       v2_api_token: 'randomtoken'
       v3_enabled: true

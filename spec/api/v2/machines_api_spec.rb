@@ -6,7 +6,6 @@ require 'timecop'
 describe 'Machines API' do
 
   before :each do
-    IDB.config.modules.api.v1_enabled = true
     IDB.config.modules.api.v2_enabled = true
     @owner = FactoryBot.create(:owner, users: [FactoryBot.create(:user)])
     allow(User).to receive(:current).and_return(@owner.users.first)
@@ -25,7 +24,6 @@ describe 'Machines API' do
   
   describe "API is switched off" do
     it 'should not allow access' do
-      IDB.config.modules.api.v1_enabled = false
       IDB.config.modules.api.v2_enabled = false
 
       api_get(action: "machines", token: @api_token_r)
