@@ -209,7 +209,11 @@ class MachinePresenter < Keynote::Presenter
         content = YAML::load(content)
         unless content.empty?
           html = "<ul>"
-          content.each do |p| html += "<li>#{p}</li>" end
+          if content.kind_of?(Array)
+            content.each do |p| html += "<li>#{p}</li>" end
+          else
+            html += "<li>#{content}</li>"
+          end
           html += "</ul>"
           return html unless html.blank?
         end
