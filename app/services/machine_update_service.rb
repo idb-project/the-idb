@@ -78,6 +78,16 @@ class MachineUpdateService
       child.vmhost = machine.fqdn
       child.save!
     end
+
+    # update vm id in PVE
+    facts.pve_vm_ids.each do |k,v|
+      child = Machine.find_by(fqdn: k)
+      # skip if child specified in puppet doesn't exist or isn't a vm here
+      next unless child
+      next unless child.virtual?
+      child.vm_id = v
+      child.save!
+    end
     
     machine.save!
   end

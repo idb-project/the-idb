@@ -39,6 +39,7 @@ module Puppetdb
     attribute :idb_reboot_required, Boolean
     attribute :idb_installed_packages, JSON
     attribute :monitoring_vm_children, Hash[String => String]
+    attribute :pve_vm_ids, Hash[String => String]
     attribute :mariadb_encrypted, Boolean
 
     attr_reader :interfaces

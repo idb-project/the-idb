@@ -19,7 +19,8 @@ describe Puppetdb::FactsV4 do
       idb_unattended_upgrades_reboot: true,
       idb_pending_updates: 8,
       idb_installed_packages: 'nginx=1.2.3',
-      monitoring_vm_children: {"vm0.example.org"=>"vmhost.example.org", "vm1.example.org"=>"vmhost.example.org"}
+      monitoring_vm_children: {"vm0.example.org"=>"vmhost.example.org", "vm1.example.org"=>"vmhost.example.org"},
+      pve_vm_ids: {"vm0.example.org"=>"111", "vm1.example.org"=>"222"}
     }
   end
 
@@ -197,6 +198,17 @@ describe Puppetdb::FactsV4 do
     it 'has an entry for vm0 and vm1' do
       expect(hash[:monitoring_vm_children]["vm0.example.org"]).to eq("vmhost.example.org")
       expect(hash[:monitoring_vm_children]["vm1.example.org"]).to eq("vmhost.example.org")
+    end
+  end
+
+  describe 'pve_vm_ids' do
+    it 'has two keys' do
+      expect(hash[:pve_vm_ids].size).to eq(2)
+    end
+
+    it 'has an entry for vm0 and vm1' do
+      expect(hash[:pve_vm_ids]["vm0.example.org"]).to eq("111")
+      expect(hash[:pve_vm_ids]["vm1.example.org"]).to eq("2")
     end
   end
 

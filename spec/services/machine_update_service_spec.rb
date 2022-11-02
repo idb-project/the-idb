@@ -292,6 +292,22 @@ describe MachineUpdateService do
         expect(vm1.vmhost).to eq(vmhost.fqdn)
       end
     end
+
+    describe "pve_vm_ids" do
+      it "updates the id" do
+        vm0 = FactoryBot.create(:virtual_machine, fqdn: 'vm0.example.com', owner: machine.owner)
+        vm1 = FactoryBot.create(:virtual_machine, fqdn: 'vm1.example.com', owner: machine.owner)
+        vmhost = FactoryBot.create(:machine, fqdn: 'vmhost.example.com', owner: machine.owner)
+        facts[:pve_vm_ids] = {vm0.fqdn => 1111, vm1.fqdn => 2222 }
+        allow(Puppetdb::Facts).to receive(:for_node).and_return(facts)
+        described_class.update_from_facts(vmhost, @url)
+        # reload the changed objects
+        vm0.reload
+        vm1.reload
+        expect(vm0.vm_id).to eq("1111")
+        expect(vm1.vm_id).to eq("2222")
+      end
+    end
   end
 
   describe '.parse_installed_packages' do
