@@ -7,7 +7,7 @@ class MachinePresenter < Keynote::Presenter
            :pending_updates, :pending_security_updates,
            :pending_updates_sum, :virtual?,
            :connected_to_power_feed?, :software,
-           :device_type_name, :announcement_deadline,
+           :device_type_name, :announcement_deadline, :vm_id,
            to: :machine
 
   def id

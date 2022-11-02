@@ -10,6 +10,7 @@
       <th>Disk</th>
       <th>Type</th>
       <th>VM Host</th>
+      <th style="min-width: 80px">PVE ID</th>
       <th>Location</th>
       <th>Uptime</th>
       <th>Serviced</th>
@@ -44,6 +45,7 @@
         <td class="machine_diskspace" style="white-space: nowrap;"><%= machine.diskspace_in_tb %></td>
         <td><%= machine.device_type_name %></td>
         <td><%= machine.vmhost %></td>
+        <td><%= machine.vm_id %></td>
         <td><%= machine.location %></td>
         <td><%= machine.uptime %></td>
         <td><%= machine.serviced_at %></td>
@@ -86,6 +88,7 @@
       <td><span class="total-cores"></span></td>
       <td><span class="total-memory"></span></td>
       <td><span class="total-diskspace"></span></td>
+      <td></td>
       <td></td>
       <td></td>
       <td></td>
