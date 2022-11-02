@@ -242,7 +242,7 @@ class Machine < ActiveRecord::Base
     expose :diskspace, documentation: { type: "Integer", desc: "Disc space in bytes" }
     expose :pending_updates_package_names, documentation: { type: "String" }
     expose :severity_class, documentation: { type: "String" }
-    expose :ucs_role, documentation: { type: "String" }
+    expose :vm_id, documentation: { type: "String" }
     expose :raw_data_api, documentation: { type: "String" }
     expose :raw_data_puppetdb, documentation: { type: "String" }
     expose :needs_reboot, documentation: { type: "Boolean" }

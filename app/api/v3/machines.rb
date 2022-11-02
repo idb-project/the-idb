@@ -314,7 +314,7 @@ module V3
         optional :diskspace, type: Integer, documentation: { type: "Integer", desc: "Disc space in bytes" }
         optional :pending_updates_package_names, type: String, documentation: { type: "String" }
         optional :severity_class, type: String, documentation: { type: "String" }
-        optional :ucs_role, type: String, documentation: { type: "String" }
+        optional :vm_id, type: String, documentation: { type: "String" }
         optional :raw_data_api, type: String, documentation: { type: "String" }
         optional :raw_data_puppetdb, type: String, documentation: { type: "String" }
         optional :needs_reboot, type: Boolean, documentation: { type: "Boolean" }

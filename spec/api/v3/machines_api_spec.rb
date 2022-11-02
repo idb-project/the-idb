@@ -210,7 +210,7 @@ describe 'Machines API V3' do
 
       payload = {
         "fqdn":"new-machine",
-        "ucs_role":"master",
+        "vm_id":"111",
         "create_machine":true
       }
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
@@ -228,7 +228,7 @@ describe 'Machines API V3' do
 
       payload = {
         "fqdn":"new-machine.example.com",
-        "ucs_role":"master"
+        "vm_id":"111"
       }
 
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
@@ -236,7 +236,7 @@ describe 'Machines API V3' do
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("new-machine.example.com")
-      expect(machine['ucs_role']).to eq("master")
+      expect(machine['vm_id']).to eq("111")
     end
 
     it 'creates a machine if not existing, entering the API token name into the history' do
@@ -246,7 +246,7 @@ describe 'Machines API V3' do
 
       payload = {
         "fqdn":"new-machine.example.com",
-        "ucs_role":"master"
+        "vm_id":"111"
       }
 
       api_post_json(action: "machines", token: @api_token_w, payload: payload, version: "3")
@@ -265,7 +265,7 @@ describe 'Machines API V3' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
 
-      machine['ucs_role'] = "member"
+      machine['vm_id'] = "111"
       # remove nics and aliases because they can only be updated via nics subroute
       machine.delete('nics')
       machine.delete('aliases')
@@ -274,7 +274,7 @@ describe 'Machines API V3' do
       expect(response.status).to eq(200)
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['ucs_role']).to eq("member")
+      expect(machine['vm_id']).to eq("111")
     end
 
     it 'updates multiple attributes of a machine if existing' do
@@ -284,7 +284,7 @@ describe 'Machines API V3' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
 
-      machine['ucs_role'] = "member"
+      machine['vm_id'] = "115"
       machine['cores'] = 7
 
       # remove nics and aliases because they can only be updated via nics subroute
@@ -296,7 +296,7 @@ describe 'Machines API V3' do
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
-      expect(machine['ucs_role']).to eq("member")
+      expect(machine['vm_id']).to eq("115")
       expect(machine['cores']).to eq(7)
     end
 

@@ -75,7 +75,7 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put(action: "machines?fqdn=new-machine&ucs_role=master&create_machine=true", token: @api_token_w)
+      api_put(action: "machines?fqdn=new-machine&vm_id=111&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(409)
 
       machine = JSON.parse(response.body)
@@ -87,12 +87,12 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", token: @api_token_w)
+      api_put(action: "machines?fqdn=new-machine.example.com&vm_id=111&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("new-machine.example.com")
-      expect(machine['ucs_role']).to eq("master")
+      expect(machine['vm_id']).to eq("111")
     end
 
     it 'creates a machine if not existing, entering the API token name into the history' do
@@ -100,7 +100,7 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master&create_machine=true", token: @api_token_w)
+      api_put(action: "machines?fqdn=new-machine.example.com&vm_id=111&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -112,7 +112,7 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine).to eq({})
 
-      api_put(action: "machines?fqdn=new-machine.example.com&ucs_role=master", token: @api_token_w)
+      api_put(action: "machines?fqdn=new-machine.example.com&vm_id=111", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -126,15 +126,15 @@ describe 'Machines API' do
 
       payload = {
         "fqdn":"new-machine2.example.com",
-        "ucs_role":"master",
+        "vm_id":"111",
         "create_machine":true
       }
-      api_put_json(action: "machines?fqdn=new-machine2.example.com&ucs_role=master", token: @api_token_w, payload: payload)
+      api_put_json(action: "machines?fqdn=new-machine2.example.com&vm_id=111", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("new-machine2.example.com")
-      expect(machine['ucs_role']).to eq("master")
+      expect(machine['vm_id']).to eq("111")
     end
 
     it 'updates a machine if existing' do
@@ -144,12 +144,12 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
 
-      api_put(action: "machines?fqdn=existing.example.com&ucs_role=member", token: @api_token_w)
+      api_put(action: "machines?fqdn=existing.example.com&vm_id=112", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing.example.com")
-      expect(machine['ucs_role']).to eq("member")
+      expect(machine['vm_id']).to eq("112")
     end
 
     it 'sets the API raw data on machine update' do
@@ -200,14 +200,14 @@ describe 'Machines API' do
 
       payload = {
         "fqdn":"existing2.example.com",
-        "ucs_role":"masterslavemember"
+        "vm_id":"100"
       }
-      api_put_json(action: "machines?fqdn=existing2.example.com&ucs_role=member", token: @api_token_w, payload: payload)
+      api_put_json(action: "machines?fqdn=existing2.example.com", token: @api_token_w, payload: payload)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
-      expect(machine['ucs_role']).to eq("masterslavemember")
+      expect(machine['vm_id']).to eq("100")
     end
 
     it 'returns a 404 if no fqdn was provided' do
@@ -222,12 +222,12 @@ describe 'Machines API' do
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
 
-      api_put(action: "machines?fqdn=existing2.example.com&ucs_role=member&cores=7", token: @api_token_w)
+      api_put(action: "machines?fqdn=existing2.example.com&vm_id=114&cores=7", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
       expect(machine['fqdn']).to eq("existing2.example.com")
-      expect(machine['ucs_role']).to eq("member")
+      expect(machine['vm_id']).to eq("114")
       expect(machine['cores']).to eq(7)
     end
 
@@ -346,7 +346,7 @@ describe 'Machines API' do
       fqdn = Machine.last.fqdn
       Machine.last.destroy!
 
-      api_put(action: "machines?fqdn=#{fqdn}&ucs_role=master", token: @api_token_w)
+      api_put(action: "machines?fqdn=#{fqdn}&vm_id=111", token: @api_token_w)
       expect(response.status).to eq(200)
 
       machine = JSON.parse(response.body)
@@ -357,7 +357,7 @@ describe 'Machines API' do
       fqdn = Machine.last.fqdn
       Machine.last.destroy!
 
-      api_put(action: "machines?fqdn=#{fqdn}&ucs_role=master&create_machine=true", token: @api_token_w)
+      api_put(action: "machines?fqdn=#{fqdn}&vm_id=111&create_machine=true", token: @api_token_w)
       expect(response.status).to eq(409)
 
       machine = JSON.parse(response.body)
