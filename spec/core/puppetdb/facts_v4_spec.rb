@@ -208,7 +208,7 @@ describe Puppetdb::FactsV4 do
 
     it 'has an entry for vm0 and vm1' do
       expect(hash[:pve_vm_ids]["vm0.example.org"]).to eq("111")
-      expect(hash[:pve_vm_ids]["vm1.example.org"]).to eq("2")
+      expect(hash[:pve_vm_ids]["vm1.example.org"]).to eq("222")
     end
   end
 
