@@ -12,13 +12,22 @@ module Puppetdb
         end
       end
 
+      i = 0
       if facts["blockdevices"]
-        i = 0
+        # Linux machines
         facts["blockdevices"].split(",").each do |d|
-          i += facts["blockdevice_#{d}_size"].to_i if facts["blockdevice_#{d}_size"]
+          i += facts.fetch("blockdevice_#{d}_size", "0").to_i
         end
-        facts["diskspace"] = i
+      elsif facts["disks"]
+        # Windows machines
+        facts["disks"].each do |d|
+          if d.is_a? Array
+            d = d.last if d.size > 1 # the hash was arrayed to [0, {facts}]
+            i += d["allocated_size"].to_i if d["allocated_size"]
+          end
+        end
       end
+      facts["diskspace"] = i
 
       new(facts)
     end
