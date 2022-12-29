@@ -83,6 +83,11 @@ module Puppetdb
         end
       end
 
+      if attributes[:ipmi]
+        nic = build_nic(attributes[:ipmi][:name], attributes[:ipmi][:ipaddress], "", attributes[:ipmi][:netmask], attributes[:ipmi][:macaddress])
+        @interfaces[attributes[:ipmi][:ipaddress]] = nic
+      end
+
       windows_fixes
       ucs_detection
       proxmox_detection
