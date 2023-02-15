@@ -1,5 +1,4 @@
 class BasicUserAuth < Struct.new(:realm, :context)
-
   def authenticate(login, pass)
     validate(login, pass) do |user|
       context.current_user = user
@@ -7,10 +6,13 @@ class BasicUserAuth < Struct.new(:realm, :context)
   end
 
   def validate(login, pass, &block)
-    validate_ldap(login, pass, &block)
+    user = validate_local(login, pass, &block)
+    unless user
+      user = validate_ldap(login, pass, &block)
+    end
+    user
   end
 
-  # currently disabled
   def validate_local(login, pass)
     user = User.find_by(login: login)
     return unless user
