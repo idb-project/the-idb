@@ -13,7 +13,6 @@ describe 'KCloudReports API V3' do
     @machine = FactoryBot.create(:machine, owner: @owner)
     allow(User).to receive(:current).and_return(@owner.users.first)
 
-    FactoryBot.create :k_cloud_report, machine: @machine
     #FactoryBot.create :api_token, owner: @owner
     #@api_token = FactoryBot.build :api_token, owner: @owner
     @api_token_r = FactoryBot.create :api_token_r, owner: @owner
@@ -37,15 +36,16 @@ describe 'KCloudReports API V3' do
 
   describe "POST /k_cloud_reports" do
     it 'creates a cloud report' do
-
+      expect(KCloudReport.all.size).to eq(0)
       payload = {
         "ip":"192.168.0.111"
       }
-      api_post_json(action: "k_cloud_reports", token: @api_token_w, payload: payload, version: "3")
+      api_post_json_no_auth(action: "k_cloud_reports", payload: payload, version: "3")
       expect(response.status).to eq(201)
 
       cloudreport = JSON.parse(response.body)
       expect(cloudreport['ip']).to eq("192.168.0.111")
+      expect(KCloudReport.all.size).to eq(1)
     end
   end
 end

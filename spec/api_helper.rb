@@ -14,6 +14,11 @@ def api_get_unauthorized(action: , params: {}, version: "2")
   JSON.parse(response.body) rescue {}
 end
 
+def api_post_no_auth(action: , params: {}, version: "2")
+  post "/api/v#{version}/#{action}", params: params
+  JSON.parse(response.body) rescue {}
+end
+
 def api_post(action: , token: , params: {}, version: "2")
   post "/api/v#{version}/#{action}", params: params, headers: {'X-IDB-API-Token': token.token }
   JSON.parse(response.body) rescue {}
@@ -21,6 +26,11 @@ end
 
 def api_post_json(action: , token: , payload: , version: "2")
   post "/api/v#{version}/#{action}", params: payload, as: :json, headers: {'X-IDB-API-Token': token.token }
+  JSON.parse(response.body) rescue {}
+end
+
+def api_post_json_no_auth(action: , payload: , version: "2")
+  post "/api/v#{version}/#{action}", params: payload, as: :json
   JSON.parse(response.body) rescue {}
 end
 
