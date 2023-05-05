@@ -10,6 +10,7 @@ module V3
     mount V3::Locations
     mount V3::Deleted
     mount V3::MaintenanceRecords
+    mount V3::KCloudReports
     add_swagger_documentation mount_path: '/v3/swagger_doc', base_path: '/api', add_base_path: true, models: [Machine::Entity], info: { title: 'IDB API', description: 'Infrastructure Database v3', contact_name: 'bytemine GmbH', contact_email: 'support@bytemine.net', contact_url: 'https://bytemine.net', license: 'GNU AFFERO GENERAL PUBLIC LICENSE Version 3', license_url: 'https://www.gnu.org/licenses/agpl-3.0.txt' }
   end
 end
