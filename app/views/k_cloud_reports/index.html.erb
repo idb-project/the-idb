@@ -1,0 +1,31 @@
+<div id="kcloudreports-index">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="<%= k_cloud_reports_path %>">Cloud Reports</a>
+          <ul class="nav">
+            <li>
+              <i class="fa fa-cog"></i>
+              <div class="columnSelectorWrapper">
+                <input id="colSelect1" type="checkbox" class="hidden">
+                <label style="margin-bottom: 0px; color: #777777; margin-right: 15px;" class="columnSelectorButton" for="colSelect1">Columns</label>
+                <div id="columnSelector" class="columnSelector"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= render partial: 'table', locals: {kcrs: @kcrs} %>
+  </div>
+</div>
+
+</div>

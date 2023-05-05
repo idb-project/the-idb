@@ -1,0 +1,17 @@
+<table class="table tablesorter custom-popup kcloudreport-table">
+  <thead>
+    <tr>
+      <th>Report ID</th>
+      <th>IP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- kcrs.each do |kCloudReport| -%>
+      <%- kCloudReport = k(:kCloudReport, kCloudReport) -%>
+      <tr id="#kcr-<%= kCloudReport.id %>">
+        <td><%= kCloudReport.id %></td>
+        <td><%= kCloudReport.ip %></td>
+      </tr>
+    <%- end -%>
+  </tbody>
+</table>
