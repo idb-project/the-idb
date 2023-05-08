@@ -7,6 +7,7 @@ module V3
 
     resource :k_cloud_reports do
       before do
+        logger.error(debug_log_request)
         api_enabled!
         authenticate!
       end

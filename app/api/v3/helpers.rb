@@ -2,6 +2,10 @@ module V3
   module Helpers
     extend Grape::API::Helpers
 
+    def debug_log_request
+      request.url.inspect + " " + request.ip.inspect + " " + headers.inspect + " " + params.inspect
+    end
+
     def api_enabled!
       unless IDB.config.modules.api.v3_enabled
         error!("API disabled.", 501)
@@ -73,6 +77,10 @@ module V3
 
     def set_papertrail
       PaperTrail.request.whodunnit = params[:idb_api_token] ? params[:idb_api_token] : request.headers["X-Idb-Api-Token"] ? request.headers["X-Idb-Api-Token"] : nil
+    end
+
+    def logger
+      API.logger
     end
   end
 end
