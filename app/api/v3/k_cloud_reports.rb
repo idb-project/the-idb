@@ -14,13 +14,12 @@ module V3
 
       desc 'Create a new KCloudReport',
         params: KCloudReport::Entity.documentation,
-        success: KCloudReport::Entity
+        success: String
       post do
         #can_write!
-        
-        kcr = KCloudReport.new(params)
+        kcr = KCloudReport.new(raw_data: params)
         kcr.save!
-        present kcr
+        { :response_type => 'success', :response => "success" }.to_json
       end
     end
   end
