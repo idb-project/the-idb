@@ -9,10 +9,13 @@ module V3
     end
 
     def get_tokens
-      unless request.headers["X-Idb-Api-Token"]
+      if request.headers["X-Idb-Api-Token"]
+        return request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
+      elsif request.headers["X-E4a-License-Report-Machine-Id"]
+        return request.headers["X-E4a-License-Report-Machine-Id"]
+      else
         error!("Unauthorized.", 401)
       end
-      request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
     end
 
     def set_token(t)
@@ -32,7 +35,7 @@ module V3
 
     def authenticate!
       tokens = get_tokens
-      unless ApiToken.where(token: tokens)
+      if ApiToken.where(token: tokens).size == 0
         error!("Unauthorized.", 401)
       end
     end
