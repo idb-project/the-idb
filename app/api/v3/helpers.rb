@@ -13,12 +13,14 @@ module V3
     end
 
     def get_tokens
+      logger.error("getting tokens")
       if request.headers["X-Idb-Api-Token"]
         return request.headers["X-Idb-Api-Token"].split(",").map{ |x| x.strip }
       elsif request.headers["X-E4a-License-Report-Machine-Id"]
+        logger.error("X-E4a-License-Report-Machine-Id token: "+request.headers["X-E4a-License-Report-Machine-Id"])
         return request.headers["X-E4a-License-Report-Machine-Id"]
       else
-        error!("Unauthorized.", 401)
+        error!("Unauthorized, no tokens presented.", 401)
       end
     end
 
@@ -39,23 +41,26 @@ module V3
 
     def authenticate!
       tokens = get_tokens
-      if ApiToken.where(token: tokens).size == 0
-        error!("Unauthorized.", 401)
+      logger.error("tokens: "+tokens)
+      if ApiToken.where(token: tokens).empty?
+        logger.error("no tokens found in database!")
+        error!("Unauthorized, no matching tokens.", 401)
       end
     end
 
     def can_read!
       tokens = get_tokens
       if ApiToken.where(token: tokens, read: true).empty?
-        error!("Unauthorized.", 401)
+        logger.error("no READ tokens found in database!")
+        error!("Unauthorized, not allowed to read.", 401)
       end
     end
 
     def can_write!
       tokens = get_tokens
-      x = ApiToken.where(token: tokens, write: true)
-      if x.empty?
-        error!("Unauthorized.", 401)
+      if ApiToken.where(token: tokens, write: true).empty?
+        logger.error("no WRITE tokens found in database!")
+        error!("Unauthorized, not allowed to write.", 401)
       end
       x.first
     end
