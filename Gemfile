@@ -25,6 +25,7 @@ gem 'simple_form'
 gem 'redcarpet'
 gem 'will_paginate'
 gem 'paperclip'
+gem 'grape_logging'
 
 gem 'duktape'
 

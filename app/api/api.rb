@@ -1,3 +1,5 @@
+require 'grape_logging'
+
 module MachineHelpers
  def process_machine_update(p)
     create_machine = p["create_machine"]
@@ -58,6 +60,15 @@ module MachineHelpers
 end
 
 class API < Grape::API
+  use GrapeLogging::Middleware::RequestLogger,
+    logger: logger,
+    include: [ GrapeLogging::Loggers::Response.new,
+               GrapeLogging::Loggers::FilterParameters.new,
+               GrapeLogging::Loggers::ClientEnv.new,
+               GrapeLogging::Loggers::RequestHeaders.new ]
+
+  logger.formatter = GrapeLogging::Formatters::Default.new
+  insert_before Grape::Middleware::Error, GrapeLogging::Middleware::RequestLogger, { logger: logger }
   error_formatter :json, ErrorFormatter
   mount V2::API
   mount V3::API
