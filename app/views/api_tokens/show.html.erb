@@ -27,6 +27,8 @@
           <th>Owner</th>
           <th>Read</th>
           <th>Write</th>
+          <th>Maintenance Logs</th>
+          <th>Cloud Reports</th>
         </tr>
         <tr>
           <%- owner = k(:owner, @api_token.owner) -%>
@@ -36,6 +38,8 @@
           <td><%= owner.name_link %></td>
           <td><%= @api_token.read %></td>
           <td><%= @api_token.write %></td>
+          <td><%= @api_token.post_logs %></td>
+          <td><%= @api_token.post_reports %></td>
         </tr>
       </table>
     </div>

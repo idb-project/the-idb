@@ -15,10 +15,32 @@ module V3
         params: KCloudReport::Entity.documentation,
         success: String
       post do
-        #can_write!
+        token = can_post_reports!
+        data_hash = params
+        machine = nil
         kcr = KCloudReport.new(raw_data: params)
-        kcr.save!
-        { :response_type => 'success', :response => "success" }.to_json
+        unless data_hash.empty?
+          if data_hash['software'] && data_hash['software']['reporter']
+            kcr.reporter = data_hash['reporter']
+          end
+          if data_hash['license'] && data_hash['license']['dnsNames']
+            data_hash['license']['dnsNames'].each do |dns_name|
+              machine = Machine.find_by(fqdn: dns_name)
+              unless machine
+                m_alias = MachineAlias.find_by(name: dns_name)
+                machine = m_alias.machine if m_alias
+              end
+            end
+            kcr.machine = machine
+          end
+        end
+
+        begin
+          kcr.save!
+          { :response_type => 'success', :response => "success" }.to_json
+        rescue
+          { :response_type => 'error', :response => "error saving cloud report" }.to_json
+        end
       end
     end
   end

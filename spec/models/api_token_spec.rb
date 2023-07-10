@@ -6,7 +6,9 @@ describe ApiToken do
       token: 'my-token',
       name: 'name of token',
       read: true,
-      write: false
+      write: false,
+      post_reports: false,
+      post_logs: true
     }
   end
 

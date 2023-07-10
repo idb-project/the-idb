@@ -59,7 +59,16 @@ module V3
       unless x.empty?
         return x.first
       end
-      x.first
+      error!("Unauthorized.", 401)
+    end
+
+    def can_post_reports!
+      tokens = get_tokens
+      x = ApiToken.where(token: tokens, post_reports: true)
+      unless x.empty?
+        return x.first
+      end
+      error!("Unauthorized to post reports.", 401)
     end
 
     # get the owner of the first token

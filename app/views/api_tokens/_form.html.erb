@@ -36,6 +36,8 @@
           <%= f.association :owner, collection: Owner.order(:name), include_blank: false %>
           <%= f.input :read %>
           <%= f.input :write%>
+          <%= f.input :post_logs %>
+          <%= f.input :post_reports%>
           <%= f.button :submit %>
         <%- end -%>
       </div>

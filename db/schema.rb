@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_04_153746) do
+ActiveRecord::Schema.define(version: 2023_05_10_080813) do
 
   create_table "api_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "token"
@@ -19,6 +19,10 @@ ActiveRecord::Schema.define(version: 2023_05_04_153746) do
     t.string "name"
     t.string "description"
     t.integer "owner_id"
+    t.boolean "post_reports"
+    t.boolean "post_logs"
+    t.bigint "machine_id"
+    t.index ["machine_id"], name: "index_api_tokens_on_machine_id"
   end
 
   create_table "attachments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|

@@ -219,7 +219,7 @@ describe 'Inventories API V3' do
     it "create a new attachment" do
       i = FactoryBot.create(:inventory, inventory_number: "123abc", owner: @owner)
 
-      post "/api/v3/inventories/123abc/attachments", headers: {'X-IDB-API-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
+      post "/api/v3/inventories/123abc/attachments", headers: {'X-Idb-Api-Token': @api_token_w.token }, params: { :data => Rack::Test::UploadedFile.new(Rails.root.join("app","assets","images","idb-logo.png"), "image/png")}
       expect(response.status).to eq(201)
 
       attachments = JSON.parse(response.body)

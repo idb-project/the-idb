@@ -4,6 +4,8 @@ FactoryBot.define do
     sequence(:name) { |n| "token-name-#{n}" }
     read { false }
     write { false }
+    post_reports { false }
+    post_logs { false }
   end
 
   factory :api_token_r, class: ApiToken do
@@ -11,6 +13,8 @@ FactoryBot.define do
     sequence(:name) { |n| "r-token-name-#{n}" }
     read { true }
     write { false }
+    post_reports { false }
+    post_logs { false }
   end
 
   factory :api_token_w, class: ApiToken do
@@ -18,6 +22,8 @@ FactoryBot.define do
     sequence(:name) { |n| "w-token-name-#{n}" }
     read { false }
     write { true }
+    post_reports { false }
+    post_logs { false }
   end	
 
   factory :api_token_rw, class: ApiToken do
@@ -25,5 +31,16 @@ FactoryBot.define do
     sequence(:name) { |n| "rw-token-name-#{n}" }
     read { true }
     write { true }
-  end	
+    post_reports { false }
+    post_logs { false }
+  end
+
+  factory :api_token_pr, class: ApiToken do
+    sequence(:token) { |n| "pr-token-#{n}" }
+    sequence(:name) { |n| "pr-token-name-#{n}" }
+    read { false }
+    write { false }
+    post_reports { true }
+    post_logs { false }
+  end
 end
