@@ -63,10 +63,10 @@ module V3
     def get_owner
       token = get_tokens.first.to_s
       x = ApiToken.find_by_token token
-      unless x
-        return nil
+      if x
+        return Owner.find_by_id x.owner_id
       end
-      return Owner.find_by_id x.owner_id
+      nil
     end
 
     def get_owners
