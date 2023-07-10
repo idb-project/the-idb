@@ -24,6 +24,7 @@ class KCloudReportPresenter < Keynote::Presenter
     json_object = eval(raw_data.gsub('=>', ':'))
     json_object = JSON.pretty_generate(json_object)
     json_object = json_object.gsub("\n", "<br/>")
+    json_object = json_object.gsub("\"", "")
     json_object = json_object.gsub(" ", "&nbsp;&nbsp;")
     json_object.html_safe
   end
