@@ -54,7 +54,7 @@ InfrastructureDb::Application.routes.draw do
   resources :softwares, only: [:index]
   resources :cloud_providers
   resources :users, only: [:index, :show, :update, :destroy]
-  resources :k_cloud_reports, only: [:index]
+  resources :k_cloud_reports, only: [:index, :show]
 
   resources :maintenance_announcements do
     get :autocomplete_maintenance_announcement_email, :on => :collection
