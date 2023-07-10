@@ -18,7 +18,7 @@ module V3
       elsif request.headers["X-E4a-License-Report-Machine-Id"]
         return request.headers["X-E4a-License-Report-Machine-Id"]
       else
-        error!("Unauthorized, no tokens presented.", 401)
+        error!("Unauthorized.", 401)
       end
     end
 
@@ -40,21 +40,24 @@ module V3
     def authenticate!
       tokens = get_tokens
       if ApiToken.where(token: tokens).empty?
-        error!("Unauthorized, no matching tokens.", 401)
+        error!("Unauthorized.", 401)
       end
     end
 
     def can_read!
       tokens = get_tokens
-      if ApiToken.where(token: tokens, read: true).empty?
-        error!("Unauthorized, not allowed to read.", 401)
+      x = ApiToken.where(token: tokens, read: true)
+      if x.empty?
+        error!("Unauthorized.", 401)
       end
+      x.first
     end
 
     def can_write!
       tokens = get_tokens
-      if ApiToken.where(token: tokens, write: true).empty?
-        error!("Unauthorized, not allowed to write.", 401)
+      x = ApiToken.where(token: tokens, write: true)
+      unless x.empty?
+        return x.first
       end
       x.first
     end
