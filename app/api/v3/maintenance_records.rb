@@ -186,8 +186,8 @@ module V3
           success: MaintenanceRecord::Entity
         post do
           can_write!
-          
-          m = Machine.owned_by(@owner).find_by_fqdn(params["machine"])
+          machine = Machine.find_by_fqdn(params["machine"])
+          m = Machine.owned_by(machine.owner).find_by_fqdn(params["machine"])
           params["machine_id"] = m.id
           params["fqdn"] = m.fqdn
           params.delete("machine")
@@ -203,4 +203,3 @@ module V3
       end
     end
   end
-  
