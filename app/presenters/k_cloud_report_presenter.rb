@@ -1,7 +1,7 @@
 class KCloudReportPresenter < Keynote::Presenter
   presents :kcloudreport
 
-  delegate :ip, :created_at, :raw_data,
+  delegate :ip, :created_at, :raw_data, :usercount,
            to: :kcloudreport
 
   def id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_10_080813) do
+ActiveRecord::Schema.define(version: 2023_07_11_075645) do
 
   create_table "api_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "token"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 2023_05_10_080813) do
     t.bigint "machine_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "usercount"
     t.index ["machine_id"], name: "index_k_cloud_reports_on_machine_id"
   end
 

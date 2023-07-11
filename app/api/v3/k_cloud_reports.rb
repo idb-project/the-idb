@@ -42,6 +42,9 @@ module V3
             end
             kcr.machine = machine
           end
+          if data_hash['users'] && data_hash['users']['count']
+            kcr.usercount = data_hash['users']['count']
+          end
         end
 
         begin
