@@ -19,6 +19,15 @@ module V3
         data_hash = params
         machine = nil
         kcr = KCloudReport.new(raw_data: params)
+        kcr.ip = get_ip
+
+        if kcr.ip
+          ip = IpAddress.find_by_addr(kcr.ip)
+          if ip
+            kcr.machine = ip.machine if ip.machine
+          end
+        end
+
         unless data_hash.empty?
           if data_hash['software'] && data_hash['software']['reporter']
             kcr.reporter = data_hash['reporter']

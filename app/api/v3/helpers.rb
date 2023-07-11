@@ -26,6 +26,10 @@ module V3
       header "X-Idb-Api-Token", t
     end
 
+    def get_ip
+      request.headers["X-Real-Ip"]
+    end
+
     # select the first valid token for updating this item
     # return nil if no token matches
     def item_update_token(item)
