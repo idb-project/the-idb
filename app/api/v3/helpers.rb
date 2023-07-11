@@ -51,10 +51,10 @@ module V3
     def can_read!
       tokens = get_tokens
       x = ApiToken.where(token: tokens, read: true)
-      if x.empty?
-        error!("Unauthorized.", 401)
+      unless x.empty?
+        return x.first
       end
-      x.first
+      error!("Unauthorized.", 401)
     end
 
     def can_write!
