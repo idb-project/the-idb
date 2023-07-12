@@ -18,7 +18,7 @@ module V3
       elsif request.headers["X-E4a-License-Report-Machine-Id"]
         return request.headers["X-E4a-License-Report-Machine-Id"]
       else
-        error!("Unauthorized.", 401)
+        []
       end
     end
 
