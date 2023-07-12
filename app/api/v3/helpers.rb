@@ -75,6 +75,19 @@ module V3
       error!("Unauthorized to post reports.", 401)
     end
 
+    def can_post_logs!
+      if ldap_auth
+        return true
+      else
+        tokens = get_tokens
+        x = ApiToken.where(token: tokens, post_logs: true)
+        unless x.empty?
+          return x.first
+        end
+        error!("Unauthorized to post reports.", 401)
+      end
+    end
+
     # get the owner of the first token
     def get_owner
       token = get_tokens.first.to_s

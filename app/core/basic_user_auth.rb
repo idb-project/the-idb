@@ -1,7 +1,9 @@
 class BasicUserAuth < Struct.new(:realm, :context)
   def authenticate(login, pass)
     validate(login, pass) do |user|
-      context.current_user = user
+      if(context && context.current_user)
+        context.current_user = user
+      end
     end
   end
 
@@ -19,8 +21,8 @@ class BasicUserAuth < Struct.new(:realm, :context)
     
     if user.valid_password?(pass)
       yield(user) if block_given?
+      user
     end
-    user
   end
 
   def validate_ldap(login, pass)

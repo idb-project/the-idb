@@ -43,4 +43,13 @@ FactoryBot.define do
     post_reports { true }
     post_logs { false }
   end
+
+  factory :api_token_pl, class: ApiToken do
+    sequence(:token) { |n| "pr-token-#{n}" }
+    sequence(:name) { |n| "pr-token-name-#{n}" }
+    read { false }
+    write { false }
+    post_reports { false }
+    post_logs { true }
+  end
 end

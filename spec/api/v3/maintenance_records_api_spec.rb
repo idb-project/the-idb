@@ -18,6 +18,7 @@ describe 'Maintenance Records API V3' do
     @api_token = FactoryBot.build :api_token, owner: @owner
     @api_token_r = FactoryBot.create :api_token_r, owner: @owner
     @api_token_w = FactoryBot.create :api_token_w, owner: @owner
+    @api_token_pl = FactoryBot.create :api_token_pl, owner: @owner
 
     # prevent execution of VersionChangeWorker, depends on running sidekiq workers
     allow(VersionChangeWorker).to receive(:perform_async) do |arg|
@@ -106,7 +107,7 @@ describe 'Maintenance Records API V3' do
         "logfile": "test test test",
         "user": @owner.users.first.login
       }
-      api_post_json(action: "maintenance_records", token: @api_token_w, version: "3", payload: payload)
+      api_post_json(action: "maintenance_records", token: @api_token_pl, version: "3", payload: payload)
       expect(response.status).to eq(201)
       mr = JSON.parse(response.body)
       expect(mr["machine"]).to eq(@machine.fqdn)

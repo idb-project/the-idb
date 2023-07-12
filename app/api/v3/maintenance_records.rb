@@ -185,7 +185,7 @@ module V3
           params: MaintenanceRecord::Entity.documentation,
           success: MaintenanceRecord::Entity
         post do
-          can_write!
+          can_post_logs!
           machine = Machine.find_by_fqdn(params["machine"])
           m = Machine.owned_by(machine.owner).find_by_fqdn(params["machine"])
           params["machine_id"] = m.id
@@ -195,6 +195,7 @@ module V3
           u = User.find_by_login(params["user"])
           params["user_id"] = u.id
           params.delete("user")
+          params.delete("password")
 
           r = MaintenanceRecord.new(params)
           r.save!
