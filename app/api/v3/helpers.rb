@@ -44,8 +44,15 @@ module V3
     def authenticate!
       tokens = get_tokens
       if ApiToken.where(token: tokens).empty?
-        error!("Unauthorized.", 401)
+        unless ldap_auth
+          error!("Unauthorized.", 401)
+        end
       end
+    end
+
+    def ldap_auth
+      user = BasicUserAuth.new.authenticate(params["user"], params["password"])
+      user
     end
 
     def can_read!
