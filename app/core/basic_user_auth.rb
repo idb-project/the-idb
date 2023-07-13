@@ -1,7 +1,7 @@
 class BasicUserAuth < Struct.new(:realm, :context)
   def authenticate(login, pass)
     validate(login, pass) do |user|
-      if(context && context.current_user)
+      if(context)
         context.current_user = user
       end
     end
