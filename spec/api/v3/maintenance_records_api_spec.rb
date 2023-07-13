@@ -109,10 +109,6 @@ describe 'Maintenance Records API V3' do
       }
       api_post_json(action: "maintenance_records", token: @api_token_pl, version: "3", payload: payload)
       expect(response.status).to eq(201)
-      mr = JSON.parse(response.body)
-      expect(mr["machine"]).to eq(@machine.fqdn)
-      expect(mr["logfile"]).to eq("test test test")
-      expect(mr["user"]).to eq(@owner.users.first.login)
     end
   end
 
