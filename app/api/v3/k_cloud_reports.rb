@@ -32,7 +32,7 @@ module V3
           if data_hash['software'] && data_hash['software']['reporter']
             kcr.reporter = data_hash['reporter']
           end
-          if data_hash['license'] && data_hash['license']['dnsNames']
+          if kcr.machine.nil? && data_hash['license'] && data_hash['license']['dnsNames']
             data_hash['license']['dnsNames'].each do |dns_name|
               machine = Machine.find_by(fqdn: dns_name)
               unless machine
@@ -40,7 +40,7 @@ module V3
                 machine = m_alias.machine if m_alias
               end
             end
-            kcr.machine = machine
+            kcr.machine = machine if machine
           end
           if data_hash['users'] && data_hash['users']['count']
             kcr.usercount = data_hash['users']['count']
