@@ -60,10 +60,6 @@ module MachineHelpers
 end
 
 class API < Grape::API
-  log_file = File.open('log/api.log', 'a')
-  log_file.sync = true
-  logger Logger.new GrapeLogging::MultiIO.new(STDOUT, log_file)
-
   use GrapeLogging::Middleware::RequestLogger,
     logger: logger,
     log_level: 'error',
@@ -75,6 +71,7 @@ class API < Grape::API
 
   insert_before Grape::Middleware::Error, GrapeLogging::Middleware::RequestLogger, { logger: logger }
   error_formatter :json, ErrorFormatter
+
   mount V2::API
   mount V3::API
 end

@@ -2,10 +2,6 @@ module V3
   module Helpers
     extend Grape::API::Helpers
 
-    def debug_log_request
-      request.url.inspect + " " + request.ip.inspect + " " + headers.inspect + " " + params.inspect
-    end
-
     def api_enabled!
       unless IDB.config.modules.api.v3_enabled
         error!("API disabled.", 501)
