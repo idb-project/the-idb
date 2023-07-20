@@ -198,10 +198,13 @@ module V3
           params.delete("password")
 
           record = MaintenanceRecord.new(params)
-          record.logfile.gsub!("[?2004h", "")
-          record.logfile.gsub!("[?2004l", "")
-          record.logfile.gsub!(/\e\r/i, "")
-          record.logfile.gsub!(/\e/i, "")
+          # remove control characters
+          if record.logfile
+            record.logfile.gsub!("[?2004h", "")
+            record.logfile.gsub!("[?2004l", "")
+            record.logfile.gsub!(/\e\r/i, "")
+            record.logfile.gsub!(/\e/i, "")
+          end
           record.save!
           { :response_type => 'success', :response => "Record for machine #{m.fqdn} created" }.to_json
         end
