@@ -139,8 +139,6 @@ class MaintenanceAnnouncementsController < ApplicationController
 
     def submit
         @announcement = MaintenanceAnnouncement.find(params[:id])
-        @announcement.custom_subject = params[:custom_subject]
-        @announcement.custom_body = params[:custom_body]
         @tickets = @announcement.maintenance_tickets
 
         begin

@@ -17,13 +17,13 @@
                         <th>Subject:</th>
                     </tr>
                     <tr>
-                        <td colspan=3><%= text_field_tag(:custom_subject, ticket.format_subject, style: "width: 80%") %></td>
+                        <td colspan=3><%= ticket.format_subject %></td>
                     </tr>
                     <tr>
                         <th>Body:</th>
                     </tr>
                     <tr>
-                        <td colspan=3><%= text_area_tag(:custom_body, ticket.format_body, size: "150x20", style: "width: 80%") %></pre></td>
+                        <td colspan=3><pre><%= ticket.format_body %></pre></td>
                     </tr>
                 </table>
             </div>
