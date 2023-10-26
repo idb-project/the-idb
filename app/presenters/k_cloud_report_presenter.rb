@@ -16,6 +16,10 @@ class KCloudReportPresenter < Keynote::Presenter
     kcloudreport.machine ? link_to(kcloudreport.machine.fqdn, kcloudreport.machine) : ""
   end
 
+  def owner
+    kcloudreport.machine ? kcloudreport.machine.owner.name : ""
+  end
+
   def kcloudreport_link
     link_to(created_at, kcloudreport)
   end
