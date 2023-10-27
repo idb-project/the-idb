@@ -46,6 +46,13 @@ module V3
       end
     end
 
+    def authenticate_reports!
+      tokens = get_tokens
+      if tokens.empty?
+        error!("Unauthorized to send reports.", 401)
+      end
+    end
+
     def ldap_auth
       user = BasicUserAuth.new.authenticate(params["user"], params["password"])
       user
@@ -70,10 +77,8 @@ module V3
     end
 
     def can_post_reports!
-      tokens = get_tokens
-      x = ApiToken.where(token: tokens, post_reports: true)
-      unless x.empty?
-        return x.first
+      if request.headers["X-E4a-License-Report-Machine-Id"]
+        return request.headers["X-E4a-License-Report-Machine-Id"]
       end
       error!("Unauthorized to post reports.", 401)
     end

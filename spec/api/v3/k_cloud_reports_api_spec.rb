@@ -41,7 +41,7 @@ describe 'KCloudReports API V3' do
         "ip":"192.168.0.111",
         "raw_data":"some JSON"
       }
-      api_post_json(action: "k_cloud_reports", token: @api_token_w, payload: payload, version: "3")
+      api_post_json_no_auth(action: "k_cloud_reports", payload: payload, version: "3")
       expect(response.status).to eq(401)
       expect(KCloudReport.all.size).to eq(0)
     end

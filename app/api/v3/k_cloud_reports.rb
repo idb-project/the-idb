@@ -8,7 +8,7 @@ module V3
     resource :k_cloud_reports do
       before do
         api_enabled!
-        authenticate!
+        authenticate_reports!
       end
 
       desc 'Create a new KCloudReport',
