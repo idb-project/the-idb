@@ -38,6 +38,13 @@ class Network < ActiveRecord::Base
 
   def ip_addresses
     IpAddress.where(addr: ip.hosts.map(&:address))
+    ret = []
+    IpAddress.all.each do |i|
+      if i.nic && i.nic.machine && i.nic.machine.owner && i.nic.machine.owner == owner
+        ret << i
+      end
+    end
+    ret
   end
 
   def allowed_ip_addresses
