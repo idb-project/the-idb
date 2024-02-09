@@ -37,7 +37,7 @@
           <%= f.input :allowed_ip_addresses, collection: @network.allowed_ip_addresses_with_hosts, as: :check_boxes, input_html: {class: ''} %>
         </div>
       <%- end -%>
-      <%= f.input :description, input_html: {rows: 15},
+      <%= f.input :description, input_html: {rows: 15, id: 'markup-source'},
               hint: %(<small>Content can be written in #{link_to 'Markdown', markdown_help_path, target: '_blank'}</small>).html_safe %>
       <%= f.association :owner, collection: Owner.order(:name) %>
       <%= f.button :submit %>
