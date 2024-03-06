@@ -1,7 +1,7 @@
 class KCloudReportPresenter < Keynote::Presenter
   presents :kcloudreport
 
-  delegate :ip, :created_at, :raw_data, :usercount,
+  delegate :ip, :created_at, :raw_data, :usercount, :machine_name, :license_name,
            to: :kcloudreport
 
   def id
@@ -13,7 +13,11 @@ class KCloudReportPresenter < Keynote::Presenter
   end
 
   def machine_link
-    kcloudreport.machine ? link_to(kcloudreport.machine.fqdn, kcloudreport.machine) : ""
+    if kcloudreport.machine
+      link_to(kcloudreport.machine.fqdn, kcloudreport.machine)
+    else
+      kcloudreport.machine_name
+    end
   end
 
   def owner

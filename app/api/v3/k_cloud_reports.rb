@@ -32,15 +32,24 @@ module V3
           if data_hash['software'] && data_hash['software']['reporter']
             kcr.reporter = data_hash['reporter']
           end
-          if kcr.machine.nil? && data_hash['license'] && data_hash['license']['dnsNames']
-            data_hash['license']['dnsNames'].each do |dns_name|
-              machine = Machine.find_by(fqdn: dns_name)
-              unless machine
-                m_alias = MachineAlias.find_by(name: dns_name)
-                machine = m_alias.machine if m_alias
+          if kcr.machine.nil? && data_hash['license']
+            if data_hash['license']['dnsNames']
+              data_hash['license']['dnsNames'].each do |dns_name|
+                machine = Machine.find_by(fqdn: dns_name)
+                unless machine
+                  m_alias = MachineAlias.find_by(name: dns_name)
+                  machine = m_alias.machine if m_alias
+                end
+              end
+              kcr.machine = machine if machine
+
+              unless kcr.machine
+                kcr.machine_name = data_hash['license']['dnsNames'].join(",")
               end
             end
-            kcr.machine = machine if machine
+            if data_hash['license']['products'] && data_hash['license']['products']['e4asub'] && data_hash['license']['products']['e4asub']['sin']
+              kcr.license_name = data_hash['license']['products']['e4asub']['sin'].join(",")
+            end
           end
           if data_hash['users'] && data_hash['users']['count']
             kcr.usercount = data_hash['users']['count']
