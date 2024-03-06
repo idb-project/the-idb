@@ -42,11 +42,11 @@ module V3
                 end
               end
               kcr.machine = machine if machine
-
-              unless kcr.machine
-                kcr.machine_name = data_hash['license']['dnsNames'].join(",")
-              end
             end
+          end
+
+          if !kcr.machine && data_hash['license'] && data_hash['license']['dnsNames']
+            kcr.machine_name = data_hash['license']['dnsNames'].join(",")
           end
 
           if data_hash['license']['products'] && data_hash['license']['products']['e4asub'] && data_hash['license']['products']['e4asub']['sin']
