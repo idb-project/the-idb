@@ -47,10 +47,12 @@ module V3
                 kcr.machine_name = data_hash['license']['dnsNames'].join(",")
               end
             end
-            if data_hash['license']['products'] && data_hash['license']['products']['e4asub'] && data_hash['license']['products']['e4asub']['sin']
-              kcr.license_name = data_hash['license']['products']['e4asub']['sin'].join(",")
-            end
           end
+
+          if data_hash['license']['products'] && data_hash['license']['products']['e4asub'] && data_hash['license']['products']['e4asub']['sin']
+            kcr.license_name = data_hash['license']['products']['e4asub']['sin'].join(",")
+          end
+
           if data_hash['users'] && data_hash['users']['count']
             kcr.usercount = data_hash['users']['count']
           end
