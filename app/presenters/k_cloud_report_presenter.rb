@@ -29,14 +29,23 @@ class KCloudReportPresenter < Keynote::Presenter
   end
 
   def usercount
+    all = ""
     return "" unless raw_data
-    json_object = JSON.parse(raw_data.gsub('\"', '"').gsub('=>', ': ').gsub('nil', '""'))
-    all = json_object['users']['count']
 
-    if json_object['users']['countByPrivileges'] && json_object['users']['countByPrivileges']['ONLY_WEB']
-      web_only = json_object['users']['countByPrivileges']['ONLY_WEB']
-      full = (all.to_i - web_only.to_i).to_s
-      return "#{all} / #{full} + #{web_only} WebApp"
+    json_object = JSON.parse(raw_data.gsub('\"', '"').gsub('=>', ': ').gsub('nil', '""'))
+
+    if json_object && json_object['users']
+      if json_object['users']['count']
+        all = json_object['users']['count']
+      end
+
+      if json_object['users']['countByPrivileges'] && json_object['users']['countByPrivileges']['ONLY_WEB']
+        web_only = json_object['users']['countByPrivileges']['ONLY_WEB']
+        full = (all.to_i - web_only.to_i).to_s
+        return "#{all} / #{full} + #{web_only} WebApp"
+      else
+        return "#{all}"
+      end
     else
       return "#{all}"
     end
@@ -44,6 +53,7 @@ class KCloudReportPresenter < Keynote::Presenter
 
   def data
     return "" unless raw_data
+
     json_object = eval(raw_data.gsub('=>', ':'))
     json_object = JSON.pretty_generate(json_object)
     json_object = json_object.gsub("\n", "<br/>")
