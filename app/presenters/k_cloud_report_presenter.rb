@@ -58,7 +58,7 @@ class KCloudReportPresenter < Keynote::Presenter
     json_object = JSON.parse(raw_data.gsub('\"', '"').gsub('=>', ': ').gsub('nil', '""'))
 
     if json_object['license'] && json_object['license']['products'] && json_object['license']['products']['e4asub'] && json_object['license']['products']['e4asub']['sin']
-      return json_object['license']['products']['e4asub']['sin']
+      return json_object['license']['products']['e4asub']['sin'].join(",")
     end
   end
 
