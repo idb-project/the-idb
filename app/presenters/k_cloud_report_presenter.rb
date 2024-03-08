@@ -1,7 +1,7 @@
 class KCloudReportPresenter < Keynote::Presenter
   presents :kcloudreport
 
-  delegate :ip, :created_at, :raw_data, :machine_name, :license_name,
+  delegate :ip, :created_at, :raw_data, :machine_name,
            to: :kcloudreport
 
   def id
@@ -48,6 +48,17 @@ class KCloudReportPresenter < Keynote::Presenter
       end
     else
       return "#{all}"
+    end
+  end
+
+  def license_name
+    return kcloudreport.license_name if kcloudreport.license_name
+    return "" unless raw_data
+
+    json_object = JSON.parse(raw_data.gsub('\"', '"').gsub('=>', ': ').gsub('nil', '""'))
+
+    if json_object['license'] && json_object['license']['products'] && json_object['license']['products']['e4asub'] && json_object['license']['products']['e4asub']['sin']
+      return json_object['license']['products']['e4asub']['sin']
     end
   end
 
