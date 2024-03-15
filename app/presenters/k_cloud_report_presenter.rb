@@ -62,6 +62,16 @@ class KCloudReportPresenter < Keynote::Presenter
     end
   end
 
+  def software_version
+    return "" unless raw_data
+
+    json_object = JSON.parse(raw_data.gsub('\"', '"').gsub('=>', ': ').gsub('nil', '""'))
+
+    if json_object['software'] && json_object['software']['version']
+      return json_object['software']['version']
+    end
+  end
+
   def data
     return "" unless raw_data
 
