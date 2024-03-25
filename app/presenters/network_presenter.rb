@@ -85,6 +85,9 @@ class NetworkPresenter < Keynote::Presenter
     ip_v6 = machine_v6_by_v4(ip)
     css_class = allowed || 'muted'
     css_class = 'hide_ip' if content.blank?
+    machine = machines[ip.address]
+    owner = ""
+    owner = machine.owner.name if machine && machine.owner
 
     build_html do
       tr class: css_class do
@@ -92,6 +95,7 @@ class NetworkPresenter < Keynote::Presenter
         td ip_v6
         td content
         td aliases
+        td owner
       end
     end
   end
